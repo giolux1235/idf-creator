@@ -251,8 +251,17 @@ def generate_idf():
                 file.save(filepath)
                 document_paths.append(filepath)
         
-        # Parse description
-        nlp_parser = BuildingDescriptionParser()
+        # Get LLM settings from form
+        llm_provider = request.form.get('llm_provider', 'none')
+        llm_api_key = request.form.get('llm_api_key', None)
+        
+        # Parse description with optional LLM
+        use_llm = llm_provider != 'none' and llm_api_key
+        nlp_parser = BuildingDescriptionParser(
+            use_llm=use_llm,
+            llm_provider=llm_provider if use_llm else 'openai',
+            api_key=llm_api_key
+        )
         result = nlp_parser.process_and_generate_idf(description, address)
         idf_params = result['idf_parameters']
         
