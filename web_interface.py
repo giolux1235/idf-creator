@@ -46,6 +46,10 @@ HTML_TEMPLATE = """
         .form-group {
             margin-bottom: 20px;
         }
+        .optional-field {
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
         label {
             display: block;
             margin-bottom: 8px;
@@ -144,6 +148,22 @@ HTML_TEMPLATE = """
                 <input type="file" id="documents" name="documents" multiple
                        accept=".pdf,.jpg,.jpeg,.png,.docx,.doc">
                 <div class="help-text">Upload building plans, floor layouts, specifications (PDF, images, Word docs)</div>
+            </div>
+            
+            <div class="form-group optional-field">
+                <label for="llm_provider">AI Assistant (Optional)</label>
+                <select id="llm_provider" name="llm_provider">
+                    <option value="none">No AI - Use basic parsing</option>
+                    <option value="openai">OpenAI GPT-4 (requires API key)</option>
+                    <option value="anthropic">Anthropic Claude (requires API key)</option>
+                </select>
+                <div class="help-text">AI improves understanding of natural language (optional)</div>
+            </div>
+            
+            <div class="form-group optional-field">
+                <label for="llm_api_key">AI API Key (Optional)</label>
+                <input type="password" id="llm_api_key" name="llm_api_key" placeholder="sk-...">
+                <div class="help-text">Only needed if using AI. Get from OpenAI.com or Anthropic.com</div>
             </div>
             
             <button type="submit">Generate IDF File</button>
