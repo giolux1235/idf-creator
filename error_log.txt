@@ -1,0 +1,29 @@
+✨ Using ENHANCED mode with multiple free APIs!
+🏗️ Using PROFESSIONAL mode with advanced features!
+
+============================================================
+🏗️  IDF Creator for EnergyPlus
+============================================================
+
+🔍 Fetching location data...
+📍 Fetching comprehensive data for: Chicago, IL
+✓ Geocoded: 41.876, -87.624
+✓ Climate zone: ASHRAE_C5
+🗺️  Fetching building footprint from OpenStreetMap...
+✓ Found building in OSM
+  - Type: university
+  - Area: 7696.9 m²
+🌤️  Getting weather data from NREL...
+✓ Weather file: Chicago O'Hare International Airport
+✓ Found location: 41.876, -87.624
+✓ Climate zone: ASHRAE_C5
+✓ Building type: Office
+✓ Stories: 3
+✓ Floor area: 5000.0 m²
+
+📐 Estimating building parameters...
+✓ Building dimensions: 88.4m × 56.6m
+
+⚙️  Generating IDF file...
+
+❌ Error: [Errno 2] No such file or directory: ''

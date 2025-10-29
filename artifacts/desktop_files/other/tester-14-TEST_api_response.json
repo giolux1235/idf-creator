@@ -1,0 +1,18 @@
+{
+  "version": "33.0.0",
+  "simulation_status": "error",
+  "energyplus_version": "25.1.0",
+  "real_simulation": true,
+  "error_message": "EnergyPlus simulation failed with fatal errors:\n**  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.\n************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.",
+  "processing_time": "2025-10-29T04:22:33.407768",
+  "warnings": [
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][number_of_vertices] - \"-24.206100\" - Expected number greater than or equal to 3.000000",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][number_of_vertices] - Failed to validate against child schema #0.",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][number_of_vertices] - \"-24.206100\" - Failed to match against any enum values.",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][number_of_vertices] - Failed to validate against child schema #1.",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][number_of_vertices] - Failed to validate against any schemas allowed by anyOf constraint.",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][sun_exposure] - \"WindExposed\" - Failed to match against any enum values.",
+    "** Severe  ** <root>[BuildingSurface:Detailed][Building_Zone_1_Ceiling][vertices][3] - Missing required property 'vertex_z_coordinate'.",
+    "************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning)."
+  ]
+}

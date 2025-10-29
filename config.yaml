@@ -1,0 +1,31 @@
+# Default building parameters (can be overridden by user input or document parsing)
+defaults:
+  building_type: "Office"
+  stories: 3
+  floor_area_per_story_m2: 500
+  window_to_wall_ratio: 0.4
+  
+# Material libraries
+materials:
+  wall_construction: "ASHRAE_C90"
+  roof_construction: "ASHRAE_M90"
+  floor_construction: "ASHRAE_C90"
+  window_construction: "ASHRAE_5pane_Clear"
+
+# HVAC defaults
+hvac:
+  type: "ZoneHVAC:IdealLoadsAirSystem"
+  heating_limit: "NoLimit"
+  cooling_limit: "NoLimit"
+
+# Simulation parameters
+simulation:
+  run_period_start: "1/1"
+  run_period_end: "12/31"
+  timestep: 6
+
+
+
+
+
+

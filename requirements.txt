@@ -1,0 +1,35 @@
+# Core dependencies
+pyenergyplus==0.9.0
+requests==2.31.0
+geopy==2.4.0
+pillow==10.0.0
+pytesseract==0.3.10
+
+# PDF processing
+PyPDF2==3.0.1
+pdf2image==1.16.3
+opencv-python==4.8.0.74
+
+# Data processing
+pandas==2.1.0
+numpy==1.24.3
+
+# Climate data
+epwfast==1.0.0
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# LLM Integration (Optional)
+openai==1.12.0
+anthropic==0.21.3
+
+# Web Interface
+flask==3.0.0
+
+
+
+
+
+

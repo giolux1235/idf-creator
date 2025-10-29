@@ -1,0 +1,7 @@
+{
+  "equip_type": "DX_COIL",
+  "name": "Catalog_DX_Coil_3Ton",
+  "rated_capacity_w": 10500.0,
+  "rated_cop": 3.4,
+  "source": "mock_bcl"
+}

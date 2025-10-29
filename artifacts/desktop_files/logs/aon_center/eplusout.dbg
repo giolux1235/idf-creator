@@ -1,0 +1,105 @@
+Reversing Surface Name=LOBBY_0_FLOOR
+side=    1 abs coord vertex=    3.0116000000000    7.0395000000000    0.0000000000000
+side=    2 abs coord vertex=   12.7139000000000    7.0395000000000    0.0000000000000
+side=    3 abs coord vertex=   12.7139000000000  -11.2782000000000    0.0000000000000
+side=    4 abs coord vertex=    3.0116000000000  -11.2782000000000    0.0000000000000
+Reversing Surface Name=CONFERENCE_0_FLOOR
+side=    1 abs coord vertex=   15.4538000000000    7.9049000000000    0.0000000000000
+side=    2 abs coord vertex=   20.0375000000000    7.9049000000000    0.0000000000000
+side=    3 abs coord vertex=   20.0375000000000   -0.1205000000000    0.0000000000000
+side=    4 abs coord vertex=   15.4538000000000   -0.1205000000000    0.0000000000000
+Reversing Surface Name=BREAK_ROOM_0_FLOOR
+side=    1 abs coord vertex=  -17.3897000000000    7.5259000000000    0.0000000000000
+side=    2 abs coord vertex=  -11.7103000000000    7.5259000000000    0.0000000000000
+side=    3 abs coord vertex=  -11.7103000000000   -2.5823000000000    0.0000000000000
+side=    4 abs coord vertex=  -17.3897000000000   -2.5823000000000    0.0000000000000
+Reversing Surface Name=MECHANICAL_0_FLOOR
+side=    1 abs coord vertex=   -1.7674000000000    9.4682000000000    0.0000000000000
+side=    2 abs coord vertex=    5.4335000000000    9.4682000000000    0.0000000000000
+side=    3 abs coord vertex=    5.4335000000000   -2.6364000000000    0.0000000000000
+side=    4 abs coord vertex=   -1.7674000000000   -2.6364000000000    0.0000000000000
+Reversing Surface Name=OFFICE_OPEN_0_FLOOR
+side=    1 abs coord vertex=   -9.9622000000000    3.3974000000000    0.0000000000000
+side=    2 abs coord vertex=   -1.8849000000000    3.3974000000000    0.0000000000000
+side=    3 abs coord vertex=   -1.8849000000000  -10.5151000000000    0.0000000000000
+side=    4 abs coord vertex=   -9.9622000000000  -10.5151000000000    0.0000000000000
+Reversing Surface Name=OFFICE_PRIVATE_0_FLOOR
+side=    1 abs coord vertex=    2.9874000000000    9.3473000000000    0.0000000000000
+side=    2 abs coord vertex=    9.3164000000000    9.3473000000000    0.0000000000000
+side=    3 abs coord vertex=    9.3164000000000    1.6011000000000    0.0000000000000
+side=    4 abs coord vertex=    2.9874000000000    1.6011000000000    0.0000000000000
+Reversing Surface Name=STORAGE_0_FLOOR
+side=    1 abs coord vertex=    6.1898000000000    3.0740000000000    0.0000000000000
+side=    2 abs coord vertex=   11.6180000000000    3.0740000000000    0.0000000000000
+side=    3 abs coord vertex=   11.6180000000000   -5.4871000000000    0.0000000000000
+side=    4 abs coord vertex=    6.1898000000000   -5.4871000000000    0.0000000000000
+Reversing Surface Name=LOBBY_1_FLOOR
+side=    1 abs coord vertex=  -15.8708000000000    4.6049000000000    3.0000000000000
+side=    2 abs coord vertex=   -8.3490000000000    4.6049000000000    3.0000000000000
+side=    3 abs coord vertex=   -8.3490000000000   -8.1446000000000    3.0000000000000
+side=    4 abs coord vertex=  -15.8708000000000   -8.1446000000000    3.0000000000000
+Reversing Surface Name=CONFERENCE_1_FLOOR
+side=    1 abs coord vertex=   -3.5074000000000   -0.5054000000000    3.0000000000000
+side=    2 abs coord vertex=    2.0899000000000   -0.5054000000000    3.0000000000000
+side=    3 abs coord vertex=    2.0899000000000  -10.3838000000000    3.0000000000000
+side=    4 abs coord vertex=   -3.5074000000000  -10.3838000000000    3.0000000000000
+Reversing Surface Name=BREAK_ROOM_1_FLOOR
+side=    1 abs coord vertex=    1.3188000000000   10.1409000000000    3.0000000000000
+side=    2 abs coord vertex=    6.1551000000000   10.1409000000000    3.0000000000000
+side=    3 abs coord vertex=    6.1551000000000    2.1580000000000    3.0000000000000
+side=    4 abs coord vertex=    1.3188000000000    2.1580000000000    3.0000000000000
+Reversing Surface Name=MECHANICAL_1_FLOOR
+side=    1 abs coord vertex=  -15.8128000000000    0.9140000000000    3.0000000000000
+side=    2 abs coord vertex=  -11.6659000000000    0.9140000000000    3.0000000000000
+side=    3 abs coord vertex=  -11.6659000000000   -4.0515000000000    3.0000000000000
+side=    4 abs coord vertex=  -15.8128000000000   -4.0515000000000    3.0000000000000
+Reversing Surface Name=OFFICE_OPEN_1_FLOOR
+side=    1 abs coord vertex=   -7.5226000000000    2.1380000000000    3.0000000000000
+side=    2 abs coord vertex=    3.5401000000000    2.1380000000000    3.0000000000000
+side=    3 abs coord vertex=    3.5401000000000  -11.1035000000000    3.0000000000000
+side=    4 abs coord vertex=   -7.5226000000000  -11.1035000000000    3.0000000000000
+Reversing Surface Name=OFFICE_PRIVATE_1_FLOOR
+side=    1 abs coord vertex=   13.3574000000000   -5.0094000000000    3.0000000000000
+side=    2 abs coord vertex=   17.3588000000000   -5.0094000000000    3.0000000000000
+side=    3 abs coord vertex=   17.3588000000000  -10.6870000000000    3.0000000000000
+side=    4 abs coord vertex=   13.3574000000000  -10.6870000000000    3.0000000000000
+Reversing Surface Name=STORAGE_1_FLOOR
+side=    1 abs coord vertex=   -0.1056000000000   10.4244000000000    3.0000000000000
+side=    2 abs coord vertex=    4.1952000000000   10.4244000000000    3.0000000000000
+side=    3 abs coord vertex=    4.1952000000000    4.1727000000000    3.0000000000000
+side=    4 abs coord vertex=   -0.1056000000000    4.1727000000000    3.0000000000000
+Reversing Surface Name=LOBBY_2_FLOOR
+side=    1 abs coord vertex=  -15.1568000000000    7.3617000000000    6.0000000000000
+side=    2 abs coord vertex=   -9.4917000000000    7.3617000000000    6.0000000000000
+side=    3 abs coord vertex=   -9.4917000000000   -3.2749000000000    6.0000000000000
+side=    4 abs coord vertex=  -15.1568000000000   -3.2749000000000    6.0000000000000
+Reversing Surface Name=CONFERENCE_2_FLOOR
+side=    1 abs coord vertex=  -15.3462000000000   -3.0263000000000    6.0000000000000
+side=    2 abs coord vertex=  -10.7133000000000   -3.0263000000000    6.0000000000000
+side=    3 abs coord vertex=  -10.7133000000000  -10.2785000000000    6.0000000000000
+side=    4 abs coord vertex=  -15.3462000000000  -10.2785000000000    6.0000000000000
+Reversing Surface Name=BREAK_ROOM_2_FLOOR
+side=    1 abs coord vertex=   -7.9942000000000    6.0988000000000    6.0000000000000
+side=    2 abs coord vertex=   -0.8306000000000    6.0988000000000    6.0000000000000
+side=    3 abs coord vertex=   -0.8306000000000   -3.5483000000000    6.0000000000000
+side=    4 abs coord vertex=   -7.9942000000000   -3.5483000000000    6.0000000000000
+Reversing Surface Name=MECHANICAL_2_FLOOR
+side=    1 abs coord vertex=  -17.0021000000000    5.3628000000000    6.0000000000000
+side=    2 abs coord vertex=  -10.3335000000000    5.3628000000000    6.0000000000000
+side=    3 abs coord vertex=  -10.3335000000000   -5.9838000000000    6.0000000000000
+side=    4 abs coord vertex=  -17.0021000000000   -5.9838000000000    6.0000000000000
+Reversing Surface Name=OFFICE_OPEN_2_FLOOR
+side=    1 abs coord vertex=  -20.3877000000000    8.1244000000000    6.0000000000000
+side=    2 abs coord vertex=   -8.3116000000000    8.1244000000000    6.0000000000000
+side=    3 abs coord vertex=   -8.3116000000000  -11.2841000000000    6.0000000000000
+side=    4 abs coord vertex=  -20.3877000000000  -11.2841000000000    6.0000000000000
+Reversing Surface Name=OFFICE_PRIVATE_2_FLOOR
+side=    1 abs coord vertex=    1.4713000000000    5.9043000000000    6.0000000000000
+side=    2 abs coord vertex=    6.2071000000000    5.9043000000000    6.0000000000000
+side=    3 abs coord vertex=    6.2071000000000   -0.7007000000000    6.0000000000000
+side=    4 abs coord vertex=    1.4713000000000   -0.7007000000000    6.0000000000000
+Reversing Surface Name=STORAGE_2_FLOOR
+side=    1 abs coord vertex=  -20.5789000000000   -0.7761000000000    6.0000000000000
+side=    2 abs coord vertex=  -15.8458000000000   -0.7761000000000    6.0000000000000
+side=    3 abs coord vertex=  -15.8458000000000   -8.6050000000000    6.0000000000000
+side=    4 abs coord vertex=  -20.5789000000000   -8.6050000000000    6.0000000000000
