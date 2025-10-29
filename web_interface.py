@@ -304,6 +304,7 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', config['port']))
     
     print("🌐 Starting IDF Creator Web Interface...")
+    print(f"🚀 Version: 1.0.0")
     print(f"📝 Open http://localhost:{port} in your browser")
     print(f"🌍 Environment: {config.get('environment', 'development')}")
     
