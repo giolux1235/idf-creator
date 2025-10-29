@@ -23,6 +23,7 @@ anthropic>=0.10.0
 
 # Web Interface
 flask>=2.0.0
+flask-cors>=3.0.0
 
 
 
