@@ -1,5 +1,5 @@
 # Core dependencies
-pyenergyplus==0.9.0
+# pyenergyplus==0.9.0  # Not available on PyPI - installed via EnergyPlus
 requests==2.31.0
 geopy==2.4.0
 pillow==10.0.0
