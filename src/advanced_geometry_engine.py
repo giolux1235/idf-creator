@@ -147,6 +147,9 @@ class AdvancedGeometryEngine:
         # Extract or generate base polygon
         if 'geometry' in osm_data and osm_data['geometry']:
             base_polygon = self._parse_osm_geometry(osm_data['geometry'])
+            # Fallback to rectangular if parsing failed
+            if base_polygon is None or base_polygon.area < 1:
+                base_polygon = self._generate_rectangular_footprint(total_area, template)
         else:
             base_polygon = self._generate_rectangular_footprint(total_area, template)
         
@@ -154,6 +157,10 @@ class AdvancedGeometryEngine:
         footprint = self._add_geometric_complexity(
             base_polygon, building_type, template, total_area
         )
+        
+        # Final safety check: if footprint is invalid, use base polygon
+        if footprint is None or footprint.area < 1:
+            footprint = base_polygon
         
         # Extract height information
         height = self._extract_building_height(osm_data, stories)
@@ -167,21 +174,76 @@ class AdvancedGeometryEngine:
         )
     
     def _parse_osm_geometry(self, geometry_data: Dict) -> Polygon:
-        """Parse OSM geometry data into Shapely polygon"""
+        """Parse OSM geometry data into Shapely polygon
+        Handles both GeoJSON (projected coords) and geographic lat/lon coords
+        """
         try:
             if geometry_data.get('type') == 'Polygon':
                 coords = geometry_data['coordinates'][0]  # Exterior ring
-                return Polygon(coords)
+                
+                # Check if coordinates are geographic (lat/lon) and need projection
+                first_coord = coords[0]
+                if len(first_coord) == 2:
+                    # Check if lat/lon (rough heuristic: abs(lat) <= 90, abs(lon) <= 180)
+                    lat, lon = first_coord[1], first_coord[0]
+                    if abs(lat) <= 90 and abs(lon) <= 180 and (abs(lat) > 1 or abs(lon) > 1):
+                        # Geographic coordinates - convert to local meters
+                        coords = self._convert_latlon_to_local_meters(coords)
+                
+                polygon = Polygon(coords)
+                return polygon if polygon.is_valid else None
+                
             elif geometry_data.get('type') == 'MultiPolygon':
                 polygons = []
                 for poly_coords in geometry_data['coordinates']:
-                    polygons.append(Polygon(poly_coords[0]))
-                return unary_union(polygons)
+                    ext_ring = poly_coords[0]  # Exterior ring of each polygon
+                    
+                    # Convert if geographic
+                    if ext_ring and len(ext_ring[0]) == 2:
+                        first = ext_ring[0]
+                        lat, lon = first[1], first[0]
+                        if abs(lat) <= 90 and abs(lon) <= 180 and (abs(lat) > 1 or abs(lon) > 1):
+                            ext_ring = self._convert_latlon_to_local_meters(ext_ring)
+                    
+                    p = Polygon(ext_ring)
+                    if p.is_valid:
+                        polygons.append(p)
+                
+                if polygons:
+                    return unary_union(polygons) if len(polygons) > 1 else polygons[0]
+                return None
+                
         except Exception as e:
             print(f"Error parsing OSM geometry: {e}")
+            import traceback
+            traceback.print_exc()
             return None
         
         return None
+    
+    def _convert_latlon_to_local_meters(self, coords):
+        """
+        Convert geographic lat/lon coordinates to local meters centered on first point.
+        Uses simple equirectangular projection (good for small buildings).
+        """
+        if not coords:
+            return coords
+        
+        # Get reference point (first coordinate)
+        lon0, lat0 = coords[0]
+        
+        # Earth radius in meters
+        R = 6371000
+        
+        # Convert all coordinates to local meters
+        local_coords = []
+        for lon, lat in coords:
+            # Equirectangular projection
+            x = R * np.radians(lon - lon0) * np.cos(np.radians(lat0))
+            y = R * np.radians(lat - lat0)
+            local_coords.append([x, y])
+        
+        return local_coords
     
     def _generate_rectangular_footprint(self, area: float, template: Dict) -> Polygon:
         """Generate rectangular footprint when OSM data is unavailable"""
