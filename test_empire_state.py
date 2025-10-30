@@ -192,7 +192,9 @@ def test_empire_state_building():
             address="Empire State Building, 350 5th Ave, New York, NY",
             user_params={
                 'building_type': 'office',
-                'name': 'Empire State Building'
+                'name': 'Empire State Building',
+                'stories': 102,  # Empire State Building has 102 floors
+                'floor_area': 257000  # Approx 2.77M sqft = ~257k m² total
             },
             output_path=str(test_idf_path)
         )
