@@ -426,7 +426,11 @@ class MultiBuildingTypes:
             template = self.get_building_type_template('office')  # Default fallback
         
         # Calculate parameters
-        floor_area = total_area / stories if stories > 0 else total_area
+        # Handle None stories
+        if stories is None or stories <= 0:
+            stories = 3
+        
+        floor_area = total_area / stories
         
         # Adjust for building type
         if building_type in ['residential_single', 'residential_multi']:
