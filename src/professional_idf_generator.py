@@ -530,38 +530,41 @@ class ProfessionalIDFGenerator:
         
         if comp_type == 'AirLoopHVAC':
             # EnergyPlus 24.2/25.1 AirLoopHVAC fields (9 fields total)
+            # Note: supply_side_outlet_node_names must be the LAST field to match schema
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
   ,                                    !- Availability Manager List Name
   {component.get('design_supply_air_flow_rate', 'Autosize')}, !- Design Supply Air Flow Rate {{m3/s}}
-  ,                                    !- Branch List Name
+  {component.get('branch_list', '')},  !- Branch List Name
   ,                                    !- Connector List Name
   {component['supply_side_inlet_node_name']}, !- Supply Side Inlet Node Name
   {component.get('demand_side_outlet_node_name', '')}, !- Demand Side Outlet Node Name
-  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'}; !- Supply Side Outlet Node Names
+  {component.get('supply_side_outlet_node_names', [])[0] if isinstance(component.get('supply_side_outlet_node_names'), list) and len(component.get('supply_side_outlet_node_names', [])) > 0 else (component.get('supply_side_outlet_node_names') if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet')}; !- Supply Side Outlet Node Names
 
 """
         
         elif comp_type == 'Fan:VariableVolume':
-            # Correct field order per EnergyPlus 25.1 schema
+            # Correct field order per EnergyPlus 24.2/25.1 schema (14 fields)
             return f"""Fan:VariableVolume,
   {component['name']},                 !- Name
   Always On,                           !- Availability Schedule Name
   {component['fan_total_efficiency']}, !- Fan Total Efficiency
   {component['fan_pressure_rise']},    !- Pressure Rise {{Pa}}
   {component['maximum_flow_rate']},    !- Maximum Flow Rate {{m3/s}}
-  {component.get('fan_power_minimum_flow_fraction', 0.3)}, !- Fan Power Minimum Flow Fraction
+  FixedFlowRate,                       !- Fan Power Minimum Flow Rate Input Method
+  ,                                    !- Fan Power Minimum Flow Fraction
+  0.0,                                 !- Fan Power Minimum Air Flow Rate {{m3/s}}
   1.0,                                 !- Motor Efficiency
   1.0,                                 !- Motor In Airstream Fraction
-  {component['air_inlet_node_name']},  !- Air Inlet Node Name
-  {component['air_outlet_node_name']}, !- Air Outlet Node Name
   {component.get('fan_power_coefficient_1', 0.0013)}, !- Fan Power Coefficient 1
   {component.get('fan_power_coefficient_2', 0.1470)}, !- Fan Power Coefficient 2
   {component.get('fan_power_coefficient_3', 0.9506)}, !- Fan Power Coefficient 3
   {component.get('fan_power_coefficient_4', -0.0998)}, !- Fan Power Coefficient 4
   {component.get('fan_power_coefficient_5', 0.0)}, !- Fan Power Coefficient 5
-  ;                                     !- End
+  {component['air_inlet_node_name']},  !- Air Inlet Node Name
+  {component['air_outlet_node_name']}, !- Air Outlet Node Name
+  Fan Energy;                          !- End-Use Subcategory
 
 """
         
