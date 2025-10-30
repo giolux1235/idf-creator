@@ -547,19 +547,17 @@ class ProfessionalIDFGenerator:
   {component['fan_total_efficiency']}, !- Fan Total Efficiency
   {component['fan_pressure_rise']},    !- Pressure Rise {{Pa}}
   {component['maximum_flow_rate']},    !- Maximum Flow Rate {{m3/s}}
-  Fraction,                            !- Fan Power Minimum Flow Rate Input Method
   {component.get('fan_power_minimum_flow_fraction', 0.3)}, !- Fan Power Minimum Flow Fraction
-  ,                                    !- Fan Power Minimum Air Flow Rate {{m3/s}}
   1.0,                                 !- Motor Efficiency
   1.0,                                 !- Motor In Airstream Fraction
+  {component['air_inlet_node_name']},  !- Air Inlet Node Name
+  {component['air_outlet_node_name']}, !- Air Outlet Node Name
   {component.get('fan_power_coefficient_1', 0.0013)}, !- Fan Power Coefficient 1
   {component.get('fan_power_coefficient_2', 0.1470)}, !- Fan Power Coefficient 2
   {component.get('fan_power_coefficient_3', 0.9506)}, !- Fan Power Coefficient 3
   {component.get('fan_power_coefficient_4', -0.0998)}, !- Fan Power Coefficient 4
   {component.get('fan_power_coefficient_5', 0.0)}, !- Fan Power Coefficient 5
-  {component['air_inlet_node_name']},  !- Air Inlet Node Name
-  {component['air_outlet_node_name']}, !- Air Outlet Node Name
-  General;                             !- End-Use Subcategory
+  ;                                     !- End
 
 """
         
@@ -611,6 +609,7 @@ class ProfessionalIDFGenerator:
         
         elif comp_type == 'AirTerminal:SingleDuct:VAV:Reheat':
             # Correct field order per EnergyPlus 25.1 schema
+            # Total 15 fields only - do not duplicate Air Outlet Node Name
             return f"""AirTerminal:SingleDuct:VAV:Reheat,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -625,9 +624,8 @@ class ProfessionalIDFGenerator:
   {component['reheat_coil_name']},     !- Reheat Coil Name
   {component.get('maximum_hot_water_or_steam_flow_rate', 0.0)}, !- Maximum Hot Water or Steam Flow Rate {{m3/s}}
   {component.get('minimum_hot_water_or_steam_flow_rate', 0.0)}, !- Minimum Hot Water or Steam Flow Rate {{m3/s}}
-  {component['reheat_coil_air_inlet_node_name']}, !- Air Outlet Node Name
   {component.get('convergence_tolerance', 0.001)}, !- Convergence Tolerance
-  {component['damper_heating_action']}, !- Damper Heating Action
+  {component['damper_heating_action']}; !- Damper Heating Action
 
 """
         
