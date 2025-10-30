@@ -65,6 +65,7 @@ def generate_idf():
         user_params = data.get('user_params', {})
         llm_provider = data.get('llm_provider', 'none')
         llm_api_key = data.get('llm_api_key', None)
+        strict_real = bool(data.get('strict_real_data', False))
         
         if not address:
             return jsonify({
@@ -96,6 +97,11 @@ def generate_idf():
         output_file = f"{building_name}_api.idf"
         output_path = os.path.join(temp_dir, output_file)
         
+        # Inject strict_real_data into params
+        user_params = dict(user_params)
+        if strict_real:
+            user_params['strict_real_data'] = True
+
         created_path = creator.create_idf(
             address=address,
             user_params=user_params,

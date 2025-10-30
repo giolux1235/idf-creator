@@ -72,6 +72,7 @@ class EnhancedLocationFetcher(LocationFetcher):
                 print(f"  - Area: {building_info['osm_area_m2']:.1f} m²")
         else:
             print("⚠️  No building found in OSM")
+            building_info['note'] = 'OSM missing; will try city and census sources'
         
         # 4. Weather file
         print(f"🌤️  Getting weather data from NREL...")
@@ -93,6 +94,23 @@ class EnhancedLocationFetcher(LocationFetcher):
             )
             if city_data:
                 print(f"✓ Found city building data")
+                # Promote useful fields to building_info as fallbacks
+                # Common field hints: 'building_sqft', 'floor_area_m2', 'parcel_area_m2', 'stories', 'height_m'
+                area_m2 = (
+                    city_data.get('floor_area_m2')
+                    or (city_data.get('building_sqft') * 0.092903 if isinstance(city_data.get('building_sqft'), (int,float)) else None)
+                    or city_data.get('parcel_area_m2')
+                )
+                if area_m2:
+                    building_info['city_area_m2'] = float(area_m2)
+                if city_data.get('stories') is not None:
+                    building_info['city_stories'] = city_data.get('stories')
+                if city_data.get('height_m') is not None:
+                    building_info['city_height_m'] = city_data.get('height_m')
+                if area_m2:
+                    print(f"  - City area: {float(area_m2):.1f} m²")
+                if city_data.get('stories') is not None:
+                    print(f"  - City stories: {city_data.get('stories')}")
             else:
                 print(f"⚠️  No city data available (not NYC/SF/Chicago)")
         except Exception as e:

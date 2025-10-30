@@ -215,31 +215,44 @@ class ProfessionalIDFGenerator:
     def _generate_complex_footprint(self, location_data: Dict, building_type: str, 
                                   estimated_params: Dict) -> BuildingFootprint:
         """Generate complex building footprint"""
-        # Extract OSM data if available
-        osm_data = location_data.get('osm_data', {})
-        
-        # Generate footprint
-        footprint = self.geometry_engine.generate_complex_footprint(
-            osm_data=osm_data,
-            building_type=building_type,
-            total_area=estimated_params['total_area'],
-            stories=estimated_params['stories']
-        )
-        # Optionally force per-floor area to match requested floor_area
+        # Build OSM-like geometry payload from enhanced location data if present
+        building_info = location_data.get('building') or {}
+        osm_like = {}
         try:
-            if building_params.get('force_area') and building_params.get('floor_area'):
-                stories = estimated_params['stories']
-                target_per_floor = float(building_params['floor_area']) / max(1, stories)
-                footprint = BuildingFootprint(
-                    polygon=self.geometry_engine.scale_polygon_to_area(footprint.polygon, target_per_floor),
-                    height=footprint.height,
-                    stories=footprint.stories,
-                    building_type=footprint.building_type,
-                    roof_type=footprint.roof_type
-                )
+            footprint_latlon = building_info.get('osm_footprint')
+            if footprint_latlon and len(footprint_latlon) >= 3:
+                # GeoJSON expects [ [ [x,y], ... ] ] with x=lon, y=lat
+                ring = [[lon, lat] for (lat, lon) in footprint_latlon]
+                # Ensure closed ring
+                if ring[0] != ring[-1]:
+                    ring.append(ring[0])
+                osm_like['geometry'] = {
+                    'type': 'Polygon',
+                    'coordinates': [ring]
+                }
+        except Exception:
+            # If anything fails, fall back without geometry
+            osm_like = {}
+
+        # Prefer real area from OSM if available to avoid hardcoded defaults
+        total_area = estimated_params.get('total_area', 1000)
+        try:
+            osm_area = building_info.get('osm_area_m2')
+            stories = max(1, int(estimated_params.get('stories') or 1))
+            if osm_area and float(osm_area) > 10:
+                # Use OSM footprint area per floor; total area = footprint * stories
+                total_area = float(osm_area) * stories
         except Exception:
             pass
-        
+
+        # Generate footprint
+        footprint = self.geometry_engine.generate_complex_footprint(
+            osm_data=osm_like,
+            building_type=building_type,
+            total_area=total_area,
+            stories=estimated_params['stories']
+        )
+
         return footprint
     
     def _select_professional_materials(self, building_type: str, climate_zone: str) -> Tuple[List[str], List[str]]:

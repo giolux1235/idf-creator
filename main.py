@@ -110,16 +110,51 @@ class IDFCreator:
         Returns:
             Complete building parameters with estimates
         """
-        # Get floor area
+        # Strict mode enforces real-world data from sources (no synthetic defaults)
+        strict = bool(building_params.get('strict_real_data'))
+
+        # Injected location-derived building info (from create_idf)
+        loc_building = building_params.get('__location_building') or {}
+
+        # Prefer real stories from OSM if available
+        stories = building_params.get('stories')
+        if stories is None:
+            osm_levels = loc_building.get('osm_levels')
+            try:
+                if osm_levels is not None:
+                    stories = int(float(osm_levels))
+            except Exception:
+                stories = None
+        if stories is None:
+            if strict:
+                raise ValueError("strict_real_data is enabled: missing 'stories' and no OSM levels available")
+            stories = 3
+
+        # Get floor area, prefer OSM footprint if available; then city data
         floor_area = building_params.get('floor_area')
-        stories = building_params.get('stories', 3)
+        if floor_area is None:
+            osm_area = loc_building.get('osm_area_m2')
+            try:
+                if osm_area and float(osm_area) > 10:
+                    floor_area = float(osm_area) * max(1, int(stories))
+            except Exception:
+                pass
+        if floor_area is None:
+            city_area = loc_building.get('city_area_m2')
+            try:
+                if city_area and float(city_area) > 10:
+                    floor_area = float(city_area) * max(1, int(stories))
+            except Exception:
+                pass
         
         # Ensure stories is not None
         if not stories:
             stories = 3
         
-        # If no floor area provided, estimate from stories
-        if not floor_area:
+        # If no floor area provided
+        if floor_area is None:
+            if strict:
+                raise ValueError("strict_real_data is enabled: missing 'floor_area' and no OSM/city/document area available")
             floor_area_per_story = building_params.get('floor_area_per_story_m2', 500)
             floor_area = floor_area_per_story * stories
         
@@ -167,7 +202,10 @@ class IDFCreator:
         
         # Estimate missing parameters
         print("\n📐 Estimating building parameters...")
-        params = self.estimate_missing_parameters(data['building_params'])
+        # Attach location-derived building info for estimation (OSM area/levels)
+        bp = dict(data['building_params'])
+        bp['__location_building'] = data.get('location', {}).get('building') or {}
+        params = self.estimate_missing_parameters(bp)
         print(f"✓ Building dimensions: {params['building']['length']:.1f}m × {params['building']['width']:.1f}m")
         
         # Generate IDF

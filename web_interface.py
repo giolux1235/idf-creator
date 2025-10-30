@@ -263,6 +263,7 @@ def api_generate_idf():
         description = data.get('description')
         llm_provider = data.get('llm_provider', 'none')
         llm_api_key = data.get('llm_api_key', None)
+        strict_real = bool(data.get('strict_real_data', False))
         
         if not address:
             return jsonify({
@@ -291,6 +292,8 @@ def api_generate_idf():
             'floor_area': idf_params.get('floor_area'),
             'building_type': idf_params.get('building_type') or 'Building'
         }
+        if strict_real:
+            user_params['strict_real_data'] = True
         
         # Create temporary output file
         temp_dir = tempfile.mkdtemp()
