@@ -376,8 +376,16 @@ class AdvancedGeometryEngine:
         
         return wing
     
-    def _add_irregularity(self, polygon: Polygon, building_type: str) -> Polygon:
+    def _add_irregularity(self, polygon, building_type: str):
         """Add irregularity to building footprint"""
+        # Handle MultiPolygon (use largest component)
+        if hasattr(polygon, 'geoms'):
+            # It's a MultiPolygon
+            polygon = max(polygon.geoms, key=lambda p: p.area)
+        
+        if not hasattr(polygon, 'exterior'):
+            return polygon
+        
         # Get polygon coordinates
         coords = list(polygon.exterior.coords[:-1])  # Remove duplicate last point
         
