@@ -290,6 +290,51 @@ class ProfessionalIDFGenerator:
         
         return materials_used, constructions_used
     
+    def _generate_airloop_branches(self, zone_name: str, zone_hvac_components: List[Dict]) -> List[Dict]:
+        """Generate BranchList and Branch objects for AirLoopHVAC"""
+        branch_objects = []
+        
+        # Find the AirLoopHVAC component
+        airloop = None
+        for comp in zone_hvac_components:
+            if comp.get('type') == 'AirLoopHVAC':
+                airloop = comp
+                break
+        
+        if not airloop:
+            return branch_objects
+        
+        # BranchList object
+        branch_list = {
+            'type': 'BranchList',
+            'name': f"{zone_name}_BranchList",
+            'branches': [f"{zone_name}_MainBranch"]
+        }
+        branch_objects.append(branch_list)
+        
+        # Find component names
+        fan_name = f"{zone_name}_SupplyFan"
+        heating_coil_name = f"{zone_name}_HeatingCoil"
+        cooling_coil_name = f"{zone_name}_CoolingCoil"
+        
+        # Branch object connecting all components in order
+        branch = {
+            'type': 'Branch',
+            'name': f"{zone_name}_MainBranch",
+            'pressure_drop_curve': '',
+            'components': [
+                {'type': 'Coil:Heating:Electric', 'name': heating_coil_name,
+                 'inlet': f"{zone_name}_HeatingCoilInlet", 'outlet': f"{zone_name}_HeatingCoilOutlet"},
+                {'type': 'Coil:Cooling:DX:SingleSpeed', 'name': cooling_coil_name,
+                 'inlet': f"{zone_name}_CoolingCoilInlet", 'outlet': f"{zone_name}_CoolingCoilOutlet"},
+                {'type': 'Fan:VariableVolume', 'name': fan_name,
+                 'inlet': f"{zone_name}_FanInlet", 'outlet': f"{zone_name}_FanOutlet"}
+            ]
+        }
+        branch_objects.append(branch)
+        
+        return branch_objects
+    
     def _generate_advanced_hvac_systems(self, zones: List[ZoneGeometry],
                                       building_type: str, climate_zone: str,
                                       building_params: Dict) -> List[Dict]:
@@ -321,6 +366,11 @@ class ProfessionalIDFGenerator:
                 catalog_equipment=None
             )
             hvac_components.extend(zone_hvac)
+            
+            # Generate BranchList and Branch objects for AirLoopHVAC
+            if hvac_type == 'VAV':
+                branch_objects = self._generate_airloop_branches(zone.name, zone_hvac)
+                hvac_components.extend(branch_objects)
 
         # Write manifest if any catalog equipment used
         if catalog_manifest:
@@ -653,6 +703,30 @@ class ProfessionalIDFGenerator:
   {component.get('exhaust_air_outlet_node', component['name'] + 'ZoneExhaustNode')}; !- Zone Exhaust Air Outlet Node Name
 
 """
+        
+        elif comp_type == 'BranchList':
+            branches_str = ', '.join(component['branches'])
+            return f"""BranchList,
+  {component['name']},                 !- Name
+  {branches_str};                       !- Branch 1 Name
+
+"""
+        
+        elif comp_type == 'Branch':
+            branch_str = f"""Branch,
+  {component['name']},                 !- Name
+  ,                                    !- Pressure Drop Curve Name
+"""
+            # Add components in sequence
+            for i, comp in enumerate(component['components'], 1):
+                branch_str += f"  {comp['type']},                    !- Component {i} Object Type\n"
+                branch_str += f"  {comp['name']},      !- Component {i} Name\n"
+                branch_str += f"  {comp['inlet']}, !- Component {i} Inlet Node Name\n"
+                branch_str += f"  {comp['outlet']}; !- Component {i} Outlet Node Name\n"
+                if i < len(component['components']):
+                    branch_str += "\n"
+            
+            return branch_str + "\n"
         
         else:
             return f"! {comp_type}: {component.get('name', 'UNKNOWN')}\n"

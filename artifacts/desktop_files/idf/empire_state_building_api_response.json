@@ -4,10 +4,9 @@
   "energyplus_version": "25.1.0",
   "real_simulation": true,
   "error_message": "EnergyPlus simulation failed with fatal errors:\n**  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.\n************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.",
-  "processing_time": "2025-10-30T21:07:26.464143",
+  "processing_time": "2025-10-30T21:12:26.494345",
   "warnings": [
     "** Severe  ** <root>[AirLoopHVAC][break_room_0_AirLoop] - Missing required property 'supply_side_outlet_node_names'.",
-    "** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_VAVTerminal][convergence_tolerance] - Value type \"string\" for input \"Normal\" not permitted by 'type' constraint.",
     "** Warning ** Version: in IDF=\"24.2\" not the same as expected=\"25.1\"",
     "************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning)."
   ]
