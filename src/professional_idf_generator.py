@@ -24,7 +24,7 @@ class ProfessionalIDFGenerator:
     """Professional-grade IDF generator with advanced features"""
     
     def __init__(self):
-        self.version = "24.2"
+        self.version = "25.1"
         self.unique_names = set()
         
         # Initialize professional modules
@@ -638,7 +638,9 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
-            # Correct field order per EnergyPlus 25.1 schema (16 fields total)
+            # Correct field order per EnergyPlus 25.1 schema (min 18 fields)
+            # Fields: A1-Name, A2-Availability, N1-Capacity, N2-SHR, N3-COP, N4-FlowRate,
+            #         N5-2017, N6-2023, A3-Inlet, A4-Outlet, A5-A9 curves
             return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -646,7 +648,7 @@ class ProfessionalIDFGenerator:
   {component['gross_rated_sensible_heat_ratio']}, !- Gross Rated Sensible Heat Ratio
   {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
   {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
-  ,                                    !- Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
+  ,                                    !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
   ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow {{W/(m3/s)}}
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {component['air_outlet_node_name']}, !- Air Outlet Node Name
