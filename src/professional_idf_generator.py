@@ -638,8 +638,7 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
-            # Correct field order per EnergyPlus 24.2/25.1 schema
-            # Note: Version 25.1 may have removed 2023 field, keeping for compatibility
+            # Correct field order per EnergyPlus 25.1 schema (16 fields total)
             return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -648,6 +647,7 @@ class ProfessionalIDFGenerator:
   {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
   {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
   ,                                    !- Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
+  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow {{W/(m3/s)}}
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {component['air_outlet_node_name']}, !- Air Outlet Node Name
   Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Temperature Curve Name
