@@ -228,10 +228,104 @@ HTML_TEMPLATE = """
 </html>
 """
 
+from flask_cors import CORS
+
+# Enable CORS for all routes
+CORS(app)
+
 @app.route('/')
 def index():
     """Render the main page"""
     return render_template_string(HTML_TEMPLATE)
+
+@app.route('/api/health', methods=['GET'])
+def api_health():
+    """API health check"""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'IDF Creator API',
+        'version': '1.0.0'
+    })
+
+@app.route('/api/generate', methods=['POST'])
+def api_generate_idf():
+    """API endpoint for JSON requests"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided'
+            }), 400
+        
+        address = data.get('address')
+        description = data.get('description')
+        llm_provider = data.get('llm_provider', 'none')
+        llm_api_key = data.get('llm_api_key', None)
+        
+        if not address:
+            return jsonify({
+                'success': False,
+                'error': 'Address is required'
+            }), 400
+        
+        # Use NLP parsing if description provided
+        if description:
+            use_llm = llm_provider != 'none' and llm_api_key
+            nlp_parser = BuildingDescriptionParser(
+                use_llm=use_llm,
+                llm_provider=llm_provider if use_llm else 'openai',
+                api_key=llm_api_key
+            )
+            result = nlp_parser.process_and_generate_idf(description, address)
+            idf_params = result['idf_parameters']
+        else:
+            idf_params = {}
+        
+        # Generate IDF
+        creator = IDFCreator(enhanced=True, professional=True)
+        
+        user_params = {
+            'stories': idf_params.get('stories'),
+            'floor_area': idf_params.get('floor_area'),
+            'building_type': idf_params.get('building_type')
+        }
+        
+        # Create temporary output file
+        temp_dir = tempfile.mkdtemp()
+        building_name = user_params.get('building_type', 'Building').replace(' ', '_')
+        output_file = f"{building_name}_api.idf"
+        output_path = os.path.join(temp_dir, output_file)
+        
+        created_path = creator.create_idf(
+            address=address,
+            user_params=user_params,
+            output_path=output_path
+        )
+        
+        # Move to persistent location
+        persistent_dir = Path('artifacts/desktop_files/idf')
+        persistent_dir.mkdir(parents=True, exist_ok=True)
+        
+        final_path = persistent_dir / output_file
+        import shutil
+        shutil.move(created_path, final_path)
+        
+        return jsonify({
+            'success': True,
+            'message': 'IDF file generated successfully',
+            'filename': output_file,
+            'download_url': f'/download/{output_file}',
+            'parameters_used': user_params
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'type': type(e).__name__
+        }), 500
 
 @app.route('/generate', methods=['POST'])
 def generate_idf():
