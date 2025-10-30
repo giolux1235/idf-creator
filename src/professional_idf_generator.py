@@ -167,6 +167,9 @@ class ProfessionalIDFGenerator:
             else:
                 idf_content.append(self.format_hvac_object(component))
         
+        # HVAC Performance Curves
+        idf_content.append(self._generate_hvac_performance_curves())
+        
         # Schedules (only for used space types)
         used_space_types = set()
         for zone in zones:
@@ -523,9 +526,157 @@ class ProfessionalIDFGenerator:
     
     def format_hvac_object(self, component: Dict) -> str:
         """Format HVAC component object for EnergyPlus."""
-        # This would format different HVAC component types
-        # Implementation depends on specific component type
-        return f"! {component['type']}: {component['name']}\n"
+        comp_type = component.get('type', '')
+        
+        if comp_type == 'AirLoopHVAC':
+            return f"""AirLoopHVAC,
+  {component['name']},                 !- Name
+  ,                                    !- Controller List Name
+  ,                                    !- Availability Manager List Name
+  {component['supply_side_inlet_node_name']},  !- Return Air Node Name
+  ,                                    !- Return Air Bypass Duct Type
+  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'};  !- Outlet Node Name
+
+"""
+        
+        elif comp_type == 'Fan:VariableVolume':
+            return f"""Fan:VariableVolume,
+  {component['name']},                 !- Name
+  Always On,                           !- Availability Schedule Name
+  {component['air_inlet_node_name']},  !- Fan Air Inlet Node Name
+  {component['air_outlet_node_name']}, !- Fan Air Outlet Node Name
+  {component['fan_total_efficiency']}, !- Fan Total Efficiency
+  {component['fan_pressure_rise']},    !- Pressure Rise {{Pa}}
+  {component['maximum_flow_rate']},    !- Maximum Flow Rate {{m3/s}}
+  {component.get('fan_power_minimum_flow_fraction', 0.3)}, !- Fan Power Minimum Flow Fraction
+  {component.get('fan_power_coefficient_1', 0.0013)}, !- Fan Power Coefficient 1
+  {component.get('fan_power_coefficient_2', 0.1470)}, !- Fan Power Coefficient 2
+  {component.get('fan_power_coefficient_3', 0.9506)}, !- Fan Power Coefficient 3
+  {component.get('fan_power_coefficient_4', -0.0998)}, !- Fan Power Coefficient 4
+  {component.get('fan_power_coefficient_5', 0.0)}; !- Fan Power Coefficient 5
+
+"""
+        
+        elif comp_type == 'Coil:Heating:Electric':
+            return f"""Coil:Heating:Electric,
+  {component['name']},                 !- Name
+  Always On,                           !- Availability Schedule Name
+  {component.get('efficiency', 1.0)},  !- Efficiency
+  {component['nominal_capacity']},     !- Nominal Capacity {{W}}
+  {component['air_inlet_node_name']},  !- Air Inlet Node Name
+  {component['air_outlet_node_name']}; !- Air Outlet Node Name
+
+"""
+        
+        elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
+            return f"""Coil:Cooling:DX:SingleSpeed,
+  {component['name']},                 !- Name
+  {component['availability_schedule_name']}, !- Availability Schedule Name
+  {component['gross_rated_total_cooling_capacity']}, !- Gross Rated Total Cooling Capacity {{W}}
+  {component['gross_rated_sensible_heat_ratio']}, !- Gross Rated Sensible Heat Ratio
+  {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
+  {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
+  ,                                    !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  {component.get('condenser_air_inlet_node_name', '')}, !- Condenser Air Inlet Node Name
+  {component['condenser_type']},       !- Condenser Type
+  {component.get('evaporator_fan_power_included_in_rated_cop', True)}, !- Evaporator Fan Power Included in Rated COP
+  {component['air_inlet_node_name']},  !- Air Inlet Node Name
+  {component['air_outlet_node_name']}, !- Air Outlet Node Name
+  Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Temperature Curve Name
+  Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Temperature Curve Name
+  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Part Load Fraction Correlation Curve Name
+  ,                                    !- Waste Heat Source
+  {component.get('condenser_fan_power_ratio', 0.2)}; !- Condenser Fan Power Ratio
+
+"""
+        
+        elif comp_type == 'ZoneHVAC:AirDistributionUnit':
+            return f"""ZoneHVAC:AirDistributionUnit,
+  {component['name']},                 !- Name
+  {component['air_terminal_name']},    !- Air Distribution Unit Outlet Node Name
+  {component['air_terminal_object_type']}, !- Air Terminal Object Type
+  {component['air_terminal_name']};    !- Air Terminal Object Name
+
+"""
+        
+        elif comp_type == 'AirTerminal:SingleDuct:VAV:Reheat':
+            return f"""AirTerminal:SingleDuct:VAV:Reheat,
+  {component['name']},                 !- Name
+  {component['availability_schedule_name']}, !- Availability Schedule Name
+  {component['damper_heating_action']}, !- Damper Heating Action
+  ,                                    !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}}
+  {component.get('maximum_flow_fraction_during_reheat', 0.5)}, !- Maximum Flow Fraction During Reheat
+  {component.get('maximum_flow_fraction_before_reheat', 0.2)}, !- Maximum Flow Fraction Before Reheat
+  {component['reheat_coil_name']},     !- Reheat Coil Name
+  {component.get('maximum_hot_water_or_steam_flow_rate', 0.0)}, !- Maximum Hot Water or Steam Flow Rate {{m3/s}}
+  {component.get('minimum_hot_water_or_steam_flow_rate', 0.0)}, !- Minimum Hot Water or Steam Flow Rate {{m3/s}}
+  {component.get('convergence_tolerance', 0.001)}, !- Convergence Tolerance
+  ,                                    !- Maximum Reheat Air Temperature {{C}}
+  {component['air_inlet_node_name']},  !- Air Inlet Node Name
+  {component['damper_air_outlet_node_name']}, !- Air Outlet Node Name
+  {component['reheat_coil_air_inlet_node_name']}, !- Reheat Coil Air Outlet Node Name
+  {component.get('maximum_flow_per_zone_floor_area_during_reheat', 0.003)}; !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}}
+
+"""
+        
+        elif comp_type == 'ZoneHVAC:PackagedTerminalAirConditioner':
+            return f"""ZoneHVAC:PackagedTerminalAirConditioner,
+  {component['name']},                 !- Name
+  {component['availability_schedule_name']}, !- Availability Schedule Name
+  ,                                    !- Cooling Coil Name
+  ,                                    !- Heating Coil Name
+  {component['fan_total_efficiency']}, !- Fan Total Efficiency
+  {component['fan_delta_pressure']},   !- Fan Pressure Rise {{Pa}}
+  {component['maximum_supply_air_flow_rate']}, !- Maximum Supply Air Flow Rate {{m3/s}}
+  ,                                    !- Fan Placement
+  {component.get('heating_coil_inlet_node', component['name'] + 'FanOutlet')}, !- Heating Coil Air Inlet Node Name
+  {component.get('cooling_coil_inlet_node', component['name'] + 'HeatingOutlet')}, !- Cooling Coil Air Inlet Node Name
+  {component.get('supply_fan_inlet_node', component['name'] + 'Inlet')}, !- Supply Fan Air Inlet Node Name
+  {component.get('supply_fan_outlet_node', component['name'] + 'Outlet')}, !- Supply Fan Air Outlet Node Name
+  {component.get('supply_air_inlet_node', component['name'] + 'ZoneSupplyNode')}, !- Zone Supply Air Inlet Node Name
+  {component.get('exhaust_air_outlet_node', component['name'] + 'ZoneExhaustNode')}; !- Zone Exhaust Air Outlet Node Name
+
+"""
+        
+        else:
+            return f"! {comp_type}: {component.get('name', 'UNKNOWN')}\n"
+    
+    def _generate_hvac_performance_curves(self) -> str:
+        """Generate performance curves for HVAC equipment"""
+        return """Curve:Biquadratic,
+  Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Name
+  0.942587793,   !- Coefficient1 Constant
+  0.009543347,   !- Coefficient2 x
+  0.000683770,   !- Coefficient3 x**2
+  -0.011042676,  !- Coefficient4 y
+  0.000005249,   !- Coefficient5 y**2
+  -0.000009720,  !- Coefficient6 x*y
+  12.77778,      !- Minimum Value of x
+  23.88889,      !- Maximum Value of x
+  18.0,          !- Minimum Value of y
+  46.11111,      !- Maximum Value of y
+  ,              !- Minimum Curve Output
+  ,              !- Maximum Curve Output
+  Temperature,   !- Input Unit Type for X
+  Temperature,   !- Input Unit Type for Y
+  Dimensionless; !- Output Unit Type
+
+Curve:Quadratic,
+  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Name
+  0.606205495,   !- Coefficient1 Constant
+  -0.096596208,  !- Coefficient2 x
+  0.001340325,   !- Coefficient3 x**2
+  0.0,           !- Minimum Value of x
+  10.0,          !- Maximum Value of x
+  ,              !- Minimum Curve Output
+  ,              !- Maximum Curve Output
+  Temperature,   !- Input Unit Type for X
+  Dimensionless; !- Output Unit Type
+
+"""
     
     def generate_people_objects(self, zone: ZoneGeometry, space_type: str, building_type: str) -> str:
         """Generate People objects for zone."""
