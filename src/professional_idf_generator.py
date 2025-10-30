@@ -529,13 +529,18 @@ class ProfessionalIDFGenerator:
         comp_type = component.get('type', '')
         
         if comp_type == 'AirLoopHVAC':
+            # EnergyPlus 25.1 AirLoopHVAC fields
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
   ,                                    !- Availability Manager List Name
   {component['supply_side_inlet_node_name']},  !- Return Air Node Name
   ,                                    !- Return Air Bypass Duct Type
-  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'};  !- Outlet Node Name
+  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'}, !- Outlet Node Name
+  ,                                    !- Branch List Name
+  ,                                    !- Connector List Name
+  {component.get('design_supply_air_flow_rate', 'Autosize')}, !- Design Supply Air Flow Rate {{m3/s}}
+  ,                                    !- Design Return Air Flow Rate {{m3/s}}
 
 """
         
@@ -574,6 +579,7 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
+            # Correct field order per EnergyPlus 24.2/25.1 schema
             return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -581,20 +587,15 @@ class ProfessionalIDFGenerator:
   {component['gross_rated_sensible_heat_ratio']}, !- Gross Rated Sensible Heat Ratio
   {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
   {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
-  ,                                    !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate
-  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow Rate
-  {component.get('condenser_air_inlet_node_name', '')}, !- Condenser Air Inlet Node Name
-  {component['condenser_type']},       !- Condenser Type
-  {component.get('evaporator_fan_power_included_in_rated_cop', True)}, !- Evaporator Fan Power Included in Rated COP
+  ,                                    !- Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
+  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow {{W/(m3/s)}}
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {component['air_outlet_node_name']}, !- Air Outlet Node Name
   Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Temperature Curve Name
   Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Flow Fraction Curve Name
   Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Temperature Curve Name
   Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Flow Fraction Curve Name
-  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Part Load Fraction Correlation Curve Name
-  ,                                    !- Waste Heat Source
-  {component.get('condenser_fan_power_ratio', 0.2)}; !- Condenser Fan Power Ratio
+  Cooling Coil DX 1-Pass Quadratic Performance Curve; !- Part Load Fraction Correlation Curve Name
 
 """
         
