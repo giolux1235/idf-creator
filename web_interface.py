@@ -289,12 +289,12 @@ def api_generate_idf():
         user_params = {
             'stories': idf_params.get('stories'),
             'floor_area': idf_params.get('floor_area'),
-            'building_type': idf_params.get('building_type')
+            'building_type': idf_params.get('building_type') or 'Building'
         }
         
         # Create temporary output file
         temp_dir = tempfile.mkdtemp()
-        building_name = user_params.get('building_type', 'Building').replace(' ', '_')
+        building_name = (user_params.get('building_type') or 'Building').replace(' ', '_')
         output_file = f"{building_name}_api.idf"
         output_path = os.path.join(temp_dir, output_file)
         
@@ -372,11 +372,11 @@ def generate_idf():
         user_params = {
             'stories': idf_params.get('stories'),
             'floor_area': idf_params.get('floor_area'),
-            'building_type': idf_params.get('building_type')
+            'building_type': idf_params.get('building_type') or 'Building'
         }
         
         # Generate output filename
-        building_name = idf_params.get('building_type', 'Building').replace(' ', '_')
+        building_name = (idf_params.get('building_type') or 'Building').replace(' ', '_')
         output_file = f"{building_name}_nlp.idf"
         output_path = os.path.join(temp_dir, output_file)
         
