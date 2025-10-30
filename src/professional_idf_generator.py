@@ -265,7 +265,7 @@ class ProfessionalIDFGenerator:
             total_area=footprint_area,  # This is actually per-floor area
             stories=estimated_params['stories']
         )
-
+        
         return footprint
     
     def _select_professional_materials(self, building_type: str, climate_zone: str) -> Tuple[List[str], List[str]]:
@@ -579,8 +579,14 @@ class ProfessionalIDFGenerator:
         comp_type = component.get('type', '')
         
         if comp_type == 'AirLoopHVAC':
-            # EnergyPlus 24.2/25.1 AirLoopHVAC fields (9 fields total)
-            # Note: supply_side_outlet_node_names must be the LAST field to match schema
+            # EnergyPlus 24.2/25.1 AirLoopHVAC fields (10 fields total)
+            # Order: Name, Controller List Name, Availability Manager List Name, Design Supply Air Flow Rate,
+            #        Branch List Name, Connector List Name, Supply Side Inlet Node Name,
+            #        Demand Side Outlet Node Name, Demand Side Inlet Node Names, Supply Side Outlet Node Names
+            demand_inlet_nodes = component.get('demand_side_inlet_node_names', [])
+            supply_outlet_nodes = component.get('supply_side_outlet_node_names', [])
+            demand_inlet_value = demand_inlet_nodes[0] if isinstance(demand_inlet_nodes, list) and len(demand_inlet_nodes) > 0 else (component.get('demand_side_inlet_node_names', '') or '')
+            supply_outlet_value = supply_outlet_nodes[0] if isinstance(supply_outlet_nodes, list) and len(supply_outlet_nodes) > 0 else (component.get('supply_side_outlet_node_names', '') or f"{component['name']}SupplyOutlet")
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
@@ -590,7 +596,8 @@ class ProfessionalIDFGenerator:
   ,                                    !- Connector List Name
   {component['supply_side_inlet_node_name']}, !- Supply Side Inlet Node Name
   {component.get('demand_side_outlet_node_name', '')}, !- Demand Side Outlet Node Name
-  {component.get('supply_side_outlet_node_names', [])[0] if isinstance(component.get('supply_side_outlet_node_names'), list) and len(component.get('supply_side_outlet_node_names', [])) > 0 else (component.get('supply_side_outlet_node_names') if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet')}; !- Supply Side Outlet Node Names
+  {demand_inlet_value},               !- Demand Side Inlet Node Names
+  {supply_outlet_value};               !- Supply Side Outlet Node Names
 
 """
         
@@ -632,6 +639,7 @@ class ProfessionalIDFGenerator:
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
             # Correct field order per EnergyPlus 24.2/25.1 schema
+            # Note: Version 25.1 may have removed 2023 field, keeping for compatibility
             return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -640,7 +648,6 @@ class ProfessionalIDFGenerator:
   {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
   {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
   ,                                    !- Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
-  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow {{W/(m3/s)}}
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {component['air_outlet_node_name']}, !- Air Outlet Node Name
   Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Temperature Curve Name
