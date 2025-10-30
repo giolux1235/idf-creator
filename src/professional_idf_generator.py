@@ -611,8 +611,8 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'AirTerminal:SingleDuct:VAV:Reheat':
-            # Correct field order per EnergyPlus 25.1 schema
-            # Total 15 fields only - do not duplicate Air Outlet Node Name
+            # Correct field order per EnergyPlus 24.2/25.1 schema (18 fields)
+            # Air Outlet Node Name comes after steam flow rates
             return f"""AirTerminal:SingleDuct:VAV:Reheat,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -621,14 +621,17 @@ class ProfessionalIDFGenerator:
   Autosize,                            !- Maximum Air Flow Rate {{m3/s}}
   Constant,                            !- Zone Minimum Air Flow Input Method
   {component.get('maximum_flow_fraction_before_reheat', 0.2)}, !- Constant Minimum Air Flow Fraction
-  ,                                    !- Constant Minimum Air Flow Fraction Schedule Name
-  {component['reheat_coil_air_inlet_node_name']}, !- Reheat Coil Air Inlet Node Name
+  ,                                    !- Fixed Minimum Air Flow Rate {{m3/s}}
+  ,                                    !- Minimum Air Flow Fraction Schedule Name
   Coil:Heating:Electric,               !- Reheat Coil Object Type
   {component['reheat_coil_name']},     !- Reheat Coil Name
   {component.get('maximum_hot_water_or_steam_flow_rate', 0.0)}, !- Maximum Hot Water or Steam Flow Rate {{m3/s}}
   {component.get('minimum_hot_water_or_steam_flow_rate', 0.0)}, !- Minimum Hot Water or Steam Flow Rate {{m3/s}}
+  {component.get('reheat_coil_air_outlet_node_name', component['air_inlet_node_name'])}, !- Air Outlet Node Name
   {component.get('convergence_tolerance', 0.001)}, !- Convergence Tolerance
-  {component['damper_heating_action']}; !- Damper Heating Action
+  {component['damper_heating_action']}, !- Damper Heating Action
+  Autocalculate,                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}}
+  Autocalculate;                       !- Maximum Flow Fraction During Reheat
 
 """
         
