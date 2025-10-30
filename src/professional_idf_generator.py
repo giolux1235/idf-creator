@@ -638,9 +638,8 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
-            # Simplified field order matching official EnergyPlus 24.2 examples
-            # Without 2017 field (N5) to match example files
-            # This is the MINIMUM required fields that work reliably
+            # Complete field order matching official EnergyPlus 24.2 examples
+            # All 37 fields to ensure compatibility
             return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -659,10 +658,26 @@ class ProfessionalIDFGenerator:
   Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Part Load Fraction Correlation Curve Name
   ,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {{C}}
   ,                                    !- Nominal Time for Condensate Removal to Begin {{s}}
-  ,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  ,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {{dimensionless}}
   ,                                    !- Maximum Cycling Rate {{cycles/hr}}
-  ,                                    !- Latent Capacity Time Constant {{s}};
-  
+  ,                                    !- Latent Capacity Time Constant {{s}}
+  ,                                    !- Condenser Air Inlet Node Name
+  ,                                    !- Condenser Type
+  ,                                    !- Evaporative Condenser Effectiveness {{dimensionless}}
+  ,                                    !- Evaporative Condenser Air Flow Rate {{m3/s}}
+  ,                                    !- Evaporative Condenser Pump Rated Power Consumption {{W}}
+  ,                                    !- Crankcase Heater Capacity {{W}}
+  ,                                    !- Crankcase Heater Capacity Function of Temperature Curve Name
+  ,                                    !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {{C}}
+  ,                                    !- Supply Water Storage Tank Name
+  ,                                    !- Condensate Collection Water Storage Tank Name
+  ,                                    !- Basin Heater Capacity {{W/K}}
+  ,                                    !- Basin Heater Setpoint Temperature {{C}}
+  ,                                    !- Basin Heater Operating Schedule Name
+  ,                                    !- Sensible Heat Ratio Function of Temperature Curve Name
+  ,                                    !- Sensible Heat Ratio Function of Flow Fraction Curve Name
+  Yes;                                 !- Report ASHRAE Standard 127 Performance Ratings
+
 """
         
         elif comp_type == 'ZoneHVAC:AirDistributionUnit':
