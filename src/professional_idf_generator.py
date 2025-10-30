@@ -602,7 +602,7 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Fan:VariableVolume':
-            # Correct field order per EnergyPlus 24.2/25.1 schema (14 fields)
+            # Correct field order per EnergyPlus 24.2 schema (17 fields)
             return f"""Fan:VariableVolume,
   {component['name']},                 !- Name
   Always On,                           !- Availability Schedule Name
@@ -620,8 +620,7 @@ class ProfessionalIDFGenerator:
   {component.get('fan_power_coefficient_4', -0.0998)}, !- Fan Power Coefficient 4
   {component.get('fan_power_coefficient_5', 0.0)}, !- Fan Power Coefficient 5
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
-  {component['air_outlet_node_name']}, !- Air Outlet Node Name
-  Fan Energy;                          !- End-Use Subcategory
+  {component['air_outlet_node_name']}; !- Air Outlet Node Name
 
 """
         

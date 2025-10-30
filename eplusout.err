@@ -1,25 +1,32 @@
-Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.10.30 15:37,
-   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "mechanical_0_CoolingCoil". Overwriting existing object.
-   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "mechanical_0_SupplyFan". Overwriting existing object.
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.10.30 16:49,
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "break_room_0_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "break_room_0_SupplyFan". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "office_open_0_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "office_open_0_SupplyFan". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "office_private_0_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "office_private_0_SupplyFan". Overwriting existing object.
    ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "mechanical_1_CoolingCoil". Overwriting existing object.
    ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "mechanical_1_SupplyFan". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "office_private_1_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "office_private_1_SupplyFan". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "lobby_2_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "lobby_2_SupplyFan". Overwriting existing object.
    ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "office_open_2_CoolingCoil". Overwriting existing object.
    ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "office_open_2_SupplyFan". Overwriting existing object.
-   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "storage_2_CoolingCoil". Overwriting existing object.
-   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "storage_2_SupplyFan". Overwriting existing object.
-   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][mechanical_0_CoolingCoil][gross_rated_total_cooling_capacity] - Value type "string" for input "mechanical_0_CoolingCoilOutlet" not permitted by 'type' constraint.
-   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][mechanical_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against child schema #0.
-   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][mechanical_0_CoolingCoil][gross_rated_total_cooling_capacity] - "mechanical_0_CoolingCoilOutlet" - Failed to match against any enum values.
-   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][mechanical_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against child schema #1.
-   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][mechanical_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against any schemas allowed by anyOf constraint.
-   ** Severe  ** <root>[Fan:VariableVolume][mechanical_0_SupplyFan][fan_total_efficiency] - Value type "string" for input "mechanical_0_FanOutlet" not permitted by 'type' constraint.
-   ** Warning ** Version: in IDF="25.1" not the same as expected="24.2"
+   ** Severe  ** Duplicate name found for object of type "Coil:Cooling:DX:SingleSpeed" named "office_private_2_CoolingCoil". Overwriting existing object.
+   ** Severe  ** Duplicate name found for object of type "Fan:VariableVolume" named "office_private_2_SupplyFan". Overwriting existing object.
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][break_room_0_CoolingCoil][gross_rated_total_cooling_capacity] - Value type "string" for input "break_room_0_CoolingCoilOutlet" not permitted by 'type' constraint.
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][break_room_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against child schema #0.
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][break_room_0_CoolingCoil][gross_rated_total_cooling_capacity] - "break_room_0_CoolingCoilOutlet" - Failed to match against any enum values.
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][break_room_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against child schema #1.
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][break_room_0_CoolingCoil][gross_rated_total_cooling_capacity] - Failed to validate against any schemas allowed by anyOf constraint.
+   ** Severe  ** <root>[Fan:VariableVolume][break_room_0_SupplyFan][fan_total_efficiency] - Value type "string" for input "break_room_0_FanOutlet" not permitted by 'type' constraint.
    **  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.
    ...Summary of Errors that led to program termination:
-   ..... Reference severe error count=14
-   ..... Last severe error=<root>[Fan:VariableVolume][mechanical_0_SupplyFan][fan_total_efficiency] - Value type "string" for input "mechanical_0_FanOutlet" not permitted by 'type' constraint.
+   ..... Reference severe error count=22
+   ..... Last severe error=<root>[Fan:VariableVolume][break_room_0_SupplyFan][fan_total_efficiency] - Value type "string" for input "break_room_0_FanOutlet" not permitted by 'type' constraint.
    ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
    ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
    ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
    ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
-   ************* EnergyPlus Terminated--Fatal Error Detected. 1 Warning; 14 Severe Errors; Elapsed Time=00hr 00min  0.06sec
+   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 22 Severe Errors; Elapsed Time=00hr 00min  0.06sec
