@@ -529,18 +529,17 @@ class ProfessionalIDFGenerator:
         comp_type = component.get('type', '')
         
         if comp_type == 'AirLoopHVAC':
-            # EnergyPlus 25.1 AirLoopHVAC fields
+            # EnergyPlus 24.2/25.1 AirLoopHVAC fields (9 fields total)
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
   ,                                    !- Availability Manager List Name
-  {component['supply_side_inlet_node_name']},  !- Return Air Node Name
-  ,                                    !- Return Air Bypass Duct Type
-  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'}, !- Outlet Node Name
+  {component.get('design_supply_air_flow_rate', 'Autosize')}, !- Design Supply Air Flow Rate {{m3/s}}
   ,                                    !- Branch List Name
   ,                                    !- Connector List Name
-  {component.get('design_supply_air_flow_rate', 'Autosize')}, !- Design Supply Air Flow Rate {{m3/s}}
-  ,                                    !- Design Return Air Flow Rate {{m3/s}}
+  {component['supply_side_inlet_node_name']}, !- Supply Side Inlet Node Name
+  {component.get('demand_side_outlet_node_name', '')}, !- Demand Side Outlet Node Name
+  {component['supply_side_outlet_node_names'][0] if component.get('supply_side_outlet_node_names') else component['name'] + 'SupplyOutlet'}; !- Supply Side Outlet Node Names
 
 """
         
