@@ -168,10 +168,13 @@ class IDFCreator:
         )
         
         # Combine all parameters
+        # Note: floor_area here is TOTAL building area (all floors combined)
+        # Professional IDF expects 'total_area' for the same concept
         complete_params = {
             **building_params,
             **dimensions,
-            'floor_area': floor_area
+            'floor_area': floor_area,
+            'total_area': floor_area  # Alias for professional IDF
         }
         
         return {

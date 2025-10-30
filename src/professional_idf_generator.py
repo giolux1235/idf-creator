@@ -234,22 +234,32 @@ class ProfessionalIDFGenerator:
             # If anything fails, fall back without geometry
             osm_like = {}
 
-        # Prefer real area from OSM if available to avoid hardcoded defaults
-        total_area = estimated_params.get('total_area', 1000)
+        # Get footprint area (per-floor area from OSM or estimated_params)
+        # The footprint polygon represents a single floor, not the entire building
+        footprint_area = None
+        
+        # Prefer real area from OSM if available
         try:
             osm_area = building_info.get('osm_area_m2')
-            stories = max(1, int(estimated_params.get('stories') or 1))
             if osm_area and float(osm_area) > 10:
-                # Use OSM footprint area per floor; total area = footprint * stories
-                total_area = float(osm_area) * stories
+                footprint_area = float(osm_area)
         except Exception:
             pass
+        
+        # Fall back to estimated params if no OSM data
+        if footprint_area is None:
+            # estimated_params has total_area (all floors) and floor_area (one floor)
+            footprint_area = estimated_params.get('floor_area')
+            if footprint_area is None:
+                total_area = estimated_params.get('total_area', 1000)
+                stories = max(1, int(estimated_params.get('stories') or 1))
+                footprint_area = total_area / stories if stories > 0 else 1000
 
-        # Generate footprint
+        # Generate footprint (single floor polygon)
         footprint = self.geometry_engine.generate_complex_footprint(
             osm_data=osm_like,
             building_type=building_type,
-            total_area=total_area,
+            total_area=footprint_area,  # This is actually per-floor area
             stories=estimated_params['stories']
         )
 
