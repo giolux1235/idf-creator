@@ -87,13 +87,17 @@ class BuildingEstimator:
         """
         type_params = self.estimate_from_type(building_type)
         
-        # Handle None or zero stories
-        if not stories or stories <= 0:
+        # Handle None or zero stories (check None first to avoid TypeError)
+        if stories is None:
             stories = 3  # Default to 3 stories
+        elif stories <= 0:
+            stories = 3
         
-        # Handle None or zero floor_area
-        if not floor_area or floor_area <= 0:
+        # Handle None or zero floor_area (check None first to avoid TypeError)
+        if floor_area is None:
             floor_area = 1000.0  # Default to 1000 m²
+        elif floor_area <= 0:
+            floor_area = 1000.0
         
         zone_area = floor_area / stories
         
