@@ -330,7 +330,7 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_ReheatInlet",
             'air_outlet_node_name': f"{zone_name}_ReheatOutlet",
             'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
-            'efficiency': hvac_template.efficiency['heating_cop']
+            'efficiency': 1.0  # Electric coils are 100% efficient
         }
         components.append(reheat_coil)
         
