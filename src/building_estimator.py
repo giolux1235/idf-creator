@@ -86,6 +86,15 @@ class BuildingEstimator:
             Dictionary with zone parameters
         """
         type_params = self.estimate_from_type(building_type)
+        
+        # Handle None or zero stories
+        if not stories or stories <= 0:
+            stories = 3  # Default to 3 stories
+        
+        # Handle None or zero floor_area
+        if not floor_area or floor_area <= 0:
+            floor_area = 1000.0  # Default to 1000 m²
+        
         zone_area = floor_area / stories
         
         return {
