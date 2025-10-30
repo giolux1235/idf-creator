@@ -114,6 +114,10 @@ class IDFCreator:
         floor_area = building_params.get('floor_area')
         stories = building_params.get('stories', 3)
         
+        # Ensure stories is not None
+        if not stories:
+            stories = 3
+        
         # If no floor area provided, estimate from stories
         if not floor_area:
             floor_area_per_story = building_params.get('floor_area_per_story_m2', 500)
