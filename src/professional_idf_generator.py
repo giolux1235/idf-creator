@@ -24,7 +24,7 @@ class ProfessionalIDFGenerator:
     """Professional-grade IDF generator with advanced features"""
     
     def __init__(self):
-        self.version = "24.2"  # Match local EnergyPlus installation
+        self.version = "25.1"
         self.unique_names = set()
         
         # Initialize professional modules
