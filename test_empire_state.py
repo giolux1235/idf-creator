@@ -81,7 +81,7 @@ def test_idf_with_api(idf_path, api_url=API_URL):
     print(f"   URL: {api_url}")
     
     try:
-        response = requests.post(api_url, json=payload, timeout=180)
+        response = requests.post(api_url, json=payload, timeout=300)
         
         if response.status_code == 200:
             result = response.json()
@@ -195,8 +195,7 @@ def test_empire_state_building():
                 'building_type': 'office',
                 'name': 'Empire State Building',
                 'stories': 102,  # Empire State Building has 102 floors
-                'floor_area': 257000,  # Approx 2.77M sqft = ~257k m² total
-                'simple_hvac': True
+                'floor_area': 257000  # Approx 2.77M sqft = ~257k m² total
             },
             output_path=str(test_idf_path)
         )

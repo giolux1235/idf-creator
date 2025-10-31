@@ -174,11 +174,52 @@ class ProfessionalIDFGenerator:
             for zone in zones:
                 idf_content.append(self._generate_ideal_loads(zone.name))
         else:
+            # Final deduplication pass before writing to IDF - use dict keyed by type:name
+            # EnergyPlus requires unique names per object type
+            # Normalize keys (case-insensitive, stripped) to catch subtle differences
+            hvac_by_key = {}
+            hvac_strings = []  # Collect formatted strings for final deduplication
+            
             for component in hvac_components:
+                comp_name = component.get('name', '').strip()
+                comp_type = component.get('type', '').strip()
+                
+                # Skip components without name or type
+                if not comp_name or not comp_type:
+                    continue
+                
+                # Normalize key (lowercase, stripped) for reliable matching
+                norm_key = f"{comp_type.lower()}::{comp_name.lower()}"
+                
+                if norm_key in hvac_by_key:
+                    # Duplicate found - skip it
+                    continue
+                    
+                hvac_by_key[norm_key] = component
+            
+            # Format all unique components
+            for component in hvac_by_key.values():
                 if component.get('type') == 'IDF_STRING' and 'raw' in component:
-                    idf_content.append(component['raw'])
+                    hvac_strings.append(component['raw'])
                 else:
-                    idf_content.append(self.format_hvac_object(component))
+                    hvac_strings.append(self.format_hvac_object(component))
+            
+            # Final string-level deduplication (in case formatting creates duplicates)
+            seen_strings = set()
+            for hvac_str in hvac_strings:
+                # Extract object type and name from first few lines
+                lines = hvac_str.strip().split('\n')
+                if len(lines) >= 2:
+                    obj_type = lines[0].split(',')[0].strip()
+                    obj_name = lines[1].split(',')[0].strip().lstrip('!').strip()
+                    str_key = f"{obj_type.lower()}::{obj_name.lower()}"
+                    
+                    if str_key not in seen_strings:
+                        seen_strings.add(str_key)
+                        idf_content.append(hvac_str)
+                else:
+                    # Can't parse, just add it
+                    idf_content.append(hvac_str)
         
         # HVAC Performance Curves
         idf_content.append(self._generate_hvac_performance_curves())
@@ -375,6 +416,7 @@ class ProfessionalIDFGenerator:
                                       building_params: Dict) -> List[Dict]:
         """Generate advanced HVAC systems for all zones"""
         hvac_components = []
+        seen_names = set()  # Global tracker to prevent any duplicate names
         
         # Get HVAC system type from building template
         building_template = self.building_types.get_building_type_template(building_type)
@@ -391,6 +433,7 @@ class ProfessionalIDFGenerator:
         spec = None
 
         for idx, zone in enumerate(zones, start=1):
+            unique_suffix = f"_z{idx}"
             # Generate HVAC system for this zone
             zone_hvac = self.hvac_systems.generate_hvac_system(
                 building_type=building_type,
@@ -399,14 +442,64 @@ class ProfessionalIDFGenerator:
                 hvac_type=hvac_type,
                 climate_zone=climate_zone,
                 catalog_equipment=None,
-                unique_suffix=f"_z{idx}"
+                unique_suffix=unique_suffix
             )
-            hvac_components.extend(zone_hvac)
+            
+            # Ensure all component names are globally unique
+            unique_zone_hvac = []
+            for comp in zone_hvac:
+                comp_name = comp.get('name', '')
+                if comp_name in seen_names:
+                    # Make it unique by adding zone index (shouldn't happen but safety check)
+                    comp_copy = dict(comp)
+                    comp_copy['name'] = f"{comp_name}_u{idx}"
+                    unique_zone_hvac.append(comp_copy)
+                    seen_names.add(comp_copy['name'])
+                else:
+                    if comp_name:
+                        seen_names.add(comp_name)
+                    unique_zone_hvac.append(comp)
+            
+            hvac_components.extend(unique_zone_hvac)
             
             # Generate BranchList and Branch objects for AirLoopHVAC
             if hvac_type == 'VAV':
-                branch_objects = self._generate_airloop_branches(zone.name + f"_z{idx}", zone_hvac)
-                hvac_components.extend(branch_objects)
+                branch_objects = self._generate_airloop_branches(zone.name + unique_suffix, unique_zone_hvac)
+                # Ensure branch object names are unique
+                unique_branches = []
+                for branch in branch_objects:
+                    branch_name = branch.get('name', '')
+                    if branch_name in seen_names:
+                        branch_copy = dict(branch)
+                        branch_copy['name'] = f"{branch_name}_u{idx}"
+                        unique_branches.append(branch_copy)
+                        seen_names.add(branch_copy['name'])
+                    else:
+                        if branch_name:
+                            seen_names.add(branch_name)
+                        unique_branches.append(branch)
+                hvac_components.extend(unique_branches)
+            
+            # Generate controls for this zone (moved inside loop)
+            controls = self.hvac_systems.generate_control_objects(
+                zone_name=zone.name + unique_suffix,
+                hvac_type=hvac_type,
+                climate_zone=climate_zone
+            )
+            # Ensure control names are unique too
+            unique_controls = []
+            for ctrl in controls:
+                ctrl_name = ctrl.get('name', '')
+                if ctrl_name and ctrl_name in seen_names:
+                    ctrl_copy = dict(ctrl)
+                    ctrl_copy['name'] = f"{ctrl_name}_u{idx}"
+                    unique_controls.append(ctrl_copy)
+                    seen_names.add(ctrl_copy['name'])
+                else:
+                    if ctrl_name:
+                        seen_names.add(ctrl_name)
+                    unique_controls.append(ctrl)
+            hvac_components.extend(unique_controls)
 
         # Write manifest if any catalog equipment used
         if catalog_manifest:
@@ -417,14 +510,6 @@ class ProfessionalIDFGenerator:
                     json.dump(catalog_manifest, f, indent=2)
             except Exception:
                 pass
-            
-            # Generate controls
-            controls = self.hvac_systems.generate_control_objects(
-                zone_name=zone.name,
-                hvac_type=hvac_type,
-                climate_zone=climate_zone
-            )
-            hvac_components.extend(controls)
         
         return hvac_components
     
