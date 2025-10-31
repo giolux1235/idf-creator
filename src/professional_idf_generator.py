@@ -241,7 +241,12 @@ class ProfessionalIDFGenerator:
             location_data.get('weather_file', 'USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw')
         ))
         
-        return '\n\n'.join(idf_content)
+        full_idf = '\n\n'.join(idf_content)
+        
+        # Final safety: remove any duplicate object definitions across entire IDF
+        full_idf = self._dedupe_idf_string(full_idf)
+        
+        return full_idf
 
     def _generate_ideal_loads(self, zone_name: str) -> str:
         """Generate a ZoneHVAC:IdealLoadsAirSystem for a zone (simple, robust)."""
@@ -1231,3 +1236,42 @@ Output:Table:SummaryReports,
                 windows.append(window)
 
         return windows
+
+    def _dedupe_idf_string(self, idf_text: str) -> str:
+        """Remove duplicate object definitions (by Type+Name) keeping first occurrence.
+        This is a defensive pass in case any upstream generator produced duplicates.
+        """
+        lines = idf_text.split('\n')
+        out_lines = []
+        seen = set()
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            # Detect object header: starts at column 0 (no leading space) and ends with ','
+            if line and not line.startswith(' ') and not line.startswith('\t') and line.endswith(',') and not line.startswith('!'):
+                # Peek next non-empty, non-comment line for the name
+                j = i + 1
+                while j < len(lines) and (not lines[j].strip() or lines[j].lstrip().startswith('!')):
+                    j += 1
+                if j < len(lines):
+                    name_candidate = lines[j].strip().rstrip(',')
+                    obj_type = line.strip().rstrip(',')
+                    key = (obj_type.lower(), name_candidate.lower())
+                    if key in seen:
+                        # Skip this entire object block until we hit a blank line separating objects
+                        # Assume objects are separated by at least one blank line in our generator
+                        i += 1
+                        # Skip until a blank line sequence (two consecutive blanks) or next header
+                        # Here we conservatively skip until we find another header-like line or EOF
+                        while i < len(lines):
+                            next_line = lines[i]
+                            if next_line and not next_line.startswith(' ') and not next_line.startswith('\t') and next_line.endswith(',') and not next_line.startswith('!'):
+                                break
+                            i += 1
+                        continue
+                    else:
+                        seen.add(key)
+            # Keep line
+            out_lines.append(line)
+            i += 1
+        return '\n'.join(out_lines)
