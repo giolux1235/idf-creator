@@ -21,6 +21,7 @@ API_URL = "https://web-production-1d1be.up.railway.app/simulate"
 def find_weather_file():
     """Find a weather file to use for testing"""
     common_paths = [
+        "artifacts/weather/Chicago.epw",
         "/Applications/EnergyPlus-24-2-0/EnergyPlus installation files/WeatherData/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
         "/Applications/EnergyPlus-25-1-0/EnergyPlus installation files/WeatherData/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
         "/Applications/EnergyPlus-24-2-0/WeatherData/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
@@ -194,7 +195,8 @@ def test_empire_state_building():
                 'building_type': 'office',
                 'name': 'Empire State Building',
                 'stories': 102,  # Empire State Building has 102 floors
-                'floor_area': 257000  # Approx 2.77M sqft = ~257k m² total
+                'floor_area': 257000,  # Approx 2.77M sqft = ~257k m² total
+                'simple_hvac': True
             },
             output_path=str(test_idf_path)
         )

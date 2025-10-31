@@ -24,7 +24,7 @@ class ProfessionalIDFGenerator:
     """Professional-grade IDF generator with advanced features"""
     
     def __init__(self):
-        self.version = "25.1"
+        self.version = "25.1.0"
         self.unique_names = set()
         
         # Initialize professional modules
@@ -80,6 +80,15 @@ class ProfessionalIDFGenerator:
         
         # Generate detailed zone layout
         zones = self.geometry_engine.generate_zone_layout(footprint, building_type)
+        # Ensure unique zone names across entire building
+        name_counts = {}
+        for z in zones:
+            base = z.name
+            if base not in name_counts:
+                name_counts[base] = 1
+            else:
+                name_counts[base] += 1
+                z.name = f"{base}_{name_counts[base]}"
         if not zones:
             print(f"⚠️  Warning: No zones generated. Footprint area: {footprint.polygon.area:.2f} m²")
         
@@ -160,12 +169,16 @@ class ProfessionalIDFGenerator:
             idf_content.append(self.generate_lighting_objects(zone, space_type, building_type))
             idf_content.append(self.generate_equipment_objects(zone, space_type, building_type))
         
-        # HVAC Systems
-        for component in hvac_components:
-            if component.get('type') == 'IDF_STRING' and 'raw' in component:
-                idf_content.append(component['raw'])
-            else:
-                idf_content.append(self.format_hvac_object(component))
+        # HVAC Systems (advanced or simple ideal loads)
+        if building_params.get('simple_hvac'):
+            for zone in zones:
+                idf_content.append(self._generate_ideal_loads(zone.name))
+        else:
+            for component in hvac_components:
+                if component.get('type') == 'IDF_STRING' and 'raw' in component:
+                    idf_content.append(component['raw'])
+                else:
+                    idf_content.append(self.format_hvac_object(component))
         
         # HVAC Performance Curves
         idf_content.append(self._generate_hvac_performance_curves())
@@ -188,6 +201,28 @@ class ProfessionalIDFGenerator:
         ))
         
         return '\n\n'.join(idf_content)
+
+    def _generate_ideal_loads(self, zone_name: str) -> str:
+        """Generate a ZoneHVAC:IdealLoadsAirSystem for a zone (simple, robust)."""
+        return f"""ZoneHVAC:IdealLoadsAirSystem,
+  {zone_name}_IdealLoads,   !- Name
+  Always On,               !- Availability Schedule Name
+  {zone_name} Supply Node, !- Zone Supply Air Node Name
+  {zone_name} Exhaust Node,!- Zone Exhaust Air Node Name
+  50,                      !- Maximum Heating Supply Air Temperature
+  13,                      !- Minimum Cooling Supply Air Temperature
+  0.015,                   !- Maximum Heating Supply Air Humidity Ratio
+  0.009,                   !- Minimum Cooling Supply Air Humidity Ratio
+  ,                        !- Heating Limit
+  ,                        !- Maximum Sensible Heating Capacity
+  ,                        !- Cooling Limit
+  ,                        !- Maximum Total Cooling Capacity
+  ,                        !- Heating Supply Air Flow Rate
+  ,                        !- Cooling Supply Air Flow Rate
+  ,                        !- Heating Outdoor Air Flow Rate
+  ,                        !- Cooling Outdoor Air Flow Rate
+  ;                        !- Outdoor Air Inlet Node Name
+"""
     
     def _determine_building_type(self, building_params: Dict, documents: List[str]) -> str:
         """Determine building type from parameters and documents"""
@@ -355,7 +390,7 @@ class ProfessionalIDFGenerator:
         # Temporarily disable direct catalog coil injection until node wiring is implemented
         spec = None
 
-        for zone in zones:
+        for idx, zone in enumerate(zones, start=1):
             # Generate HVAC system for this zone
             zone_hvac = self.hvac_systems.generate_hvac_system(
                 building_type=building_type,
@@ -363,13 +398,14 @@ class ProfessionalIDFGenerator:
                 zone_area=zone.area,
                 hvac_type=hvac_type,
                 climate_zone=climate_zone,
-                catalog_equipment=None
+                catalog_equipment=None,
+                unique_suffix=f"_z{idx}"
             )
             hvac_components.extend(zone_hvac)
             
             # Generate BranchList and Branch objects for AirLoopHVAC
             if hvac_type == 'VAV':
-                branch_objects = self._generate_airloop_branches(zone.name, zone_hvac)
+                branch_objects = self._generate_airloop_branches(zone.name + f"_z{idx}", zone_hvac)
                 hvac_components.extend(branch_objects)
 
         # Write manifest if any catalog equipment used
@@ -602,23 +638,22 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Fan:VariableVolume':
-            # Correct field order per EnergyPlus 24.2 schema (17 fields)
             return f"""Fan:VariableVolume,
   {component['name']},                 !- Name
   Always On,                           !- Availability Schedule Name
   {component['fan_total_efficiency']}, !- Fan Total Efficiency
   {component['fan_pressure_rise']},    !- Pressure Rise {{Pa}}
   {component['maximum_flow_rate']},    !- Maximum Flow Rate {{m3/s}}
-  FixedFlowRate,                       !- Fan Power Minimum Flow Rate Input Method
-  ,                                    !- Fan Power Minimum Flow Fraction
+  FixedFlowRate,                       !- Fan Power Minimum Flow Fraction Input Method
+  0.0,                                 !- Fan Power Minimum Flow Fraction
   0.0,                                 !- Fan Power Minimum Air Flow Rate {{m3/s}}
   1.0,                                 !- Motor Efficiency
   1.0,                                 !- Motor In Airstream Fraction
-  {component.get('fan_power_coefficient_1', 0.0013)}, !- Fan Power Coefficient 1
-  {component.get('fan_power_coefficient_2', 0.1470)}, !- Fan Power Coefficient 2
-  {component.get('fan_power_coefficient_3', 0.9506)}, !- Fan Power Coefficient 3
-  {component.get('fan_power_coefficient_4', -0.0998)}, !- Fan Power Coefficient 4
-  {component.get('fan_power_coefficient_5', 0.0)}, !- Fan Power Coefficient 5
+  {component.get('fan_power_coefficient_1', 0.0013)},
+  {component.get('fan_power_coefficient_2', 0.1470)},
+  {component.get('fan_power_coefficient_3', 0.9506)},
+  {component.get('fan_power_coefficient_4', -0.0998)},
+  {component.get('fan_power_coefficient_5', 0.0)},
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {component['air_outlet_node_name']}; !- Air Outlet Node Name
 
@@ -637,45 +672,21 @@ class ProfessionalIDFGenerator:
 """
         
         elif comp_type == 'Coil:Cooling:DX:SingleSpeed':
-            # Complete field order matching official EnergyPlus 24.2 examples
-            # All 37 fields to ensure compatibility
+            # Node names early to match parser expectations, then ratings and curves
             return f"""Coil:Cooling:DX:SingleSpeed,
-  {component['name']},                 !- Name
-  {component['availability_schedule_name']}, !- Availability Schedule Name
-  {component['gross_rated_total_cooling_capacity']}, !- Gross Rated Total Cooling Capacity {{W}}
-  {component['gross_rated_sensible_heat_ratio']}, !- Gross Rated Sensible Heat Ratio
-  {component['gross_rated_cooling_cop']}, !- Gross Rated Cooling COP {{W/W}}
-  {component['rated_air_flow_rate']},  !- Rated Air Flow Rate {{m3/s}}
-  ,                                    !- Rated Evaporator Fan Power Per Volume Flow Rate {{W/(m3/s)}}
-  ,                                    !- 2023 Rated Evaporator Fan Power Per Volume Flow {{W/(m3/s)}}
-  {component['air_inlet_node_name']},  !- Air Inlet Node Name
-  {component['air_outlet_node_name']}, !- Air Outlet Node Name
-  Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Temperature Curve Name
-  Cooling Coil DX 1-Pass Biquadratic Performance Curve, !- Total Cooling Capacity Function of Flow Fraction Curve Name
-  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Temperature Curve Name
-  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Energy Input Ratio Function of Flow Fraction Curve Name
-  Cooling Coil DX 1-Pass Quadratic Performance Curve, !- Part Load Fraction Correlation Curve Name
-  ,                                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {{C}}
-  ,                                    !- Nominal Time for Condensate Removal to Begin {{s}}
-  ,                                    !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {{dimensionless}}
-  ,                                    !- Maximum Cycling Rate {{cycles/hr}}
-  ,                                    !- Latent Capacity Time Constant {{s}}
-  ,                                    !- Condenser Air Inlet Node Name
-  ,                                    !- Condenser Type
-  ,                                    !- Evaporative Condenser Effectiveness {{dimensionless}}
-  ,                                    !- Evaporative Condenser Air Flow Rate {{m3/s}}
-  ,                                    !- Evaporative Condenser Pump Rated Power Consumption {{W}}
-  ,                                    !- Crankcase Heater Capacity {{W}}
-  ,                                    !- Crankcase Heater Capacity Function of Temperature Curve Name
-  ,                                    !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {{C}}
-  ,                                    !- Supply Water Storage Tank Name
-  ,                                    !- Condensate Collection Water Storage Tank Name
-  ,                                    !- Basin Heater Capacity {{W/K}}
-  ,                                    !- Basin Heater Setpoint Temperature {{C}}
-  ,                                    !- Basin Heater Operating Schedule Name
-  ,                                    !- Sensible Heat Ratio Function of Temperature Curve Name
-  ,                                    !- Sensible Heat Ratio Function of Flow Fraction Curve Name
-  Yes;                                 !- Report ASHRAE Standard 127 Performance Ratings
+  {component['name']},
+  {component['availability_schedule_name']},
+  {component['air_inlet_node_name']},
+  {component['air_outlet_node_name']},
+  {component['gross_rated_total_cooling_capacity']},
+  {component['gross_rated_sensible_heat_ratio']},
+  {component['gross_rated_cooling_cop']},
+  {component['rated_air_flow_rate']},
+  Cooling Coil DX 1-Pass Biquadratic Performance Curve,
+  Cooling Coil DX 1-Pass Biquadratic Performance Curve,
+  Cooling Coil DX 1-Pass Quadratic Performance Curve,
+  Cooling Coil DX 1-Pass Quadratic Performance Curve,
+  Cooling Coil DX 1-Pass Quadratic Performance Curve;
 
 """
         

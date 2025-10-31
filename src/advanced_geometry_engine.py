@@ -492,14 +492,20 @@ class AdvancedGeometryEngine:
         core_zones = self._generate_core_zones(floor_polygon, floor_level, template)
         zones.extend(core_zones)
         
+        # Track zone types already created on this floor to avoid duplicate names
+        created_types = set()
+        for z in core_zones:
+            base = z.name.rsplit('_', 1)[0]
+            created_types.add(base)
+        
         # Calculate remaining area
         used_area = sum(zone.area for zone in core_zones)
         remaining_area = floor_area - used_area
         
-        # Generate typical zones to fill remaining space
+        # Generate typical zones to fill remaining space, skipping duplicates
         if remaining_area > 0:
             typical_zones = self._generate_typical_zones(
-                floor_polygon, floor_level, template, remaining_area
+                floor_polygon, floor_level, template, remaining_area, created_types
             )
             zones.extend(typical_zones)
         
@@ -533,17 +539,22 @@ class AdvancedGeometryEngine:
         return zones
     
     def _generate_typical_zones(self, floor_polygon: Polygon, floor_level: int,
-                              template: Dict, available_area: float) -> List[ZoneGeometry]:
+                              template: Dict, available_area: float,
+                              created_types: Optional[set] = None) -> List[ZoneGeometry]:
         """Generate typical zones to fill remaining floor area"""
         zones = []
         typical_zone_types = template['typical_zones']
         
         remaining_area = available_area
+        created_types = created_types or set()
         
         for zone_type in typical_zone_types:
             if remaining_area <= 0:
                 break
-                
+            # Skip types already present on this floor to avoid duplicate names
+            if zone_type in created_types:
+                continue
+            
             if zone_type in template['zone_sizes']:
                 min_area, max_area = template['zone_sizes'][zone_type]
                 max_possible = min(max_area, remaining_area)
@@ -564,6 +575,7 @@ class AdvancedGeometryEngine:
                         )
                         zones.append(zone)
                         remaining_area -= zone.area
+                        created_types.add(zone_type)
         
         return zones
     

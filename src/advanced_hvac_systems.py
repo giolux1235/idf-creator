@@ -134,7 +134,8 @@ class AdvancedHVACSystems:
     def generate_hvac_system(self, building_type: str, zone_name: str,
                            zone_area: float, hvac_type: str,
                            climate_zone: str,
-                           catalog_equipment: Optional[Dict] = None) -> List[Dict]:
+                           catalog_equipment: Optional[Dict] = None,
+                           unique_suffix: str = "") -> List[Dict]:
         """Generate HVAC system for a zone.
 
         If catalog_equipment is provided, use pre-translated IDF strings from the
@@ -152,7 +153,7 @@ class AdvancedHVACSystems:
         components = []
         
         if hvac_template.system_type == 'VAV':
-            components.extend(self._generate_vav_system(zone_name, sizing_params, hvac_template))
+            components.extend(self._generate_vav_system(zone_name, sizing_params, hvac_template, unique_suffix))
         elif hvac_template.system_type == 'RTU':
             components.extend(self._generate_rtu_system(zone_name, sizing_params, hvac_template))
         elif hvac_template.system_type == 'PTAC':
@@ -227,30 +228,31 @@ class AdvancedHVACSystems:
         }
     
     def _generate_vav_system(self, zone_name: str, sizing_params: Dict, 
-                           hvac_template: HVACSystem) -> List[Dict]:
+                           hvac_template: HVACSystem, unique_suffix: str = "") -> List[Dict]:
         """Generate VAV system components"""
         components = []
+        zn = f"{zone_name}{unique_suffix}" if unique_suffix else zone_name
         
         # Air Loop
         air_loop = {
             'type': 'AirLoopHVAC',
-            'name': f"{zone_name}_AirLoop",
+            'name': f"{zn}_AirLoop",
             'design_supply_air_flow_rate': sizing_params['supply_air_flow'],
-            'branch_list': f"{zone_name}_BranchList",
-            'connector_list': f"{zone_name}_ConnectorList",
-            'supply_side_inlet_node_name': f"{zone_name}_SupplyInlet",
-            'demand_side_outlet_node_name': f"{zone_name}_DemandOutlet",
-            'demand_side_inlet_node_names': [f"{zone_name}_DemandInlet"],
-            'supply_side_outlet_node_names': [f"{zone_name}_SupplyOutlet"]
+            'branch_list': f"{zn}_BranchList",
+            'connector_list': f"{zn}_ConnectorList",
+            'supply_side_inlet_node_name': f"{zn}_SupplyInlet",
+            'demand_side_outlet_node_name': f"{zn}_DemandOutlet",
+            'demand_side_inlet_node_names': [f"{zn}_DemandInlet"],
+            'supply_side_outlet_node_names': [f"{zn}_SupplyOutlet"]
         }
         components.append(air_loop)
         
         # Supply Fan
         fan = {
             'type': 'Fan:VariableVolume',
-            'name': f"{zone_name}_SupplyFan",
-            'air_inlet_node_name': f"{zone_name}_FanInlet",
-            'air_outlet_node_name': f"{zone_name}_FanOutlet",
+            'name': f"{zn}_SupplyFan",
+            'air_inlet_node_name': f"{zn}_FanInlet",
+            'air_outlet_node_name': f"{zn}_FanOutlet",
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow'],
@@ -266,9 +268,9 @@ class AdvancedHVACSystems:
         # Heating Coil
         heating_coil = {
             'type': 'Coil:Heating:Electric',
-            'name': f"{zone_name}_HeatingCoil",
-            'air_inlet_node_name': f"{zone_name}_HeatingCoilInlet",
-            'air_outlet_node_name': f"{zone_name}_HeatingCoilOutlet",
+            'name': f"{zn}_HeatingCoil",
+            'air_inlet_node_name': f"{zn}_HeatingCoilInlet",
+            'air_outlet_node_name': f"{zn}_HeatingCoilOutlet",
             'nominal_capacity': sizing_params['heating_load'],
             'efficiency': hvac_template.efficiency['heating_cop']
         }
@@ -277,15 +279,15 @@ class AdvancedHVACSystems:
         # Cooling Coil
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
-            'name': f"{zone_name}_CoolingCoil",
-            'air_inlet_node_name': f"{zone_name}_CoolingCoilInlet",
-            'air_outlet_node_name': f"{zone_name}_CoolingCoilOutlet",
+            'name': f"{zn}_CoolingCoil",
+            'air_inlet_node_name': f"{zn}_CoolingCoilInlet",
+            'air_outlet_node_name': f"{zn}_CoolingCoilOutlet",
             'availability_schedule_name': 'Always On',
             'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': sizing_params['supply_air_flow'],
-            'condenser_air_inlet_node_name': f"{zone_name}_CondenserInlet",
+            'condenser_air_inlet_node_name': f"{zn}_CondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
             'condenser_fan_power_ratio': 0.2
@@ -295,10 +297,10 @@ class AdvancedHVACSystems:
         # Zone Equipment
         zone_equipment = {
             'type': 'ZoneHVAC:AirDistributionUnit',
-            'name': f"{zone_name}_ADU",
-            'air_distribution_unit_outlet_node_name': f"{zone_name}_ADUOutlet",
+            'name': f"{zn}_ADU",
+            'air_distribution_unit_outlet_node_name': f"{zn}_ADUOutlet",
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
-            'air_terminal_name': f"{zone_name}_VAVTerminal",
+            'air_terminal_name': f"{zn}_VAVTerminal",
             'nominal_supply_air_flow_rate': sizing_params['supply_air_flow']
         }
         components.append(zone_equipment)
@@ -306,29 +308,29 @@ class AdvancedHVACSystems:
         # VAV Terminal
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
-            'name': f"{zone_name}_VAVTerminal",
+            'name': f"{zn}_VAVTerminal",
             'availability_schedule_name': 'Always On',
             'damper_heating_action': 'Normal',
             'maximum_flow_fraction_during_reheat': 0.5,
             'maximum_flow_per_zone_floor_area_during_reheat': 0.003,
             'maximum_flow_fraction_before_reheat': 0.2,
-            'reheat_coil_name': f"{zone_name}_ReheatCoil",
+            'reheat_coil_name': f"{zn}_ReheatCoil",
             'maximum_hot_water_or_steam_flow_rate': sizing_params['heating_load'] / 1000,
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.001,
-            'damper_air_outlet_node_name': f"{zone_name}_TerminalOutlet",
-            'air_inlet_node_name': f"{zone_name}_TerminalInlet",
-            'reheat_coil_air_inlet_node_name': f"{zone_name}_ReheatInlet",
-            'reheat_coil_air_outlet_node_name': f"{zone_name}_ReheatOutlet"
+            'damper_air_outlet_node_name': f"{zn}_TerminalOutlet",
+            'air_inlet_node_name': f"{zn}_TerminalInlet",
+            'reheat_coil_air_inlet_node_name': f"{zn}_ReheatInlet",
+            'reheat_coil_air_outlet_node_name': f"{zn}_ReheatOutlet"
         }
         components.append(vav_terminal)
         
         # Reheat Coil
         reheat_coil = {
             'type': 'Coil:Heating:Electric',
-            'name': f"{zone_name}_ReheatCoil",
-            'air_inlet_node_name': f"{zone_name}_ReheatInlet",
-            'air_outlet_node_name': f"{zone_name}_ReheatOutlet",
+            'name': f"{zn}_ReheatCoil",
+            'air_inlet_node_name': f"{zn}_ReheatInlet",
+            'air_outlet_node_name': f"{zn}_ReheatOutlet",
             'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
             'efficiency': 1.0  # Electric coils are 100% efficient
         }
