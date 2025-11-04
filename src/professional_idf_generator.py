@@ -1665,6 +1665,8 @@ InternalMass,
             is_office_space = any(x in space_type.lower() for x in ['office', 'conference', 'classroom'])
             
             # Occupancy schedule (simplified - single annual period to avoid field limit)
+            # Using Weekdays/Weekends only - EnergyPlus will use default values for Holiday/DesignDays
+            # This avoids "duplicate assignment" errors while maintaining functionality
             if is_office_space:
                 schedules.append(f"""Schedule:Compact,
   {space_type}_Occupancy,  !- Name
@@ -1677,39 +1679,22 @@ InternalMass,
   Until: 18:00,0.3,
   Until: 24:00,0.1,
   For: Weekends,
-  Until: 24:00,0.1,
-  For: Holiday,
-  Until: 24:00,0.0,
-  For: SummerDesignDay,
-  Until: 24:00,1.0,
-  For: WinterDesignDay,
-  Until: 24:00,0.0,
-  For: CustomDay1,
-  Until: 24:00,0.1,
-  For: CustomDay2,
   Until: 24:00,0.1;
 """)
             else:
                 # Non-office spaces (storage, mechanical) - lower occupancy year-round
+                # Use AllDays which includes all day types (Holiday, SummerDesignDay, etc.)
+                # Don't add specific day types after AllDays - that causes duplicates
                 schedules.append(f"""Schedule:Compact,
   {space_type}_Occupancy,  !- Name
   Fraction,                !- Schedule Type Limits Name
   Through: 12/31,
   For: AllDays,
-  Until: 24:00,0.20,
-  For: Holiday,
-  Until: 24:00,0.20,
-  For: SummerDesignDay,
-  Until: 24:00,0.20,
-  For: WinterDesignDay,
-  Until: 24:00,0.20,
-  For: CustomDay1,
-  Until: 24:00,0.20,
-  For: CustomDay2,
   Until: 24:00,0.20;
 """)
             
             # Lighting schedule (simplified - single annual period)
+            # Using Weekdays/Weekends only to avoid duplicate assignment errors
             schedules.append(f"""Schedule:Compact,
   {space_type}_Lighting,   !- Name
   Fraction,                !- Schedule Type Limits Name
@@ -1721,20 +1706,11 @@ InternalMass,
   Until: 20:00,0.5,
   Until: 24:00,0.1,
   For: Weekends,
-  Until: 24:00,0.2,
-  For: Holiday,
-  Until: 24:00,0.2,
-  For: SummerDesignDay,
-  Until: 24:00,1.0,
-  For: WinterDesignDay,
-  Until: 24:00,0.2,
-  For: CustomDay1,
-  Until: 24:00,0.2,
-  For: CustomDay2,
   Until: 24:00,0.2;
 """)
             
             # Equipment schedule (simplified - single annual period)
+            # Using Weekdays/Weekends only to avoid duplicate assignment errors
             schedules.append(f"""Schedule:Compact,
   {space_type}_Equipment,  !- Name
   Fraction,                !- Schedule Type Limits Name
@@ -1746,16 +1722,6 @@ InternalMass,
   Until: 19:00,0.5,
   Until: 24:00,0.3,
   For: Weekends,
-  Until: 24:00,0.3,
-  For: Holiday,
-  Until: 24:00,0.1,
-  For: SummerDesignDay,
-  Until: 24:00,0.8,
-  For: WinterDesignDay,
-  Until: 24:00,0.3,
-  For: CustomDay1,
-  Until: 24:00,0.3,
-  For: CustomDay2,
   Until: 24:00,0.3;
 """)
 
