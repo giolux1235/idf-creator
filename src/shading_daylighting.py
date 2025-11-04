@@ -166,19 +166,42 @@ Schedule:Compact,
 """
         return shading_control
     
-    def generate_daylight_controls(self, zone_name: str, building_type: str) -> str:
-        """Generate daylighting controls for a zone"""
+    def generate_daylight_controls(self, zone_name: str, building_type: str, zone_geometry=None) -> str:
+        """Generate daylighting controls for a zone
+        
+        Args:
+            zone_name: Name of the zone
+            building_type: Type of building
+            zone_geometry: Optional ZoneGeometry object with polygon information
+        """
         
         # Generate reference point first (required by Daylighting:Controls)
         reference_point_name = f"{zone_name}_ReferencePoint1"
+        
+        # Calculate reference point coordinates based on zone geometry
+        # If zone geometry is provided, use polygon centroid; otherwise use default
+        if zone_geometry and zone_geometry.polygon and zone_geometry.polygon.is_valid:
+            # Get polygon bounds
+            bounds = zone_geometry.polygon.bounds  # (minx, miny, maxx, maxy)
+            # Calculate centroid
+            centroid = zone_geometry.polygon.centroid
+            ref_x = centroid.x
+            ref_y = centroid.y
+            # Ensure point is within bounds (safety check)
+            ref_x = max(bounds[0] + 0.5, min(bounds[2] - 0.5, ref_x))
+            ref_y = max(bounds[1] + 0.5, min(bounds[3] - 0.5, ref_y))
+        else:
+            # Default fallback: use center of typical zone (will be adjusted if zone is small)
+            ref_x = 2.0
+            ref_y = 2.0
         
         # Daylighting:ReferencePoint
         # Zone name should match actual Zone name (without _Zone suffix)
         reference_point = f"""Daylighting:ReferencePoint,
   {reference_point_name},             !- Name
   {zone_name},                        !- Zone Name
-  2.0,                                !- X-Coordinate of Reference Point {{m}}
-  2.0,                                !- Y-Coordinate of Reference Point {{m}}
+  {ref_x:.2f},                                !- X-Coordinate of Reference Point {{m}}
+  {ref_y:.2f},                                !- Y-Coordinate of Reference Point {{m}}
   0.8;                                !- Z-Coordinate of Reference Point {{m}}
 
 """

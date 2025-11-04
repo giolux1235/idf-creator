@@ -241,9 +241,13 @@ class AdvancedHVACSystems:
         heating_load = zone_area * heating_load_density * multipliers['heating']
         
         # Air flow rates
-        # EnergyPlus expects 0.00004027 to 0.00006041 m³/s per watt of cooling capacity
-        # Use middle value: 0.00005 m³/s per watt
-        supply_air_flow = cooling_load * 0.00005  # m³/s
+        # EnergyPlus expects air volume flow rate per watt in range [2.684E-005--6.713E-005] m³/s/W
+        # Use middle of range: ~4.7E-5 m³/s/W for proper coil sizing
+        # Minimum air flow rate: 0.00004027 m³/s per watt (2.684E-5 m³/s/W minimum)
+        # Maximum air flow rate: 0.00006041 m³/s per watt (6.713E-5 m³/s/W maximum)
+        # Use 4.7E-5 m³/s/W (middle of range) for proper operation
+        air_flow_per_watt = 4.7e-5  # m³/s per watt (middle of acceptable range)
+        supply_air_flow = cooling_load * air_flow_per_watt  # m³/s
         
         # Ventilation rate: 0.5 L/s-m² = 0.0005 m³/s-m²
         ventilation_rate = zone_area * 0.0005  # m³/s

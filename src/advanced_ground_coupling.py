@@ -89,8 +89,14 @@ class AdvancedGroundCoupling:
         zone_key = climate_zone if climate_zone in self.climate_templates else 'C5'
         template = self.climate_templates[zone_key]
         
+        # Clamp ground temperatures to EnergyPlus recommended range (15-25°C for building surface)
+        # EnergyPlus warns if values fall outside this range
+        building_surface_clamped = [max(15.0, min(25.0, t)) for t in template['building_surface']]
+        # For shallow and deep, use original values (they don't have the same restriction)
+        # But we can still ensure building_surface is in range
+        
         # Format monthly temperatures (Jan-Dec)
-        building_surface_temps = ', '.join([f"{t:.1f}" for t in template['building_surface']])
+        building_surface_temps = ', '.join([f"{t:.1f}" for t in building_surface_clamped])
         shallow_temps = ', '.join([f"{t:.1f}" for t in template['shallow']])
         deep_temps = ', '.join([f"{t:.1f}" for t in template['deep']])
         

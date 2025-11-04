@@ -316,7 +316,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                     if daylighting_eligible:
                         try:
                             daylighting_idf = self.shading_daylighting.generate_daylight_controls(
-                                zone.name, building_type
+                                zone.name, building_type, zone_geometry=zone
                             )
                             idf_content.append(daylighting_idf)
                         except Exception as e:
@@ -1040,16 +1040,24 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 time_zone = round(longitude / 15.0, 1)
         
         # Use address as location name, fallback to city or 'Site'
+        # Sanitize name to remove special characters that might break IDF parsing
         address = location_data.get('address', '')
         city_name = location_data.get('weather_city_name') or location_data.get('city')
         location_name = address if address else (city_name if city_name else 'Site')
+        
+        # Sanitize location name: remove commas, semicolons, and newlines
+        location_name = location_name.replace(',', '_').replace(';', '_').replace('\n', ' ').replace('\r', ' ')
+        location_name = ' '.join(location_name.split())  # Normalize whitespace
+        # Limit length to reasonable size
+        if len(location_name) > 100:
+            location_name = location_name[:100]
         
         site_location = f"""Site:Location,
   {location_name}, !- Name
   {latitude:.4f},          !- Latitude
   {longitude:.4f},         !- Longitude
   {time_zone:.1f},         !- Time Zone
-  {elevation:.1f};         !- Elevation
+  {elevation:.1f};         !- Elevation {{m}}
 
 """
         
@@ -1669,6 +1677,16 @@ InternalMass,
   Until: 18:00,0.3,
   Until: 24:00,0.1,
   For: Weekends,
+  Until: 24:00,0.1,
+  For: Holiday,
+  Until: 24:00,0.0,
+  For: SummerDesignDay,
+  Until: 24:00,1.0,
+  For: WinterDesignDay,
+  Until: 24:00,0.0,
+  For: CustomDay1,
+  Until: 24:00,0.1,
+  For: CustomDay2,
   Until: 24:00,0.1;
 """)
             else:
@@ -1678,6 +1696,16 @@ InternalMass,
   Fraction,                !- Schedule Type Limits Name
   Through: 12/31,
   For: AllDays,
+  Until: 24:00,0.20,
+  For: Holiday,
+  Until: 24:00,0.20,
+  For: SummerDesignDay,
+  Until: 24:00,0.20,
+  For: WinterDesignDay,
+  Until: 24:00,0.20,
+  For: CustomDay1,
+  Until: 24:00,0.20,
+  For: CustomDay2,
   Until: 24:00,0.20;
 """)
             
@@ -1693,6 +1721,16 @@ InternalMass,
   Until: 20:00,0.5,
   Until: 24:00,0.1,
   For: Weekends,
+  Until: 24:00,0.2,
+  For: Holiday,
+  Until: 24:00,0.2,
+  For: SummerDesignDay,
+  Until: 24:00,1.0,
+  For: WinterDesignDay,
+  Until: 24:00,0.2,
+  For: CustomDay1,
+  Until: 24:00,0.2,
+  For: CustomDay2,
   Until: 24:00,0.2;
 """)
             
@@ -1708,6 +1746,16 @@ InternalMass,
   Until: 19:00,0.5,
   Until: 24:00,0.3,
   For: Weekends,
+  Until: 24:00,0.3,
+  For: Holiday,
+  Until: 24:00,0.1,
+  For: SummerDesignDay,
+  Until: 24:00,0.8,
+  For: WinterDesignDay,
+  Until: 24:00,0.3,
+  For: CustomDay1,
+  Until: 24:00,0.3,
+  For: CustomDay2,
   Until: 24:00,0.3;
 """)
 
