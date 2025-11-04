@@ -664,6 +664,8 @@ GET /api/health
 ## 📚 Additional Resources
 
 - **Full Documentation**: See `README.md`
+- **Developer Geocoding Guide**: See `DEVELOPER_GEOCODING_GUIDE.md` (⚠️ Important: Error handling)
+- **Geocoding Enforcement**: See `GEOCODING_REAL_COORDINATES_ENFORCEMENT.md`
 - **Geocoding Details**: See `docs/WHY_LOOKUP_TABLE.md`
 - **Example Code**: See `example.py`
 - **GitHub**: https://github.com/giolux1235/idf-creator
