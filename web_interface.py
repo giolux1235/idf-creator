@@ -288,16 +288,25 @@ def api_generate_idf():
         else:
             idf_params = {}
         
-        # Generate IDF
-        creator = IDFCreator(enhanced=True, professional=True)
+        # Check for user_params in request, or extract direct parameters
+        user_params_request = data.get('user_params', {})
         
+        # Merge parameters: user_params from request > direct parameters > parsed from description
         user_params = {
-            'stories': idf_params.get('stories'),
-            'floor_area': idf_params.get('floor_area'),
-            'building_type': idf_params.get('building_type') or 'Building'
+            'stories': user_params_request.get('stories') or data.get('stories') or idf_params.get('stories'),
+            'floor_area': user_params_request.get('floor_area') or data.get('floor_area') or idf_params.get('floor_area'),
+            'building_type': user_params_request.get('building_type') or data.get('building_type') or idf_params.get('building_type') or 'Building'
         }
+        
+        # Also check for floor_area_per_story_m2
+        if user_params_request.get('floor_area_per_story_m2') or data.get('floor_area_per_story_m2'):
+            user_params['floor_area_per_story_m2'] = user_params_request.get('floor_area_per_story_m2') or data.get('floor_area_per_story_m2')
+        
         if strict_real:
             user_params['strict_real_data'] = True
+        
+        # Generate IDF
+        creator = IDFCreator(enhanced=True, professional=True)
         
         # Create temporary output file
         temp_dir = tempfile.mkdtemp()
