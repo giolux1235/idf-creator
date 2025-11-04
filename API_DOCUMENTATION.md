@@ -209,7 +209,7 @@ curl -O http://localhost:5001/api/download/Office_api.idf
 
 ### Local Development
 ```bash
-python api_server.py
+python web_interface.py
 ```
 
 The API will run on `http://localhost:5001`
@@ -217,14 +217,10 @@ The API will run on `http://localhost:5001`
 ### Railway Deployment
 Update your `Procfile`:
 ```
-api: python api_server.py
+web: python web_interface.py
 ```
 
-Or run alongside web interface:
-```
-web: python web_interface.py
-api: python api_server.py
-```
+Note: `web_interface.py` provides both web UI and API endpoints
 
 ---
 

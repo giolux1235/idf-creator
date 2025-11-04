@@ -1,0 +1,622 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.02 19:25,
+   ** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.
+   **   ~~~   ** These values may be inappropriate.  Please consult the Input Output Reference for more details.
+   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.
+   **   ~~~   ** ..Location object=SITE
+   **   ~~~   ** ..Weather File Location=Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300
+   **   ~~~   ** ..due to location differences, Latitude difference=[1.24] degrees, Longitude difference=[13.93] degrees.
+   **   ~~~   ** ..Time Zone difference=[2.0] hour(s), Elevation difference=[1910.00] percent, [191.00] meters.
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="BREAK_ROOM_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="BREAK_ROOM_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_OCCUPANCY" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="LOBBY_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="LOBBY_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_OCCUPANCY" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="STORAGE_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="STORAGE_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_PRIVATE_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_PRIVATE_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: LOBBY_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="LOBBY_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: BREAK_ROOM_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="BREAK_ROOM_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_3_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_3_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: BREAK_ROOM_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="BREAK_ROOM_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_PRIVATE_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_PRIVATE_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_PRIVATE_0
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -19.96, Zone Maximum X= -16.00
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 18.0025 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_PRIVATE_0
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 23.53, Zone Maximum Y= 29.07
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 21.5304 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=CONFERENCE_1
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.20, Zone Maximum X= -8.08
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 10.0842 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=CONFERENCE_1
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 12.30, Zone Maximum Y= 25.78
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 10.2980 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=CONFERENCE_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=LOBBY_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -12.26, Zone Maximum X= -1.86
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.8627 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=LOBBY_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 12.86, Zone Maximum Y= 24.43
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 10.8602 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=LOBBY_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -16.77, Zone Maximum X= -9.69
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 11.6892 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 20.08, Zone Maximum Y= 29.77
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 18.0755 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=CONFERENCE_3
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 8.31, Zone Maximum Y= 17.54
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 6.3069 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=CONFERENCE_3
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 9.00, Zone Maximum Z= 12.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 8.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=CONFERENCE_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -7.37, Zone Maximum X= -1.06
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.0591 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=CONFERENCE_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 7.93, Zone Maximum Y= 17.08
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 5.9349 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=CONFERENCE_4
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 12.00, Zone Maximum Z= 15.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 11.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=BREAK_ROOM_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 3.24, Zone Maximum X= 7.33
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 1.2427 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=BREAK_ROOM_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 4.06, Zone Maximum Y= 10.75
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 2.0582 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=BREAK_ROOM_4
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 12.00, Zone Maximum Z= 15.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 11.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_PRIVATE_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 3.31, Zone Maximum X= 9.38
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 1.3144 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_PRIVATE_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 10.61, Zone Maximum Y= 16.77
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 8.6063 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_PRIVATE_4
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 12.00, Zone Maximum Z= 15.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 11.2000 m.
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_0_Z1_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_0_Z1_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_1_Z2_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_1_Z2_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_2_Z3_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_2_Z3_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_2_Z4_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_2_Z4_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_3_Z5_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_3_Z5_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_4_Z6_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_4_Z6_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_4_Z7_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_4_Z7_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_4_Z8_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_4_Z8_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_4_Z9_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_4_Z9_VAVTERMINAL
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.038E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/17 13:15 - 13:30
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "BREAK_ROOM_4_Z7_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -43.55 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 01/17 13:15 - 13:30
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.148 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.043E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=01/17 13:45 - 14:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -41.85 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 01/17 13:45 - 14:00
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.117 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.039E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 13:23 - 13:30
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -43.30 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 13:23 - 13:30
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.219 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.042E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 13:45 - 14:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.043E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 13:53 - 14:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "BREAK_ROOM_2_Z4_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -42.65 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 13:53 - 14:00
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.244 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_4_Z6_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -41.83 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 13:53 - 14:00
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.122 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.043E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 14:08 - 14:15
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_3_Z5_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -41.64 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 14:08 - 14:15
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.169 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.030E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 14:30 - 14:45
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "STORAGE_4_Z9_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -44.90 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 14:30 - 14:45
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.105 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.043E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=02/10 14:45 - 15:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_1_Z2_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -41.79 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 02/10 14:45 - 15:00
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.134 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "BREAK_ROOM_4_Z7_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.40
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 02/15 15:00 - 15:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -4.40
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 02/15 15:45 - 16:00
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 1.031E-005 m3/s/W.
+   **   ~~~   **  Environment=YEAR ROUND RUN PERIOD, at Simulation time=03/08 13:53 - 14:00
+   **   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
+   **   ~~~   ** Possible causes include inconsistent air flow rates in system components,
+   **   ~~~   ** or variable air volume [VAV] system using incorrect coil type.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "LOBBY_2_Z3_COOLINGCOILDX" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -44.04 C.
+   **   ~~~   **  ...Occurrence info = YEAR ROUND RUN PERIOD, 03/08 13:53 - 14:00
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 24.146 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_1_Z2_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "LOBBY_2_Z3_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "BREAK_ROOM_2_Z4_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_3_Z5_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "CONFERENCE_4_Z6_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "STORAGE_4_Z9_COOLINGCOILDX" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -0.55
+   **   ~~~   **  ... Occurrence info = YEAR ROUND RUN PERIOD, 03/17 17:00 - 17:08
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ************* Simulation Error Summary *************
+   ************* There are 1 unused schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 716 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000088  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 409 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000452  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 2705 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000000  Min=-0.035055
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1033 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000088  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 409 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000452  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 404 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000136  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 853 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000047  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1303 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000031  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1873 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.000011  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 84142 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 32986 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-29.404860  Min=-46.316368
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 80414 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 31460 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-28.826753  Min=-51.530109
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 82344 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 32260 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-29.421652  Min=-52.301102
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 86376 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 84214 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 33974 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-29.469738  Min=-46.096144
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 33044 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-7.421338  Min=-46.596145
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 83424 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 32716 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-7.761106  Min=-46.609946
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 78778 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 30795 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-29.964159  Min=-50.515710
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 85776 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 33727 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-8.076530  Min=-46.562526
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_4_Z7_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 83 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.025000 [C]  Min=-5.300000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z1_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 51 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-4.700000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range error continues...
+   *************  **   ~~~   **   This error occurred 81742 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.000011  Min=0.000010
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 32064 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-30.136461  Min=-46.739673
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z2_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 65 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.025000 [C]  Min=-3.600000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z3_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 44 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-3.025000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_2_Z4_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 67 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.025000 [C]  Min=-3.600000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_3_Z5_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 49 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-3.300000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_4_Z6_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 56 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-3.450000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_4_Z8_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 44 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-3.025000 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_4_Z9_COOLINGCOILDX" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 34 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.425000 [C]  Min=-2.750000 [C]
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 1050513 Warning; 0 Severe Errors; Elapsed Time=00hr 00min 40.99sec

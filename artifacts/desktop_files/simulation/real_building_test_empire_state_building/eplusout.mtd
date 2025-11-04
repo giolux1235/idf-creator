@@ -1,0 +1,1490 @@
+
+ Meters for 7,CONFERENCE_0_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 128,OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 165,LOBBY_2_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:LOBBY_2 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:LOBBY_2 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:LOBBY_2 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 202,CONFERENCE_3_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 239,MECHANICAL_3_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 276,OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 313,LOBBY_4_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:LOBBY_4 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:LOBBY_4 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:LOBBY_4 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 350,STORAGE_4_LIGHTS:Lights Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:STORAGE_4 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorLights:Electricity [J]
+  OnMeter=InteriorLights:Electricity:Zone:STORAGE_4 [J]
+  OnMeter=InteriorLights:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorLights:Electricity [J]
+  OnMeter=General:InteriorLights:Electricity:Zone:STORAGE_4 [J]
+  OnMeter=General:InteriorLights:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 387,CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:CONFERENCE_0 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 460,OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 485,LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:LOBBY_2 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:LOBBY_2 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:LOBBY_2 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 510,CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:CONFERENCE_3 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 535,MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:MECHANICAL_3 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 560,OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 585,LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:LOBBY_4 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:LOBBY_4 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:LOBBY_4 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 610,STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:Building [J]
+  OnMeter=Electricity:Zone:STORAGE_4 [J]
+  OnMeter=Electricity:SpaceType:GENERAL [J]
+  OnMeter=InteriorEquipment:Electricity [J]
+  OnMeter=InteriorEquipment:Electricity:Zone:STORAGE_4 [J]
+  OnMeter=InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+  OnMeter=General:InteriorEquipment:Electricity [J]
+  OnMeter=General:InteriorEquipment:Electricity:Zone:STORAGE_4 [J]
+  OnMeter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J]
+
+ Meters for 635,CONFERENCE_0:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:CONFERENCE_0 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:CONFERENCE_0 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:CONFERENCE_0 [J]
+
+ Meters for 720,CONFERENCE_0:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:CONFERENCE_0 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:CONFERENCE_0 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:CONFERENCE_0 [J]
+
+ Meters for 769,OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+
+ Meters for 806,OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J]
+
+ Meters for 831,LOBBY_2:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:LOBBY_2 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:LOBBY_2 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:LOBBY_2 [J]
+
+ Meters for 868,LOBBY_2:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:LOBBY_2 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:LOBBY_2 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:LOBBY_2 [J]
+
+ Meters for 893,CONFERENCE_3:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:CONFERENCE_3 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:CONFERENCE_3 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:CONFERENCE_3 [J]
+
+ Meters for 930,CONFERENCE_3:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:CONFERENCE_3 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:CONFERENCE_3 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:CONFERENCE_3 [J]
+
+ Meters for 955,MECHANICAL_3:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:MECHANICAL_3 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:MECHANICAL_3 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:MECHANICAL_3 [J]
+
+ Meters for 992,MECHANICAL_3:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:MECHANICAL_3 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:MECHANICAL_3 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:MECHANICAL_3 [J]
+
+ Meters for 1017,OFFICE_OPEN_3:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+
+ Meters for 1054,OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:OFFICE_OPEN_3 [J]
+
+ Meters for 1079,LOBBY_4:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:LOBBY_4 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:LOBBY_4 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:LOBBY_4 [J]
+
+ Meters for 1116,LOBBY_4:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:LOBBY_4 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:LOBBY_4 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:LOBBY_4 [J]
+
+ Meters for 1141,STORAGE_4:Zone Air System Sensible Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:STORAGE_4 [J]
+  OnMeter=Heating:EnergyTransfer [J]
+  OnMeter=Heating:EnergyTransfer:Zone:STORAGE_4 [J]
+  OnMeter=General:Heating:EnergyTransfer [J]
+  OnMeter=General:Heating:EnergyTransfer:Zone:STORAGE_4 [J]
+
+ Meters for 1178,STORAGE_4:Zone Air System Sensible Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:Building [J]
+  OnMeter=EnergyTransfer:Zone:STORAGE_4 [J]
+  OnMeter=Cooling:EnergyTransfer [J]
+  OnMeter=Cooling:EnergyTransfer:Zone:STORAGE_4 [J]
+  OnMeter=General:Cooling:EnergyTransfer [J]
+  OnMeter=General:Cooling:EnergyTransfer:Zone:STORAGE_4 [J]
+
+ Meters for 1203,CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1228,CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1265,CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1266,CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1267,OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1268,OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1269,OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1270,OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1271,LOBBY_2_Z3_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1272,LOBBY_2_Z3_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1273,LOBBY_2_Z3_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1274,LOBBY_2_Z3_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1275,CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1276,CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1277,CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1278,CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1279,MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1280,MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1281,MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1282,MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1283,OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1284,OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1285,OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1286,OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1287,LOBBY_4_Z7_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1288,LOBBY_4_Z7_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1289,LOBBY_4_Z7_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1290,LOBBY_4_Z7_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1291,STORAGE_4_Z8_HEATINGCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1292,STORAGE_4_Z8_HEATINGCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1293,STORAGE_4_Z8_REHEATCOIL:Heating Coil Heating Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=HeatingCoils:EnergyTransfer [J]
+
+ Meters for 1294,STORAGE_4_Z8_REHEATCOIL:Heating Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Heating:Electricity [J]
+  OnMeter=General:Heating:Electricity [J]
+
+ Meters for 1295,CONFERENCE_0_Z1_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1320,OFFICE_PRIVATE_1_Z2_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1321,LOBBY_2_Z3_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1322,CONFERENCE_3_Z4_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1323,MECHANICAL_3_Z5_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1324,OFFICE_OPEN_3_Z6_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1325,LOBBY_4_Z7_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1326,STORAGE_4_Z8_SUPPLYFAN:Fan Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Fans:Electricity [J]
+  OnMeter=General:Fans:Electricity [J]
+
+ Meters for 1327,CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1340,CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1365,OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1366,OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1367,LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1368,LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1369,CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1370,CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1371,MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1372,MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1373,OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1374,OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1375,LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1376,LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1377,STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Total Cooling Energy [J]
+  OnMeter=EnergyTransfer:Facility [J]
+  OnMeter=EnergyTransfer:HVAC [J]
+  OnMeter=CoolingCoils:EnergyTransfer [J]
+
+ Meters for 1378,STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1379,Whole Building:Facility Total Purchased Electricity Energy [J]
+  OnMeter=ElectricityPurchased:Facility [J]
+  OnMeter=ElectricityPurchased:Plant [J]
+  OnMeter=Cogeneration:ElectricityPurchased [J]
+  OnMeter=General:Cogeneration:ElectricityPurchased [J]
+
+ Meters for 1428,Whole Building:Facility Total Surplus Electricity Energy [J]
+  OnMeter=ElectricitySurplusSold:Facility [J]
+  OnMeter=ElectricitySurplusSold:Plant [J]
+  OnMeter=Cogeneration:ElectricitySurplusSold [J]
+  OnMeter=General:Cogeneration:ElectricitySurplusSold [J]
+
+ Meters for 1477,Whole Building:Facility Net Purchased Electricity Energy [J]
+  OnMeter=ElectricityNet:Facility [J]
+  OnMeter=ElectricityNet:Plant [J]
+  OnMeter=Cogeneration:ElectricityNet [J]
+  OnMeter=General:Cogeneration:ElectricityNet [J]
+
+ Meters for 1526,CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1527,OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1528,LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1529,CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1530,MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1531,OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1532,LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1533,STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy [J]
+  OnMeter=Electricity:Facility [J]
+  OnMeter=Electricity:HVAC [J]
+  OnMeter=Cooling:Electricity [J]
+  OnMeter=General:Cooling:Electricity [J]
+
+ Meters for 1534,Site:Environmental Impact Total N2O Emissions Carbon Equivalent Mass [kg]
+  OnMeter=Carbon Equivalent:Facility [kg]
+  OnMeter=CarbonEquivalentEmissions:Carbon Equivalent [kg]
+
+ Meters for 1559,Site:Environmental Impact Total CH4 Emissions Carbon Equivalent Mass [kg]
+  OnMeter=Carbon Equivalent:Facility [kg]
+  OnMeter=CarbonEquivalentEmissions:Carbon Equivalent [kg]
+
+ Meters for 1560,Site:Environmental Impact Total CO2 Emissions Carbon Equivalent Mass [kg]
+  OnMeter=Carbon Equivalent:Facility [kg]
+  OnMeter=CarbonEquivalentEmissions:Carbon Equivalent [kg]
+
+ For Meter=Electricity:Facility [J], ResourceType=Electricity, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_PRIVATE_1_Z2_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_2_Z3_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_3_Z4_SUPPLYFAN:Fan Electricity Energy
+  MECHANICAL_3_Z5_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_OPEN_3_Z6_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_4_Z7_SUPPLYFAN:Fan Electricity Energy
+  STORAGE_4_Z8_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+
+ For Meter=Electricity:Building [J], ResourceType=Electricity, Group=Building, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=Electricity:Zone:CONFERENCE_0 [J], ResourceType=Electricity, Group=Zone, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=Electricity:SpaceType:GENERAL [J], ResourceType=Electricity, Group=SpaceType, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity [J], ResourceType=Electricity, EndUse=InteriorLights, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:CONFERENCE_0 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+
+ For Meter=InteriorLights:Electricity:SpaceType:GENERAL [J], ResourceType=Electricity, EndUse=InteriorLights, Group=SpaceType, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity [J], ResourceType=Electricity, EndUse=InteriorLights, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:CONFERENCE_0 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:SpaceType:GENERAL [J], ResourceType=Electricity, EndUse=InteriorLights, Group=SpaceType, contents are:
+  CONFERENCE_0_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:OFFICE_PRIVATE_1 [J], ResourceType=Electricity, Group=Zone, contents are:
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:OFFICE_PRIVATE_1 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:OFFICE_PRIVATE_1 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  OFFICE_PRIVATE_1_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:LOBBY_2 [J], ResourceType=Electricity, Group=Zone, contents are:
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:LOBBY_2 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:LOBBY_2 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  LOBBY_2_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:CONFERENCE_3 [J], ResourceType=Electricity, Group=Zone, contents are:
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:CONFERENCE_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:CONFERENCE_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  CONFERENCE_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:MECHANICAL_3 [J], ResourceType=Electricity, Group=Zone, contents are:
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:MECHANICAL_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:MECHANICAL_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  MECHANICAL_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:OFFICE_OPEN_3 [J], ResourceType=Electricity, Group=Zone, contents are:
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:OFFICE_OPEN_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:OFFICE_OPEN_3 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  OFFICE_OPEN_3_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:LOBBY_4 [J], ResourceType=Electricity, Group=Zone, contents are:
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:LOBBY_4 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:LOBBY_4 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  LOBBY_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=Electricity:Zone:STORAGE_4 [J], ResourceType=Electricity, Group=Zone, contents are:
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorLights:Electricity:Zone:STORAGE_4 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=General:InteriorLights:Electricity:Zone:STORAGE_4 [J], ResourceType=Electricity, EndUse=InteriorLights, Group=Zone, contents are:
+  STORAGE_4_LIGHTS:Lights Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity [J], ResourceType=Electricity, EndUse=InteriorEquipment, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:CONFERENCE_0 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:SpaceType:GENERAL [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=SpaceType, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity [J], ResourceType=Electricity, EndUse=InteriorEquipment, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:CONFERENCE_0 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:SpaceType:GENERAL [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=SpaceType, contents are:
+  CONFERENCE_0_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:OFFICE_PRIVATE_1 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:OFFICE_PRIVATE_1 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  OFFICE_PRIVATE_1_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:LOBBY_2 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:LOBBY_2 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  LOBBY_2_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:CONFERENCE_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:CONFERENCE_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  CONFERENCE_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:MECHANICAL_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:MECHANICAL_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  MECHANICAL_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:OFFICE_OPEN_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:OFFICE_OPEN_3 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  OFFICE_OPEN_3_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:LOBBY_4 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:LOBBY_4 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  LOBBY_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=InteriorEquipment:Electricity:Zone:STORAGE_4 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=General:InteriorEquipment:Electricity:Zone:STORAGE_4 [J], ResourceType=Electricity, EndUse=InteriorEquipment, Group=Zone, contents are:
+  STORAGE_4_EQUIPMENT:Electric Equipment Electricity Energy
+
+ For Meter=EnergyTransfer:Facility [J], ResourceType=EnergyTransfer, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+  LOBBY_2:Zone Air System Sensible Heating Energy
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+  LOBBY_4:Zone Air System Sensible Heating Energy
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+  STORAGE_4:Zone Air System Sensible Heating Energy
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Heating Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+
+ For Meter=EnergyTransfer:Building [J], ResourceType=EnergyTransfer, Group=Building, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+  LOBBY_2:Zone Air System Sensible Heating Energy
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+  LOBBY_4:Zone Air System Sensible Heating Energy
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+  STORAGE_4:Zone Air System Sensible Heating Energy
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:CONFERENCE_0 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=Heating, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+  LOBBY_2:Zone Air System Sensible Heating Energy
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+  LOBBY_4:Zone Air System Sensible Heating Energy
+  STORAGE_4:Zone Air System Sensible Heating Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:CONFERENCE_0 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=Heating, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+  LOBBY_2:Zone Air System Sensible Heating Energy
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+  LOBBY_4:Zone Air System Sensible Heating Energy
+  STORAGE_4:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:CONFERENCE_0 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  CONFERENCE_0:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=Cooling, contents are:
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:CONFERENCE_0 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=Cooling, contents are:
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:CONFERENCE_0 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  CONFERENCE_0:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  OFFICE_PRIVATE_1:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:OFFICE_PRIVATE_1 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  OFFICE_PRIVATE_1:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:LOBBY_2 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  LOBBY_2:Zone Air System Sensible Heating Energy
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:LOBBY_2 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  LOBBY_2:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:LOBBY_2 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  LOBBY_2:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:LOBBY_2 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:LOBBY_2 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  LOBBY_2:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:CONFERENCE_3 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:CONFERENCE_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:CONFERENCE_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  CONFERENCE_3:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:CONFERENCE_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:CONFERENCE_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  CONFERENCE_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:MECHANICAL_3 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:MECHANICAL_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:MECHANICAL_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  MECHANICAL_3:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:MECHANICAL_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:MECHANICAL_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  MECHANICAL_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:OFFICE_OPEN_3 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:OFFICE_OPEN_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:OFFICE_OPEN_3 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  OFFICE_OPEN_3:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:OFFICE_OPEN_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:OFFICE_OPEN_3 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  OFFICE_OPEN_3:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:LOBBY_4 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  LOBBY_4:Zone Air System Sensible Heating Energy
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:LOBBY_4 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  LOBBY_4:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:LOBBY_4 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  LOBBY_4:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:LOBBY_4 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:LOBBY_4 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  LOBBY_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:Zone:STORAGE_4 [J], ResourceType=EnergyTransfer, Group=Zone, contents are:
+  STORAGE_4:Zone Air System Sensible Heating Energy
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=Heating:EnergyTransfer:Zone:STORAGE_4 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  STORAGE_4:Zone Air System Sensible Heating Energy
+
+ For Meter=General:Heating:EnergyTransfer:Zone:STORAGE_4 [J], ResourceType=EnergyTransfer, EndUse=Heating, Group=Zone, contents are:
+  STORAGE_4:Zone Air System Sensible Heating Energy
+
+ For Meter=Cooling:EnergyTransfer:Zone:STORAGE_4 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=General:Cooling:EnergyTransfer:Zone:STORAGE_4 [J], ResourceType=EnergyTransfer, EndUse=Cooling, Group=Zone, contents are:
+  STORAGE_4:Zone Air System Sensible Cooling Energy
+
+ For Meter=EnergyTransfer:HVAC [J], ResourceType=EnergyTransfer, Group=HVAC, contents are:
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Heating Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+
+ For Meter=HeatingCoils:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=HeatingCoils, contents are:
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Heating Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Heating Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Heating Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Heating Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Heating Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Heating Energy
+
+ For Meter=Electricity:HVAC [J], ResourceType=Electricity, Group=HVAC, contents are:
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_PRIVATE_1_Z2_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_2_Z3_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_3_Z4_SUPPLYFAN:Fan Electricity Energy
+  MECHANICAL_3_Z5_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_OPEN_3_Z6_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_4_Z7_SUPPLYFAN:Fan Electricity Energy
+  STORAGE_4_Z8_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+
+ For Meter=Heating:Electricity [J], ResourceType=Electricity, EndUse=Heating, contents are:
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Electricity Energy
+
+ For Meter=General:Heating:Electricity [J], ResourceType=Electricity, EndUse=Heating, contents are:
+  CONFERENCE_0_Z1_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_0_Z1_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_2_Z3_REHEATCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_HEATINGCOIL:Heating Coil Electricity Energy
+  CONFERENCE_3_Z4_REHEATCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_HEATINGCOIL:Heating Coil Electricity Energy
+  MECHANICAL_3_Z5_REHEATCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_HEATINGCOIL:Heating Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_REHEATCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_HEATINGCOIL:Heating Coil Electricity Energy
+  LOBBY_4_Z7_REHEATCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_HEATINGCOIL:Heating Coil Electricity Energy
+  STORAGE_4_Z8_REHEATCOIL:Heating Coil Electricity Energy
+
+ For Meter=Fans:Electricity [J], ResourceType=Electricity, EndUse=Fans, contents are:
+  CONFERENCE_0_Z1_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_PRIVATE_1_Z2_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_2_Z3_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_3_Z4_SUPPLYFAN:Fan Electricity Energy
+  MECHANICAL_3_Z5_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_OPEN_3_Z6_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_4_Z7_SUPPLYFAN:Fan Electricity Energy
+  STORAGE_4_Z8_SUPPLYFAN:Fan Electricity Energy
+
+ For Meter=General:Fans:Electricity [J], ResourceType=Electricity, EndUse=Fans, contents are:
+  CONFERENCE_0_Z1_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_PRIVATE_1_Z2_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_2_Z3_SUPPLYFAN:Fan Electricity Energy
+  CONFERENCE_3_Z4_SUPPLYFAN:Fan Electricity Energy
+  MECHANICAL_3_Z5_SUPPLYFAN:Fan Electricity Energy
+  OFFICE_OPEN_3_Z6_SUPPLYFAN:Fan Electricity Energy
+  LOBBY_4_Z7_SUPPLYFAN:Fan Electricity Energy
+  STORAGE_4_Z8_SUPPLYFAN:Fan Electricity Energy
+
+ For Meter=CoolingCoils:EnergyTransfer [J], ResourceType=EnergyTransfer, EndUse=CoolingCoils, contents are:
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Total Cooling Energy
+
+ For Meter=Cooling:Electricity [J], ResourceType=Electricity, EndUse=Cooling, contents are:
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+
+ For Meter=General:Cooling:Electricity [J], ResourceType=Electricity, EndUse=Cooling, contents are:
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Electricity Energy
+  CONFERENCE_0_Z1_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_PRIVATE_1_Z2_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_2_Z3_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  CONFERENCE_3_Z4_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  MECHANICAL_3_Z5_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  OFFICE_OPEN_3_Z6_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  LOBBY_4_Z7_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+  STORAGE_4_Z8_COOLINGCOILDX:Cooling Coil Crankcase Heater Electricity Energy
+
+ For Meter=ElectricityPurchased:Facility [J], ResourceType=ElectricityPurchased, contents are:
+  Whole Building:Facility Total Purchased Electricity Energy
+
+ For Meter=ElectricityPurchased:Plant [J], ResourceType=ElectricityPurchased, Group=Plant, contents are:
+  Whole Building:Facility Total Purchased Electricity Energy
+
+ For Meter=Cogeneration:ElectricityPurchased [J], ResourceType=ElectricityPurchased, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Total Purchased Electricity Energy
+
+ For Meter=General:Cogeneration:ElectricityPurchased [J], ResourceType=ElectricityPurchased, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Total Purchased Electricity Energy
+
+ For Meter=ElectricitySurplusSold:Facility [J], ResourceType=ElectricitySurplusSold, contents are:
+  Whole Building:Facility Total Surplus Electricity Energy
+
+ For Meter=ElectricitySurplusSold:Plant [J], ResourceType=ElectricitySurplusSold, Group=Plant, contents are:
+  Whole Building:Facility Total Surplus Electricity Energy
+
+ For Meter=Cogeneration:ElectricitySurplusSold [J], ResourceType=ElectricitySurplusSold, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Total Surplus Electricity Energy
+
+ For Meter=General:Cogeneration:ElectricitySurplusSold [J], ResourceType=ElectricitySurplusSold, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Total Surplus Electricity Energy
+
+ For Meter=ElectricityNet:Facility [J], ResourceType=ElectricityNet, contents are:
+  Whole Building:Facility Net Purchased Electricity Energy
+
+ For Meter=ElectricityNet:Plant [J], ResourceType=ElectricityNet, Group=Plant, contents are:
+  Whole Building:Facility Net Purchased Electricity Energy
+
+ For Meter=Cogeneration:ElectricityNet [J], ResourceType=ElectricityNet, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Net Purchased Electricity Energy
+
+ For Meter=General:Cogeneration:ElectricityNet [J], ResourceType=ElectricityNet, EndUse=Cogeneration, contents are:
+  Whole Building:Facility Net Purchased Electricity Energy
+
+ For Meter=Carbon Equivalent:Facility [kg], ResourceType=Carbon Equivalent, contents are:
+  Site:Environmental Impact Total N2O Emissions Carbon Equivalent Mass
+  Site:Environmental Impact Total CH4 Emissions Carbon Equivalent Mass
+  Site:Environmental Impact Total CO2 Emissions Carbon Equivalent Mass
+
+ For Meter=CarbonEquivalentEmissions:Carbon Equivalent [kg], ResourceType=Carbon Equivalent, EndUse=CarbonEquivalentEmissions, contents are:
+  Site:Environmental Impact Total N2O Emissions Carbon Equivalent Mass
+  Site:Environmental Impact Total CH4 Emissions Carbon Equivalent Mass
+  Site:Environmental Impact Total CO2 Emissions Carbon Equivalent Mass

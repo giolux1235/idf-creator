@@ -1,0 +1,401 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 21:20
+! <Version>, Version ID
+ Version, 24.2.0
+! <Timesteps per Hour>, #TimeSteps, Minutes per TimeStep {minutes}
+ Timesteps per Hour,  4, 15
+! <System Convergence Limits>, Minimum System TimeStep {minutes}, Max HVAC Iterations, Minimum Plant Iterations, Maximum Plant Iterations
+ System Convergence Limits, 1, 20, 2, 8
+! <Simulation Control>, Do Zone Sizing, Do System Sizing, Do Plant Sizing, Do Design Days, Do Weather Simulation, Do HVAC Sizing Simulation
+ Simulation Control, No, No, No, No, Yes, No
+! <Performance Precision Tradeoffs>, Use Coil Direct Simulation, Zone Radiant Exchange Algorithm, Override Mode, Number of Timestep In Hour, Force Euler Method, Minimum Number of Warmup Days, Force Suppress All Begin Environment Resets, Minimum System Timestep, MaxZoneTempDiff, MaxAllowedDelTemp
+ Performance Precision Tradeoffs, No, ScriptF, Normal, 4, No, 1, No, 1.0, 0.300, 2.0000E-003
+! <Output Reporting Tolerances>, Tolerance for Time Heating Setpoint Not Met, Tolerance for Zone Cooling Setpoint Not Met Time
+ Output Reporting Tolerances, 0.200, 0.200, 
+! <Site:GroundTemperature:BuildingSurface>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:BuildingSurface,  13.00,  12.00,  11.00,  10.00,  11.00,  13.00,  15.00,  16.00,  16.00,  15.00,  14.00,  13.00
+! <Site:GroundTemperature:FCfactorMethod>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:FCfactorMethod,  -1.89,  -3.06,  -0.99,   2.23,  10.68,  17.20,  21.60,  22.94,  20.66,  15.60,   8.83,   2.56
+! <Site:GroundTemperature:Shallow>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:Shallow,  11.00,  10.00,   9.00,   8.00,   9.00,  11.00,  13.00,  14.00,  14.00,  13.00,  12.00,  11.00
+! <Site:GroundTemperature:Deep>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:Deep,   9.00,   8.00,   7.00,   6.00,   7.00,   9.00,  11.00,  12.00,  12.00,  11.00,  10.00,   9.00
+! <Site:GroundReflectance>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Site:GroundReflectance:SnowModifier>, Normal, Daylighting {dimensionless}
+ Site:GroundReflectance:SnowModifier,   1.000,   1.000
+! <Site:GroundReflectance:Snow>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance:Snow,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Site:GroundReflectance:Snow:Daylighting>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance:Snow:Daylighting,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Environment:Weather Station>,Wind Sensor Height Above Ground {m},Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Sensor Height Above Ground {m},Wind Speed Modifier Coefficient-Internal,Temperature Modifier Coefficient-Internal
+Environment:Weather Station,10.000,0.140,270.000,1.500,1.586,9.750E-003
+! <Site:Location>, Location Name, Latitude {N+/S- Deg}, Longitude {E+/W- Deg},  Time Zone Number {GMT+/-}, Elevation {m},  Standard Pressure at Elevation {Pa}, Standard RhoAir at Elevation
+Site:Location,Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300,41.98,-87.92,-6.00,201.00,98934,1.1759
+! <Site Water Mains Temperature Information>,Calculation Method{},Water Mains Temperature Schedule Name{},Annual Average Outdoor Air Temperature{C},Maximum Difference In Monthly Average Outdoor Air Temperatures{deltaC},Fixed Default Water Mains Temperature{C}
+Site Water Mains Temperature Information,FixedDefault,NA,NA,NA,10.0
+! <Building Information>, Building Name,North Axis {deg},Terrain,  Loads Convergence Tolerance Value,Temperature Convergence Tolerance Value,  Solar Distribution,Maximum Number of Warmup Days,Minimum Number of Warmup Days
+ Building Information,Professional Building,0.000,Suburbs,4.00000E-002,0.20000,MinimalShadowing,15,6
+! <Inside Convection Algorithm>, Algorithm {Simple | TARP | CeilingDiffuser | AdaptiveConvectionAlgorithm}
+Inside Convection Algorithm,TARP
+! <Outside Convection Algorithm>, Algorithm {SimpleCombined | TARP | MoWitt | DOE-2 | AdaptiveConvectionAlgorithm}
+Outside Convection Algorithm,DOE-2
+! <Sky Radiance Distribution>, Value {Anisotropic}
+Sky Radiance Distribution,Anisotropic
+! <Zone Air Solution Algorithm>, Algorithm {ThirdOrderBackwardDifference | AnalyticalSolution | EulerMethod}, Space Heat Balance Sizing, Space Heat Balance Simulation
+ Zone Air Solution Algorithm, ThirdOrderBackwardDifference, No, No
+! <Zone Air Carbon Dioxide Balance Simulation>, Simulation {Yes/No}, Carbon Dioxide Concentration
+ Zone Air Carbon Dioxide Balance Simulation, No,N/A
+! <Zone Air Generic Contaminant Balance Simulation>, Simulation {Yes/No}, Generic Contaminant Concentration
+ Zone Air Generic Contaminant Balance Simulation, No,N/A
+! <Zone Air Mass Flow Balance Simulation>, Enforce Mass Balance, Adjust Zone Mixing and Return {AdjustMixingOnly | AdjustReturnOnly | AdjustMixingThenReturn | AdjustReturnThenMixing | None}, Adjust Zone Infiltration {AddInfiltration | AdjustInfiltration | None}, Infiltration Zones {MixingSourceZonesOnly | AllZones}
+ Zone Air Mass Flow Balance Simulation, No,N/A,N/A,N/A
+! <HVACSystemRootFindingAlgorithm>, Value {RegulaFalsi | Bisection | BisectionThenRegulaFalsi | RegulaFalsiThenBisection}
+ HVACSystemRootFindingAlgorithm, RegulaFalsi
+! <Environment:Site Atmospheric Variation>,Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Gradient Coefficient {K/m}
+Environment:Site Atmospheric Variation,0.220,370.000,6.500000E-003
+! <Shadowing/Sun Position Calculations Annual Simulations>, Shading Calculation Method, Shading Calculation Update Frequency Method, Shading Calculation Update Frequency {days}, Maximum Figures in Shadow Overlap Calculations {}, Polygon Clipping Algorithm, Pixel Counting Resolution, Sky Diffuse Modeling Algorithm, Output External Shading Calculation Results, Disable Self-Shading Within Shading Zone Groups, Disable Self-Shading From Shading Zone Groups to Other Zones
+Shadowing/Sun Position Calculations Annual Simulations,PolygonClipping,Periodic,20,15000,SutherlandHodgman,512,SimpleSkyDiffuseModeling,No,No,No
+! <Surface Geometry>,Starting Corner,Vertex Input Direction,Coordinate System,Daylight Reference Point Coordinate System,Rectangular (Simple) Surface Coordinate System
+ Surface Geometry,UpperLeftCorner,Counterclockwise,RelativeCoordinateSystem,RelativeCoordinateSystem,RelativeToZoneOrigin
+! <Surface Heat Transfer Algorithm>, Value {CTF - ConductionTransferFunction | EMPD - MoisturePenetrationDepthConductionTransferFunction | CondFD - ConductionFiniteDifference | HAMT - CombinedHeatAndMoistureFiniteElement} - Description,Inside Surface Max Temperature Limit{C}, Surface Convection Coefficient Lower Limit {W/m2-K}, Surface Convection Coefficient Upper Limit {W/m2-K}
+Surface Heat Transfer Algorithm, CTF - ConductionTransferFunction,200,0.10,1000.0
+! <Shading Summary>, Number of Fixed Detached Shades, Number of Building Detached Shades, Number of Attached Shades
+ Shading Summary,0,0,0
+! <Zone Summary>, Number of Zones, Number of Zone Surfaces, Number of SubSurfaces
+ Zone Summary,37,518,190
+! <Zone Information>,Zone Name,North Axis {deg},Origin X-Coordinate {m},Origin Y-Coordinate {m},Origin Z-Coordinate {m},Centroid X-Coordinate {m},Centroid Y-Coordinate {m},Centroid Z-Coordinate {m},Type,Zone Multiplier,Zone List Multiplier,Minimum X {m},Maximum X {m},Minimum Y {m},Maximum Y {m},Minimum Z {m},Maximum Z {m},Ceiling Height {m},Volume {m3},Zone Inside Convection Algorithm {Simple-Detailed-CeilingDiffuser-TrombeWall},Zone Outside Convection Algorithm {Simple-Detailed-Tarp-MoWitt-DOE-2-BLAST}, Floor Area {m2},Exterior Gross Wall Area {m2},Exterior Net Wall Area {m2},Exterior Window Area {m2}, Number of Surfaces, Number of SubSurfaces, Number of Shading SubSurfaces,  Part of Total Building Area
+ Zone Information, LOBBY_0,0.0,0.00,0.00,0.00,-2.30,17.33,1.50,1,1,1,-8.37,3.78,9.11,25.56,0.00,3.00,3.00,10.00,TARP,DOE-2,197.03,170.40,119.12,51.28,6,4,0,Yes
+ Zone Information, CONFERENCE_0,0.0,0.00,0.00,0.00,-11.18,4.18,1.50,1,1,1,-13.66,-8.71,0.25,8.11,0.00,3.00,3.00,10.00,TARP,DOE-2,37.60,75.62,52.86,22.76,6,4,0,Yes
+ Zone Information, BREAK_ROOM_0,0.0,0.00,0.00,0.00,-5.99,20.20,1.50,1,1,1,-8.35,-3.63,17.52,22.89,0.00,3.00,3.00,10.00,TARP,DOE-2,24.43,59.44,41.55,17.89,6,4,0,Yes
+ Zone Information, MECHANICAL_0,0.0,0.00,0.00,0.00,-9.13,0.18,1.50,1,1,1,-12.89,-5.37,-6.33,6.68,0.00,3.00,3.00,10.00,TARP,DOE-2,95.65,121.90,85.21,36.69,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_0,0.0,0.00,0.00,0.00,-11.99,-3.46,1.50,1,1,1,-15.64,-5.46,-7.70,3.51,0.00,3.00,3.00,10.00,TARP,DOE-2,33.40,125.11,89.59,35.52,10,5,0,Yes
+ Zone Information, OFFICE_PRIVATE_0,0.0,0.00,0.00,0.00,-1.25,-3.02,1.50,1,1,1,-5.47,5.26,-7.85,3.56,0.00,3.00,3.00,10.00,TARP,DOE-2,119.79,131.58,93.26,38.32,8,4,0,Yes
+ Zone Information, STORAGE_0,0.0,0.00,0.00,0.00,10.17,-2.09,1.50,1,1,1,5.16,15.55,-7.98,3.56,0.00,3.00,3.00,10.00,TARP,DOE-2,112.63,127.77,86.14,41.62,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_0_2,0.0,0.00,0.00,0.00,-10.90,8.97,1.50,1,1,1,-15.17,-5.41,3.51,15.02,0.00,3.00,3.00,10.00,TARP,DOE-2,57.52,134.41,96.73,37.68,13,9,0,Yes
+ Zone Information, OFFICE_OPEN_0_3,0.0,0.00,0.00,0.00,0.29,8.31,1.50,1,1,1,-5.51,5.26,3.46,14.97,0.00,3.00,3.00,10.00,TARP,DOE-2,68.83,132.81,93.78,39.03,10,6,0,Yes
+ Zone Information, OFFICE_OPEN_0_4,0.0,0.00,0.00,0.00,11.12,9.06,1.50,1,1,1,5.16,15.90,3.46,15.02,0.00,3.00,3.00,10.00,TARP,DOE-2,120.61,131.01,90.30,40.71,7,5,0,Yes
+ Zone Information, OFFICE_OPEN_0_5,0.0,0.00,0.00,0.00,-10.44,21.76,1.50,1,1,1,-16.13,-5.46,14.92,26.04,0.00,3.00,3.00,10.00,TARP,DOE-2,81.49,126.98,89.51,37.47,8,5,0,Yes
+ Zone Information, OFFICE_OPEN_0_6,0.0,0.00,0.00,0.00,1.88,22.62,1.50,1,1,1,-5.46,5.26,14.97,26.25,0.00,3.00,3.00,10.00,TARP,DOE-2,22.25,131.00,93.82,37.18,8,4,0,Yes
+ Zone Information, OFFICE_OPEN_0_7,0.0,0.00,0.00,0.00,10.32,20.60,1.50,1,1,1,5.16,15.61,14.92,26.45,0.00,3.00,3.00,10.00,TARP,DOE-2,115.64,129.26,90.22,39.04,6,4,0,Yes
+ Zone Information, LOBBY_1,0.0,0.00,0.00,0.00,1.93,12.42,4.50,1,1,1,-2.23,6.09,7.06,17.79,3.00,6.00,3.00,10.00,TARP,DOE-2,87.32,113.06,79.03,34.03,6,4,0,Yes
+ Zone Information, CONFERENCE_1,0.0,0.00,0.00,0.00,-7.86,4.40,4.50,1,1,1,-10.72,-5.00,-0.87,9.67,3.00,6.00,3.00,10.00,TARP,DOE-2,58.65,96.37,67.37,29.00,6,4,0,Yes
+ Zone Information, BREAK_ROOM_1,0.0,0.00,0.00,0.00,-11.24,16.12,4.50,1,1,1,-14.03,-8.46,13.06,19.18,3.00,6.00,3.00,10.00,TARP,DOE-2,32.93,68.94,48.19,20.75,6,4,0,Yes
+ Zone Information, MECHANICAL_1,0.0,0.00,0.00,0.00,-5.10,4.24,4.50,1,1,1,-8.23,-1.97,0.46,8.02,3.00,6.00,3.00,10.00,TARP,DOE-2,45.96,81.72,57.12,24.59,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_1,0.0,0.00,0.00,0.00,-10.61,-2.09,4.50,1,1,1,-15.64,-5.41,-7.70,3.56,3.00,6.00,3.00,10.00,TARP,DOE-2,85.49,125.11,87.18,37.92,8,6,0,Yes
+ Zone Information, OFFICE_PRIVATE_1,0.0,0.00,0.00,0.00,-1.09,-1.60,4.50,1,1,1,-5.51,5.26,-7.85,3.56,3.00,6.00,3.00,10.00,TARP,DOE-2,109.27,131.58,93.42,38.15,10,6,0,Yes
+ Zone Information, STORAGE_1,0.0,0.00,0.00,0.00,10.17,-2.09,4.50,1,1,1,5.16,15.55,-7.98,3.56,3.00,6.00,3.00,10.00,TARP,DOE-2,112.63,127.77,86.14,41.62,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_1_2,0.0,0.00,0.00,0.00,-11.00,10.49,4.50,1,1,1,-15.17,-5.41,3.46,15.02,3.00,6.00,3.00,10.00,TARP,DOE-2,64.46,137.01,99.99,37.02,13,8,0,Yes
+ Zone Information, OFFICE_OPEN_1_3,0.0,0.00,0.00,0.00,10.17,8.68,4.50,1,1,1,5.16,15.90,3.46,15.02,3.00,6.00,3.00,10.00,TARP,DOE-2,114.14,131.01,90.80,40.21,9,6,0,Yes
+ Zone Information, OFFICE_OPEN_1_4,0.0,0.00,0.00,0.00,-10.79,19.53,4.50,1,1,1,-16.13,-5.41,14.92,26.04,3.00,6.00,3.00,10.00,TARP,DOE-2,88.88,151.96,107.95,44.00,10,7,0,Yes
+ Zone Information, OFFICE_OPEN_1_5,0.0,0.00,0.00,0.00,-0.71,20.17,4.50,1,1,1,-5.51,5.26,14.92,26.25,3.00,6.00,3.00,10.00,TARP,DOE-2,98.64,131.00,91.57,39.43,8,6,0,Yes
+ Zone Information, OFFICE_OPEN_1_6,0.0,0.00,0.00,0.00,9.42,20.03,4.50,1,1,1,5.16,15.61,14.92,26.45,3.00,6.00,3.00,10.00,TARP,DOE-2,113.36,129.26,91.21,38.05,8,5,0,Yes
+ Zone Information, LOBBY_2,0.0,0.00,0.00,0.00,-1.36,0.42,7.50,1,1,1,-5.31,2.59,-4.76,5.60,6.00,9.00,3.00,10.00,TARP,DOE-2,80.04,108.37,75.76,32.62,6,4,0,Yes
+ Zone Information, CONFERENCE_2,0.0,0.00,0.00,0.00,-0.61,22.27,7.50,1,1,1,-4.47,2.63,17.40,26.20,6.00,9.00,3.00,10.00,TARP,DOE-2,60.61,93.91,66.13,27.78,7,4,0,Yes
+ Zone Information, BREAK_ROOM_2,0.0,0.00,0.00,0.00,-0.78,12.44,7.50,1,1,1,-2.60,1.05,9.04,15.84,6.00,9.00,3.00,10.00,TARP,DOE-2,23.83,61.56,43.03,18.53,6,4,0,Yes
+ Zone Information, MECHANICAL_2,0.0,0.00,0.00,0.00,10.55,17.05,7.50,1,1,1,7.02,14.08,11.28,22.82,6.00,9.00,3.00,10.00,TARP,DOE-2,79.60,110.40,77.17,33.22,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_2,0.0,0.00,0.00,0.00,-10.32,-2.15,7.50,1,1,1,-15.64,-5.41,-7.70,3.56,6.00,9.00,3.00,10.00,TARP,DOE-2,108.05,125.11,87.18,37.92,6,4,0,Yes
+ Zone Information, OFFICE_PRIVATE_2,0.0,0.00,0.00,0.00,-0.56,-2.23,7.50,1,1,1,-5.51,5.26,-7.85,3.56,6.00,9.00,3.00,10.00,TARP,DOE-2,56.05,180.87,126.55,54.31,10,7,0,Yes
+ Zone Information, STORAGE_2,0.0,0.00,0.00,0.00,10.17,-2.09,7.50,1,1,1,5.16,15.55,-7.98,3.56,6.00,9.00,3.00,10.00,TARP,DOE-2,112.63,127.77,86.14,41.62,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_2_2,0.0,0.00,0.00,0.00,-10.72,8.96,7.50,1,1,1,-15.17,-5.41,3.46,15.02,6.00,9.00,3.00,10.00,TARP,DOE-2,106.48,125.85,88.11,37.75,7,5,0,Yes
+ Zone Information, OFFICE_OPEN_2_3,0.0,0.00,0.00,0.00,-0.54,9.00,7.50,1,1,1,-5.51,5.26,3.46,15.02,6.00,9.00,3.00,10.00,TARP,DOE-2,85.48,180.39,126.34,54.05,14,11,0,Yes
+ Zone Information, OFFICE_OPEN_2_4,0.0,0.00,0.00,0.00,10.80,10.15,7.50,1,1,1,5.16,15.90,3.46,14.97,6.00,9.00,3.00,10.00,TARP,DOE-2,95.29,152.85,107.65,45.21,11,7,0,Yes
+ Zone Information, OFFICE_OPEN_2_5,0.0,0.00,0.00,0.00,-10.54,20.54,7.50,1,1,1,-16.13,-5.41,14.92,26.04,6.00,9.00,3.00,10.00,TARP,DOE-2,111.65,126.98,89.05,37.93,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_2_6,0.0,0.00,0.00,0.00,10.40,20.53,7.50,1,1,1,5.16,15.61,14.97,26.45,6.00,9.00,3.00,10.00,TARP,DOE-2,61.36,176.07,127.09,48.99,10,6,0,Yes
+! <Zone Internal Gains Nominal>,Zone Name, Floor Area {m2},# Occupants,Area per Occupant {m2/person},Occupant per Area {person/m2},Interior Lighting {W/m2},Electric Load {W/m2},Gas Load {W/m2},Other Load {W/m2},Hot Water Eq {W/m2},Steam Equipment {W/m2},Sum Loads per Area {W/m2},Outdoor Controlled Baseboard Heat
+ Zone Internal Gains Nominal, LOBBY_0,197.03,9.0,21.893,4.568E-002,12.900,3.200,0.000,0.000,0.000,0.000,16.100,No
+ Zone Internal Gains Nominal, CONFERENCE_0,37.60,7.0,5.371,0.186,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, BREAK_ROOM_0,24.43,2.0,12.214,8.187E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+ Zone Internal Gains Nominal, MECHANICAL_0,95.65,1.0,95.647,1.046E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0,33.40,1.0,33.405,2.994E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_0,119.79,5.0,23.957,4.174E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_0,112.63,1.0,112.628,8.879E-003,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_2,57.52,2.0,28.761,3.477E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_3,68.83,3.0,22.942,4.359E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_4,120.61,6.0,20.102,4.975E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_5,81.49,4.0,20.374,4.908E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_6,22.25,1.0,22.246,4.495E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0_7,115.64,5.0,23.128,4.324E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, LOBBY_1,87.32,4.0,21.831,4.581E-002,12.900,3.200,0.000,0.000,0.000,0.000,16.100,No
+ Zone Internal Gains Nominal, CONFERENCE_1,58.65,11.0,5.332,0.188,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, BREAK_ROOM_1,32.93,3.0,10.978,9.110E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+ Zone Internal Gains Nominal, MECHANICAL_1,45.96,1.0,45.955,2.176E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1,85.49,4.0,21.372,4.679E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_1,109.27,5.0,21.855,4.576E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_1,112.63,1.0,112.628,8.879E-003,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1_2,64.46,3.0,21.487,4.654E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1_3,114.14,5.0,22.829,4.380E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1_4,88.88,4.0,22.219,4.501E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1_5,98.64,4.0,24.661,4.055E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_1_6,113.36,5.0,22.673,4.411E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, LOBBY_2,80.04,4.0,20.011,4.997E-002,12.900,3.200,0.000,0.000,0.000,0.000,16.100,No
+ Zone Internal Gains Nominal, CONFERENCE_2,60.61,12.0,5.051,0.198,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, BREAK_ROOM_2,23.83,2.0,11.913,8.394E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+ Zone Internal Gains Nominal, MECHANICAL_2,79.60,1.0,79.603,1.256E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2,108.05,5.0,21.610,4.628E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_2,56.05,2.0,28.025,3.568E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_2,112.63,1.0,112.628,8.879E-003,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2_2,106.48,5.0,21.297,4.696E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2_3,85.48,4.0,21.370,4.679E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2_4,95.29,4.0,23.823,4.198E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2_5,111.65,5.0,22.329,4.478E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2_6,61.36,3.0,20.453,4.889E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+! <People Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Number of People {},People/Floor Area {person/m2},Floor Area per person {m2/person},Fraction Radiant,Fraction Convected,Sensible Fraction Calculation,Activity level,ASHRAE 55 Warnings,Carbon Dioxide Generation Rate,Minimum Number of People for All Day Types,Maximum Number of People for All Day Types,Minimum Number of People for Weekdays, Maximum Number of People for Weekdays, Minimum Number of People for Weekends/Holidays, Maximum Number of People for Weekends /Holidays,Minimum Number of People for Summer Design Days, Maximum Number of People for Summer Design Days,Minimum Number of People for Winter Design Days, Maximum Number of People for Winter Design Days
+ People Internal Gains Nominal, LOBBY_0_PEOPLE,LOBBY_OCCUPANCY,LOBBY_0,197.03,9.0,9.0,4.568E-002,21.893,0.300,0.700,0.100,LOBBY_ACTIVITY,No,3.8200E-008,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,
+ People Internal Gains Nominal, CONFERENCE_0_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_0,37.60,7.0,7.0,0.186,5.371,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,0.0,7.0,0.0,7.0,0.0,0.7,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, BREAK_ROOM_0_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_0,24.43,2.0,2.0,8.187E-002,12.214,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,
+ People Internal Gains Nominal, MECHANICAL_0_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_0,95.65,1.0,1.0,1.046E-002,95.647,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_0_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0,33.40,1.0,1.0,2.994E-002,33.405,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,1.0,0.0,1.0,0.0,0.1,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_PRIVATE_0_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_0,119.79,5.0,5.0,4.174E-002,23.957,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, STORAGE_0_PEOPLE,STORAGE_OCCUPANCY,STORAGE_0,112.63,1.0,1.0,8.879E-003,112.628,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_0_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_2,57.52,2.0,2.0,3.477E-002,28.761,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,2.0,0.0,2.0,0.0,0.2,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_0_3_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_3,68.83,3.0,3.0,4.359E-002,22.942,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,3.0,0.0,3.0,0.0,0.3,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_0_4_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_4,120.61,6.0,6.0,4.975E-002,20.102,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,6.0,0.0,6.0,0.0,0.6,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_0_5_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_5,81.49,4.0,4.0,4.908E-002,20.374,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_0_6_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_6,22.25,1.0,1.0,4.495E-002,22.246,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,1.0,0.0,1.0,0.0,0.1,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_0_7_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0_7,115.64,5.0,5.0,4.324E-002,23.128,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, LOBBY_1_PEOPLE,LOBBY_OCCUPANCY,LOBBY_1,87.32,4.0,4.0,4.581E-002,21.831,0.300,0.700,0.100,LOBBY_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, CONFERENCE_1_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_1,58.65,11.0,11.0,0.188,5.332,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,0.0,11.0,0.0,11.0,0.0,1.1,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, BREAK_ROOM_1_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_1,32.93,3.0,3.0,9.110E-002,10.978,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,
+ People Internal Gains Nominal, MECHANICAL_1_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_1,45.96,1.0,1.0,2.176E-002,45.955,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_1_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1,85.49,4.0,4.0,4.679E-002,21.372,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_PRIVATE_1_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_1,109.27,5.0,5.0,4.576E-002,21.855,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, STORAGE_1_PEOPLE,STORAGE_OCCUPANCY,STORAGE_1,112.63,1.0,1.0,8.879E-003,112.628,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_1_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1_2,64.46,3.0,3.0,4.654E-002,21.487,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,3.0,0.0,3.0,0.0,0.3,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_1_3_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1_3,114.14,5.0,5.0,4.380E-002,22.829,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_1_4_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1_4,88.88,4.0,4.0,4.501E-002,22.219,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_1_5_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1_5,98.64,4.0,4.0,4.055E-002,24.661,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_1_6_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_1_6,113.36,5.0,5.0,4.411E-002,22.673,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, LOBBY_2_PEOPLE,LOBBY_OCCUPANCY,LOBBY_2,80.04,4.0,4.0,4.997E-002,20.011,0.300,0.700,0.100,LOBBY_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, CONFERENCE_2_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_2,60.61,12.0,12.0,0.198,5.051,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,0.0,12.0,0.0,12.0,0.0,1.2,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, BREAK_ROOM_2_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_2,23.83,2.0,2.0,8.394E-002,11.913,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,
+ People Internal Gains Nominal, MECHANICAL_2_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_2,79.60,1.0,1.0,1.256E-002,79.603,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2,108.05,5.0,5.0,4.628E-002,21.610,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_PRIVATE_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_2,56.05,2.0,2.0,3.568E-002,28.025,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,2.0,0.0,2.0,0.0,0.2,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, STORAGE_2_PEOPLE,STORAGE_OCCUPANCY,STORAGE_2,112.63,1.0,1.0,8.879E-003,112.628,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+ People Internal Gains Nominal, OFFICE_OPEN_2_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2_2,106.48,5.0,5.0,4.696E-002,21.297,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_2_3_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2_3,85.48,4.0,4.0,4.679E-002,21.370,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_2_4_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2_4,95.29,4.0,4.0,4.198E-002,23.823,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,4.0,0.0,4.0,0.0,0.4,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_2_5_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2_5,111.65,5.0,5.0,4.478E-002,22.329,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,5.0,0.0,5.0,0.0,0.5,0.0,0.0,0.0,0.0,
+ People Internal Gains Nominal, OFFICE_OPEN_2_6_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2_6,61.36,3.0,3.0,4.889E-002,20.453,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.0,3.0,0.0,3.0,0.0,0.3,0.0,0.0,0.0,0.0,
+! <Lights Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Lighting Level {W},Lights/Floor Area {W/m2},Lights per person {W/person},Fraction Return Air,Fraction Radiant,Fraction Short Wave,Fraction Convected,Fraction Replaceable,End-Use, Minimum Lighting Level for All Day Types {W},Maximum Lighting Level for All Day Types {W},Minimum Lighting Level for Weekdays {W}, Maximum Lighting Level for Weekdays {W},Minimum Lighting Level for Weekends/Holidays {W}, Maximum Lighting Level for Weekends /Holidays {W},Minimum Lighting Level for Summer Design Days {W}, Maximum Lighting Level for Summer Design Days {W},Minimum Lighting Level for Winter Design Days {W}, Maximum Lighting Level for Winter Design Days {W}
+ Lights Internal Gains Nominal, LOBBY_0_LIGHTS,LOBBY_LIGHTING,LOBBY_0,197.03,9.0,2541.735,12.900,282.415,0.000,0.300,0.200,0.500,1.000,General,0.000,2541.735,254.174,2541.7,0.000,508.347,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, CONFERENCE_0_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_0,37.60,7.0,406.075,10.800,58.011,0.000,0.300,0.200,0.500,1.000,General,0.000,406.075,40.607,406.1,0.000,81.215,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, BREAK_ROOM_0_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_0,24.43,2.0,197.863,8.100,98.931,0.000,0.300,0.200,0.500,1.000,General,0.000,197.863,19.786,197.9,0.000,39.573,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, MECHANICAL_0_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_0,95.65,1.0,516.491,5.400,516.491,0.000,0.300,0.200,0.500,1.000,General,0.000,516.491,51.649,516.5,0.000,103.298,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0,33.40,1.0,360.771,10.800,360.771,0.000,0.300,0.200,0.500,1.000,General,0.000,360.771,36.077,360.8,0.000,72.154,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_0_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_0,119.79,5.0,1293.681,10.800,258.736,0.000,0.300,0.200,0.500,1.000,General,0.000,1293.681,129.368,1293.7,0.000,258.736,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, STORAGE_0_LIGHTS,STORAGE_LIGHTING,STORAGE_0,112.63,1.0,608.189,5.400,608.189,0.000,0.300,0.200,0.500,1.000,General,0.000,608.189,60.819,608.2,0.000,121.638,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_2,57.52,2.0,621.241,10.800,310.620,0.000,0.300,0.200,0.500,1.000,General,0.000,621.241,62.124,621.2,0.000,124.248,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_3_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_3,68.83,3.0,743.325,10.800,247.775,0.000,0.300,0.200,0.500,1.000,General,0.000,743.325,74.333,743.3,0.000,148.665,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_4_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_4,120.61,6.0,1302.620,10.800,217.103,0.000,0.300,0.200,0.500,1.000,General,0.000,1302.620,130.262,1302.6,0.000,260.524,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_5_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_5,81.49,4.0,880.136,10.800,220.034,0.000,0.300,0.200,0.500,1.000,General,0.000,880.136,88.014,880.1,0.000,176.027,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_6_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_6,22.25,1.0,240.254,10.800,240.254,0.000,0.300,0.200,0.500,1.000,General,0.000,240.254,24.025,240.3,0.000,48.051,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_7_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0_7,115.64,5.0,1248.919,10.800,249.784,0.000,0.300,0.200,0.500,1.000,General,0.000,1248.919,124.892,1248.9,0.000,249.784,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, LOBBY_1_LIGHTS,LOBBY_LIGHTING,LOBBY_1,87.32,4.0,1126.459,12.900,281.615,0.000,0.300,0.200,0.500,1.000,General,0.000,1126.459,112.646,1126.5,0.000,225.292,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, CONFERENCE_1_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_1,58.65,11.0,633.459,10.800,57.587,0.000,0.300,0.200,0.500,1.000,General,0.000,633.459,63.346,633.5,0.000,126.692,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, BREAK_ROOM_1_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_1,32.93,3.0,266.754,8.100,88.918,0.000,0.300,0.200,0.500,1.000,General,0.000,266.754,26.675,266.8,0.000,53.351,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, MECHANICAL_1_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_1,45.96,1.0,248.158,5.400,248.158,0.000,0.300,0.200,0.500,1.000,General,0.000,248.158,24.816,248.2,0.000,49.632,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1,85.49,4.0,923.255,10.800,230.814,0.000,0.300,0.200,0.500,1.000,General,0.000,923.255,92.326,923.3,0.000,184.651,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_1_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_1,109.27,5.0,1180.152,10.800,236.030,0.000,0.300,0.200,0.500,1.000,General,0.000,1180.152,118.015,1180.2,0.000,236.030,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, STORAGE_1_LIGHTS,STORAGE_LIGHTING,STORAGE_1,112.63,1.0,608.189,5.400,608.189,0.000,0.300,0.200,0.500,1.000,General,0.000,608.189,60.819,608.2,0.000,121.638,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1_2,64.46,3.0,696.191,10.800,232.064,0.000,0.300,0.200,0.500,1.000,General,0.000,696.191,69.619,696.2,0.000,139.238,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_3_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1_3,114.14,5.0,1232.748,10.800,246.550,0.000,0.300,0.200,0.500,1.000,General,0.000,1232.748,123.275,1232.7,0.000,246.550,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_4_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1_4,88.88,4.0,959.882,10.800,239.970,0.000,0.300,0.200,0.500,1.000,General,0.000,959.882,95.988,959.9,0.000,191.976,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_5_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1_5,98.64,4.0,1065.342,10.800,266.336,0.000,0.300,0.200,0.500,1.000,General,0.000,1065.342,106.534,1065.3,0.000,213.068,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_1_6_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_1_6,113.36,5.0,1224.318,10.800,244.864,0.000,0.300,0.200,0.500,1.000,General,0.000,1224.318,122.432,1224.3,0.000,244.864,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, LOBBY_2_LIGHTS,LOBBY_LIGHTING,LOBBY_2,80.04,4.0,1032.565,12.900,258.141,0.000,0.300,0.200,0.500,1.000,General,0.000,1032.565,103.256,1032.6,0.000,206.513,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, CONFERENCE_2_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_2,60.61,12.0,654.566,10.800,54.547,0.000,0.300,0.200,0.500,1.000,General,0.000,654.566,65.457,654.6,0.000,130.913,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, BREAK_ROOM_2_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_2,23.83,2.0,192.987,8.100,96.494,0.000,0.300,0.200,0.500,1.000,General,0.000,192.987,19.299,193.0,0.000,38.597,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, MECHANICAL_2_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_2,79.60,1.0,429.856,5.400,429.856,0.000,0.300,0.200,0.500,1.000,General,0.000,429.856,42.986,429.9,0.000,85.971,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2,108.05,5.0,1166.917,10.800,233.383,0.000,0.300,0.200,0.500,1.000,General,0.000,1166.917,116.692,1166.9,0.000,233.383,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_2,56.05,2.0,605.330,10.800,302.665,0.000,0.300,0.200,0.500,1.000,General,0.000,605.330,60.533,605.3,0.000,121.066,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, STORAGE_2_LIGHTS,STORAGE_LIGHTING,STORAGE_2,112.63,1.0,608.189,5.400,608.189,0.000,0.300,0.200,0.500,1.000,General,0.000,608.189,60.819,608.2,0.000,121.638,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2_2,106.48,5.0,1150.024,10.800,230.005,0.000,0.300,0.200,0.500,1.000,General,0.000,1150.024,115.002,1150.0,0.000,230.005,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_3_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2_3,85.48,4.0,923.190,10.800,230.798,0.000,0.300,0.200,0.500,1.000,General,0.000,923.190,92.319,923.2,0.000,184.638,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_4_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2_4,95.29,4.0,1029.138,10.800,257.284,0.000,0.300,0.200,0.500,1.000,General,0.000,1029.138,102.914,1029.1,0.000,205.828,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_5_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2_5,111.65,5.0,1205.772,10.800,241.154,0.000,0.300,0.200,0.500,1.000,General,0.000,1205.772,120.577,1205.8,0.000,241.154,0.000,0.000,0.000,0.000
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_6_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2_6,61.36,3.0,662.690,10.800,220.897,0.000,0.300,0.200,0.500,1.000,General,0.000,662.690,66.269,662.7,0.000,132.538,0.000,0.000,0.000,0.000
+! <ElectricEquipment Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Equipment Level {W},Equipment/Floor Area {W/m2},Equipment per person {W/person},Fraction Latent,Fraction Radiant,Fraction Lost,Fraction Convected,End-Use SubCategory,Minimum Equipment Level for All Day Types {W},Maximum Equipment Level for All Day Types {W},Minimum Equipment Level for Weekdays {W}, Maximum Equipment Level for Weekdays {W},Minimum Equipment Level for Weekends/Holidays {W}, Maximum Equipment Level for Weekends /Holidays {W},Minimum Equipment Level for Summer Design Days {W}, Maximum Equipment Level for Summer Design Days {W},Minimum Equipment Level for Winter Design Days {W}, Maximum Equipment Level for Winter Design Days {W}
+ ElectricEquipment Internal Gains Nominal, LOBBY_0_EQUIPMENT,LOBBY_EQUIPMENT,LOBBY_0,197.03,9.0,630.508,3.200,70.056,0.100,0.200,0.000,0.700,General,0.000,504.406,189.152,504.406,0.000,189.152,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_0_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_0,37.60,7.0,304.556,8.100,43.508,0.100,0.200,0.000,0.700,General,0.000,243.645,91.367,243.645,0.000,91.367,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, BREAK_ROOM_0_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_0,24.43,2.0,366.413,15.000,183.206,0.100,0.200,0.000,0.700,General,0.000,293.130,109.924,293.130,0.000,109.924,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_0_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_0,95.65,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0,33.40,1.0,270.578,8.100,270.578,0.100,0.200,0.000,0.700,General,0.000,216.463,81.173,216.463,0.000,81.173,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_0_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_0,119.79,5.0,970.260,8.100,194.052,0.100,0.200,0.000,0.700,General,0.000,776.208,291.078,776.208,0.000,291.078,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, STORAGE_0_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_0,112.63,1.0,123.890,1.100,123.890,0.100,0.200,0.000,0.700,General,0.000,99.112,37.167,99.112,0.000,37.167,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_2,57.52,2.0,465.930,8.100,232.965,0.100,0.200,0.000,0.700,General,0.000,372.744,139.779,372.744,0.000,139.779,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_3_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_3,68.83,3.0,557.494,8.100,185.831,0.100,0.200,0.000,0.700,General,0.000,445.995,167.248,445.995,0.000,167.248,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_4_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_4,120.61,6.0,976.965,8.100,162.827,0.100,0.200,0.000,0.700,General,0.000,781.572,293.089,781.572,0.000,293.089,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_5_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_5,81.49,4.0,660.102,8.100,165.026,0.100,0.200,0.000,0.700,General,0.000,528.082,198.031,528.082,0.000,198.031,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_6_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_6,22.25,1.0,180.191,8.100,180.191,0.100,0.200,0.000,0.700,General,0.000,144.152,54.057,144.152,0.000,54.057,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_7_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0_7,115.64,5.0,936.689,8.100,187.338,0.100,0.200,0.000,0.700,General,0.000,749.352,281.007,749.352,0.000,281.007,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, LOBBY_1_EQUIPMENT,LOBBY_EQUIPMENT,LOBBY_1,87.32,4.0,279.432,3.200,69.858,0.100,0.200,0.000,0.700,General,0.000,223.545,83.830,223.545,0.000,83.830,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_1_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_1,58.65,11.0,475.094,8.100,43.190,0.100,0.200,0.000,0.700,General,0.000,380.075,142.528,380.075,0.000,142.528,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, BREAK_ROOM_1_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_1,32.93,3.0,493.989,15.000,164.663,0.100,0.200,0.000,0.700,General,0.000,395.191,148.197,395.191,0.000,148.197,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_1_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_1,45.96,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1,85.49,4.0,692.441,8.100,173.110,0.100,0.200,0.000,0.700,General,0.000,553.953,207.732,553.953,0.000,207.732,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_1_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_1,109.27,5.0,885.114,8.100,177.023,0.100,0.200,0.000,0.700,General,0.000,708.091,265.534,708.091,0.000,265.534,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, STORAGE_1_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_1,112.63,1.0,123.890,1.100,123.890,0.100,0.200,0.000,0.700,General,0.000,99.112,37.167,99.112,0.000,37.167,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1_2,64.46,3.0,522.143,8.100,174.048,0.100,0.200,0.000,0.700,General,0.000,417.715,156.643,417.715,0.000,156.643,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_3_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1_3,114.14,5.0,924.561,8.100,184.912,0.100,0.200,0.000,0.700,General,0.000,739.649,277.368,739.649,0.000,277.368,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_4_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1_4,88.88,4.0,719.911,8.100,179.978,0.100,0.200,0.000,0.700,General,0.000,575.929,215.973,575.929,0.000,215.973,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_5_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1_5,98.64,4.0,799.007,8.100,199.752,0.100,0.200,0.000,0.700,General,0.000,639.205,239.702,639.205,0.000,239.702,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_1_6_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_1_6,113.36,5.0,918.238,8.100,183.648,0.100,0.200,0.000,0.700,General,0.000,734.591,275.472,734.591,0.000,275.472,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, LOBBY_2_EQUIPMENT,LOBBY_EQUIPMENT,LOBBY_2,80.04,4.0,256.140,3.200,64.035,0.100,0.200,0.000,0.700,General,0.000,204.912,76.842,204.912,0.000,76.842,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_2_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_2,60.61,12.0,490.924,8.100,40.910,0.100,0.200,0.000,0.700,General,0.000,392.740,147.277,392.740,0.000,147.277,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, BREAK_ROOM_2_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_2,23.83,2.0,357.384,15.000,178.692,0.100,0.200,0.000,0.700,General,0.000,285.907,107.215,285.907,0.000,107.215,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_2_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_2,79.60,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2,108.05,5.0,875.188,8.100,175.038,0.100,0.200,0.000,0.700,General,0.000,700.150,262.556,700.150,0.000,262.556,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_2,56.05,2.0,453.998,8.100,226.999,0.100,0.200,0.000,0.700,General,0.000,363.198,136.199,363.198,0.000,136.199,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, STORAGE_2_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_2,112.63,1.0,123.890,1.100,123.890,0.100,0.200,0.000,0.700,General,0.000,99.112,37.167,99.112,0.000,37.167,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2_2,106.48,5.0,862.518,8.100,172.504,0.100,0.200,0.000,0.700,General,0.000,690.015,258.755,690.015,0.000,258.755,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_3_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2_3,85.48,4.0,692.393,8.100,173.098,0.100,0.200,0.000,0.700,General,0.000,553.914,207.718,553.914,0.000,207.718,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_4_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2_4,95.29,4.0,771.853,8.100,192.963,0.100,0.200,0.000,0.700,General,0.000,617.483,231.556,617.483,0.000,231.556,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_5_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2_5,111.65,5.0,904.329,8.100,180.866,0.100,0.200,0.000,0.700,General,0.000,723.463,271.299,723.463,0.000,271.299,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_6_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2_6,61.36,3.0,497.017,8.100,165.672,0.100,0.200,0.000,0.700,General,0.000,397.614,149.105,397.614,0.000,149.105,0.000,0.000,0.000,0.000
+! <Enclosure/Window Adjacency Daylighting Counts>, Enclosure Name, Number of Exterior Windows, Number of Exterior Windows in Adjacent Enclosures
+Enclosure/Window Adjacency Daylighting Counts, LOBBY_0,4,0
+Enclosure/Window Adjacency Daylighting Counts, CONFERENCE_0,4,0
+Enclosure/Window Adjacency Daylighting Counts, BREAK_ROOM_0,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0,5,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_PRIVATE_0,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_2,9,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_3,6,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_4,5,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_5,5,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_6,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_0_7,4,0
+Enclosure/Window Adjacency Daylighting Counts, LOBBY_1,4,0
+Enclosure/Window Adjacency Daylighting Counts, CONFERENCE_1,4,0
+Enclosure/Window Adjacency Daylighting Counts, BREAK_ROOM_1,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1,6,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_PRIVATE_1,6,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1_2,8,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1_3,6,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1_4,7,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1_5,6,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_1_6,5,0
+Enclosure/Window Adjacency Daylighting Counts, LOBBY_2,4,0
+Enclosure/Window Adjacency Daylighting Counts, CONFERENCE_2,4,0
+Enclosure/Window Adjacency Daylighting Counts, BREAK_ROOM_2,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_PRIVATE_2,7,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2_2,5,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2_3,11,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2_4,7,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2_5,4,0
+Enclosure/Window Adjacency Daylighting Counts, OFFICE_OPEN_2_6,6,0
+! <Enclosure/Window Adjacency Daylighting Matrix>, Enclosure Name, Number of Adjacent Enclosures with Windows,Adjacent Enclosure Names - 1st 100 (max)
+Enclosure/Window Adjacency Daylighting Matrix, LOBBY_0,0
+Enclosure/Window Adjacency Daylighting Matrix, CONFERENCE_0,0
+Enclosure/Window Adjacency Daylighting Matrix, BREAK_ROOM_0,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_PRIVATE_0,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_3,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_4,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_5,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_6,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_0_7,0
+Enclosure/Window Adjacency Daylighting Matrix, LOBBY_1,0
+Enclosure/Window Adjacency Daylighting Matrix, CONFERENCE_1,0
+Enclosure/Window Adjacency Daylighting Matrix, BREAK_ROOM_1,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_PRIVATE_1,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1_3,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1_4,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1_5,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_1_6,0
+Enclosure/Window Adjacency Daylighting Matrix, LOBBY_2,0
+Enclosure/Window Adjacency Daylighting Matrix, CONFERENCE_2,0
+Enclosure/Window Adjacency Daylighting Matrix, BREAK_ROOM_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_PRIVATE_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2_2,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2_3,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2_4,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2_5,0
+Enclosure/Window Adjacency Daylighting Matrix, OFFICE_OPEN_2_6,0
+! <ZoneInfiltration Airflow Stats Nominal>,Name,Schedule Name,Zone Name, Zone Floor Area {m2}, # Zone Occupants,Design Volume Flow Rate {m3/s},Volume Flow Rate/Floor Area {m3/s-m2},Volume Flow Rate/Exterior Surface Area {m3/s-m2},ACH - Air Changes per Hour,Equation A - Constant Term Coefficient {},Equation B - Temperature Term Coefficient {1/C},Equation C - Velocity Term Coefficient {s/m}, Equation D - Velocity Squared Term Coefficient {s2/m2}
+ ZoneInfiltration Airflow Stats Nominal, LOBBY_0_INFILTRATION,LOBBY_0_INFILTRATION_SCHEDULE,LOBBY_0,197.03,9.0,4.926E-002,2.500E-004,8.726E-005,17.733,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, CONFERENCE_0_INFILTRATION,CONFERENCE_0_INFILTRATION_SCHEDULE,CONFERENCE_0,37.60,7.0,9.400E-003,2.500E-004,6.232E-005,3.384,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, BREAK_ROOM_0_INFILTRATION,BREAK_ROOM_0_INFILTRATION_SCHEDULE,BREAK_ROOM_0,24.43,2.0,6.107E-003,2.500E-004,5.639E-005,2.199,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, MECHANICAL_0_INFILTRATION,MECHANICAL_0_INFILTRATION_SCHEDULE,MECHANICAL_0,95.65,1.0,2.391E-002,2.500E-004,7.635E-005,8.608,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_INFILTRATION,OFFICE_OPEN_0_INFILTRATION_SCHEDULE,OFFICE_OPEN_0,33.40,1.0,8.351E-003,2.500E-004,4.351E-005,3.006,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_PRIVATE_0_INFILTRATION,OFFICE_PRIVATE_0_INFILTRATION_SCHEDULE,OFFICE_PRIVATE_0,119.79,5.0,2.995E-002,2.500E-004,8.069E-005,10.781,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, STORAGE_0_INFILTRATION,STORAGE_0_INFILTRATION_SCHEDULE,STORAGE_0,112.63,1.0,2.816E-002,2.500E-004,7.976E-005,10.137,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_2_INFILTRATION,OFFICE_OPEN_0_2_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_2,57.52,2.0,1.438E-002,2.500E-004,5.765E-005,5.177,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_3_INFILTRATION,OFFICE_OPEN_0_3_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_3,68.83,3.0,1.721E-002,2.500E-004,6.362E-005,6.195,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_4_INFILTRATION,OFFICE_OPEN_0_4_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_4,120.61,6.0,3.015E-002,2.500E-004,8.100E-005,10.855,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_5_INFILTRATION,OFFICE_OPEN_0_5_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_5,81.49,4.0,2.037E-002,2.500E-004,7.026E-005,7.335,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_6_INFILTRATION,OFFICE_OPEN_0_6_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_6,22.25,1.0,5.562E-003,2.500E-004,3.169E-005,2.002,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_0_7_INFILTRATION,OFFICE_OPEN_0_7_INFILTRATION_SCHEDULE,OFFICE_OPEN_0_7,115.64,5.0,2.891E-002,2.500E-004,8.019E-005,10.408,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, LOBBY_1_INFILTRATION,LOBBY_1_INFILTRATION_SCHEDULE,LOBBY_1,87.32,4.0,2.183E-002,2.500E-004,7.588E-005,7.859,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, CONFERENCE_1_INFILTRATION,CONFERENCE_1_INFILTRATION_SCHEDULE,CONFERENCE_1,58.65,11.0,1.466E-002,2.500E-004,6.862E-005,5.279,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, BREAK_ROOM_1_INFILTRATION,BREAK_ROOM_1_INFILTRATION_SCHEDULE,BREAK_ROOM_1,32.93,3.0,8.233E-003,2.500E-004,6.107E-005,2.964,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, MECHANICAL_1_INFILTRATION,MECHANICAL_1_INFILTRATION_SCHEDULE,MECHANICAL_1,45.96,1.0,1.149E-002,2.500E-004,6.617E-005,4.136,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_INFILTRATION,OFFICE_OPEN_1_INFILTRATION_SCHEDULE,OFFICE_OPEN_1,85.49,4.0,2.137E-002,2.500E-004,7.218E-005,7.694,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_PRIVATE_1_INFILTRATION,OFFICE_PRIVATE_1_INFILTRATION_SCHEDULE,OFFICE_PRIVATE_1,109.27,5.0,2.732E-002,2.500E-004,7.802E-005,9.834,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, STORAGE_1_INFILTRATION,STORAGE_1_INFILTRATION_SCHEDULE,STORAGE_1,112.63,1.0,2.816E-002,2.500E-004,7.976E-005,10.137,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_2_INFILTRATION,OFFICE_OPEN_1_2_INFILTRATION_SCHEDULE,OFFICE_OPEN_1_2,64.46,3.0,1.612E-002,2.500E-004,6.060E-005,5.802,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_3_INFILTRATION,OFFICE_OPEN_1_3_INFILTRATION_SCHEDULE,OFFICE_OPEN_1_3,114.14,5.0,2.854E-002,2.500E-004,7.942E-005,10.273,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_4_INFILTRATION,OFFICE_OPEN_1_4_INFILTRATION_SCHEDULE,OFFICE_OPEN_1_4,88.88,4.0,2.222E-002,2.500E-004,6.739E-005,7.999,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_5_INFILTRATION,OFFICE_OPEN_1_5_INFILTRATION_SCHEDULE,OFFICE_OPEN_1_5,98.64,4.0,2.466E-002,2.500E-004,7.512E-005,8.878,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_1_6_INFILTRATION,OFFICE_OPEN_1_6_INFILTRATION_SCHEDULE,OFFICE_OPEN_1_6,113.36,5.0,2.834E-002,2.500E-004,7.961E-005,10.203,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, LOBBY_2_INFILTRATION,LOBBY_2_INFILTRATION_SCHEDULE,LOBBY_2,80.04,4.0,2.001E-002,2.500E-004,7.454E-005,7.204,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, CONFERENCE_2_INFILTRATION,CONFERENCE_2_INFILTRATION_SCHEDULE,CONFERENCE_2,60.61,12.0,1.515E-002,2.500E-004,7.043E-005,5.455,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, BREAK_ROOM_2_INFILTRATION,BREAK_ROOM_2_INFILTRATION_SCHEDULE,BREAK_ROOM_2,23.83,2.0,5.956E-003,2.500E-004,5.454E-005,2.144,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, MECHANICAL_2_INFILTRATION,MECHANICAL_2_INFILTRATION_SCHEDULE,MECHANICAL_2,79.60,1.0,1.990E-002,2.500E-004,7.382E-005,7.164,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_INFILTRATION,OFFICE_OPEN_2_INFILTRATION_SCHEDULE,OFFICE_OPEN_2,108.05,5.0,2.701E-002,2.500E-004,7.917E-005,9.724,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_PRIVATE_2_INFILTRATION,OFFICE_PRIVATE_2_INFILTRATION_SCHEDULE,OFFICE_PRIVATE_2,56.05,2.0,1.401E-002,2.500E-004,4.783E-005,5.044,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, STORAGE_2_INFILTRATION,STORAGE_2_INFILTRATION_SCHEDULE,STORAGE_2,112.63,1.0,2.816E-002,2.500E-004,7.976E-005,10.137,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_2_INFILTRATION,OFFICE_OPEN_2_2_INFILTRATION_SCHEDULE,OFFICE_OPEN_2_2,106.48,5.0,2.662E-002,2.500E-004,7.857E-005,9.584,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_3_INFILTRATION,OFFICE_OPEN_2_3_INFILTRATION_SCHEDULE,OFFICE_OPEN_2_3,85.48,4.0,2.137E-002,2.500E-004,6.082E-005,7.693,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_4_INFILTRATION,OFFICE_OPEN_2_4_INFILTRATION_SCHEDULE,OFFICE_OPEN_2_4,95.29,4.0,2.382E-002,2.500E-004,6.937E-005,8.576,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_5_INFILTRATION,OFFICE_OPEN_2_5_INFILTRATION_SCHEDULE,OFFICE_OPEN_2_5,111.65,5.0,2.791E-002,2.500E-004,7.968E-005,10.048,1.000,0.960,0.120,0.000
+ ZoneInfiltration Airflow Stats Nominal, OFFICE_OPEN_2_6_INFILTRATION,OFFICE_OPEN_2_6_INFILTRATION_SCHEDULE,OFFICE_OPEN_2_6,61.36,3.0,1.534E-002,2.500E-004,5.134E-005,5.522,1.000,0.960,0.120,0.000
+! <AirFlow Model>, Simple
+ AirFlow Model, Simple
+! <RoomAir Model>, Zone Name, Mixing/Mundt/UCSDDV/UCSDCV/UCSDUFI/UCSDUFE/User Defined
+RoomAir Model,LOBBY_0,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_0,Mixing/Well-Stirred
+RoomAir Model,BREAK_ROOM_0,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_0,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_0,Mixing/Well-Stirred
+RoomAir Model,STORAGE_0,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_3,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_4,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_5,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_6,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0_7,Mixing/Well-Stirred
+RoomAir Model,LOBBY_1,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_1,Mixing/Well-Stirred
+RoomAir Model,BREAK_ROOM_1,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_1,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_1,Mixing/Well-Stirred
+RoomAir Model,STORAGE_1,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1_3,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1_4,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1_5,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_1_6,Mixing/Well-Stirred
+RoomAir Model,LOBBY_2,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_2,Mixing/Well-Stirred
+RoomAir Model,BREAK_ROOM_2,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_2,Mixing/Well-Stirred
+RoomAir Model,STORAGE_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2_3,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2_4,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2_5,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2_6,Mixing/Well-Stirred
+! <AirflowNetwork Model:Control>, No Multizone or Distribution/Multizone with Distribution/Multizone without Distribution/Multizone with Distribution only during Fan Operation
+AirflowNetwork Model:Control,NoMultizoneOrDistribution
+! <Zone Volume Capacitance Multiplier>, Sensible Heat Capacity Multiplier, Moisture Capacity Multiplier, Carbon Dioxide Capacity Multiplier, Generic Contaminant Capacity Multiplier
+Zone Volume Capacitance Multiplier,   1.000 ,   1.000,   1.000,   1.000

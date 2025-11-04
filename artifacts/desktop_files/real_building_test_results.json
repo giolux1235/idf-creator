@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Willis Tower (Sears Tower)",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_willis_tower_sears_tower.idf",
+    "simulated_eui": null,
+    "known_eui": 155,
+    "error_pct": null,
+    "simulation_error": "Could not extract energy data"
+  },
+  {
+    "name": "Empire State Building",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_empire_state_building.idf",
+    "simulated_eui": null,
+    "known_eui": 180,
+    "error_pct": null,
+    "simulation_error": "Could not extract energy data"
+  },
+  {
+    "name": "John Hancock Center",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_john_hancock_center.idf",
+    "simulated_eui": null,
+    "known_eui": 165,
+    "error_pct": null,
+    "simulation_error": "Could not extract energy data"
+  },
+  {
+    "name": "Transamerica Pyramid",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_transamerica_pyramid.idf",
+    "simulated_eui": null,
+    "known_eui": 140,
+    "error_pct": null,
+    "simulation_error": "Could not extract energy data"
+  },
+  {
+    "name": "Bank of America Tower (Seattle)",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_bank_of_america_tower_seattle.idf",
+    "simulated_eui": null,
+    "known_eui": 120,
+    "error_pct": null,
+    "simulation_error": "Weather file not found"
+  },
+  {
+    "name": "Prudential Tower (Boston)",
+    "success": true,
+    "idf_path": "artifacts/desktop_files/idf/real_prudential_tower_boston.idf",
+    "simulated_eui": null,
+    "known_eui": 185,
+    "error_pct": null,
+    "simulation_error": "Weather file not found"
+  }
+]

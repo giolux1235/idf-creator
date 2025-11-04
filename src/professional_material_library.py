@@ -6,6 +6,7 @@ ASHRAE 90.1 compliant materials and construction assemblies
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
+from .building_age_adjustments import BuildingAgeAdjuster
 
 
 @dataclass
@@ -44,6 +45,7 @@ class ProfessionalMaterialLibrary:
         self.materials = self._load_materials()
         self.constructions = self._load_constructions()
         self.climate_zones = self._load_climate_zones()
+        self.age_adjuster = BuildingAgeAdjuster()
     
     def _load_materials(self) -> Dict[str, Material]:
         """Load comprehensive material database"""
@@ -517,11 +519,16 @@ class ProfessionalMaterialLibrary:
         }
     
     def get_construction_assembly(self, building_type: str, climate_zone: str, 
-                                surface_type: str, year_built: int = 2020) -> Construction:
-        """Get appropriate construction assembly based on building type and climate zone"""
+                                surface_type: str, year_built: Optional[int] = None,
+                                leed_level: Optional[str] = None) -> Construction:
+        """Get appropriate construction assembly based on building type, climate zone, age, and LEED level"""
         
         # Map climate zone to construction category
         cz_category = self.climate_zones.get(climate_zone, '3-4')
+        
+        # Use modern defaults if year_built not specified
+        if year_built is None:
+            year_built = 2020
         
         # Determine if building meets current code (post-2010)
         code_era = 'current' if year_built >= 2010 else 'legacy'
@@ -545,44 +552,106 @@ class ProfessionalMaterialLibrary:
             if surface_type.lower() in construction.name.lower():
                 return construction
         
-        # If nothing found, return a basic construction
-        return self._get_basic_construction(surface_type)
+              # If nothing found, return a basic construction (age and LEED-adjusted)
+        return self._get_basic_construction(surface_type, year_built, leed_level)
     
-    def _get_basic_construction(self, surface_type: str) -> Construction:
-        """Get basic construction as fallback"""
+    def _get_basic_construction(self, surface_type: str, year_built: Optional[int] = None,
+                               leed_level: Optional[str] = None) -> Construction:
+        """Get basic construction as fallback (with age and LEED adjustments)"""
+        # Apply LEED envelope improvements if specified
+        envelope_improvement = 1.0
+        if leed_level:
+            from .building_age_adjustments import BuildingAgeAdjuster
+            leed_adjuster = BuildingAgeAdjuster()
+            leed_bonuses = leed_adjuster.get_leed_efficiency_bonus(leed_level)
+            envelope_improvement = leed_bonuses.get('envelope_improvement', 1.0)
+        
+        # For LEED Platinum windows, apply additional triple-pane bonus
+        if leed_level and leed_level.lower() == 'platinum' and 'window' in surface_type.lower():
+            envelope_improvement = envelope_improvement * 1.15  # Additional 15% for triple-pane
+        
         if 'wall' in surface_type.lower():
+            # LEED improves R-value (reduces U-factor)
+            base_u = 0.35
+            base_r = 2.86
+            improved_r = base_r * envelope_improvement
+            improved_u = 1.0 / improved_r if improved_r > 0 else base_u
             return Construction(
                 name='Basic_Wall',
                 materials=['Gypsum_Board_1_2', 'Insulation_Fiberglass_R13', 'Gypsum_Board_1_2'],
-                u_factor=0.35,
-                r_value=2.86,
+                u_factor=improved_u,
+                r_value=improved_r,
                 climate_zone='All',
                 building_type='All'
             )
         elif 'roof' in surface_type.lower():
+            base_u = 0.20
+            base_r = 5.0
+            improved_r = base_r * envelope_improvement
+            improved_u = 1.0 / improved_r if improved_r > 0 else base_u
             return Construction(
                 name='Basic_Roof',
                 materials=['Roof_Membrane', 'Roof_Insulation_R20', 'Concrete_Medium'],
-                u_factor=0.20,
-                r_value=5.0,
+                u_factor=improved_u,
+                r_value=improved_r,
                 climate_zone='All',
                 building_type='All'
             )
         elif 'floor' in surface_type.lower():
+            base_u = 0.20
+            base_r = 5.0
+            improved_r = base_r * envelope_improvement
+            improved_u = 1.0 / improved_r if improved_r > 0 else base_u
             return Construction(
                 name='Basic_Floor',
                 materials=['Concrete_Heavy', 'Insulation_Fiberglass_R20'],
-                u_factor=0.20,
-                r_value=5.0,
+                u_factor=improved_u,
+                r_value=improved_r,
                 climate_zone='All',
                 building_type='All'
             )
         else:
+            # Window - adjust based on building age and LEED
+            if year_built is None:
+                year_built = 2020  # Default to modern
+            
+            window_props = self.age_adjuster.get_window_properties(year_built)
+            
+            # Apply LEED improvements to windows (better U-factor, may use triple-pane)
+            window_u = window_props['u_factor']
+            if leed_level:
+                # LEED Platinum/Gold buildings often use triple-pane or better double-pane
+                leed_lower = leed_level.lower()
+                if leed_lower in ['platinum', 'gold']:
+                    # Triple-pane or better double-pane low-E
+                    window_u = window_u * 0.75  # 25% better U-factor
+                    material_name = 'Window_Triple_LowE' if leed_lower == 'platinum' else 'Window_Double_LowE'
+                elif leed_lower in ['silver', 'certified']:
+                    # Better double-pane low-E
+                    window_u = window_u * 0.90  # 10% better U-factor
+                    material_name = 'Window_Double_LowE'
+                else:
+                    # Default based on age
+                    if window_props['window_type'] == 'single_pane':
+                        material_name = 'Window_Single_Clear'
+                    elif 'low_e' in window_props['window_type']:
+                        material_name = 'Window_Double_LowE'
+                    else:
+                        material_name = 'Window_Double_Clear'
+            else:
+                # Choose material based on window type (age-based)
+                if window_props['window_type'] == 'single_pane':
+                    material_name = 'Window_Single_Clear'
+                elif 'low_e' in window_props['window_type']:
+                    material_name = 'Window_Double_LowE'
+                else:
+                    material_name = 'Window_Double_Clear'
+            
             return Construction(
-                name='Basic_Window',
-                materials=['Window_Double_Clear'],
-                u_factor=2.7,
-                r_value=0.37,
+                name=f"Window_AgeLEED_{year_built}_{leed_level or 'None'}",
+                materials=[material_name],
+                u_factor=window_u,
+                r_value=1.0 / window_u if window_u > 0 else 0.37,
                 climate_zone='All',
                 building_type='All'
             )

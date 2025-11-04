@@ -1,0 +1,9 @@
+{
+  "test_date": "2025-11-01T23:25:56.510885",
+  "buildings_tested": 6,
+  "buildings_simulated": 0,
+  "buildings_with_results": 0,
+  "average_error_percent": null,
+  "ashrae_14_compliance": 0,
+  "results": []
+}

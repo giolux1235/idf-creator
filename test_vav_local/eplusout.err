@@ -1,0 +1,603 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.10.31 17:04,
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_0_Z1_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_0_Z1_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_0_Z2_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_0_Z2_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_0_Z3_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_0_Z3_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_0_Z4_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_0_Z4_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_OPEN_0_Z5_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_OPEN_0_Z5_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_0_Z6_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_0_Z6_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_0_Z7_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_0_Z7_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_1_Z8_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_1_Z8_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_1_Z9_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = BREAK_ROOM_1_Z9_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_1_Z10_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_1_Z10_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_1_Z11_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_1_Z11_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_1_Z12_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_1_Z12_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_2_Z13_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = LOBBY_2_Z13_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_2_Z14_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = CONFERENCE_2_Z14_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_2_Z15_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = MECHANICAL_2_Z15_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_OPEN_2_Z16_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_OPEN_2_Z16_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_2_Z17_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = OFFICE_PRIVATE_2_Z17_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow per Zone Floor Area During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_2_Z18_VAVTERMINAL
+   ** Warning ** Since Damper Heating Action = NORMAL, input for Maximum Flow Fraction During Reheat will be ignored.
+   **   ~~~   ** Occurs in AirTerminal:SingleDuct:VAV:Reheat = STORAGE_2_Z18_VAVTERMINAL
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="LOBBY_0_Z1_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_0_Z2_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_0_Z3_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="MECHANICAL_0_Z4_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_0_Z5_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z6_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="STORAGE_0_Z7_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z8_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_1_Z9_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="MECHANICAL_1_Z10_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_1_Z11_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="STORAGE_1_Z12_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z13_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="CONFERENCE_2_Z14_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="MECHANICAL_2_Z15_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_2_Z16_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_2_Z17_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** GetDXCoils: Coil:Cooling:DX:SingleSpeed="STORAGE_2_Z18_COOLINGCOILDX" curve values
+   **   ~~~   ** ... Energy Input Ratio Function of Temperature Curve Name = COOL-EIR-FT output is not equal to 1.0 (+ or - 10%) at rated conditions.
+   **   ~~~   ** ... Curve output at rated conditions = -3.341E-002
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_0_Z1_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_0_Z2_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_0_Z3_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_0_Z4_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_0_Z5_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z6_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_0_Z7_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z8_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_1_Z9_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_1_Z10_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_1_Z11_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_1_Z12_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z13_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_2_Z14_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_2_Z15_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_2_Z16_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_2_Z17_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_2_Z18_COOLINGCOILDX":
+   **   ~~~   **  Energy Input Ratio Modifier curve (function of temperature) output is negative (-3.334E-002).
+   **   ~~~   **  Negative value occurs using a condenser inlet air temperature of 35.0 and an inlet air wet-bulb temperature of 19.4.
+   **   ~~~   **  Resetting curve output to zero and continuing simulation.
+   **   ~~~   **  During Warmup, Environment=QUICK VALIDATION RUN PERIOD, at Simulation time=01/01 00:00 - 00:15
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ** Severe  ** Node Connection Error, Node="LOBBY_0_Z1_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=LOBBY_0_Z1_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_0_Z2_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=CONFERENCE_0_Z2_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="BREAK_ROOM_0_Z3_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=BREAK_ROOM_0_Z3_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_0_Z4_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=MECHANICAL_0_Z4_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="OFFICE_OPEN_0_Z5_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=OFFICE_OPEN_0_Z5_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_0_Z6_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=OFFICE_PRIVATE_0_Z6_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="STORAGE_0_Z7_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=STORAGE_0_Z7_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_1_Z8_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=CONFERENCE_1_Z8_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="BREAK_ROOM_1_Z9_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=BREAK_ROOM_1_Z9_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_1_Z10_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=MECHANICAL_1_Z10_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_1_Z11_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=OFFICE_PRIVATE_1_Z11_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="STORAGE_1_Z12_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=STORAGE_1_Z12_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="LOBBY_2_Z13_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=LOBBY_2_Z13_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_2_Z14_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=CONFERENCE_2_Z14_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_2_Z15_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=MECHANICAL_2_Z15_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="OFFICE_OPEN_2_Z16_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=OFFICE_OPEN_2_Z16_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_2_Z17_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=OFFICE_PRIVATE_2_Z17_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="STORAGE_2_Z18_REHEATINLET", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=Coil:Heating:Electric, Name=STORAGE_2_Z18_REHEATCOIL
+   ** Severe  ** Node Connection Error, Node="LOBBY_0_Z1_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=LOBBY_0_Z1_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_0_Z2_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=CONFERENCE_0_Z2_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="BREAK_ROOM_0_Z3_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=BREAK_ROOM_0_Z3_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_0_Z4_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=MECHANICAL_0_Z4_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="OFFICE_OPEN_0_Z5_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=OFFICE_OPEN_0_Z5_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_0_Z6_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=OFFICE_PRIVATE_0_Z6_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="STORAGE_0_Z7_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=STORAGE_0_Z7_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_1_Z8_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=CONFERENCE_1_Z8_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="BREAK_ROOM_1_Z9_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=BREAK_ROOM_1_Z9_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_1_Z10_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=MECHANICAL_1_Z10_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_1_Z11_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=OFFICE_PRIVATE_1_Z11_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="STORAGE_1_Z12_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=STORAGE_1_Z12_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="LOBBY_2_Z13_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=LOBBY_2_Z13_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="CONFERENCE_2_Z14_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=CONFERENCE_2_Z14_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="MECHANICAL_2_Z15_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=MECHANICAL_2_Z15_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="OFFICE_OPEN_2_Z16_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=OFFICE_OPEN_2_Z16_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="OFFICE_PRIVATE_2_Z17_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=OFFICE_PRIVATE_2_Z17_RETURNAIRMIXER
+   ** Severe  ** Node Connection Error, Node="STORAGE_2_Z18_RETURNAIR", Inlet node did not find an appropriate matching "outlet" node.
+   **   ~~~   ** If this is an outdoor air inlet node, it must be listed in an OutdoorAir:Node or OutdoorAir:NodeList object.
+   **   ~~~   ** Reference Object=AirLoopHVAC:ZoneMixer, Name=STORAGE_2_Z18_RETURNAIRMIXER
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=LOBBY_0_Z1_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : LOBBY_0_Z1_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: LOBBY_0_Z1_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=CONFERENCE_0_Z2_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : CONFERENCE_0_Z2_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: CONFERENCE_0_Z2_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=BREAK_ROOM_0_Z3_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : BREAK_ROOM_0_Z3_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: BREAK_ROOM_0_Z3_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=MECHANICAL_0_Z4_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : MECHANICAL_0_Z4_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: MECHANICAL_0_Z4_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=OFFICE_OPEN_0_Z5_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : OFFICE_OPEN_0_Z5_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: OFFICE_OPEN_0_Z5_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=OFFICE_PRIVATE_0_Z6_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_0_Z6_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_0_Z6_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=STORAGE_0_Z7_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : STORAGE_0_Z7_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: STORAGE_0_Z7_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=CONFERENCE_1_Z8_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : CONFERENCE_1_Z8_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: CONFERENCE_1_Z8_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=BREAK_ROOM_1_Z9_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : BREAK_ROOM_1_Z9_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: BREAK_ROOM_1_Z9_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=MECHANICAL_1_Z10_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : MECHANICAL_1_Z10_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: MECHANICAL_1_Z10_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=OFFICE_PRIVATE_1_Z11_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_1_Z11_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_1_Z11_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=STORAGE_1_Z12_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : STORAGE_1_Z12_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: STORAGE_1_Z12_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=LOBBY_2_Z13_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : LOBBY_2_Z13_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: LOBBY_2_Z13_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=CONFERENCE_2_Z14_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : CONFERENCE_2_Z14_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: CONFERENCE_2_Z14_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=MECHANICAL_2_Z15_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : MECHANICAL_2_Z15_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: MECHANICAL_2_Z15_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=OFFICE_OPEN_2_Z16_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : OFFICE_OPEN_2_Z16_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: OFFICE_OPEN_2_Z16_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=OFFICE_PRIVATE_2_Z17_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_2_Z17_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_2_Z17_ADUOUTLET
+   ** Warning ** Potential Node Connection Error for object COIL:HEATING:ELECTRIC, name=STORAGE_2_Z18_REHEATCOIL
+   **   ~~~   **   Node Types are still UNDEFINED -- See Branch/Node Details file for further information
+   **   ~~~   **   Inlet Node : STORAGE_2_Z18_TERMINALOUTLET
+   **   ~~~   **   Outlet Node: STORAGE_2_Z18_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=LOBBY_0_Z1_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : LOBBY_0_Z1_REHEATINLET
+   **   ~~~   **   Outlet Node: LOBBY_0_Z1_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=CONFERENCE_0_Z2_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : CONFERENCE_0_Z2_REHEATINLET
+   **   ~~~   **   Outlet Node: CONFERENCE_0_Z2_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=BREAK_ROOM_0_Z3_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : BREAK_ROOM_0_Z3_REHEATINLET
+   **   ~~~   **   Outlet Node: BREAK_ROOM_0_Z3_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=MECHANICAL_0_Z4_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : MECHANICAL_0_Z4_REHEATINLET
+   **   ~~~   **   Outlet Node: MECHANICAL_0_Z4_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=OFFICE_OPEN_0_Z5_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : OFFICE_OPEN_0_Z5_REHEATINLET
+   **   ~~~   **   Outlet Node: OFFICE_OPEN_0_Z5_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=OFFICE_PRIVATE_0_Z6_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_0_Z6_REHEATINLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_0_Z6_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=STORAGE_0_Z7_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : STORAGE_0_Z7_REHEATINLET
+   **   ~~~   **   Outlet Node: STORAGE_0_Z7_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=CONFERENCE_1_Z8_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : CONFERENCE_1_Z8_REHEATINLET
+   **   ~~~   **   Outlet Node: CONFERENCE_1_Z8_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=BREAK_ROOM_1_Z9_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : BREAK_ROOM_1_Z9_REHEATINLET
+   **   ~~~   **   Outlet Node: BREAK_ROOM_1_Z9_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=MECHANICAL_1_Z10_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : MECHANICAL_1_Z10_REHEATINLET
+   **   ~~~   **   Outlet Node: MECHANICAL_1_Z10_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=OFFICE_PRIVATE_1_Z11_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_1_Z11_REHEATINLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_1_Z11_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=STORAGE_1_Z12_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : STORAGE_1_Z12_REHEATINLET
+   **   ~~~   **   Outlet Node: STORAGE_1_Z12_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=LOBBY_2_Z13_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : LOBBY_2_Z13_REHEATINLET
+   **   ~~~   **   Outlet Node: LOBBY_2_Z13_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=CONFERENCE_2_Z14_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : CONFERENCE_2_Z14_REHEATINLET
+   **   ~~~   **   Outlet Node: CONFERENCE_2_Z14_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=MECHANICAL_2_Z15_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : MECHANICAL_2_Z15_REHEATINLET
+   **   ~~~   **   Outlet Node: MECHANICAL_2_Z15_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=OFFICE_OPEN_2_Z16_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : OFFICE_OPEN_2_Z16_REHEATINLET
+   **   ~~~   **   Outlet Node: OFFICE_OPEN_2_Z16_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=OFFICE_PRIVATE_2_Z17_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : OFFICE_PRIVATE_2_Z17_REHEATINLET
+   **   ~~~   **   Outlet Node: OFFICE_PRIVATE_2_Z17_ADUOUTLET
+   ** Warning ** Node Connection Error for object COIL:HEATING:ELECTRIC=STORAGE_2_Z18_REHEATCOIL
+   **   ~~~   **   Air Nodes not on any Branch or Parent Object
+   **   ~~~   **   Inlet Node : STORAGE_2_Z18_REHEATINLET
+   **   ~~~   **   Outlet Node: STORAGE_2_Z18_ADUOUTLET
+   ************* There were 72 node connection errors noted.
+   ************* Beginning Simulation
+   ************* Simulation Error Summary *************
+   ************* There are 1 unused schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_0_Z1_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_0_Z2_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_0_Z3_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_0_Z4_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_0_Z5_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_0_Z6_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_0_Z7_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_1_Z8_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="BREAK_ROOM_1_Z9_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_1_Z10_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_1_Z11_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_1_Z12_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="LOBBY_2_Z13_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="CONFERENCE_2_Z14_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="MECHANICAL_2_Z15_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_2_Z16_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_PRIVATE_2_Z17_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="STORAGE_2_Z18_COOLINGCOILDX": Energy Input Ratio Modifier curve (function of temperature) output is negative warning continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 1 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.033347  Min=-0.033347
+   *************
+   *************
+   ************* ===== Final Error Summary =====
+   ************* The following error categories occurred.  Consider correcting or noting.
+   ************* Node Connection Errors
+   ************* ..Node connection errors are often caused by spelling mistakes in a node name field.
+   ************* ..To track down the problem, search the idf file for each node name listed to see if it
+   ************* ..occurs in the expected input fields.
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 108 Warning; 36 Severe Errors; Elapsed Time=00hr 00min  1.96sec

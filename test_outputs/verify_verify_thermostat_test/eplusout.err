@@ -1,0 +1,794 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 21:20,
+   ** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.
+   **   ~~~   ** These values may be inappropriate.  Please consult the Input Output Reference for more details.
+   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.
+   **   ~~~   ** ..Location object=SITE
+   **   ~~~   ** ..Weather File Location=Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300
+   **   ~~~   ** ..due to location differences, Latitude difference=[0.48] degrees, Longitude difference=[0.32] degrees.
+   **   ~~~   ** ..Time Zone difference=[2.0] hour(s), Elevation difference=[1910.00] percent, [191.00] meters.
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="BREAK_ROOM_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="BREAK_ROOM_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_OCCUPANCY" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="CONFERENCE_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="LOBBY_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="LOBBY_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="MECHANICAL_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="MECHANICAL_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_OCCUPANCY" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="OFFICE_OPEN_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="STORAGE_LIGHTING" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** ProcessScheduleInput: Schedule:Compact="STORAGE_EQUIPMENT" has missing day types in Through=12/31
+   **   ~~~   ** Last "For" field=FOR: WEEKENDS
+   **   ~~~   ** Missing day types="Holiday","SummerDesignDay","WinterDesignDay","CustomDay1","CustomDay2"
+   **   ~~~   ** Missing day types will have 0.0 as Schedule Values
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="LOBBY_0_FLOOR", in Zone="LOBBY_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="LOBBY_0_CEILING", in Zone="LOBBY_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="CONFERENCE_0_FLOOR", in Zone="CONFERENCE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="CONFERENCE_0_CEILING", in Zone="CONFERENCE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="BREAK_ROOM_0_FLOOR", in Zone="BREAK_ROOM_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="BREAK_ROOM_0_CEILING", in Zone="BREAK_ROOM_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="MECHANICAL_0_FLOOR", in Zone="MECHANICAL_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="MECHANICAL_0_CEILING", in Zone="MECHANICAL_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_FLOOR", in Zone="OFFICE_OPEN_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_CEILING", in Zone="OFFICE_OPEN_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_PRIVATE_0_FLOOR", in Zone="OFFICE_PRIVATE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_PRIVATE_0_CEILING", in Zone="OFFICE_PRIVATE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="STORAGE_0_FLOOR", in Zone="STORAGE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="STORAGE_0_CEILING", in Zone="STORAGE_0".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_2_FLOOR", in Zone="OFFICE_OPEN_0_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_2_CEILING", in Zone="OFFICE_OPEN_0_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_3_FLOOR", in Zone="OFFICE_OPEN_0_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_3_CEILING", in Zone="OFFICE_OPEN_0_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_4_FLOOR", in Zone="OFFICE_OPEN_0_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_4_CEILING", in Zone="OFFICE_OPEN_0_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_5_FLOOR", in Zone="OFFICE_OPEN_0_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_5_CEILING", in Zone="OFFICE_OPEN_0_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_6_FLOOR", in Zone="OFFICE_OPEN_0_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_6_CEILING", in Zone="OFFICE_OPEN_0_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_0_7_FLOOR", in Zone="OFFICE_OPEN_0_7".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_0_7_CEILING", in Zone="OFFICE_OPEN_0_7".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="LOBBY_1_FLOOR", in Zone="LOBBY_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="LOBBY_1_CEILING", in Zone="LOBBY_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="CONFERENCE_1_FLOOR", in Zone="CONFERENCE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="CONFERENCE_1_CEILING", in Zone="CONFERENCE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="BREAK_ROOM_1_FLOOR", in Zone="BREAK_ROOM_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="BREAK_ROOM_1_CEILING", in Zone="BREAK_ROOM_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="MECHANICAL_1_FLOOR", in Zone="MECHANICAL_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="MECHANICAL_1_CEILING", in Zone="MECHANICAL_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_FLOOR", in Zone="OFFICE_OPEN_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_CEILING", in Zone="OFFICE_OPEN_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_PRIVATE_1_FLOOR", in Zone="OFFICE_PRIVATE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_PRIVATE_1_CEILING", in Zone="OFFICE_PRIVATE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="STORAGE_1_FLOOR", in Zone="STORAGE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="STORAGE_1_CEILING", in Zone="STORAGE_1".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_2_FLOOR", in Zone="OFFICE_OPEN_1_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_2_CEILING", in Zone="OFFICE_OPEN_1_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_3_FLOOR", in Zone="OFFICE_OPEN_1_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_3_CEILING", in Zone="OFFICE_OPEN_1_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_4_FLOOR", in Zone="OFFICE_OPEN_1_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_4_CEILING", in Zone="OFFICE_OPEN_1_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_5_FLOOR", in Zone="OFFICE_OPEN_1_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_5_CEILING", in Zone="OFFICE_OPEN_1_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_1_6_FLOOR", in Zone="OFFICE_OPEN_1_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_1_6_CEILING", in Zone="OFFICE_OPEN_1_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="LOBBY_2_FLOOR", in Zone="LOBBY_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="LOBBY_2_CEILING", in Zone="LOBBY_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="CONFERENCE_2_FLOOR", in Zone="CONFERENCE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="CONFERENCE_2_CEILING", in Zone="CONFERENCE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="BREAK_ROOM_2_FLOOR", in Zone="BREAK_ROOM_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="BREAK_ROOM_2_CEILING", in Zone="BREAK_ROOM_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="MECHANICAL_2_FLOOR", in Zone="MECHANICAL_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="MECHANICAL_2_CEILING", in Zone="MECHANICAL_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_FLOOR", in Zone="OFFICE_OPEN_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_CEILING", in Zone="OFFICE_OPEN_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_PRIVATE_2_FLOOR", in Zone="OFFICE_PRIVATE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_PRIVATE_2_CEILING", in Zone="OFFICE_PRIVATE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="STORAGE_2_FLOOR", in Zone="STORAGE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="STORAGE_2_CEILING", in Zone="STORAGE_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_2_FLOOR", in Zone="OFFICE_OPEN_2_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_2_CEILING", in Zone="OFFICE_OPEN_2_2".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_3_FLOOR", in Zone="OFFICE_OPEN_2_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_3_CEILING", in Zone="OFFICE_OPEN_2_3".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_4_FLOOR", in Zone="OFFICE_OPEN_2_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_4_CEILING", in Zone="OFFICE_OPEN_2_4".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_5_FLOOR", in Zone="OFFICE_OPEN_2_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_5_CEILING", in Zone="OFFICE_OPEN_2_5".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Floor is upside down! Tilt angle=[0.0], should be near 180, Surface="OFFICE_OPEN_2_6_FLOOR", in Zone="OFFICE_OPEN_2_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** GetVertices: Roof/Ceiling is upside down! Tilt angle=[180.0], should be near 0, Surface="OFFICE_OPEN_2_6_CEILING", in Zone="OFFICE_OPEN_2_6".
+   **   ~~~   ** Automatic fix is attempted.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=LOBBY_0
+   **   ~~~   ** The calculated Zone Volume was=-197.03
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=CONFERENCE_0
+   **   ~~~   ** The calculated Zone Volume was=-37.60
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=BREAK_ROOM_0
+   **   ~~~   ** The calculated Zone Volume was=-24.43
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=MECHANICAL_0
+   **   ~~~   ** The calculated Zone Volume was=-95.65
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0
+   **   ~~~   ** The calculated Zone Volume was=-33.40
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_PRIVATE_0
+   **   ~~~   ** The calculated Zone Volume was=-119.79
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=STORAGE_0
+   **   ~~~   ** The calculated Zone Volume was=-112.63
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_2
+   **   ~~~   ** The calculated Zone Volume was=-57.52
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_3
+   **   ~~~   ** The calculated Zone Volume was=-68.83
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_4
+   **   ~~~   ** The calculated Zone Volume was=-120.61
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_5
+   **   ~~~   ** The calculated Zone Volume was=-81.49
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_6
+   **   ~~~   ** The calculated Zone Volume was=-22.25
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_0_7
+   **   ~~~   ** The calculated Zone Volume was=-115.64
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=LOBBY_1
+   **   ~~~   ** The calculated Zone Volume was=-87.32
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=CONFERENCE_1
+   **   ~~~   ** The calculated Zone Volume was=-58.65
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=BREAK_ROOM_1
+   **   ~~~   ** The calculated Zone Volume was=-32.93
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=MECHANICAL_1
+   **   ~~~   ** The calculated Zone Volume was=-45.96
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1
+   **   ~~~   ** The calculated Zone Volume was=-85.49
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_PRIVATE_1
+   **   ~~~   ** The calculated Zone Volume was=-109.27
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=STORAGE_1
+   **   ~~~   ** The calculated Zone Volume was=-112.63
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1_2
+   **   ~~~   ** The calculated Zone Volume was=-64.46
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1_3
+   **   ~~~   ** The calculated Zone Volume was=-114.14
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1_4
+   **   ~~~   ** The calculated Zone Volume was=-88.88
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1_5
+   **   ~~~   ** The calculated Zone Volume was=-98.64
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_1_6
+   **   ~~~   ** The calculated Zone Volume was=-113.36
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=LOBBY_2
+   **   ~~~   ** The calculated Zone Volume was=-80.04
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=CONFERENCE_2
+   **   ~~~   ** The calculated Zone Volume was=-60.61
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=BREAK_ROOM_2
+   **   ~~~   ** The calculated Zone Volume was=-23.83
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=MECHANICAL_2
+   **   ~~~   ** The calculated Zone Volume was=-79.60
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2
+   **   ~~~   ** The calculated Zone Volume was=-108.05
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_PRIVATE_2
+   **   ~~~   ** The calculated Zone Volume was=-56.05
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=STORAGE_2
+   **   ~~~   ** The calculated Zone Volume was=-112.63
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2_2
+   **   ~~~   ** The calculated Zone Volume was=-106.48
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2_3
+   **   ~~~   ** The calculated Zone Volume was=-85.48
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2_4
+   **   ~~~   ** The calculated Zone Volume was=-95.29
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2_5
+   **   ~~~   ** The calculated Zone Volume was=-111.65
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** Indicated Zone Volume <= 0.0 for Zone=OFFICE_OPEN_2_6
+   **   ~~~   ** The calculated Zone Volume was=-61.36
+   **   ~~~   ** The simulation will continue with the Zone Volume set to 10.0 m3. 
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: LOBBY_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="LOBBY_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: BREAK_ROOM_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="BREAK_ROOM_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_PRIVATE_0_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_PRIVATE_0_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_3_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_3_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_5_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_5_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_6_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_6_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_0_7_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_0_7_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: LOBBY_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="LOBBY_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: BREAK_ROOM_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="BREAK_ROOM_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_PRIVATE_1_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_PRIVATE_1_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_3_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_3_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_5_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_5_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_1_6_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_1_6_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: LOBBY_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="LOBBY_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: CONFERENCE_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="CONFERENCE_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: BREAK_ROOM_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="BREAK_ROOM_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_PRIVATE_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_PRIVATE_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_2_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_2_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_3_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_3_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_4_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_4_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_5_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_5_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** No Glare Calculation Daylighting Reference Point Name provided for object named: OFFICE_OPEN_2_6_DAYLIGHT
+   **   ~~~   ** No glare calculation performed, and the simulation continues.
+   ** Warning ** GetDaylightingControls: Fraction of zone or space controlled by the Daylighting reference points is < 1.0.
+   **   ~~~   ** ..discovered in Daylighting:Controls="OFFICE_OPEN_2_6_DAYLIGHT", only 0.900 of the zone or space is controlled.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=LOBBY_0
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 9.11, Zone Maximum Y= 25.56
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 7.1096 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=CONFERENCE_0
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -13.66, Zone Maximum X= -8.71
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 10.7087 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=BREAK_ROOM_0
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -8.35, Zone Maximum X= -3.63
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 5.6265 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=BREAK_ROOM_0
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 17.52, Zone Maximum Y= 22.89
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 15.5150 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_0
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.64, Zone Maximum X= -5.46
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4601 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_0_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.17, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.51, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.5083 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_3
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 14.97
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_0_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.90
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_0_5
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -16.13, Zone Maximum X= -5.46
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4601 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_5
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.04
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_6
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.97, Zone Maximum Y= 26.25
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9697 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_0_7
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.61
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_0_7
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.45
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=LOBBY_1
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 7.06, Zone Maximum Y= 17.79
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 5.0644 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=LOBBY_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=CONFERENCE_1
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -10.72, Zone Maximum X= -5.00
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.0047 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=CONFERENCE_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=BREAK_ROOM_1
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -14.03, Zone Maximum X= -8.46
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 10.4563 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=BREAK_ROOM_1
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 13.06, Zone Maximum Y= 19.18
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 11.0610 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=BREAK_ROOM_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_1
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.64, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_PRIVATE_1
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_1_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.17, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_1_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_1_3
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.90
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_1_3
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1_3
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_1_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -16.13, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_1_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.04
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1_4
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_1_5
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.25
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1_5
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_1_6
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.61
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_1_6
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.45
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_1_6
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 3.00, Zone Maximum Z= 6.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 2.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=LOBBY_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=CONFERENCE_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 17.40, Zone Maximum Y= 26.20
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 15.4034 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=CONFERENCE_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -2.60, Zone Maximum X= 1.05
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 0.9514 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 9.04, Zone Maximum Y= 15.84
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 7.0357 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=BREAK_ROOM_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.64, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_PRIVATE_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_2_2
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -15.17, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_2_2
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2_2
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_2_3
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 15.02
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2_3
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_2_4
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.90
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_2_4
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 3.46, Zone Maximum Y= 14.97
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 1.4583 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2_4
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_2_5
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= -16.13, Zone Maximum X= -5.41
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 7.4101 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_2_5
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.92, Zone Maximum Y= 26.04
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9197 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2_5
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point X Value outside Zone Min/Max X, Zone=OFFICE_OPEN_2_6
+   **   ~~~   ** ...X Reference Point= 2.00, Zone Minimum X= 5.16, Zone Maximum X= 15.61
+   **   ~~~   ** ...X Reference Distance Outside MinimumX= 3.1638 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Y Value outside Zone Min/Max Y, Zone=OFFICE_OPEN_2_6
+   **   ~~~   ** ...Y Reference Point= 2.00, Zone Minimum Y= 14.97, Zone Maximum Y= 26.45
+   **   ~~~   ** ...Y Reference Distance Outside MinimumY= 12.9697 m.
+   ** Warning ** GeometryTransformForDaylighting: Reference point Z Value outside Zone Min/Max Z, Zone=OFFICE_OPEN_2_6
+   **   ~~~   ** ...Z Reference Point= 0.80, Zone Minimum Z= 6.00, Zone Maximum Z= 9.00
+   **   ~~~   ** ...Z Reference Distance Outside MinimumZ= 5.2000 m.
+   ** Severe  ** ZoneControl:Thermostat="LOBBY_0_Z1_ZONECONTROL" invalid Zone or ZoneList Name="LOBBY_0_Z1" not found.
+   ** Severe  ** ZoneControl:Thermostat="CONFERENCE_0_Z2_ZONECONTROL" invalid Zone or ZoneList Name="CONFERENCE_0_Z2" not found.
+   ** Severe  ** ZoneControl:Thermostat="BREAK_ROOM_0_Z3_ZONECONTROL" invalid Zone or ZoneList Name="BREAK_ROOM_0_Z3" not found.
+   ** Severe  ** ZoneControl:Thermostat="MECHANICAL_0_Z4_ZONECONTROL" invalid Zone or ZoneList Name="MECHANICAL_0_Z4" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_Z5_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_Z5" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_PRIVATE_0_Z6_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_PRIVATE_0_Z6" not found.
+   ** Severe  ** ZoneControl:Thermostat="STORAGE_0_Z7_ZONECONTROL" invalid Zone or ZoneList Name="STORAGE_0_Z7" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_2_Z8_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_2_Z8" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_3_Z9_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_3_Z9" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_4_Z10_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_4_Z10" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_5_Z11_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_5_Z11" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_6_Z12_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_6_Z12" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_0_7_Z13_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_0_7_Z13" not found.
+   ** Severe  ** ZoneControl:Thermostat="LOBBY_1_Z14_ZONECONTROL" invalid Zone or ZoneList Name="LOBBY_1_Z14" not found.
+   ** Severe  ** ZoneControl:Thermostat="CONFERENCE_1_Z15_ZONECONTROL" invalid Zone or ZoneList Name="CONFERENCE_1_Z15" not found.
+   ** Severe  ** ZoneControl:Thermostat="BREAK_ROOM_1_Z16_ZONECONTROL" invalid Zone or ZoneList Name="BREAK_ROOM_1_Z16" not found.
+   ** Severe  ** ZoneControl:Thermostat="MECHANICAL_1_Z17_ZONECONTROL" invalid Zone or ZoneList Name="MECHANICAL_1_Z17" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_Z18_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_Z18" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_PRIVATE_1_Z19_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_PRIVATE_1_Z19" not found.
+   ** Severe  ** ZoneControl:Thermostat="STORAGE_1_Z20_ZONECONTROL" invalid Zone or ZoneList Name="STORAGE_1_Z20" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_2_Z21_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_2_Z21" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_3_Z22_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_3_Z22" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_4_Z23_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_4_Z23" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_5_Z24_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_5_Z24" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_1_6_Z25_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_1_6_Z25" not found.
+   ** Severe  ** ZoneControl:Thermostat="LOBBY_2_Z26_ZONECONTROL" invalid Zone or ZoneList Name="LOBBY_2_Z26" not found.
+   ** Severe  ** ZoneControl:Thermostat="CONFERENCE_2_Z27_ZONECONTROL" invalid Zone or ZoneList Name="CONFERENCE_2_Z27" not found.
+   ** Severe  ** ZoneControl:Thermostat="BREAK_ROOM_2_Z28_ZONECONTROL" invalid Zone or ZoneList Name="BREAK_ROOM_2_Z28" not found.
+   ** Severe  ** ZoneControl:Thermostat="MECHANICAL_2_Z29_ZONECONTROL" invalid Zone or ZoneList Name="MECHANICAL_2_Z29" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_Z30_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_Z30" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_PRIVATE_2_Z31_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_PRIVATE_2_Z31" not found.
+   ** Severe  ** ZoneControl:Thermostat="STORAGE_2_Z32_ZONECONTROL" invalid Zone or ZoneList Name="STORAGE_2_Z32" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_2_Z33_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_2_Z33" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_3_Z34_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_3_Z34" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_4_Z35_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_4_Z35" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_5_Z36_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_5_Z36" not found.
+   ** Severe  ** ZoneControl:Thermostat="OFFICE_OPEN_2_6_Z37_ZONECONTROL" invalid Zone or ZoneList Name="OFFICE_OPEN_2_6_Z37" not found.
+   ** Severe  ** GetZoneAirSetpoints: Errors with invalid names in ZoneControl:Thermostat objects.
+   **   ~~~   ** ...These will not be read in.  Other errors may occur.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_0_Z1_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="LOBBY_0_Z1_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_0_Z1_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="LOBBY_0_Z1_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_0_Z2_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="CONFERENCE_0_Z2_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_0_Z2_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="CONFERENCE_0_Z2_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_0_Z3_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="BREAK_ROOM_0_Z3_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_0_Z3_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="BREAK_ROOM_0_Z3_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_0_Z4_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="MECHANICAL_0_Z4_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_0_Z4_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="MECHANICAL_0_Z4_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_Z5_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_Z5_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_Z5_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_Z5_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_0_Z6_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_PRIVATE_0_Z6_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_0_Z6_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_PRIVATE_0_Z6_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_0_Z7_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="STORAGE_0_Z7_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_0_Z7_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="STORAGE_0_Z7_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_2_Z8_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_2_Z8_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_2_Z8_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_2_Z8_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_3_Z9_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_3_Z9_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_3_Z9_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_3_Z9_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_4_Z10_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_4_Z10_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_4_Z10_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_4_Z10_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_5_Z11_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_5_Z11_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_5_Z11_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_5_Z11_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_6_Z12_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_6_Z12_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_6_Z12_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_6_Z12_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_7_Z13_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_0_7_Z13_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_0_7_Z13_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_0_7_Z13_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_1_Z14_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="LOBBY_1_Z14_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_1_Z14_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="LOBBY_1_Z14_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_1_Z15_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="CONFERENCE_1_Z15_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_1_Z15_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="CONFERENCE_1_Z15_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_1_Z16_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="BREAK_ROOM_1_Z16_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_1_Z16_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="BREAK_ROOM_1_Z16_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_1_Z17_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="MECHANICAL_1_Z17_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_1_Z17_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="MECHANICAL_1_Z17_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_Z18_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_Z18_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_Z18_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_Z18_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_1_Z19_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_PRIVATE_1_Z19_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_1_Z19_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_PRIVATE_1_Z19_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_1_Z20_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="STORAGE_1_Z20_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_1_Z20_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="STORAGE_1_Z20_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_2_Z21_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_2_Z21_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_2_Z21_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_2_Z21_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_3_Z22_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_3_Z22_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_3_Z22_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_3_Z22_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_4_Z23_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_4_Z23_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_4_Z23_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_4_Z23_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_5_Z24_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_5_Z24_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_5_Z24_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_5_Z24_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_6_Z25_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_1_6_Z25_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_1_6_Z25_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_1_6_Z25_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_2_Z26_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="LOBBY_2_Z26_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="LOBBY_2_Z26_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="LOBBY_2_Z26_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_2_Z27_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="CONFERENCE_2_Z27_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="CONFERENCE_2_Z27_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="CONFERENCE_2_Z27_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_2_Z28_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="BREAK_ROOM_2_Z28_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="BREAK_ROOM_2_Z28_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="BREAK_ROOM_2_Z28_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_2_Z29_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="MECHANICAL_2_Z29_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="MECHANICAL_2_Z29_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="MECHANICAL_2_Z29_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_Z30_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_Z30_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_Z30_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_Z30_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_2_Z31_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_PRIVATE_2_Z31_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_PRIVATE_2_Z31_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_PRIVATE_2_Z31_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_2_Z32_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="STORAGE_2_Z32_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="STORAGE_2_Z32_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="STORAGE_2_Z32_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_2_Z33_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_2_Z33_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_2_Z33_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_2_Z33_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_3_Z34_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_3_Z34_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_3_Z34_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_3_Z34_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_4_Z35_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_4_Z35_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_4_Z35_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_4_Z35_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_5_Z36_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_5_Z36_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_5_Z36_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_5_Z36_COOLINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_6_Z37_THERMOSTAT" invalid Heating Setpoint Temperature Schedule Name="OFFICE_OPEN_2_6_Z37_HEATINGSETPOINT" not found.
+   ** Severe  ** ThermostatSetpoint:DualSetpoint="OFFICE_OPEN_2_6_Z37_THERMOSTAT" invalid Cooling Setpoint Temperature Schedule Name="OFFICE_OPEN_2_6_Z37_COOLINGSETPOINT" not found.
+   ** Severe  ** GetStagedDualSetpoint: Errors with invalid names in ZoneControl:Thermostat:StagedDualSetpoint objects.
+   **   ~~~   ** ...These will not be read in.  Other errors may occur.
+   **  Fatal  ** Errors getting Zone Control input data.  Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=113
+   ..... Last severe error=GetStagedDualSetpoint: Errors with invalid names in ZoneControl:Thermostat:StagedDualSetpoint objects.
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 251 Warning; 113 Severe Errors; Elapsed Time=00hr 00min  0.36sec

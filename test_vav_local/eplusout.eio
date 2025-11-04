@@ -1,0 +1,503 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.10.31 17:04
+! <Version>, Version ID
+ Version, 24.2.0
+! <Timesteps per Hour>, #TimeSteps, Minutes per TimeStep {minutes}
+ Timesteps per Hour,  4, 15
+! <System Convergence Limits>, Minimum System TimeStep {minutes}, Max HVAC Iterations, Minimum Plant Iterations, Maximum Plant Iterations
+ System Convergence Limits, 1, 20, 2, 8
+! <Simulation Control>, Do Zone Sizing, Do System Sizing, Do Plant Sizing, Do Design Days, Do Weather Simulation, Do HVAC Sizing Simulation
+ Simulation Control, No, No, No, No, Yes, No
+! <Performance Precision Tradeoffs>, Use Coil Direct Simulation, Zone Radiant Exchange Algorithm, Override Mode, Number of Timestep In Hour, Force Euler Method, Minimum Number of Warmup Days, Force Suppress All Begin Environment Resets, Minimum System Timestep, MaxZoneTempDiff, MaxAllowedDelTemp
+ Performance Precision Tradeoffs, No, ScriptF, Normal, 4, No, 1, No, 1.0, 0.300, 2.0000E-003
+! <Output Reporting Tolerances>, Tolerance for Time Heating Setpoint Not Met, Tolerance for Zone Cooling Setpoint Not Met Time
+ Output Reporting Tolerances, 0.200, 0.200, 
+! <Site:GroundTemperature:BuildingSurface>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:BuildingSurface,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00,  20.00
+! <Site:GroundTemperature:FCfactorMethod>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:FCfactorMethod,  -1.89,  -3.06,  -0.99,   2.23,  10.68,  17.20,  21.60,  22.94,  20.66,  15.60,   8.83,   2.56
+! <Site:GroundTemperature:Shallow>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:Shallow,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00,  13.00
+! <Site:GroundTemperature:Deep>,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+ Site:GroundTemperature:Deep,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00,  16.00
+! <Site:GroundReflectance>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Site:GroundReflectance:SnowModifier>, Normal, Daylighting {dimensionless}
+ Site:GroundReflectance:SnowModifier,   1.000,   1.000
+! <Site:GroundReflectance:Snow>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance:Snow,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Site:GroundReflectance:Snow:Daylighting>,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+ Site:GroundReflectance:Snow:Daylighting,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20,  0.20
+! <Environment:Weather Station>,Wind Sensor Height Above Ground {m},Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Sensor Height Above Ground {m},Wind Speed Modifier Coefficient-Internal,Temperature Modifier Coefficient-Internal
+Environment:Weather Station,10.000,0.140,270.000,1.500,1.586,9.750E-003
+! <Site:Location>, Location Name, Latitude {N+/S- Deg}, Longitude {E+/W- Deg},  Time Zone Number {GMT+/-}, Elevation {m},  Standard Pressure at Elevation {Pa}, Standard RhoAir at Elevation
+Site:Location,Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300,41.98,-87.92,-6.00,201.00,98934,1.1759
+! <Site Water Mains Temperature Information>,Calculation Method{},Water Mains Temperature Schedule Name{},Annual Average Outdoor Air Temperature{C},Maximum Difference In Monthly Average Outdoor Air Temperatures{deltaC},Fixed Default Water Mains Temperature{C}
+Site Water Mains Temperature Information,FixedDefault,NA,NA,NA,10.0
+! <Building Information>, Building Name,North Axis {deg},Terrain,  Loads Convergence Tolerance Value,Temperature Convergence Tolerance Value,  Solar Distribution,Maximum Number of Warmup Days,Minimum Number of Warmup Days
+ Building Information,Professional Building,0.000,Suburbs,4.00000E-002,0.20000,FullInteriorAndExterior,15,6
+! <Inside Convection Algorithm>, Algorithm {Simple | TARP | CeilingDiffuser | AdaptiveConvectionAlgorithm}
+Inside Convection Algorithm,TARP
+! <Outside Convection Algorithm>, Algorithm {SimpleCombined | TARP | MoWitt | DOE-2 | AdaptiveConvectionAlgorithm}
+Outside Convection Algorithm,DOE-2
+! <Sky Radiance Distribution>, Value {Anisotropic}
+Sky Radiance Distribution,Anisotropic
+! <Zone Air Solution Algorithm>, Algorithm {ThirdOrderBackwardDifference | AnalyticalSolution | EulerMethod}, Space Heat Balance Sizing, Space Heat Balance Simulation
+ Zone Air Solution Algorithm, ThirdOrderBackwardDifference, No, No
+! <Zone Air Carbon Dioxide Balance Simulation>, Simulation {Yes/No}, Carbon Dioxide Concentration
+ Zone Air Carbon Dioxide Balance Simulation, No,N/A
+! <Zone Air Generic Contaminant Balance Simulation>, Simulation {Yes/No}, Generic Contaminant Concentration
+ Zone Air Generic Contaminant Balance Simulation, No,N/A
+! <Zone Air Mass Flow Balance Simulation>, Enforce Mass Balance, Adjust Zone Mixing and Return {AdjustMixingOnly | AdjustReturnOnly | AdjustMixingThenReturn | AdjustReturnThenMixing | None}, Adjust Zone Infiltration {AddInfiltration | AdjustInfiltration | None}, Infiltration Zones {MixingSourceZonesOnly | AllZones}
+ Zone Air Mass Flow Balance Simulation, No,N/A,N/A,N/A
+! <HVACSystemRootFindingAlgorithm>, Value {RegulaFalsi | Bisection | BisectionThenRegulaFalsi | RegulaFalsiThenBisection}
+ HVACSystemRootFindingAlgorithm, RegulaFalsi
+! <Environment:Site Atmospheric Variation>,Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Gradient Coefficient {K/m}
+Environment:Site Atmospheric Variation,0.220,370.000,6.500000E-003
+! <Shadowing/Sun Position Calculations Annual Simulations>, Shading Calculation Method, Shading Calculation Update Frequency Method, Shading Calculation Update Frequency {days}, Maximum Figures in Shadow Overlap Calculations {}, Polygon Clipping Algorithm, Pixel Counting Resolution, Sky Diffuse Modeling Algorithm, Output External Shading Calculation Results, Disable Self-Shading Within Shading Zone Groups, Disable Self-Shading From Shading Zone Groups to Other Zones
+Shadowing/Sun Position Calculations Annual Simulations,PolygonClipping,Periodic,20,15000,SutherlandHodgman,512,SimpleSkyDiffuseModeling,No,No,No
+! <Surface Geometry>,Starting Corner,Vertex Input Direction,Coordinate System,Daylight Reference Point Coordinate System,Rectangular (Simple) Surface Coordinate System
+ Surface Geometry,UpperLeftCorner,Counterclockwise,RelativeCoordinateSystem,RelativeCoordinateSystem,RelativeToZoneOrigin
+! <Surface Heat Transfer Algorithm>, Value {CTF - ConductionTransferFunction | EMPD - MoisturePenetrationDepthConductionTransferFunction | CondFD - ConductionFiniteDifference | HAMT - CombinedHeatAndMoistureFiniteElement} - Description,Inside Surface Max Temperature Limit{C}, Surface Convection Coefficient Lower Limit {W/m2-K}, Surface Convection Coefficient Upper Limit {W/m2-K}
+Surface Heat Transfer Algorithm, CTF - ConductionTransferFunction,200,0.10,1000.0
+! <Shading Summary>, Number of Fixed Detached Shades, Number of Building Detached Shades, Number of Attached Shades
+ Shading Summary,0,0,0
+! <Zone Summary>, Number of Zones, Number of Zone Surfaces, Number of SubSurfaces
+ Zone Summary,18,180,72
+! <Zone Information>,Zone Name,North Axis {deg},Origin X-Coordinate {m},Origin Y-Coordinate {m},Origin Z-Coordinate {m},Centroid X-Coordinate {m},Centroid Y-Coordinate {m},Centroid Z-Coordinate {m},Type,Zone Multiplier,Zone List Multiplier,Minimum X {m},Maximum X {m},Minimum Y {m},Maximum Y {m},Minimum Z {m},Maximum Z {m},Ceiling Height {m},Volume {m3},Zone Inside Convection Algorithm {Simple-Detailed-CeilingDiffuser-TrombeWall},Zone Outside Convection Algorithm {Simple-Detailed-Tarp-MoWitt-DOE-2-BLAST}, Floor Area {m2},Exterior Gross Wall Area {m2},Exterior Net Wall Area {m2},Exterior Window Area {m2}, Number of Surfaces, Number of SubSurfaces, Number of Shading SubSurfaces,  Part of Total Building Area
+ Zone Information, LOBBY_0,0.0,0.00,0.00,0.00,-19.35,-98.45,1.50,1,1,1,-25.39,-13.31,-105.12,-91.78,0.00,3.00,3.00,475.70,TARP,DOE-2,158.57,151.30,98.57,52.73,6,4,0,Yes
+ Zone Information, CONFERENCE_0,0.0,0.00,0.00,0.00,-71.09,-73.59,1.50,1,1,1,-75.03,-67.16,-79.68,-67.49,0.00,3.00,3.00,281.80,TARP,DOE-2,93.93,119.15,77.58,41.57,6,4,0,Yes
+ Zone Information, BREAK_ROOM_0,0.0,0.00,0.00,0.00,-5.63,-25.02,1.50,1,1,1,-8.29,-2.97,-28.64,-21.40,0.00,3.00,3.00,111.80,TARP,DOE-2,37.27,74.16,48.30,25.86,6,4,0,Yes
+ Zone Information, MECHANICAL_0,0.0,0.00,0.00,0.00,-15.76,-23.70,1.50,1,1,1,-19.89,-11.64,-28.89,-18.52,0.00,3.00,3.00,251.05,TARP,DOE-2,83.68,110.52,71.99,38.53,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_0,0.0,0.00,0.00,0.00,-62.90,-16.06,1.50,1,1,1,-70.84,-54.96,-26.13,-5.99,0.00,3.00,3.00,949.36,TARP,DOE-2,316.45,215.00,140.04,74.96,6,4,0,Yes
+ Zone Information, OFFICE_PRIVATE_0,0.0,0.00,0.00,0.00,-76.12,-47.88,1.50,1,1,1,-79.21,-73.04,-51.74,-44.02,0.00,3.00,3.00,138.77,TARP,DOE-2,46.26,82.14,53.50,28.64,6,4,0,Yes
+ Zone Information, STORAGE_0,0.0,0.00,0.00,0.00,-21.83,-70.59,1.50,1,1,1,-23.78,-19.88,-74.31,-66.87,0.00,3.00,3.00,83.55,TARP,DOE-2,27.85,66.82,43.49,23.33,6,4,0,Yes
+ Zone Information, CONFERENCE_1,0.0,0.00,0.00,0.00,-69.01,-80.29,4.50,1,1,1,-72.85,-65.18,-86.13,-74.46,3.00,6.00,3.00,262.39,TARP,DOE-2,87.46,114.77,74.73,40.04,6,4,0,Yes
+ Zone Information, BREAK_ROOM_1,0.0,0.00,0.00,0.00,-81.16,-96.02,4.50,1,1,1,-84.20,-78.12,-101.66,-90.37,3.00,6.00,3.00,200.63,TARP,DOE-2,66.88,103.00,67.04,35.96,6,4,0,Yes
+ Zone Information, MECHANICAL_1,0.0,0.00,0.00,0.00,-60.46,-60.66,4.50,1,1,1,-64.48,-56.45,-66.89,-54.42,3.00,6.00,3.00,294.04,TARP,DOE-2,98.01,121.77,79.28,42.48,6,4,0,Yes
+ Zone Information, OFFICE_PRIVATE_1,0.0,0.00,0.00,0.00,-6.92,-87.68,4.50,1,1,1,-9.09,-4.76,-90.89,-84.47,3.00,6.00,3.00,80.21,TARP,DOE-2,26.74,63.30,41.22,22.08,6,4,0,Yes
+ Zone Information, STORAGE_1,0.0,0.00,0.00,0.00,-7.89,-76.70,4.50,1,1,1,-11.11,-4.68,-79.99,-73.41,3.00,6.00,3.00,123.03,TARP,DOE-2,41.01,76.85,50.08,26.78,6,4,0,Yes
+ Zone Information, LOBBY_2,0.0,0.00,0.00,0.00,-69.77,-104.37,7.50,1,1,1,-73.85,-65.69,-111.13,-97.62,6.00,9.00,3.00,323.98,TARP,DOE-2,107.99,128.78,83.84,44.94,6,4,0,Yes
+ Zone Information, CONFERENCE_2,0.0,0.00,0.00,0.00,-77.65,-65.62,7.50,1,1,1,-82.05,-73.26,-70.12,-61.12,6.00,9.00,3.00,232.06,TARP,DOE-2,77.35,105.55,68.77,36.77,6,4,0,Yes
+ Zone Information, MECHANICAL_2,0.0,0.00,0.00,0.00,-61.47,-82.85,7.50,1,1,1,-65.59,-57.36,-88.67,-77.03,6.00,9.00,3.00,281.40,TARP,DOE-2,93.80,118.01,76.85,41.16,6,4,0,Yes
+ Zone Information, OFFICE_OPEN_2,0.0,0.00,0.00,0.00,-59.47,-27.72,7.50,1,1,1,-64.66,-54.28,-33.71,-21.74,6.00,9.00,3.00,366.06,TARP,DOE-2,122.02,132.90,86.58,46.32,6,4,0,Yes
+ Zone Information, OFFICE_PRIVATE_2,0.0,0.00,0.00,0.00,-42.64,-97.58,7.50,1,1,1,-45.22,-40.06,-102.14,-93.02,6.00,9.00,3.00,136.81,TARP,DOE-2,45.60,84.45,54.98,29.48,6,4,0,Yes
+ Zone Information, STORAGE_2,0.0,0.00,0.00,0.00,-6.19,-63.89,7.50,1,1,1,-9.25,-3.12,-67.22,-60.56,6.00,9.00,3.00,118.80,TARP,DOE-2,39.60,75.58,49.24,26.34,6,4,0,Yes
+! <Zone Internal Gains Nominal>,Zone Name, Floor Area {m2},# Occupants,Area per Occupant {m2/person},Occupant per Area {person/m2},Interior Lighting {W/m2},Electric Load {W/m2},Gas Load {W/m2},Other Load {W/m2},Hot Water Eq {W/m2},Steam Equipment {W/m2},Sum Loads per Area {W/m2},Outdoor Controlled Baseboard Heat
+ Zone Internal Gains Nominal, LOBBY_0,158.57,7.0,22.652,4.415E-002,12.900,3.200,0.000,0.000,0.000,0.000,16.100,No
+ Zone Internal Gains Nominal, CONFERENCE_0,93.93,18.0,5.218,0.192,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, BREAK_ROOM_0,37.27,3.0,12.422,8.050E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+ Zone Internal Gains Nominal, MECHANICAL_0,83.68,1.0,83.682,1.195E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_0,316.45,15.0,21.097,4.740E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_0,46.26,2.0,23.129,4.324E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_0,27.85,1.0,27.851,3.590E-002,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+ Zone Internal Gains Nominal, CONFERENCE_1,87.46,17.0,5.145,0.194,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, BREAK_ROOM_1,66.88,6.0,11.146,8.972E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+ Zone Internal Gains Nominal, MECHANICAL_1,98.01,1.0,98.015,1.020E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_1,26.74,1.0,26.737,3.740E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_1,41.01,1.0,41.010,2.438E-002,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+ Zone Internal Gains Nominal, LOBBY_2,107.99,5.0,21.599,4.630E-002,12.900,3.200,0.000,0.000,0.000,0.000,16.100,No
+ Zone Internal Gains Nominal, CONFERENCE_2,77.35,15.0,5.157,0.194,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, MECHANICAL_2,93.80,1.0,93.800,1.066E-002,5.400,0.000,0.000,0.000,0.000,0.000,5.400,No
+ Zone Internal Gains Nominal, OFFICE_OPEN_2,122.02,6.0,20.337,4.917E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, OFFICE_PRIVATE_2,45.60,2.0,22.801,4.386E-002,10.800,8.100,0.000,0.000,0.000,0.000,18.900,No
+ Zone Internal Gains Nominal, STORAGE_2,39.60,1.0,39.601,2.525E-002,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+! <People Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Number of People {},People/Floor Area {person/m2},Floor Area per person {m2/person},Fraction Radiant,Fraction Convected,Sensible Fraction Calculation,Activity level,ASHRAE 55 Warnings,Carbon Dioxide Generation Rate,Minimum Number of People for All Day Types,Maximum Number of People for All Day Types,Minimum Number of People for Weekdays, Maximum Number of People for Weekdays, Minimum Number of People for Weekends/Holidays, Maximum Number of People for Weekends /Holidays,Minimum Number of People for Summer Design Days, Maximum Number of People for Summer Design Days,Minimum Number of People for Winter Design Days, Maximum Number of People for Winter Design Days
+ People Internal Gains Nominal, LOBBY_0_PEOPLE,LOBBY_OCCUPANCY,LOBBY_0,158.57,7.0,7.0,4.415E-002,22.652,0.300,0.700,0.100,LOBBY_ACTIVITY,No,3.8200E-008,5.6,5.6,5.6,5.6,5.6,5.6,5.6,5.6,5.6,5.6,
+ People Internal Gains Nominal, CONFERENCE_0_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_0,93.93,18.0,18.0,0.192,5.218,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,14.4,14.4,14.4,14.4,14.4,14.4,14.4,14.4,14.4,14.4,
+ People Internal Gains Nominal, BREAK_ROOM_0_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_0,37.27,3.0,3.0,8.050E-002,12.422,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,2.4,2.4,2.4,2.4,2.4,2.4,2.4,2.4,2.4,2.4,
+ People Internal Gains Nominal, MECHANICAL_0_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_0,83.68,1.0,1.0,1.195E-002,83.682,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, OFFICE_OPEN_0_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_0,316.45,15.0,15.0,4.740E-002,21.097,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,
+ People Internal Gains Nominal, OFFICE_PRIVATE_0_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_0,46.26,2.0,2.0,4.324E-002,23.129,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,
+ People Internal Gains Nominal, STORAGE_0_PEOPLE,STORAGE_OCCUPANCY,STORAGE_0,27.85,1.0,1.0,3.590E-002,27.851,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, CONFERENCE_1_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_1,87.46,17.0,17.0,0.194,5.145,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,13.6,13.6,13.6,13.6,13.6,13.6,13.6,13.6,13.6,13.6,
+ People Internal Gains Nominal, BREAK_ROOM_1_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_1,66.88,6.0,6.0,8.972E-002,11.146,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,
+ People Internal Gains Nominal, MECHANICAL_1_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_1,98.01,1.0,1.0,1.020E-002,98.015,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, OFFICE_PRIVATE_1_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_1,26.74,1.0,1.0,3.740E-002,26.737,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, STORAGE_1_PEOPLE,STORAGE_OCCUPANCY,STORAGE_1,41.01,1.0,1.0,2.438E-002,41.010,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, LOBBY_2_PEOPLE,LOBBY_OCCUPANCY,LOBBY_2,107.99,5.0,5.0,4.630E-002,21.599,0.300,0.700,0.100,LOBBY_ACTIVITY,No,3.8200E-008,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,
+ People Internal Gains Nominal, CONFERENCE_2_PEOPLE,CONFERENCE_OCCUPANCY,CONFERENCE_2,77.35,15.0,15.0,0.194,5.157,0.300,0.700,0.100,CONFERENCE_ACTIVITY,No,3.8200E-008,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,12.0,
+ People Internal Gains Nominal, MECHANICAL_2_PEOPLE,MECHANICAL_OCCUPANCY,MECHANICAL_2,93.80,1.0,1.0,1.066E-002,93.800,0.300,0.700,0.100,MECHANICAL_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+ People Internal Gains Nominal, OFFICE_OPEN_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_OPEN_2,122.02,6.0,6.0,4.917E-002,20.337,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,4.8,
+ People Internal Gains Nominal, OFFICE_PRIVATE_2_PEOPLE,OFFICE_OPEN_OCCUPANCY,OFFICE_PRIVATE_2,45.60,2.0,2.0,4.386E-002,22.801,0.300,0.700,0.100,OFFICE_OPEN_ACTIVITY,No,3.8200E-008,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,
+ People Internal Gains Nominal, STORAGE_2_PEOPLE,STORAGE_OCCUPANCY,STORAGE_2,39.60,1.0,1.0,2.525E-002,39.601,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+! <Lights Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Lighting Level {W},Lights/Floor Area {W/m2},Lights per person {W/person},Fraction Return Air,Fraction Radiant,Fraction Short Wave,Fraction Convected,Fraction Replaceable,End-Use, Minimum Lighting Level for All Day Types {W},Maximum Lighting Level for All Day Types {W},Minimum Lighting Level for Weekdays {W}, Maximum Lighting Level for Weekdays {W},Minimum Lighting Level for Weekends/Holidays {W}, Maximum Lighting Level for Weekends /Holidays {W},Minimum Lighting Level for Summer Design Days {W}, Maximum Lighting Level for Summer Design Days {W},Minimum Lighting Level for Winter Design Days {W}, Maximum Lighting Level for Winter Design Days {W}
+ Lights Internal Gains Nominal, LOBBY_0_LIGHTS,LOBBY_LIGHTING,LOBBY_0,158.57,7.0,2045.498,12.900,292.214,0.000,0.300,0.200,0.500,1.000,General,2045.498,2045.498,2045.498,2045.5,2045.498,2045.498,2045.498,2045.498,2045.498,2045.498
+ Lights Internal Gains Nominal, CONFERENCE_0_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_0,93.93,18.0,1014.474,10.800,56.360,0.000,0.300,0.200,0.500,1.000,General,1014.474,1014.474,1014.474,1014.5,1014.474,1014.474,1014.474,1014.474,1014.474,1014.474
+ Lights Internal Gains Nominal, BREAK_ROOM_0_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_0,37.27,3.0,301.866,8.100,100.622,0.000,0.300,0.200,0.500,1.000,General,301.866,301.866,301.866,301.9,301.866,301.866,301.866,301.866,301.866,301.866
+ Lights Internal Gains Nominal, MECHANICAL_0_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_0,83.68,1.0,451.885,5.400,451.885,0.000,0.300,0.200,0.500,1.000,General,451.885,451.885,451.885,451.9,451.885,451.885,451.885,451.885,451.885,451.885
+ Lights Internal Gains Nominal, OFFICE_OPEN_0_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_0,316.45,15.0,3417.681,10.800,227.845,0.000,0.300,0.200,0.500,1.000,General,3417.681,3417.681,3417.681,3417.7,3417.681,3417.681,3417.681,3417.681,3417.681,3417.681
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_0_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_0,46.26,2.0,499.581,10.800,249.790,0.000,0.300,0.200,0.500,1.000,General,499.581,499.581,499.581,499.6,499.581,499.581,499.581,499.581,499.581,499.581
+ Lights Internal Gains Nominal, STORAGE_0_LIGHTS,STORAGE_LIGHTING,STORAGE_0,27.85,1.0,150.398,5.400,150.398,0.000,0.300,0.200,0.500,1.000,General,150.398,150.398,150.398,150.4,150.398,150.398,150.398,150.398,150.398,150.398
+ Lights Internal Gains Nominal, CONFERENCE_1_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_1,87.46,17.0,944.607,10.800,55.565,0.000,0.300,0.200,0.500,1.000,General,944.607,944.607,944.607,944.6,944.607,944.607,944.607,944.607,944.607,944.607
+ Lights Internal Gains Nominal, BREAK_ROOM_1_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_1,66.88,6.0,541.688,8.100,90.281,0.000,0.300,0.200,0.500,1.000,General,541.688,541.688,541.688,541.7,541.688,541.688,541.688,541.688,541.688,541.688
+ Lights Internal Gains Nominal, MECHANICAL_1_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_1,98.01,1.0,529.279,5.400,529.279,0.000,0.300,0.200,0.500,1.000,General,529.279,529.279,529.279,529.3,529.279,529.279,529.279,529.279,529.279,529.279
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_1_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_1,26.74,1.0,288.761,10.800,288.761,0.000,0.300,0.200,0.500,1.000,General,288.761,288.761,288.761,288.8,288.761,288.761,288.761,288.761,288.761,288.761
+ Lights Internal Gains Nominal, STORAGE_1_LIGHTS,STORAGE_LIGHTING,STORAGE_1,41.01,1.0,221.453,5.400,221.453,0.000,0.300,0.200,0.500,1.000,General,221.453,221.453,221.453,221.5,221.453,221.453,221.453,221.453,221.453,221.453
+ Lights Internal Gains Nominal, LOBBY_2_LIGHTS,LOBBY_LIGHTING,LOBBY_2,107.99,5.0,1393.108,12.900,278.622,0.000,0.300,0.200,0.500,1.000,General,1393.108,1393.108,1393.108,1393.1,1393.108,1393.108,1393.108,1393.108,1393.108,1393.108
+ Lights Internal Gains Nominal, CONFERENCE_2_LIGHTS,CONFERENCE_LIGHTING,CONFERENCE_2,77.35,15.0,835.411,10.800,55.694,0.000,0.300,0.200,0.500,1.000,General,835.411,835.411,835.411,835.4,835.411,835.411,835.411,835.411,835.411,835.411
+ Lights Internal Gains Nominal, MECHANICAL_2_LIGHTS,MECHANICAL_LIGHTING,MECHANICAL_2,93.80,1.0,506.519,5.400,506.519,0.000,0.300,0.200,0.500,1.000,General,506.519,506.519,506.519,506.5,506.519,506.519,506.519,506.519,506.519,506.519
+ Lights Internal Gains Nominal, OFFICE_OPEN_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_OPEN_2,122.02,6.0,1317.826,10.800,219.638,0.000,0.300,0.200,0.500,1.000,General,1317.826,1317.826,1317.826,1317.8,1317.826,1317.826,1317.826,1317.826,1317.826,1317.826
+ Lights Internal Gains Nominal, OFFICE_PRIVATE_2_LIGHTS,OFFICE_OPEN_LIGHTING,OFFICE_PRIVATE_2,45.60,2.0,492.507,10.800,246.254,0.000,0.300,0.200,0.500,1.000,General,492.507,492.507,492.507,492.5,492.507,492.507,492.507,492.507,492.507,492.507
+ Lights Internal Gains Nominal, STORAGE_2_LIGHTS,STORAGE_LIGHTING,STORAGE_2,39.60,1.0,213.843,5.400,213.843,0.000,0.300,0.200,0.500,1.000,General,213.843,213.843,213.843,213.8,213.843,213.843,213.843,213.843,213.843,213.843
+! <ElectricEquipment Internal Gains Nominal>,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Equipment Level {W},Equipment/Floor Area {W/m2},Equipment per person {W/person},Fraction Latent,Fraction Radiant,Fraction Lost,Fraction Convected,End-Use SubCategory,Minimum Equipment Level for All Day Types {W},Maximum Equipment Level for All Day Types {W},Minimum Equipment Level for Weekdays {W}, Maximum Equipment Level for Weekdays {W},Minimum Equipment Level for Weekends/Holidays {W}, Maximum Equipment Level for Weekends /Holidays {W},Minimum Equipment Level for Summer Design Days {W}, Maximum Equipment Level for Summer Design Days {W},Minimum Equipment Level for Winter Design Days {W}, Maximum Equipment Level for Winter Design Days {W}
+ ElectricEquipment Internal Gains Nominal, LOBBY_0_EQUIPMENT,LOBBY_EQUIPMENT,LOBBY_0,158.57,7.0,507.410,3.200,72.487,0.100,0.200,0.000,0.700,General,355.187,355.187,355.187,355.187,355.187,355.187,355.187,355.187,355.187,355.187
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_0_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_0,93.93,18.0,760.855,8.100,42.270,0.100,0.200,0.000,0.700,General,532.599,532.599,532.599,532.599,532.599,532.599,532.599,532.599,532.599,532.599
+ ElectricEquipment Internal Gains Nominal, BREAK_ROOM_0_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_0,37.27,3.0,559.011,15.000,186.337,0.100,0.200,0.000,0.700,General,391.308,391.308,391.308,391.308,391.308,391.308,391.308,391.308,391.308,391.308
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_0_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_0,83.68,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_0_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_0,316.45,15.0,2563.261,8.100,170.884,0.100,0.200,0.000,0.700,General,1794.282,1794.282,1794.282,1794.282,1794.282,1794.282,1794.282,1794.282,1794.282,1794.282
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_0_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_0,46.26,2.0,374.686,8.100,187.343,0.100,0.200,0.000,0.700,General,262.280,262.280,262.280,262.280,262.280,262.280,262.280,262.280,262.280,262.280
+ ElectricEquipment Internal Gains Nominal, STORAGE_0_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_0,27.85,1.0,30.637,1.100,30.637,0.100,0.200,0.000,0.700,General,21.446,21.446,21.446,21.446,21.446,21.446,21.446,21.446,21.446,21.446
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_1_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_1,87.46,17.0,708.455,8.100,41.674,0.100,0.200,0.000,0.700,General,495.919,495.919,495.919,495.919,495.919,495.919,495.919,495.919,495.919,495.919
+ ElectricEquipment Internal Gains Nominal, BREAK_ROOM_1_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_1,66.88,6.0,1003.126,15.000,167.188,0.100,0.200,0.000,0.700,General,702.188,702.188,702.188,702.188,702.188,702.188,702.188,702.188,702.188,702.188
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_1_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_1,98.01,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_1_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_1,26.74,1.0,216.571,8.100,216.571,0.100,0.200,0.000,0.700,General,151.600,151.600,151.600,151.600,151.600,151.600,151.600,151.600,151.600,151.600
+ ElectricEquipment Internal Gains Nominal, STORAGE_1_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_1,41.01,1.0,45.111,1.100,45.111,0.100,0.200,0.000,0.700,General,31.578,31.578,31.578,31.578,31.578,31.578,31.578,31.578,31.578,31.578
+ ElectricEquipment Internal Gains Nominal, LOBBY_2_EQUIPMENT,LOBBY_EQUIPMENT,LOBBY_2,107.99,5.0,345.577,3.200,69.115,0.100,0.200,0.000,0.700,General,241.904,241.904,241.904,241.904,241.904,241.904,241.904,241.904,241.904,241.904
+ ElectricEquipment Internal Gains Nominal, CONFERENCE_2_EQUIPMENT,CONFERENCE_EQUIPMENT,CONFERENCE_2,77.35,15.0,626.559,8.100,41.771,0.100,0.200,0.000,0.700,General,438.591,438.591,438.591,438.591,438.591,438.591,438.591,438.591,438.591,438.591
+ ElectricEquipment Internal Gains Nominal, MECHANICAL_2_EQUIPMENT,MECHANICAL_EQUIPMENT,MECHANICAL_2,93.80,1.0,0.000,0.000,0.000,0.100,0.200,0.000,0.700,General,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+ ElectricEquipment Internal Gains Nominal, OFFICE_OPEN_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_OPEN_2,122.02,6.0,988.369,8.100,164.728,0.100,0.200,0.000,0.700,General,691.859,691.859,691.859,691.859,691.859,691.859,691.859,691.859,691.859,691.859
+ ElectricEquipment Internal Gains Nominal, OFFICE_PRIVATE_2_EQUIPMENT,OFFICE_OPEN_EQUIPMENT,OFFICE_PRIVATE_2,45.60,2.0,369.380,8.100,184.690,0.100,0.200,0.000,0.700,General,258.566,258.566,258.566,258.566,258.566,258.566,258.566,258.566,258.566,258.566
+ ElectricEquipment Internal Gains Nominal, STORAGE_2_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_2,39.60,1.0,43.561,1.100,43.561,0.100,0.200,0.000,0.700,General,30.492,30.492,30.492,30.492,30.492,30.492,30.492,30.492,30.492,30.492
+! <RoomAir Model>, Zone Name, Mixing/Mundt/UCSDDV/UCSDCV/UCSDUFI/UCSDUFE/User Defined
+RoomAir Model,LOBBY_0,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_0,Mixing/Well-Stirred
+RoomAir Model,BREAK_ROOM_0,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_0,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_0,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_0,Mixing/Well-Stirred
+RoomAir Model,STORAGE_0,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_1,Mixing/Well-Stirred
+RoomAir Model,BREAK_ROOM_1,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_1,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_1,Mixing/Well-Stirred
+RoomAir Model,STORAGE_1,Mixing/Well-Stirred
+RoomAir Model,LOBBY_2,Mixing/Well-Stirred
+RoomAir Model,CONFERENCE_2,Mixing/Well-Stirred
+RoomAir Model,MECHANICAL_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_OPEN_2,Mixing/Well-Stirred
+RoomAir Model,OFFICE_PRIVATE_2,Mixing/Well-Stirred
+RoomAir Model,STORAGE_2,Mixing/Well-Stirred
+! <AirflowNetwork Model:Control>, No Multizone or Distribution/Multizone with Distribution/Multizone without Distribution/Multizone with Distribution only during Fan Operation
+AirflowNetwork Model:Control,NoMultizoneOrDistribution
+! <Zone Volume Capacitance Multiplier>, Sensible Heat Capacity Multiplier, Moisture Capacity Multiplier, Carbon Dioxide Capacity Multiplier, Generic Contaminant Capacity Multiplier
+Zone Volume Capacitance Multiplier,   1.000 ,   1.000,   1.000,   1.000
+! <Component Sizing Information>, Component Type, Component Name, Input Field Description, Value
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.79283
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 0.15857
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00001E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_0_Z1_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 12.68533
+ Component Sizing Information, Coil:Heating:Electric, LOBBY_0_Z1_REHEATCOIL, User-Specified Nominal Capacity [W], 3805.59898
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.46967
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 9.39334E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00001E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_0_Z2_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 7.51467
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_0_Z2_REHEATCOIL, User-Specified Nominal Capacity [W], 2254.40084
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.18634
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 3.72674E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_0_Z3_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 2.98139
+ Component Sizing Information, Coil:Heating:Electric, BREAK_ROOM_0_Z3_REHEATCOIL, User-Specified Nominal Capacity [W], 894.41815
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.41841
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 8.36829E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00001E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_0_Z4_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 6.69464
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_0_Z4_REHEATCOIL, User-Specified Nominal Capacity [W], 2008.39072
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 1.58226
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 0.31645
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_0_Z5_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 25.31624
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_OPEN_0_Z5_REHEATCOIL, User-Specified Nominal Capacity [W], 7594.87119
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.23129
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 4.62576E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_0_Z6_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 3.70061
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_0_Z6_REHEATCOIL, User-Specified Nominal Capacity [W], 1110.18217
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.13926
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 2.78516E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00001E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_0_Z7_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 2.22813
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_0_Z7_REHEATCOIL, User-Specified Nominal Capacity [W], 668.43955
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.43732
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 8.74638E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_1_Z8_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 6.99710
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_1_Z8_REHEATCOIL, User-Specified Nominal Capacity [W], 2099.13087
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.33437
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 6.68749E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 9.99998E-004
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, BREAK_ROOM_1_Z9_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 5.35000
+ Component Sizing Information, Coil:Heating:Electric, BREAK_ROOM_1_Z9_REHEATCOIL, User-Specified Nominal Capacity [W], 1604.99854
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.49008
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 9.80152E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_1_Z10_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 7.84121
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_1_Z10_REHEATCOIL, User-Specified Nominal Capacity [W], 2352.36366
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.13369
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 2.67372E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_1_Z11_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 2.13898
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_1_Z11_REHEATCOIL, User-Specified Nominal Capacity [W], 641.69258
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.20505
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 4.10097E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 9.99996E-004
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_1_Z12_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 3.28077
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_1_Z12_REHEATCOIL, User-Specified Nominal Capacity [W], 984.23218
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.53997
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 0.10799
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, LOBBY_2_Z13_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 8.63944
+ Component Sizing Information, Coil:Heating:Electric, LOBBY_2_Z13_REHEATCOIL, User-Specified Nominal Capacity [W], 2591.83263
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.38677
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 7.73532E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, CONFERENCE_2_Z14_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 6.18826
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_2_Z14_REHEATCOIL, User-Specified Nominal Capacity [W], 1856.47752
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.46899
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 9.37987E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 9.99988E-004
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, MECHANICAL_2_Z15_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 7.50389
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_2_Z15_REHEATCOIL, User-Specified Nominal Capacity [W], 2251.16761
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.61011
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 0.12202
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_OPEN_2_Z16_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 9.76172
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_OPEN_2_Z16_REHEATCOIL, User-Specified Nominal Capacity [W], 2928.51663
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.22801
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 4.56023E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 9.99996E-004
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, OFFICE_PRIVATE_2_Z17_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 3.64819
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_2_Z17_REHEATCOIL, User-Specified Nominal Capacity [W], 1094.45598
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, User-Specified Maximum Air Flow Rate [m3/s], 0.19800
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, Design Size Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, User-Specified Constant Minimum Air Flow Fraction, 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, Design Size Minimum Air Flow Rate [m3/s], 3.96006E-002
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2], 1.00000E-003
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, Design Size Maximum Flow Fraction during Reheat [], 0.20000
+ Component Sizing Information, AirTerminal:SingleDuct:VAV:Reheat, STORAGE_2_Z18_VAVTERMINAL, User-Specified Maximum Reheat Water Flow Rate [m3/s], 3.16805
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_2_Z18_REHEATCOIL, User-Specified Nominal Capacity [W], 950.41434
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_0_Z1_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.79283
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_0_Z1_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 15856.66240
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_0_Z1_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+! <DX Cooling Coil Standard Rating Information>, Component Type, Component Name, Standard Rating (Net) Cooling Capacity {W}, Standard Rating Net COP {W/W}, EER {Btu/W-h}, SEER User {Btu/W-h}, SEER Standard {Btu/W-h}, IEER {Btu/W-h}
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, LOBBY_0_Z1_COOLINGCOILDX, 15241.0, 32.96, 112.48, 62.04, 58.68, 41.3
+! <DX Cooling Coil AHRI 2023 Standard Rating Information>, Component Type, Component Name, Standard Rating (Net) Cooling Capacity {W}, Standard Rating Net COP2 {W/W}, EER2 {Btu/W-h}, SEER2 User {Btu/W-h}, SEER2 Standard {Btu/W-h}, IEER 2022 {Btu/W-h}
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, LOBBY_0_Z1_COOLINGCOILDX, 15241.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, LOBBY_0_Z1_HEATINGCOIL, User-Specified Nominal Capacity [W], 12685.32992
+ Component Sizing Information, Fan:VariableVolume, LOBBY_0_Z1_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.79283
+ Component Sizing Information, Fan:VariableVolume, LOBBY_0_Z1_SUPPLYFAN, Design Electric Power Consumption [W], 679.57125
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_0_Z2_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.46967
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_0_Z2_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 9393.33682
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_0_Z2_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_0_Z2_COOLINGCOILDX, 9028.6, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_0_Z2_COOLINGCOILDX, 9028.6, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_0_Z2_HEATINGCOIL, User-Specified Nominal Capacity [W], 7514.66946
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_0_Z2_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.46967
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_0_Z2_SUPPLYFAN, Design Electric Power Consumption [W], 402.57158
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_0_Z3_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.18634
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_0_Z3_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 3726.74228
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_0_Z3_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_0_Z3_COOLINGCOILDX, 3582.0, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_0_Z3_COOLINGCOILDX, 3582.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, BREAK_ROOM_0_Z3_HEATINGCOIL, User-Specified Nominal Capacity [W], 2981.39382
+ Component Sizing Information, Fan:VariableVolume, BREAK_ROOM_0_Z3_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.18634
+ Component Sizing Information, Fan:VariableVolume, BREAK_ROOM_0_Z3_SUPPLYFAN, Design Electric Power Consumption [W], 159.71753
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_0_Z4_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.41841
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_0_Z4_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 8368.29468
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_0_Z4_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_0_Z4_COOLINGCOILDX, 8043.4, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_0_Z4_COOLINGCOILDX, 8043.4, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_0_Z4_HEATINGCOIL, User-Specified Nominal Capacity [W], 6694.63575
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_0_Z4_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.41841
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_0_Z4_SUPPLYFAN, Design Electric Power Consumption [W], 358.64120
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_0_Z5_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 1.58226
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_0_Z5_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 31645.29664
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_0_Z5_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_0_Z5_COOLINGCOILDX, 30416.6, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_0_Z5_COOLINGCOILDX, 30416.6, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_OPEN_0_Z5_HEATINGCOIL, User-Specified Nominal Capacity [W], 25316.23732
+ Component Sizing Information, Fan:VariableVolume, OFFICE_OPEN_0_Z5_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 1.58226
+ Component Sizing Information, Fan:VariableVolume, OFFICE_OPEN_0_Z5_SUPPLYFAN, Design Electric Power Consumption [W], 1356.22700
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_0_Z6_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.23129
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_0_Z6_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 4625.75903
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_0_Z6_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_0_Z6_COOLINGCOILDX, 4446.2, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_0_Z6_COOLINGCOILDX, 4446.2, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_0_Z6_HEATINGCOIL, User-Specified Nominal Capacity [W], 3700.60722
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_0_Z6_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.23129
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_0_Z6_SUPPLYFAN, Design Electric Power Consumption [W], 198.24682
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_0_Z7_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.13926
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_0_Z7_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 2785.16480
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_0_Z7_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_0_Z7_COOLINGCOILDX, 2677.0, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_0_Z7_COOLINGCOILDX, 2677.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_0_Z7_HEATINGCOIL, User-Specified Nominal Capacity [W], 2228.13184
+ Component Sizing Information, Fan:VariableVolume, STORAGE_0_Z7_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.13926
+ Component Sizing Information, Fan:VariableVolume, STORAGE_0_Z7_SUPPLYFAN, Design Electric Power Consumption [W], 119.36421
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_1_Z8_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.43732
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_1_Z8_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 8746.37862
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_1_Z8_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_1_Z8_COOLINGCOILDX, 8406.8, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_1_Z8_COOLINGCOILDX, 8406.8, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_1_Z8_HEATINGCOIL, User-Specified Nominal Capacity [W], 6997.10289
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_1_Z8_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.43732
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_1_Z8_SUPPLYFAN, Design Electric Power Consumption [W], 374.84480
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_1_Z9_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.33437
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_1_Z9_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 6687.49393
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_1_Z9_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_1_Z9_COOLINGCOILDX, 6427.8, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, BREAK_ROOM_1_Z9_COOLINGCOILDX, 6427.8, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, BREAK_ROOM_1_Z9_HEATINGCOIL, User-Specified Nominal Capacity [W], 5349.99514
+ Component Sizing Information, Fan:VariableVolume, BREAK_ROOM_1_Z9_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.33437
+ Component Sizing Information, Fan:VariableVolume, BREAK_ROOM_1_Z9_SUPPLYFAN, Design Electric Power Consumption [W], 286.60688
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_1_Z10_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.49008
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_1_Z10_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 9801.51524
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_1_Z10_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_1_Z10_COOLINGCOILDX, 9421.0, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_1_Z10_COOLINGCOILDX, 9421.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_1_Z10_HEATINGCOIL, User-Specified Nominal Capacity [W], 7841.21220
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_1_Z10_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.49008
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_1_Z10_SUPPLYFAN, Design Electric Power Consumption [W], 420.06494
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_1_Z11_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.13369
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_1_Z11_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 2673.71908
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_1_Z11_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_1_Z11_COOLINGCOILDX, 2569.9, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_1_Z11_COOLINGCOILDX, 2569.9, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_1_Z11_HEATINGCOIL, User-Specified Nominal Capacity [W], 2138.97526
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_1_Z11_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.13369
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_1_Z11_SUPPLYFAN, Design Electric Power Consumption [W], 114.58796
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_1_Z12_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.20505
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_1_Z12_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 4100.96741
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_1_Z12_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_1_Z12_COOLINGCOILDX, 3941.7, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_1_Z12_COOLINGCOILDX, 3941.7, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_1_Z12_HEATINGCOIL, User-Specified Nominal Capacity [W], 3280.77393
+ Component Sizing Information, Fan:VariableVolume, STORAGE_1_Z12_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.20505
+ Component Sizing Information, Fan:VariableVolume, STORAGE_1_Z12_SUPPLYFAN, Design Electric Power Consumption [W], 175.75575
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_2_Z13_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.53997
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_2_Z13_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 10799.30261
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, LOBBY_2_Z13_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, LOBBY_2_Z13_COOLINGCOILDX, 10380.0, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, LOBBY_2_Z13_COOLINGCOILDX, 10380.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, LOBBY_2_Z13_HEATINGCOIL, User-Specified Nominal Capacity [W], 8639.44209
+ Component Sizing Information, Fan:VariableVolume, LOBBY_2_Z13_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.53997
+ Component Sizing Information, Fan:VariableVolume, LOBBY_2_Z13_SUPPLYFAN, Design Electric Power Consumption [W], 462.82725
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_2_Z14_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.38677
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_2_Z14_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 7735.32301
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_2_Z14_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_2_Z14_COOLINGCOILDX, 7435.0, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, CONFERENCE_2_Z14_COOLINGCOILDX, 7435.0, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, CONFERENCE_2_Z14_HEATINGCOIL, User-Specified Nominal Capacity [W], 6188.25840
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_2_Z14_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.38677
+ Component Sizing Information, Fan:VariableVolume, CONFERENCE_2_Z14_SUPPLYFAN, Design Electric Power Consumption [W], 331.51384
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_2_Z15_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.46899
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_2_Z15_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 9379.86502
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_2_Z15_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_2_Z15_COOLINGCOILDX, 9015.7, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, MECHANICAL_2_Z15_COOLINGCOILDX, 9015.7, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, MECHANICAL_2_Z15_HEATINGCOIL, User-Specified Nominal Capacity [W], 7503.89202
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_2_Z15_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.46899
+ Component Sizing Information, Fan:VariableVolume, MECHANICAL_2_Z15_SUPPLYFAN, Design Electric Power Consumption [W], 401.99422
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_2_Z16_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.61011
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_2_Z16_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 12202.15263
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_2_Z16_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_2_Z16_COOLINGCOILDX, 11728.4, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_OPEN_2_Z16_COOLINGCOILDX, 11728.4, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_OPEN_2_Z16_HEATINGCOIL, User-Specified Nominal Capacity [W], 9761.72210
+ Component Sizing Information, Fan:VariableVolume, OFFICE_OPEN_2_Z16_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.61011
+ Component Sizing Information, Fan:VariableVolume, OFFICE_OPEN_2_Z16_SUPPLYFAN, Design Electric Power Consumption [W], 522.94940
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_2_Z17_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.22801
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_2_Z17_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 4560.23323
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_2_Z17_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_2_Z17_COOLINGCOILDX, 4383.2, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, OFFICE_PRIVATE_2_Z17_COOLINGCOILDX, 4383.2, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, OFFICE_PRIVATE_2_Z17_HEATINGCOIL, User-Specified Nominal Capacity [W], 3648.18659
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_2_Z17_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.22801
+ Component Sizing Information, Fan:VariableVolume, OFFICE_PRIVATE_2_Z17_SUPPLYFAN, Design Electric Power Consumption [W], 195.43857
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_2_Z18_COOLINGCOILDX, User-Specified Rated Air Flow Rate [m3/s], 0.19800
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_2_Z18_COOLINGCOILDX, User-Specified Gross Rated Total Cooling Capacity [W], 3960.05976
+ Component Sizing Information, Coil:Cooling:DX:SingleSpeed, STORAGE_2_Z18_COOLINGCOILDX, User-Specified Gross Rated Sensible Heat Ratio, 0.75000
+ DX Cooling Coil Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_2_Z18_COOLINGCOILDX, 3806.3, 32.96, 112.48, 62.04, 58.68, 41.3
+ DX Cooling Coil AHRI 2023 Standard Rating Information, Coil:Cooling:DX:SingleSpeed, STORAGE_2_Z18_COOLINGCOILDX, 3806.3, 32.96, 112.48, 62.04, 60.36, 41.3
+ Component Sizing Information, Coil:Heating:Electric, STORAGE_2_Z18_HEATINGCOIL, User-Specified Nominal Capacity [W], 3168.04781
+ Component Sizing Information, Fan:VariableVolume, STORAGE_2_Z18_SUPPLYFAN, User-Specified Maximum Flow Rate [m3/s], 0.19800
+ Component Sizing Information, Fan:VariableVolume, STORAGE_2_Z18_SUPPLYFAN, Design Electric Power Consumption [W], 169.71685
+! <Environment>,Environment Name,Environment Type, Start Date, End Date, Start DayOfWeek, Duration {#days}, Source:Start DayOfWeek,  Use Daylight Saving, Use Holidays, Apply Weekend Holiday Rule,  Use Rain Values, Use Snow Values, Sky Temperature Model
+! <Environment:Special Days>, Special Day Name, Special Day Type, Source, Start Date, Duration {#days}
+! <Environment:Daylight Saving>, Daylight Saving Indicator, Source, Start Date, End Date
+! <Environment:WarmupDays>, NumberofWarmupDays
+Environment,QUICK VALIDATION RUN PERIOD,WeatherFileRunPeriod,01/01/2017,01/31/2017,Sunday,31,Use RunPeriod Specified Day,Yes,Yes,Yes,Yes,Yes,Clark and Allen
+Environment:Daylight Saving,No,
+Environment:WarmupDays, 10
+! <Warmup Convergence Information>,Zone Name,Environment Type/Name,Average Warmup Temperature Difference {deltaC},Std Dev Warmup Temperature Difference {deltaC},Max Temperature Pass/Fail Convergence,Min Temperature Pass/Fail Convergence,Average Warmup Load Difference {W},Std Dev Warmup Load Difference {W},Heating Load Pass/Fail Convergence,Cooling Load Pass/Fail Convergence
+ Warmup Convergence Information,LOBBY_0,RunPeriod: QUICK VALIDATION RUN PERIOD,9.3232052396E-002,0.1044859833,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,CONFERENCE_0,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1100840875,0.1330562886,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,BREAK_ROOM_0,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1755346238,0.2007689972,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,MECHANICAL_0,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1388371582,0.1613219658,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,OFFICE_OPEN_0,RunPeriod: QUICK VALIDATION RUN PERIOD,6.5473433360E-002,7.3850227907E-002,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,OFFICE_PRIVATE_0,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1583990260,0.1803973052,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,STORAGE_0,RunPeriod: QUICK VALIDATION RUN PERIOD,0.2056470607,0.2435461361,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,CONFERENCE_1,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1173380796,0.1384107229,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,BREAK_ROOM_1,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1291360546,0.1567322864,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,MECHANICAL_1,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1285622182,0.1560196542,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,OFFICE_PRIVATE_1,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1999867518,0.2316279689,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,STORAGE_1,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1813956516,0.2069638878,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,LOBBY_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1127803489,0.1354818100,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,CONFERENCE_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1286416728,0.1446348312,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,MECHANICAL_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1311833942,0.1566535873,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,OFFICE_OPEN_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1029605752,0.1165223722,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,OFFICE_PRIVATE_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1632084818,0.1951244859,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+ Warmup Convergence Information,STORAGE_2,RunPeriod: QUICK VALIDATION RUN PERIOD,0.1834109127,0.2101722169,Pass,Pass,0.0000000000,0.0000000000,Pass,Pass
+! <Program Control Information:Threads/Parallel Sims>, Threading Supported,Maximum Number of Threads, Env Set Threads (OMP_NUM_THREADS), EP Env Set Threads (EP_OMP_NUM_THREADS), IDF Set Threads, Number of Threads Used (Interior Radiant Exchange), Number Nominal Surfaces, Number Parallel Sims
+Program Control:Threads/Parallel Sims, No,1, N/A, N/A, N/A, N/A, N/A, N/A
+End of Data

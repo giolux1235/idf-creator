@@ -1,0 +1,1992 @@
+Program Version:,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.02 09:28
+Tabular Output Report in Format: ,Comma
+
+Building:,Professional Building
+Environment:,YEAR ROUND RUN PERIOD ** Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Annual Building Utility Performance Summary
+FOR:,Entire Facility
+Values gathered over      8760.00 hours
+
+Site and Source Energy
+
+,,Total Energy [GJ],Energy Per Total Building Area [MJ/m2],Energy Per Conditioned Building Area [MJ/m2]
+,Total Site Energy,30.01,608.01,608.01
+,Net Site Energy,30.01,608.01,608.01
+,Total Source Energy,95.05,1925.57,1925.57
+,Net Source Energy,95.05,1925.57,1925.57
+
+
+Site to Source Energy Conversion Factors
+
+,,Site=>Source Conversion Factor
+,Electricity,3.167
+,Natural Gas,1.084
+,District Cooling,1.056
+,District Heating Water,3.613
+,District Heating Steam,1.200
+,Gasoline,1.050
+,Diesel,1.050
+,Coal,1.050
+,Fuel Oil No 1,1.050
+,Fuel Oil No 2,1.050
+,Propane,1.050
+,Other Fuel 1,1.000
+,Other Fuel 2,1.000
+
+
+Building Area
+
+,,Area [m2]
+,Total Building Area,49.36
+,Net Conditioned Building Area,49.36
+,Unconditioned Building Area,0.00
+
+
+End Uses
+
+,,Electricity [GJ],Natural Gas [GJ],Gasoline [GJ],Diesel [GJ],Coal [GJ],Fuel Oil No 1 [GJ],Fuel Oil No 2 [GJ],Propane [GJ],Other Fuel 1 [GJ],Other Fuel 2 [GJ],District Cooling [GJ],District Heating Water [GJ],District Heating Steam [GJ],Water [m3]
+,Heating,19.82,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,0.74,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,3.87,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,5.13,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,0.45,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,,,,,,,,,
+,Total End Uses,30.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+Note: Electricity appears to be the principal heating source based on energy usage.
+
+
+End Uses By Subcategory
+
+,,Subcategory,Electricity [GJ],Natural Gas [GJ],Gasoline [GJ],Diesel [GJ],Coal [GJ],Fuel Oil No 1 [GJ],Fuel Oil No 2 [GJ],Propane [GJ],Other Fuel 1 [GJ],Other Fuel 2 [GJ],District Cooling [GJ],District Heating Water [GJ],District Heating Steam [GJ],Water [m3]
+,Heating,General,19.82,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,General,0.74,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,General,3.87,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,General,5.13,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,General,0.45,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+End Uses By Space Type
+
+,,Space Type,Electricity [GJ],Natural Gas [GJ],Gasoline [GJ],Diesel [GJ],Coal [GJ],Fuel Oil No 1 [GJ],Fuel Oil No 2 [GJ],Propane [GJ],Other Fuel 1 [GJ],Other Fuel 2 [GJ],District Cooling [GJ],District Heating Water [GJ],District Heating Steam [GJ],Water [m3]
+,Heating,Unassigned,19.82,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,Unassigned,0.74,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,GENERAL,3.87,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,GENERAL,5.13,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,Unassigned,0.45,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,Unassigned,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Normalized Metrics
+Utility Use Per Conditioned Floor Area
+
+,,Electricity Intensity [MJ/m2],Natural Gas Intensity [MJ/m2],Gasoline Intensity [MJ/m2],Diesel Intensity [MJ/m2],Coal Intensity [MJ/m2],Fuel Oil No 1 Intensity [MJ/m2],Fuel Oil No 2 Intensity [MJ/m2],Propane Intensity [MJ/m2],Other Fuel 1 Intensity [MJ/m2],Other Fuel 2 Intensity [MJ/m2],District Cooling Intensity [MJ/m2],District Heating Water Intensity [MJ/m2],District Heating Steam Intensity [MJ/m2],Water Intensity [m3/m2]
+,Lighting,78.39,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,HVAC,425.60,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Other,104.03,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Total,608.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Utility Use Per Total Floor Area
+
+,,Electricity Intensity [MJ/m2],Natural Gas Intensity [MJ/m2],Gasoline Intensity [MJ/m2],Diesel Intensity [MJ/m2],Coal Intensity [MJ/m2],Fuel Oil No 1 Intensity [MJ/m2],Fuel Oil No 2 Intensity [MJ/m2],Propane Intensity [MJ/m2],Other Fuel 1 Intensity [MJ/m2],Other Fuel 2 Intensity [MJ/m2],District Cooling Intensity [MJ/m2],District Heating Water Intensity [MJ/m2],District Heating Steam Intensity [MJ/m2],Water Intensity [m3/m2]
+,Lighting,78.39,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+,HVAC,425.60,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+,Other,104.03,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+,Total,608.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+
+
+Electric Loads Satisfied
+
+,,Electricity [GJ],Percent Electricity [%]
+,Fuel-Fired Power Generation,0.000,0.00
+,High Temperature Geothermal*,0.000,0.00
+,Photovoltaic Power,0.000,0.00
+,Wind Power,0.000,0.00
+,Power Conversion,0.000,0.00
+,Net Decrease in On-Site Storage,0.000,0.00
+,Total On-Site Electric Sources,0.000,0.00
+,,,
+,Electricity Coming From Utility,30.012,100.00
+,Surplus Electricity Going To Utility,0.000,0.00
+,Net Electricity From Utility,30.012,100.00
+,,,
+,Total On-Site and Utility Electric Sources,30.012,100.00
+,Total Electricity End Uses,30.012,100.00
+
+
+On-Site Thermal Sources
+
+,,Heat [GJ],Percent Heat [%]
+,Water-Side Heat Recovery,0.00,
+,Air to Air Heat Recovery for Cooling,0.00,
+,Air to Air Heat Recovery for Heating,0.00,
+,High-Temperature Geothermal*,0.00,
+,Solar Water Thermal,0.00,
+,Solar Air Thermal,0.00,
+,Total On-Site Thermal Sources,0.00,
+
+
+Water Source Summary
+
+,,Water [m3],Percent Water [%]
+,Rainwater Collection,0.00,-
+,Condensate Collection,0.00,-
+,Groundwater Well,0.00,-
+,Total On Site Water Sources,0.00,-
+,-,-,-
+,Initial Storage,0.00,-
+,Final Storage,0.00,-
+,Change in Storage,0.00,-
+,-,-,-
+,Water Supplied by Utility,0.00,-
+,-,-,-
+,Total On Site, Change in Storage, and Utility Water Sources,0.00,-
+,Total Water End Uses,0.00,-
+
+
+Setpoint Not Met Criteria
+
+,,Degrees [deltaC]
+,Tolerance for Zone Heating Setpoint Not Met Time,0.20
+,Tolerance for Zone Cooling Setpoint Not Met Time,0.20
+
+
+Comfort and Setpoint Not Met Summary
+
+,,Facility [Hours]
+,Time Setpoint Not Met During Occupied Heating,0.00
+,Time Setpoint Not Met During Occupied Cooling,0.00
+,Time Not Comfortable Based on Simple ASHRAE 55-2004,8592.25
+
+
+Note 1: An asterisk (*) indicates that the feature is not yet implemented.
+----------------------------------------------------------------------------------------------------
+REPORT:,Input Verification and Results Summary
+FOR:,Entire Facility
+General
+
+,,Value
+,Program Version and Build,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.02 09:28
+,RunPeriod,YEAR ROUND RUN PERIOD
+,Weather File,Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300
+,Latitude [deg],41.98
+,Longitude [deg],-87.9
+,Elevation [m],201.00
+,Time Zone,-6.0
+,North Axis Angle [deg],0.00
+,Rotation for Appendix G [deg],0.00
+,Hours Simulated [hrs],8760.00
+
+
+ENVELOPE
+Window-Wall Ratio
+
+,,Total,North (315 to 45 deg),East (45 to 135 deg),South (135 to 225 deg),West (225 to 315 deg)
+,Gross Wall Area [m2],144.69,34.36,37.99,34.36,37.99
+,Above Ground Wall Area [m2],144.69,34.36,37.99,34.36,37.99
+,Window Opening Area [m2],43.55,13.77,11.43,6.92,11.43
+,Gross Window-Wall Ratio [%],30.10,40.07,30.09,20.14,30.09
+,Above Ground Window-Wall Ratio [%],30.10,40.07,30.09,20.14,30.09
+
+
+Conditioned Window-Wall Ratio
+
+,,Total,North (315 to 45 deg),East (45 to 135 deg),South (135 to 225 deg),West (225 to 315 deg)
+,Gross Wall Area [m2],144.69,34.36,37.99,34.36,37.99
+,Above Ground Wall Area [m2],144.69,34.36,37.99,34.36,37.99
+,Window Opening Area [m2],43.55,13.77,11.43,6.92,11.43
+,Gross Window-Wall Ratio [%],30.10,40.07,30.09,20.14,30.09
+,Above Ground Window-Wall Ratio [%],30.10,40.07,30.09,20.14,30.09
+
+
+Skylight-Roof Ratio
+
+,,Total
+,Gross Roof Area [m2],49.36
+,Skylight Area [m2],0.00
+,Skylight-Roof Ratio [%],0.00
+
+
+PERFORMANCE
+Zone Summary
+
+,,Area [m2],Conditioned (Y/N),Part of Total Floor Area (Y/N),Volume [m3],Multipliers,Above Ground Gross Wall Area [m2],Underground Gross Wall Area [m2],Window Glass Area [m2],Opening Area [m2],Lighting [W/m2],People [m2 per person],Plug and Process [W/m2]
+,STORAGE_11,10.25,Yes,Yes,30.75,1.00,38.59,0.00,11.61,11.61,5.4000,10.25,1.1000
+,BREAK_ROOM_70,21.22,Yes,Yes,63.66,1.00,55.29,0.00,16.64,16.64,8.1000,10.61,15.0000
+,STORAGE_85,17.89,Yes,Yes,53.67,1.00,50.81,0.00,15.29,15.29,5.4000,17.89,1.1000
+,Total,49.36,,,148.08,,144.69,0.00,43.55,43.55,6.5607,12.34,7.0754
+,Conditioned Total,49.36,,,148.08,,144.69,0.00,43.55,43.55,6.5607,12.34,7.0754
+,Unconditioned Total,0.00,,,0.00,,0.00,0.00,0.00,0.00,,,
+,Not Part of Total,0.00,,,0.00,,0.00,0.00,0.00,0.00,,,
+
+
+Space Summary
+
+,,Area [m2],Conditioned (Y/N),Part of Total Floor Area (Y/N),Multipliers,Zone Name,Space Type,Radiant/Solar Enclosure Name,Lighting [W/m2],People [m2 per person],Plug and Process [W/m2],Tags
+,STORAGE_11,10.25,Yes,Yes,1.00,STORAGE_11,GENERAL,STORAGE_11,5.4000,10.25,1.1000,
+,BREAK_ROOM_70,21.22,Yes,Yes,1.00,BREAK_ROOM_70,GENERAL,BREAK_ROOM_70,8.1000,10.61,15.0000,
+,STORAGE_85,17.89,Yes,Yes,1.00,STORAGE_85,GENERAL,STORAGE_85,5.4000,17.89,1.1000,
+,Total,49.36,,,,,,,6.5607,12.34,7.0754,
+,Conditioned Total,49.36,,,,,,,6.5607,12.34,7.0754,
+,Unconditioned Total,0.00,,,,,,,0.0000,0.00,0.0000,
+,Not Part of Total,0.00,,,,,,,0.0000,0.00,0.0000,
+
+
+Space Type Summary
+
+,,Total Area [m2],Conditioned Area [m2],Unconditioned Area [m2],Not Part of Total Area [m2],Lighting [W/m2],People [m2 per person],Plug and Process [W/m2]
+,GENERAL,49.36,49.36,0.00,0.00,6.5607,12.34,7.0754
+,Total,49.36,49.36,0.00,0.00,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Demand End Use Components Summary
+FOR:,Entire Facility
+End Uses
+
+,,Electricity [W],Natural Gas [W],Gasoline [W],Diesel [W],Coal [W],Fuel Oil No 1 [W],Fuel Oil No 2 [W],Propane [W],Other Fuel 1 [W],Other Fuel 2 [W],District Cooling [W],District Heating Water [W],District Heating Steam [W],Water [m3/s]
+,Time of Peak,27-JAN-07:30,-,-,-,-,-,-,-,-,-,-,-,-,-
+,Heating,1352.57,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,323.84,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,244.47,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,14.37,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,,,,,,,,,
+,Total End Uses,1935.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+End Uses By Subcategory
+
+,,Subcategory,Electricity [W],Natural Gas [W],Gasoline [W],Diesel [W],Coal [W],Fuel Oil No 1 [W],Fuel Oil No 2 [W],Propane [W],Other Fuel 1 [W],Other Fuel 2 [W],District Cooling [W],District Heating Water [W],District Heating Steam [W],Water [m3/s]
+,Heating,General,1352.57,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,General,323.84,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,General,244.47,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,General,14.37,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Source Energy End Use Components Summary
+FOR:,Entire Facility
+Values gathered over      8760.00 hours
+
+Source Energy End Use Components Summary
+
+,,Source Electricity [GJ],Source Natural Gas [GJ],Source Gasoline [GJ],Source Diesel [GJ],Source Coal [GJ],Source Fuel Oil No 1 [GJ],Source Fuel Oil No 2 [GJ],Source Propane [GJ],Source Other Fuel 1 [GJ],Source Other Fuel 2 [GJ],Source District Cooling [GJ],Source District Heating Water [GJ],Source District Heating Steam [GJ]
+,Heating,62.76,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,2.33,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,12.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,16.26,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,1.44,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,,,,,,,,
+,Total Source Energy End Use Components,95.05,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Normalized Metrics
+Source Energy End Use Components Per Conditioned Floor Area
+
+,,Source Electricity [MJ/m2],Source Natural Gas [MJ/m2],Source Gasoline [MJ/m2],Source Diesel [MJ/m2],Source Coal [MJ/m2],Source Fuel Oil No 1 [MJ/m2],Source Fuel Oil No 2 [MJ/m2],Source Propane [MJ/m2],Source Other Fuel 1 [MJ/m2],Source Other Fuel 2 [MJ/m2],Source District Cooling [MJ/m2],Source District Heating Water [MJ/m2],Source District Heating Steam [MJ/m2]
+,Heating,1271.55,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,47.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,248.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,329.45,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,29.07,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,,,,,,,,
+,Total Source Energy End Use Components,1925.57,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Source Energy End Use Components Per Total Floor Area
+
+,,Source Electricity [MJ/m2],Source Natural Gas [MJ/m2],Source Gasoline [MJ/m2],Source Diesel [MJ/m2],Source Coal [MJ/m2],Source Fuel Oil No 1 [MJ/m2],Source Fuel Oil No 2 [MJ/m2],Source Propane [MJ/m2],Source Other Fuel 1 [MJ/m2],Source Other Fuel 2 [MJ/m2],Source District Cooling [MJ/m2],Source District Heating Water [MJ/m2],Source District Heating Steam [MJ/m2]
+,Heating,1271.55,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling,47.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting,248.25,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment,329.45,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans,29.07,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,,,,,,,,,,,,,,
+,Total Source Energy End Use Components,1925.57,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Component Sizing Summary
+FOR:,Entire Facility
+AirTerminal:SingleDuct:VAV:Reheat
+
+,,User-Specified Maximum Air Flow Rate [m3/s],Design Size Constant Minimum Air Flow Fraction,User-Specified Constant Minimum Air Flow Fraction,Design Size Minimum Air Flow Rate [m3/s],Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2],Design Size Maximum Flow Fraction during Reheat [],User-Specified Maximum Reheat Water Flow Rate [m3/s]
+,STORAGE_11_Z1_VAVTERMINAL,0.051254,0.200000,0.200000,0.010251,0.001000,0.200000,0.820068
+,BREAK_ROOM_70_Z2_VAVTERMINAL,0.106100,0.200000,0.200000,0.021220,0.001000,0.200000,1.70
+,STORAGE_85_Z3_VAVTERMINAL,0.089453,0.200000,0.200000,0.017891,0.001000,0.200000,1.43
+User-Specified values were used. Design Size values were used if no User-Specified values were provided. Design Size values may be derived from alternate User-Specified values.
+
+
+Coil:Heating:Electric
+
+,,User-Specified Nominal Capacity [W]
+,STORAGE_11_Z1_REHEATCOIL,246.02
+,BREAK_ROOM_70_Z2_REHEATCOIL,509.28
+,STORAGE_85_Z3_REHEATCOIL,429.37
+,STORAGE_11_Z1_HEATINGCOIL,820.07
+,BREAK_ROOM_70_Z2_HEATINGCOIL,1697.59
+,STORAGE_85_Z3_HEATINGCOIL,1431.25
+User-Specified values were used. Design Size values were used if no User-Specified values were provided.
+
+
+Coil:Cooling:DX:SingleSpeed
+
+,,User-Specified Rated Air Flow Rate [m3/s],User-Specified Gross Rated Total Cooling Capacity [W],User-Specified Gross Rated Sensible Heat Ratio
+,STORAGE_11_Z1_COOLINGCOILDX,0.051254,1025.08,0.750000
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,0.106100,2121.99,0.750000
+,STORAGE_85_Z3_COOLINGCOILDX,0.089453,1789.06,0.750000
+User-Specified values were used. Design Size values were used if no User-Specified values were provided.
+
+
+Fan:VariableVolume
+
+,,User-Specified Maximum Flow Rate [m3/s],Design Electric Power Consumption [W]
+,STORAGE_11_Z1_SUPPLYFAN,0.051254,43.93
+,BREAK_ROOM_70_Z2_SUPPLYFAN,0.106100,90.94
+,STORAGE_85_Z3_SUPPLYFAN,0.089453,76.67
+User-Specified values were used. Design Size values were used if no User-Specified values were provided.
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Surface Shadowing Summary
+FOR:,Entire Facility
+Surfaces (Walls, Roofs, etc) that may be Shadowed by Other Surfaces
+
+,,Possible Shadow Receivers
+,STORAGE_11_WALL_1,BREAK_ROOM_70_WALL_3 | BREAK_ROOM_70_WALL_4 | BREAK_ROOM_70_FLOOR | STORAGE_85_WALL_3 | STORAGE_85_WALL_4 | STORAGE_85_FLOOR |
+,STORAGE_11_WALL_2,BREAK_ROOM_70_WALL_3 | BREAK_ROOM_70_WALL_4 | BREAK_ROOM_70_FLOOR | STORAGE_85_WALL_3 | STORAGE_85_FLOOR |
+,STORAGE_11_CEILING,BREAK_ROOM_70_WALL_3 | BREAK_ROOM_70_WALL_4 | BREAK_ROOM_70_FLOOR | STORAGE_85_WALL_3 | STORAGE_85_WALL_4 | STORAGE_85_FLOOR |
+,BREAK_ROOM_70_WALL_4,STORAGE_85_WALL_1 | STORAGE_85_WALL_3 | STORAGE_85_FLOOR |
+,BREAK_ROOM_70_CEILING,STORAGE_85_WALL_1 | STORAGE_85_WALL_2 | STORAGE_85_WALL_3 | STORAGE_85_FLOOR |
+
+
+Subsurfaces (Windows and Doors) that may be Shadowed by Surfaces
+
+,,Possible Shadow Receivers
+,STORAGE_11_WALL_1,STORAGE_11_WINDOW_1 |
+,STORAGE_11_WALL_2,STORAGE_11_WINDOW_2 |
+,STORAGE_11_WALL_3,STORAGE_11_WINDOW_3 |
+,STORAGE_11_WALL_4,STORAGE_11_WINDOW_4 |
+,BREAK_ROOM_70_WALL_1,BREAK_ROOM_70_WINDOW_1 |
+,BREAK_ROOM_70_WALL_2,BREAK_ROOM_70_WINDOW_2 |
+,BREAK_ROOM_70_WALL_3,BREAK_ROOM_70_WINDOW_3 |
+,BREAK_ROOM_70_WALL_4,BREAK_ROOM_70_WINDOW_4 |
+,STORAGE_85_WALL_1,STORAGE_85_WINDOW_1 |
+,STORAGE_85_WALL_2,STORAGE_85_WINDOW_2 |
+,STORAGE_85_WALL_3,STORAGE_85_WINDOW_3 |
+,STORAGE_85_WALL_4,STORAGE_85_WINDOW_4 |
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Adaptive Comfort Summary
+FOR:,Entire Facility
+Time Not Meeting the Adaptive Comfort Models during Occupied Hours
+
+,,ASHRAE55 90% Acceptability Limits [Hours],ASHRAE55 80% Acceptability Limits  [Hours],CEN15251 Category I Acceptability Limits [Hours],CEN15251 Category II Acceptability Limits [Hours],CEN15251 Category III Acceptability Limits [Hours]
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Initialization Summary
+FOR:,Entire Facility
+Version
+
+,,Version ID
+,1,24.2.0
+
+
+Timesteps per Hour
+
+,,#TimeSteps,Minutes per TimeStep {minutes}
+,1,4,15
+
+
+System Convergence Limits
+
+,,Minimum System TimeStep {minutes},Max HVAC Iterations,Minimum Plant Iterations,Maximum Plant Iterations
+,1,1,20,2,8
+
+
+Simulation Control
+
+,,Do Zone Sizing,Do System Sizing,Do Plant Sizing,Do Design Days,Do Weather Simulation,Do HVAC Sizing Simulation
+,1,No,No,No,No,Yes,No
+
+
+Performance Precision Tradeoffs
+
+,,Use Coil Direct Simulation,Zone Radiant Exchange Algorithm,Override Mode,Number of Timestep In Hour,Force Euler Method,Minimum Number of Warmup Days,Force Suppress All Begin Environment Resets,Minimum System Timestep,MaxZoneTempDiff,MaxAllowedDelTemp
+,1,No,ScriptF,Normal,4,No,1,No,1.0,0.300,2.0000E-003
+
+
+Output Reporting Tolerances
+
+,,Tolerance for Time Heating Setpoint Not Met,Tolerance for Zone Cooling Setpoint Not Met Time
+,1,0.200,0.200
+
+
+Site:GroundTemperature:BuildingSurface
+
+,,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+,1,13.00,12.00,11.00,10.00,11.00,13.00,15.00,16.00,16.00,15.00,14.00,13.00
+
+
+Site:GroundTemperature:FCfactorMethod
+
+,,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+,1,-1.89,-3.06,-0.99,2.23,10.68,17.20,21.60,22.94,20.66,15.60,8.83,2.56
+
+
+Site:GroundTemperature:Shallow
+
+,,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+,1,11.00,10.00,9.00,8.00,9.00,11.00,13.00,14.00,14.00,13.00,12.00,11.00
+
+
+Site:GroundTemperature:Deep
+
+,,Jan{C},Feb{C},Mar{C},Apr{C},May{C},Jun{C},Jul{C},Aug{C},Sep{C},Oct{C},Nov{C},Dec{C}
+,1,9.00,8.00,7.00,6.00,7.00,9.00,11.00,12.00,12.00,11.00,10.00,9.00
+
+
+Site:GroundReflectance
+
+,,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+,1,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20
+
+
+Site:GroundReflectance:SnowModifier
+
+,,Normal,Daylighting {dimensionless}
+,1,1.000,1.000
+
+
+Site:GroundReflectance:Snow
+
+,,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+,1,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20
+
+
+Site:GroundReflectance:Snow:Daylighting
+
+,,Jan{dimensionless},Feb{dimensionless},Mar{dimensionless},Apr{dimensionless},May{dimensionless},Jun{dimensionless},Jul{dimensionless},Aug{dimensionless},Sep{dimensionless},Oct{dimensionless},Nov{dimensionless},Dec{dimensionless}
+,1,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20
+
+
+Environment:Weather Station
+
+,,Wind Sensor Height Above Ground {m},Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Sensor Height Above Ground {m},Wind Speed Modifier Coefficient-Internal,Temperature Modifier Coefficient-Internal
+,1,10.000,0.140,270.000,1.500,1.586,9.750E-003
+
+
+Site:Location
+
+,,Location Name,Latitude {N+/S- Deg},Longitude {E+/W- Deg},Time Zone Number {GMT+/-},Elevation {m},Standard Pressure at Elevation {Pa},Standard RhoAir at Elevation
+,1,Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300,41.98,-87.92,-6.00,201.00,98934,1.1759
+
+
+Site Water Mains Temperature Information
+
+,,Calculation Method{},Water Mains Temperature Schedule Name{},Annual Average Outdoor Air Temperature{C},Maximum Difference In Monthly Average Outdoor Air Temperatures{deltaC},Fixed Default Water Mains Temperature{C}
+,1,FixedDefault,NA,NA,NA,10.0
+
+
+Building Information
+
+,,Building Name,North Axis {deg},Terrain,Loads Convergence Tolerance Value,Temperature Convergence Tolerance Value,Solar Distribution,Maximum Number of Warmup Days,Minimum Number of Warmup Days
+,1,Professional Building,0.000,Suburbs,4.00000E-002,0.20000,FullInteriorAndExterior,15,6
+
+
+Inside Convection Algorithm
+
+,,Algorithm {Simple
+,,TARP
+,,CeilingDiffuser
+,,AdaptiveConvectionAlgorithm}
+,1,TARP
+
+
+Outside Convection Algorithm
+
+,,Algorithm {SimpleCombined
+,,TARP
+,,MoWitt
+,,DOE-2
+,,AdaptiveConvectionAlgorithm}
+,1,DOE-2
+
+
+Sky Radiance Distribution
+
+,,Value {Anisotropic}
+,1,Anisotropic
+
+
+Zone Air Solution Algorithm
+
+,,Algorithm {ThirdOrderBackwardDifference,Space Heat Balance Sizing,Space Heat Balance Simulation
+,,AnalyticalSolution,,
+,,EulerMethod},,
+,1,ThirdOrderBackwardDifference,No,No
+
+
+Zone Air Carbon Dioxide Balance Simulation
+
+,,Simulation {Yes/No},Carbon Dioxide Concentration
+,1,No,N/A
+
+
+Zone Air Generic Contaminant Balance Simulation
+
+,,Simulation {Yes/No},Generic Contaminant Concentration
+,1,No,N/A
+
+
+Zone Air Mass Flow Balance Simulation
+
+,,Enforce Mass Balance,Adjust Zone Mixing and Return {AdjustMixingOnly,Adjust Zone Infiltration {AddInfiltration,Infiltration Zones {MixingSourceZonesOnly
+,,,AdjustReturnOnly,AdjustInfiltration,AllZones}
+,,,AdjustMixingThenReturn,None},
+,,,AdjustReturnThenMixing,,
+,,,None},,
+,1,No,N/A,N/A,N/A
+
+
+HVACSystemRootFindingAlgorithm
+
+,,Value {RegulaFalsi
+,,Bisection
+,,BisectionThenRegulaFalsi
+,,RegulaFalsiThenBisection}
+,1,RegulaFalsi
+
+
+Environment:Site Atmospheric Variation
+
+,,Wind Speed Profile Exponent {},Wind Speed Profile Boundary Layer Thickness {m},Air Temperature Gradient Coefficient {K/m}
+,1,0.220,370.000,6.500000E-003
+
+
+Shadowing/Sun Position Calculations Annual Simulations
+
+,,Shading Calculation Method,Shading Calculation Update Frequency Method,Shading Calculation Update Frequency {days},Maximum Figures in Shadow Overlap Calculations {},Polygon Clipping Algorithm,Pixel Counting Resolution,Sky Diffuse Modeling Algorithm,Output External Shading Calculation Results,Disable Self-Shading Within Shading Zone Groups,Disable Self-Shading From Shading Zone Groups to Other Zones
+,1,PolygonClipping,Periodic,20,15000,SutherlandHodgman,512,SimpleSkyDiffuseModeling,No,No,No
+
+
+Surface Geometry
+
+,,Starting Corner,Vertex Input Direction,Coordinate System,Daylight Reference Point Coordinate System,Rectangular (Simple) Surface Coordinate System
+,1,UpperLeftCorner,Counterclockwise,RelativeCoordinateSystem,RelativeCoordinateSystem,RelativeToZoneOrigin
+
+
+Surface Heat Transfer Algorithm
+
+,,Value {CTF - ConductionTransferFunction,Inside Surface Max Temperature Limit{C},Surface Convection Coefficient Lower Limit {W/m2-K},Surface Convection Coefficient Upper Limit {W/m2-K}
+,,EMPD - MoisturePenetrationDepthConductionTransferFunction,,,
+,,CondFD - ConductionFiniteDifference,,,
+,,HAMT - CombinedHeatAndMoistureFiniteElement} - Description,,,
+,1,CTF - ConductionTransferFunction,200,0.10,1000.0
+
+
+Shading Summary
+
+,,Number of Fixed Detached Shades,Number of Building Detached Shades,Number of Attached Shades
+,1,0,0,0
+
+
+Zone Summary
+
+,,Number of Zones,Number of Zone Surfaces,Number of SubSurfaces
+,1,3,33,12
+
+
+Zone Information
+
+,,Zone Name,North Axis {deg},Origin X-Coordinate {m},Origin Y-Coordinate {m},Origin Z-Coordinate {m},Centroid X-Coordinate {m},Centroid Y-Coordinate {m},Centroid Z-Coordinate {m},Type,Zone Multiplier,Zone List Multiplier,Minimum X {m},Maximum X {m},Minimum Y {m},Maximum Y {m},Minimum Z {m},Maximum Z {m},Ceiling Height {m},Volume {m3},Zone Inside Convection Algorithm {Simple-Detailed-CeilingDiffuser-TrombeWall},Zone Outside Convection Algorithm {Simple-Detailed-Tarp-MoWitt-DOE-2-BLAST},Floor Area {m2},Exterior Gross Wall Area {m2},Exterior Net Wall Area {m2},Exterior Window Area {m2},Number of Surfaces,Number of SubSurfaces,Number of Shading SubSurfaces,Part of Total Building Area
+,1,STORAGE_11,0.0,0.00,0.00,0.00,2.81,2.44,34.50,1,1,1,1.31,4.32,0.64,4.25,33.00,36.00,3.00,30.75,TARP,DOE-2,10.25,38.59,26.97,11.61,6,4,0,Yes
+,2,BREAK_ROOM_70,0.0,0.00,0.00,0.00,7.45,-2.73,211.50,1,1,1,5.15,9.75,-5.14,-0.33,210.00,213.00,3.00,63.66,TARP,DOE-2,21.22,55.29,38.65,16.64,6,4,0,Yes
+,3,STORAGE_85,0.0,0.00,0.00,0.00,4.78,-2.69,256.50,1,1,1,2.71,6.85,-4.95,-0.42,255.00,258.00,3.00,53.67,TARP,DOE-2,17.89,50.81,35.52,15.29,6,4,0,Yes
+
+
+Zone Internal Gains Nominal
+
+,,Zone Name,Floor Area {m2},# Occupants,Area per Occupant {m2/person},Occupant per Area {person/m2},Interior Lighting {W/m2},Electric Load {W/m2},Gas Load {W/m2},Other Load {W/m2},Hot Water Eq {W/m2},Steam Equipment {W/m2},Sum Loads per Area {W/m2},Outdoor Controlled Baseboard Heat
+,1,STORAGE_11,10.25,1.0,10.251,9.755E-002,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+,2,BREAK_ROOM_70,21.22,2.0,10.610,9.425E-002,8.100,15.000,0.000,0.000,0.000,0.000,23.100,No
+,3,STORAGE_85,17.89,1.0,17.890,5.590E-002,5.400,1.100,0.000,0.000,0.000,0.000,6.500,No
+
+
+People Internal Gains Nominal
+
+,,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Number of People {},People/Floor Area {person/m2},Floor Area per person {m2/person},Fraction Radiant,Fraction Convected,Sensible Fraction Calculation,Activity level,ASHRAE 55 Warnings,Carbon Dioxide Generation Rate,Minimum Number of People for All Day Types,Maximum Number of People for All Day Types,Minimum Number of People for Weekdays,Maximum Number of People for Weekdays,Minimum Number of People for Weekends/Holidays,Maximum Number of People for Weekends /Holidays,Minimum Number of People for Summer Design Days,Maximum Number of People for Summer Design Days,Minimum Number of People for Winter Design Days,Maximum Number of People for Winter Design Days
+,1,STORAGE_11_PEOPLE,STORAGE_OCCUPANCY,STORAGE_11,10.25,1.0,1.0,9.755E-002,10.251,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+,2,BREAK_ROOM_70_PEOPLE,BREAK_ROOM_OCCUPANCY,BREAK_ROOM_70,21.22,2.0,2.0,9.425E-002,10.610,0.300,0.700,0.100,BREAK_ROOM_ACTIVITY,No,3.8200E-008,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4
+,3,STORAGE_85_PEOPLE,STORAGE_OCCUPANCY,STORAGE_85,17.89,1.0,1.0,5.590E-002,17.890,0.300,0.700,0.100,STORAGE_ACTIVITY,No,3.8200E-008,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+
+
+Lights Internal Gains Nominal
+
+,,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Lighting Level {W},Lights/Floor Area {W/m2},Lights per person {W/person},Fraction Return Air,Fraction Radiant,Fraction Short Wave,Fraction Convected,Fraction Replaceable,End-Use,Minimum Lighting Level for All Day Types {W},Maximum Lighting Level for All Day Types {W},Minimum Lighting Level for Weekdays {W},Maximum Lighting Level for Weekdays {W},Minimum Lighting Level for Weekends/Holidays {W},Maximum Lighting Level for Weekends /Holidays {W},Minimum Lighting Level for Summer Design Days {W},Maximum Lighting Level for Summer Design Days {W},Minimum Lighting Level for Winter Design Days {W},Maximum Lighting Level for Winter Design Days {W}
+,1,STORAGE_11_LIGHTS,STORAGE_LIGHTING,STORAGE_11,10.25,1.0,55.355,5.400,55.355,0.000,0.300,0.200,0.500,1.000,General,0.000,55.355,5.536,55.4,0.000,11.071,0.000,0.000,0.000,0.000
+,2,BREAK_ROOM_70_LIGHTS,BREAK_ROOM_LIGHTING,BREAK_ROOM_70,21.22,2.0,171.878,8.100,85.939,0.000,0.300,0.200,0.500,1.000,General,0.000,171.878,17.188,171.9,0.000,34.376,0.000,0.000,0.000,0.000
+,3,STORAGE_85_LIGHTS,STORAGE_LIGHTING,STORAGE_85,17.89,1.0,96.607,5.400,96.607,0.000,0.300,0.200,0.500,1.000,General,0.000,96.607,9.661,96.6,0.000,19.321,0.000,0.000,0.000,0.000
+
+
+ElectricEquipment Internal Gains Nominal
+
+,,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Equipment Level {W},Equipment/Floor Area {W/m2},Equipment per person {W/person},Fraction Latent,Fraction Radiant,Fraction Lost,Fraction Convected,End-Use SubCategory,Minimum Equipment Level for All Day Types {W},Maximum Equipment Level for All Day Types {W},Minimum Equipment Level for Weekdays {W},Maximum Equipment Level for Weekdays {W},Minimum Equipment Level for Weekends/Holidays {W},Maximum Equipment Level for Weekends /Holidays {W},Minimum Equipment Level for Summer Design Days {W},Maximum Equipment Level for Summer Design Days {W},Minimum Equipment Level for Winter Design Days {W},Maximum Equipment Level for Winter Design Days {W}
+,1,STORAGE_11_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_11,10.25,1.0,11.276,1.100,11.276,0.100,0.200,0.000,0.700,General,0.000,9.021,3.383,9.021,0.000,3.383,0.000,0.000,0.000,0.000
+,2,BREAK_ROOM_70_EQUIPMENT,BREAK_ROOM_EQUIPMENT,BREAK_ROOM_70,21.22,2.0,318.293,15.000,159.147,0.100,0.200,0.000,0.700,General,0.000,254.634,95.488,254.634,0.000,95.488,0.000,0.000,0.000,0.000
+,3,STORAGE_85_EQUIPMENT,STORAGE_EQUIPMENT,STORAGE_85,17.89,1.0,19.679,1.100,19.679,0.100,0.200,0.000,0.700,General,0.000,15.743,5.904,15.743,0.000,5.904,0.000,0.000,0.000,0.000
+
+
+Enclosure/Window Adjacency Daylighting Counts
+
+,,Enclosure Name,Number of Exterior Windows,Number of Exterior Windows in Adjacent Enclosures
+,1,BREAK_ROOM_70,4,0
+
+
+Enclosure/Window Adjacency Daylighting Matrix
+
+,,Enclosure Name,Number of Adjacent Enclosures with Windows,Adjacent Enclosure Names - 1st 100 (max)
+,1,BREAK_ROOM_70,0,
+
+
+ZoneInfiltration Airflow Stats Nominal
+
+,,Name,Schedule Name,Zone Name,Zone Floor Area {m2},# Zone Occupants,Design Volume Flow Rate {m3/s},Volume Flow Rate/Floor Area {m3/s-m2},Volume Flow Rate/Exterior Surface Area {m3/s-m2},ACH - Air Changes per Hour,Equation A - Constant Term Coefficient {},Equation B - Temperature Term Coefficient {1/C},Equation C - Velocity Term Coefficient {s/m},Equation D - Velocity Squared Term Coefficient {s2/m2}
+,1,STORAGE_11_INFILTRATION,STORAGE_11_INFILTRATION_SCHEDULE,STORAGE_11,10.25,1.0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+,2,BREAK_ROOM_70_INFILTRATION,BREAK_ROOM_70_INFILTRATION_SCHEDULE,BREAK_ROOM_70,21.22,2.0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+,3,STORAGE_85_INFILTRATION,STORAGE_85_INFILTRATION_SCHEDULE,STORAGE_85,17.89,1.0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+
+
+AirFlow Model
+
+,,Simple
+,1,Simple
+
+
+RoomAir Model
+
+,,Zone Name,Mixing/Mundt/UCSDDV/UCSDCV/UCSDUFI/UCSDUFE/User Defined
+,1,STORAGE_11,Mixing/Well-Stirred
+,2,BREAK_ROOM_70,Mixing/Well-Stirred
+,3,STORAGE_85,Mixing/Well-Stirred
+
+
+AirflowNetwork Model:Control
+
+,,No Multizone or Distribution/Multizone with Distribution/Multizone without Distribution/Multizone with Distribution only during Fan Operation
+,1,NoMultizoneOrDistribution
+
+
+Zone Volume Capacitance Multiplier
+
+,,Sensible Heat Capacity Multiplier,Moisture Capacity Multiplier,Carbon Dioxide Capacity Multiplier,Generic Contaminant Capacity Multiplier
+,1,1.000,1.000,1.000,1.000
+
+
+Component Sizing Information
+
+,,Component Type,Component Name,Input Field Description,Value
+,1,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,User-Specified Maximum Air Flow Rate [m3/s],5.12542E-002
+,2,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,Design Size Constant Minimum Air Flow Fraction,0.20000
+,3,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,User-Specified Constant Minimum Air Flow Fraction,0.20000
+,4,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,Design Size Minimum Air Flow Rate [m3/s],1.02508E-002
+,5,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2],9.99986E-004
+,6,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,Design Size Maximum Flow Fraction during Reheat [],0.20000
+,7,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_11_Z1_VAVTERMINAL,User-Specified Maximum Reheat Water Flow Rate [m3/s],0.82007
+,8,Coil:Heating:Electric,STORAGE_11_Z1_REHEATCOIL,User-Specified Nominal Capacity [W],246.02038
+,9,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,User-Specified Maximum Air Flow Rate [m3/s],0.10610
+,10,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,Design Size Constant Minimum Air Flow Fraction,0.20000
+,11,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,User-Specified Constant Minimum Air Flow Fraction,0.20000
+,12,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,Design Size Minimum Air Flow Rate [m3/s],2.12199E-002
+,13,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2],1.00002E-003
+,14,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,Design Size Maximum Flow Fraction during Reheat [],0.20000
+,15,AirTerminal:SingleDuct:VAV:Reheat,BREAK_ROOM_70_Z2_VAVTERMINAL,User-Specified Maximum Reheat Water Flow Rate [m3/s],1.69759
+,16,Coil:Heating:Electric,BREAK_ROOM_70_Z2_REHEATCOIL,User-Specified Nominal Capacity [W],509.27824
+,17,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,User-Specified Maximum Air Flow Rate [m3/s],8.94531E-002
+,18,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,Design Size Constant Minimum Air Flow Fraction,0.20000
+,19,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,User-Specified Constant Minimum Air Flow Fraction,0.20000
+,20,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,Design Size Minimum Air Flow Rate [m3/s],1.78906E-002
+,21,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,Design Size Maximum Flow per Zone Floor Area during Reheat [m3/s-m2],1.00002E-003
+,22,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,Design Size Maximum Flow Fraction during Reheat [],0.20000
+,23,AirTerminal:SingleDuct:VAV:Reheat,STORAGE_85_Z3_VAVTERMINAL,User-Specified Maximum Reheat Water Flow Rate [m3/s],1.43125
+,24,Coil:Heating:Electric,STORAGE_85_Z3_REHEATCOIL,User-Specified Nominal Capacity [W],429.37497
+,25,Coil:Cooling:DX:SingleSpeed,STORAGE_11_Z1_COOLINGCOILDX,User-Specified Rated Air Flow Rate [m3/s],5.12542E-002
+,26,Coil:Cooling:DX:SingleSpeed,STORAGE_11_Z1_COOLINGCOILDX,User-Specified Gross Rated Total Cooling Capacity [W],1025.08491
+,27,Coil:Cooling:DX:SingleSpeed,STORAGE_11_Z1_COOLINGCOILDX,User-Specified Gross Rated Sensible Heat Ratio,0.75000
+,28,Coil:Heating:Electric,STORAGE_11_Z1_HEATINGCOIL,User-Specified Nominal Capacity [W],820.06793
+,29,Fan:VariableVolume,STORAGE_11_Z1_SUPPLYFAN,User-Specified Maximum Flow Rate [m3/s],5.12542E-002
+,30,Fan:VariableVolume,STORAGE_11_Z1_SUPPLYFAN,Design Electric Power Consumption [W],43.93221
+,31,Coil:Cooling:DX:SingleSpeed,BREAK_ROOM_70_Z2_COOLINGCOILDX,User-Specified Rated Air Flow Rate [m3/s],0.10610
+,32,Coil:Cooling:DX:SingleSpeed,BREAK_ROOM_70_Z2_COOLINGCOILDX,User-Specified Gross Rated Total Cooling Capacity [W],2121.99266
+,33,Coil:Cooling:DX:SingleSpeed,BREAK_ROOM_70_Z2_COOLINGCOILDX,User-Specified Gross Rated Sensible Heat Ratio,0.75000
+,34,Coil:Heating:Electric,BREAK_ROOM_70_Z2_HEATINGCOIL,User-Specified Nominal Capacity [W],1697.59413
+,35,Fan:VariableVolume,BREAK_ROOM_70_Z2_SUPPLYFAN,User-Specified Maximum Flow Rate [m3/s],0.10610
+,36,Fan:VariableVolume,BREAK_ROOM_70_Z2_SUPPLYFAN,Design Electric Power Consumption [W],90.94254
+,37,Coil:Cooling:DX:SingleSpeed,STORAGE_85_Z3_COOLINGCOILDX,User-Specified Rated Air Flow Rate [m3/s],8.94531E-002
+,38,Coil:Cooling:DX:SingleSpeed,STORAGE_85_Z3_COOLINGCOILDX,User-Specified Gross Rated Total Cooling Capacity [W],1789.06236
+,39,Coil:Cooling:DX:SingleSpeed,STORAGE_85_Z3_COOLINGCOILDX,User-Specified Gross Rated Sensible Heat Ratio,0.75000
+,40,Coil:Heating:Electric,STORAGE_85_Z3_HEATINGCOIL,User-Specified Nominal Capacity [W],1431.24989
+,41,Fan:VariableVolume,STORAGE_85_Z3_SUPPLYFAN,User-Specified Maximum Flow Rate [m3/s],8.94531E-002
+,42,Fan:VariableVolume,STORAGE_85_Z3_SUPPLYFAN,Design Electric Power Consumption [W],76.67410
+
+
+DX Cooling Coil Standard Rating Information
+
+,,Component Type,Component Name,Standard Rating (Net) Cooling Capacity {W},Standard Rating Net COP {W/W},EER {Btu/W-h},SEER User {Btu/W-h},SEER Standard {Btu/W-h},IEER {Btu/W-h}
+,1,Coil:Cooling:DX:SingleSpeed,STORAGE_11_Z1_COOLINGCOILDX,985.3,39.98,136.43,54.18,51.26,37.2
+,2,Coil:Cooling:DX:SingleSpeed,BREAK_ROOM_70_Z2_COOLINGCOILDX,2039.6,39.98,136.43,54.18,51.26,37.2
+,3,Coil:Cooling:DX:SingleSpeed,STORAGE_85_Z3_COOLINGCOILDX,1719.6,39.98,136.43,54.18,51.26,37.2
+
+
+DX Cooling Coil AHRI 2023 Standard Rating Information
+
+,,Component Type,Component Name,Standard Rating (Net) Cooling Capacity {W},Standard Rating Net COP2 {W/W},EER2 {Btu/W-h},SEER2 User {Btu/W-h},SEER2 Standard {Btu/W-h},IEER 2022 {Btu/W-h}
+,1,Coil:Cooling:DX:SingleSpeed,STORAGE_11_Z1_COOLINGCOILDX,985.3,39.98,136.43,54.18,52.72,37.2
+,2,Coil:Cooling:DX:SingleSpeed,BREAK_ROOM_70_Z2_COOLINGCOILDX,2039.6,39.98,136.43,54.18,52.72,37.2
+,3,Coil:Cooling:DX:SingleSpeed,STORAGE_85_Z3_COOLINGCOILDX,1719.6,39.98,136.43,54.18,52.72,37.2
+
+
+Environment
+
+,,Environment Name,Environment Type,Start Date,End Date,Start DayOfWeek,Duration {#days},Source:Start DayOfWeek,Use Daylight Saving,Use Holidays,Apply Weekend Holiday Rule,Use Rain Values,Use Snow Values,Sky Temperature Model
+,1,YEAR ROUND RUN PERIOD,WeatherFileRunPeriod,01/01/2017,12/31/2017,Sunday,365,Use RunPeriod Specified Day,Yes,Yes,Yes,Yes,Yes,Clark and Allen
+
+
+Environment:Daylight Saving
+
+,,Daylight Saving Indicator,Source,Start Date,End Date
+,1,No,,,
+
+
+Environment:WarmupDays
+
+,,NumberofWarmupDays
+,1,6
+
+
+Sky Daylight Factors
+
+,,Sky Type,MonthAndDay,Daylighting Control Name,Enclosure Name,Window Name,Reference Point,Daylight Factor
+,1,Clear Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_1,BREAK_ROOM_70_REFERENCEPOINT1,1.0086E-002
+,2,Clear Turbid Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_1,BREAK_ROOM_70_REFERENCEPOINT1,1.1226E-002
+,3,Intermediate Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_1,BREAK_ROOM_70_REFERENCEPOINT1,7.1770E-003
+,4,Overcast Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_1,BREAK_ROOM_70_REFERENCEPOINT1,3.7593E-003
+,5,Clear Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_2,BREAK_ROOM_70_REFERENCEPOINT1,7.0872E-003
+,6,Clear Turbid Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_2,BREAK_ROOM_70_REFERENCEPOINT1,6.6408E-003
+,7,Intermediate Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_2,BREAK_ROOM_70_REFERENCEPOINT1,6.6884E-003
+,8,Overcast Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_2,BREAK_ROOM_70_REFERENCEPOINT1,5.7803E-003
+,9,Clear Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_3,BREAK_ROOM_70_REFERENCEPOINT1,7.2285E-003
+,10,Clear Turbid Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_3,BREAK_ROOM_70_REFERENCEPOINT1,5.8892E-003
+,11,Intermediate Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_3,BREAK_ROOM_70_REFERENCEPOINT1,5.2859E-003
+,12,Overcast Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_3,BREAK_ROOM_70_REFERENCEPOINT1,7.2953E-003
+,13,Clear Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_4,BREAK_ROOM_70_REFERENCEPOINT1,7.1261E-003
+,14,Clear Turbid Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_4,BREAK_ROOM_70_REFERENCEPOINT1,6.6899E-003
+,15,Intermediate Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_4,BREAK_ROOM_70_REFERENCEPOINT1,6.7177E-003
+,16,Overcast Sky,01/01,BREAK_ROOM_70_DAYLIGHT,BREAK_ROOM_70,BREAK_ROOM_70_WINDOW_4,BREAK_ROOM_70_REFERENCEPOINT1,5.7803E-003
+
+
+Warmup Convergence Information
+
+,,Zone Name,Environment Type/Name,Average Warmup Temperature Difference {deltaC},Std Dev Warmup Temperature Difference {deltaC},Max Temperature Pass/Fail Convergence,Min Temperature Pass/Fail Convergence,Average Warmup Load Difference {W},Std Dev Warmup Load Difference {W},Heating Load Pass/Fail Convergence,Cooling Load Pass/Fail Convergence
+,1,STORAGE_11,RunPeriod: YEAR ROUND RUN PERIOD,0.2223725791,0.2383652570,Pass,Pass,1.6669967532E-002,1.8464856186E-002,Pass,Pass
+,2,BREAK_ROOM_70,RunPeriod: YEAR ROUND RUN PERIOD,0.1641804281,0.1760904433,Pass,Pass,1.3216928584E-002,1.4428455511E-002,Pass,Pass
+,3,STORAGE_85,RunPeriod: YEAR ROUND RUN PERIOD,0.1788398606,0.1928924533,Pass,Pass,1.2874446936E-002,1.4196481504E-002,Pass,Pass
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Annual Heat Emissions Report
+FOR:,Entire Facility
+Annual Heat Emissions Summary
+
+,,Envelope Convection,Zone Exfiltration,Zone Exhaust Air,HVAC Relief Air,HVAC Reject Heat,Total
+,Heat Emissions [GJ],325.68,0.00,0.00,0.00,14.91,340.58
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Annual Thermal Resilience Summary
+FOR:,Entire Facility
+Heat Index Hours
+
+,,Safe (≤ 26.7°C) [hr],Caution (> 26.7°C, ≤ 32.2°C) [hr],Extreme Caution (> 32.2°C, ≤ 39.4°C) [hr],Danger (> 39.4°C, ≤ 51.7°C) [hr],Extreme Danger (> 51.7°C) [hr]
+,STORAGE_11,4644.00,1325.75,1559.75,1230.50,0.00
+,BREAK_ROOM_70,4441.50,1167.25,1920.25,1231.00,0.00
+,STORAGE_85,4903.75,1650.25,1544.00,662.00,0.00
+,Min,4441.50,1167.25,1544.00,662.00,0.00
+,Max,4903.75,1650.25,1920.25,1231.00,0.00
+,Average,4663.08,1381.08,1674.67,1041.17,0.00
+,Sum,13989.25,4143.25,5024.00,3123.50,0.00
+
+
+Heat Index OccupantHours
+
+,,Safe (≤ 26.7°C) [hr],Caution (> 26.7°C, ≤ 32.2°C) [hr],Extreme Caution (> 32.2°C, ≤ 39.4°C) [hr],Danger (> 39.4°C, ≤ 51.7°C) [hr],Extreme Danger (> 51.7°C) [hr]
+,STORAGE_11,928.80,265.15,311.95,246.10,0.00
+,BREAK_ROOM_70,1776.60,466.90,768.10,492.40,0.00
+,STORAGE_85,980.75,330.05,308.80,132.40,0.00
+,Min,928.80,265.15,308.80,132.40,0.00
+,Max,1776.60,466.90,768.10,492.40,0.00
+,Average,1228.72,354.03,462.95,290.30,0.00
+,Sum,3686.15,1062.10,1388.85,870.90,0.00
+
+
+Heat Index OccupiedHours
+
+,,Safe (≤ 26.7°C) [hr],Caution (> 26.7°C, ≤ 32.2°C) [hr],Extreme Caution (> 32.2°C, ≤ 39.4°C) [hr],Danger (> 39.4°C, ≤ 51.7°C) [hr],Extreme Danger (> 51.7°C) [hr]
+,STORAGE_11,4644.00,1325.75,1559.75,1230.50,0.00
+,BREAK_ROOM_70,4441.50,1167.25,1920.25,1231.00,0.00
+,STORAGE_85,4903.75,1650.25,1544.00,662.00,0.00
+,Min,4441.50,1167.25,1544.00,662.00,0.00
+,Max,4903.75,1650.25,1920.25,1231.00,0.00
+,Average,4663.08,1381.08,1674.67,1041.17,0.00
+,Sum,13989.25,4143.25,5024.00,3123.50,0.00
+
+
+Humidex Hours
+
+,,Little to no Discomfort (≤ 29) [hr],Some Discomfort (> 29, ≤ 40) [hr],Great Discomfort; Avoid Exertion (> 40, ≤ 45) [hr],Dangerous (> 45, ≤ 50) [hr],Heat Stroke Quite Possible (> 50) [hr]
+,STORAGE_11,4335.00,2869.75,916.00,544.00,95.25
+,BREAK_ROOM_70,3443.50,3581.00,1197.50,493.00,45.00
+,STORAGE_85,5092.00,2840.25,670.50,156.50,0.75
+,Min,3443.50,2840.25,670.50,156.50,0.75
+,Max,5092.00,3581.00,1197.50,544.00,95.25
+,Average,4290.17,3097.00,928.00,397.83,47.00
+,Sum,12870.50,9291.00,2784.00,1193.50,141.00
+
+
+Humidex OccupantHours
+
+,,Little to no Discomfort (≤ 29) [hr],Some Discomfort (> 29, ≤ 40) [hr],Great Discomfort; Avoid Exertion (> 40, ≤ 45) [hr],Dangerous (> 45, ≤ 50) [hr],Heat Stroke Quite Possible (> 50) [hr]
+,STORAGE_11,867.00,573.95,183.20,108.80,19.05
+,BREAK_ROOM_70,1377.40,1432.40,479.00,197.20,18.00
+,STORAGE_85,1018.40,568.05,134.10,31.30,0.15
+,Min,867.00,568.05,134.10,31.30,0.15
+,Max,1377.40,1432.40,479.00,197.20,19.05
+,Average,1087.60,858.13,265.43,112.43,12.40
+,Sum,3262.80,2574.40,796.30,337.30,37.20
+
+
+Humidex OccupiedHours
+
+,,Little to no Discomfort (≤ 29) [hr],Some Discomfort (> 29, ≤ 40) [hr],Great Discomfort; Avoid Exertion (> 40, ≤ 45) [hr],Dangerous (> 45, ≤ 50) [hr],Heat Stroke Quite Possible (> 50) [hr]
+,STORAGE_11,4335.00,2869.75,916.00,544.00,95.25
+,BREAK_ROOM_70,3443.50,3581.00,1197.50,493.00,45.00
+,STORAGE_85,5092.00,2840.25,670.50,156.50,0.75
+,Min,3443.50,2840.25,670.50,156.50,0.75
+,Max,5092.00,3581.00,1197.50,544.00,95.25
+,Average,4290.17,3097.00,928.00,397.83,47.00
+,Sum,12870.50,9291.00,2784.00,1193.50,141.00
+
+
+Hours of Safety for Cold Events
+
+,,Hours of Safety [hr],End Time of the Safety Duration,Safe Temperature Exceedance Hours [hr],Safe Temperature Exceedance OccupantHours [hr],Safe Temperature Exceedance OccupiedHours [hr]
+,STORAGE_11,0.00,01-JAN-00:00,2388.75,477.75,2388.75
+,BREAK_ROOM_70,0.00,01-JAN-00:00,2019.50,807.80,2019.50
+,STORAGE_85,0.00,01-JAN-00:00,2501.50,500.30,2501.50
+,Min,0.00,-,2019.50,477.75,2019.50
+,Max,0.00,-,2501.50,807.80,2501.50
+,Average,0.00,-,2303.25,595.28,2303.25
+,Sum,0.00,-,6909.75,1785.85,6909.75
+
+
+Hours of Safety for Heat Events
+
+,,Hours of Safety [hr],End Time of the Safety Duration,Safe Temperature Exceedance Hours [hr],Safe Temperature Exceedance OccupantHours [hr],Safe Temperature Exceedance OccupiedHours [hr]
+,STORAGE_11,998.75,11-FEB-14:45,3651.00,730.20,3651.00
+,BREAK_ROOM_70,1598.75,08-MAR-14:45,3783.50,1513.40,3783.50
+,STORAGE_85,1622.00,09-MAR-14:00,3372.25,674.45,3372.25
+,Min,998.75,-,3372.25,674.45,3372.25
+,Max,1622.00,-,3783.50,1513.40,3783.50
+,Average,1406.50,-,3602.25,972.68,3602.25
+,Sum,4219.50,-,10806.75,2918.05,10806.75
+
+
+Unmet Degree-Hours
+
+,,Cooling Setpoint Unmet Degree-Hours [°C·hr],Cooling Setpoint Unmet Occupant-Weighted Degree-Hours [°C·hr],Cooling Setpoint Unmet Occupied Degree-Hours [°C·hr],Heating Setpoint Unmet Degree-Hours [°C·hr],Heating Setpoint Unmet Occupant-Weighted Degree-Hours [°C·hr],Heating Setpoint Unmet Occupied Degree-Hours [°C·hr]
+,STORAGE_11,0.00,0.00,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,0.00,0.00,0.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,0.00,0.00,0.00,0.00
+,Average,0.00,0.00,0.00,0.00,0.00,0.00
+,Sum,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Discomfort-weighted Exceedance OccupantHours
+
+,,Very-cold Exceedance OccupantHours [hr],Cool Exceedance OccupantHours [hr],Warm Exceedance OccupantHours [hr],Very-hot Exceedance OccupantHours [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,0.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,0.00,0.00
+,Average,0.00,0.00,0.00,0.00
+,Sum,0.00,0.00,0.00,0.00
+
+
+Discomfort-weighted Exceedance OccupiedHours
+
+,,Very-cold Exceedance OccupantHours [hr],Cool Exceedance OccupantHours [hr],Warm Exceedance OccupantHours [hr],Very-hot Exceedance OccupantHours [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,0.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,0.00,0.00
+,Average,0.00,0.00,0.00,0.00
+,Sum,0.00,0.00,0.00,0.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Climatic Data Summary
+FOR:,Entire Facility
+SizingPeriod:DesignDay
+
+,,Maximum Dry Bulb [C],Daily Temperature Range [deltaC],Humidity Value,Humidity Type,Wind Speed [m/s],Wind Direction
+,None,,,,,,
+
+
+Monthly Precipitation Summary
+
+,,Monthly Total Precipitation from .epw [mm],Monthly Total Hours of Rain from .epw,Monthly Total Precipitation in Site:Precipitation [mm],Monthly Total Roof Irrigation Depth [mm],Monthly Total Rain Collection Volume [m3]
+,Jan,0.00,0,,,
+,Feb,0.00,0,,,
+,Mar,0.00,0,,,
+,Apr,46.00,43,,,
+,May,0.00,0,,,
+,Jun,0.00,0,,,
+,Jul,0.00,0,,,
+,Aug,0.00,0,,,
+,Sep,0.00,0,,,
+,Oct,0.00,0,,,
+,Nov,0.00,0,,,
+,Dec,0.00,0,,,
+
+
+Weather Statistics File
+
+,,Value
+,None,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Envelope Summary
+FOR:,Entire Facility
+Opaque Exterior
+
+,,Construction,Zone,Reflectance,U-Factor with Film [W/m2-K],U-Factor no Film [W/m2-K],Gross Area [m2],Net Area [m2],Azimuth [deg],Tilt [deg],Cardinal Direction
+,STORAGE_11_WALL_1,WALL_STEELFRAME_R19_CZ3_4,STORAGE_11,0.30,0.260,0.270,8.75,6.99,180.00,90.00,S
+,STORAGE_11_WALL_2,WALL_STEELFRAME_R19_CZ3_4,STORAGE_11,0.30,0.260,0.270,10.54,7.37,90.00,90.00,E
+,STORAGE_11_WALL_3,WALL_STEELFRAME_R19_CZ3_4,STORAGE_11,0.30,0.260,0.270,8.75,5.25,0.00,90.00,N
+,STORAGE_11_WALL_4,WALL_STEELFRAME_R19_CZ3_4,STORAGE_11,0.30,0.260,0.270,10.54,7.37,270.00,90.00,W
+,STORAGE_11_FLOOR,FLOOR_CONCRETE_R20,STORAGE_11,0.35,0.250,0.262,10.25,10.25,270.00,180.00,
+,STORAGE_11_CEILING,ROOF_FLAT_R20_CZ1_2,STORAGE_11,0.30,0.259,0.268,10.25,10.25,90.00,0.00,
+,BREAK_ROOM_70_WALL_1,WALL_STEELFRAME_R19_CZ3_4,BREAK_ROOM_70,0.30,0.260,0.270,13.50,10.78,180.00,90.00,S
+,BREAK_ROOM_70_WALL_2,WALL_STEELFRAME_R19_CZ3_4,BREAK_ROOM_70,0.30,0.260,0.270,14.14,9.89,90.00,90.00,E
+,BREAK_ROOM_70_WALL_3,WALL_STEELFRAME_R19_CZ3_4,BREAK_ROOM_70,0.30,0.260,0.270,13.50,8.09,0.00,90.00,N
+,BREAK_ROOM_70_WALL_4,WALL_STEELFRAME_R19_CZ3_4,BREAK_ROOM_70,0.30,0.260,0.270,14.14,9.89,270.00,90.00,W
+,BREAK_ROOM_70_FLOOR,FLOOR_CONCRETE_R20,BREAK_ROOM_70,0.35,0.250,0.262,21.22,21.22,270.00,180.00,
+,BREAK_ROOM_70_CEILING,ROOF_FLAT_R20_CZ1_2,BREAK_ROOM_70,0.30,0.259,0.268,21.22,21.22,90.00,0.00,
+,STORAGE_85_WALL_1,WALL_STEELFRAME_R19_CZ3_4,STORAGE_85,0.30,0.260,0.270,12.10,9.67,180.00,90.00,S
+,STORAGE_85_WALL_2,WALL_STEELFRAME_R19_CZ3_4,STORAGE_85,0.30,0.260,0.270,13.30,9.30,90.00,90.00,E
+,STORAGE_85_WALL_3,WALL_STEELFRAME_R19_CZ3_4,STORAGE_85,0.30,0.260,0.270,12.10,7.25,0.00,90.00,N
+,STORAGE_85_WALL_4,WALL_STEELFRAME_R19_CZ3_4,STORAGE_85,0.30,0.260,0.270,13.30,9.30,270.00,90.00,W
+,STORAGE_85_FLOOR,FLOOR_CONCRETE_R20,STORAGE_85,0.35,0.250,0.262,17.89,17.89,270.00,180.00,
+,STORAGE_85_CEILING,ROOF_FLAT_R20_CZ1_2,STORAGE_85,0.30,0.259,0.268,17.89,17.89,90.00,0.00,
+
+
+Opaque Interior
+
+,,Construction,Zone,Adjacent Surface,Reflectance,U-Factor with Film [W/m2-K],U-Factor no Film [W/m2-K],Gross Area [m2],Net Area [m2],Azimuth [deg],Tilt [deg],Cardinal Direction
+,STORAGE_11_INTERNALMASS,STORAGE_11_INTERNALMASS_CONSTRUCTION,STORAGE_11,STORAGE_11_INTERNALMASS,0.30,,6.667,0.15,,0.00,90.00,N
+,BREAK_ROOM_70_INTERNALMASS,BREAK_ROOM_70_INTERNALMASS_CONSTRUCTION,BREAK_ROOM_70,BREAK_ROOM_70_INTERNALMASS,0.30,,6.667,0.15,,0.00,90.00,N
+,STORAGE_85_INTERNALMASS,STORAGE_85_INTERNALMASS_CONSTRUCTION,STORAGE_85,STORAGE_85_INTERNALMASS,0.30,,6.667,0.15,,0.00,90.00,N
+
+
+Exterior Fenestration
+
+,,Construction,Frame and Divider,Glass Area [m2],Frame Area [m2],Divider Area [m2],Area of One Opening [m2],Area of Multiplied Openings [m2],Glass U-Factor [W/m2-K],Glass SHGC,Glass Visible Transmittance,Frame Conductance [W/m2-K],Divider Conductance [W/m2-K],NFRC Product Type,Assembly U-Factor [W/m2-K],Assembly SHGC,Assembly Visible Transmittance,Shade Control,Parent Surface,Azimuth [deg],Tilt [deg],Cardinal Direction
+,STORAGE_11_WINDOW_1,WINDOW_DOUBLE_CZ3_4,,1.76,0.00,0.00,1.76,1.76,2.703,0.782,0.721,,,,,,,No,STORAGE_11_WALL_1,180.00,83.35,S
+,STORAGE_11_WINDOW_2,WINDOW_DOUBLE_CZ3_4,,3.17,0.00,0.00,3.17,3.17,2.703,0.782,0.721,,,,,,,No,STORAGE_11_WALL_2,90.00,85.55,E
+,STORAGE_11_WINDOW_3,WINDOW_DOUBLE_CZ3_4,,3.51,0.00,0.00,3.51,3.51,2.703,0.782,0.721,,,,,,,No,STORAGE_11_WALL_3,0.00,86.66,N
+,STORAGE_11_WINDOW_4,WINDOW_DOUBLE_CZ3_4,,3.17,0.00,0.00,3.17,3.17,2.703,0.782,0.721,,,,,,,No,STORAGE_11_WALL_4,270.00,85.55,W
+,BREAK_ROOM_70_WINDOW_1,WINDOW_DOUBLE_CZ3_4,,2.72,0.00,0.00,2.72,2.72,2.703,0.782,0.721,,,,,,,No,BREAK_ROOM_70_WALL_1,180.00,83.35,S
+,BREAK_ROOM_70_WINDOW_2,WINDOW_DOUBLE_CZ3_4,,4.26,0.00,0.00,4.26,4.26,2.703,0.782,0.721,,,,,,,No,BREAK_ROOM_70_WALL_2,90.00,85.55,E
+,BREAK_ROOM_70_WINDOW_3,WINDOW_DOUBLE_CZ3_4,,5.41,0.00,0.00,5.41,5.41,2.703,0.782,0.721,,,,,,,No,BREAK_ROOM_70_WALL_3,0.00,86.66,N
+,BREAK_ROOM_70_WINDOW_4,WINDOW_DOUBLE_CZ3_4,,4.26,0.00,0.00,4.26,4.26,2.703,0.782,0.721,,,,,,,No,BREAK_ROOM_70_WALL_4,270.00,85.55,W
+,STORAGE_85_WINDOW_1,WINDOW_DOUBLE_CZ3_4,,2.44,0.00,0.00,2.44,2.44,2.703,0.782,0.721,,,,,,,No,STORAGE_85_WALL_1,180.00,83.35,S
+,STORAGE_85_WINDOW_2,WINDOW_DOUBLE_CZ3_4,,4.00,0.00,0.00,4.00,4.00,2.703,0.782,0.721,,,,,,,No,STORAGE_85_WALL_2,90.00,85.55,E
+,STORAGE_85_WINDOW_3,WINDOW_DOUBLE_CZ3_4,,4.85,0.00,0.00,4.85,4.85,2.703,0.782,0.721,,,,,,,No,STORAGE_85_WALL_3,0.00,86.66,N
+,STORAGE_85_WINDOW_4,WINDOW_DOUBLE_CZ3_4,,4.00,0.00,0.00,4.00,4.00,2.703,0.782,0.721,,,,,,,No,STORAGE_85_WALL_4,270.00,85.55,W
+,Total or Average,,,,,,,43.55,2.703,0.782,0.721,,,,,,,,,,,
+,North Total or Average,,,,,,,13.77,2.703,0.782,0.721,,,,,,,,,,,
+,Non-North Total or Average,,,,,,,29.78,2.703,0.782,0.721,,,,,,,,,,,
+
+
+Exterior Fenestration Shaded State
+
+,,Frame and Divider,Glass U-Factor [W/m2-K],Glass SHGC,Glass Visible Transmittance,NFRC Product Type,Assembly U-Factor [W/m2-K],Assembly SHGC,Assembly Visible Transmittance
+,None,,,,,,,,
+
+
+Interior Fenestration
+
+,,Construction,Area of One Opening [m2],Area of Openings [m2],Glass U-Factor [W/m2-K],Glass SHGC,Glass Visible Transmittance,Parent Surface
+,Total or Average,,,0.00,-,-,-,
+
+
+Exterior Door
+
+,,Construction,U-Factor with Film [W/m2-K],U-Factor no Film [W/m2-K],Gross Area [m2],Parent Surface
+,None,,,,,
+
+
+Interior Door
+
+,,Construction,U-Factor with Film [W/m2-K],U-Factor no Film [W/m2-K],Gross Area [m2],Parent Surface
+,None,,,,,
+
+
+Opaque Construction Layers
+
+,,Layer 1,Layer 2,Layer 3,Layer 4,Layer 5,Layer 6,Layer 7,Layer 8,Layer 9,Layer 10
+,FLOOR_CONCRETE_R20,Concrete_Heavy,Insulation_SprayFoam_R20,Gypsum_Board_1_2,,,,,,,
+,ROOF_FLAT_R20_CZ1_2,Roof_Membrane,Roof_Insulation_R20,Concrete_Medium,,,,,,,
+,WALL_STEELFRAME_R19_CZ3_4,Gypsum_Board_1_2,Steel_Stud_25ga,Insulation_Fiberglass_R19,Gypsum_Board_1_2,,,,,,
+,STORAGE_11_INTERNALMASS_CONSTRUCTION,STORAGE_11_INTERNALMASS_MATERIAL,,,,,,,,,
+,BREAK_ROOM_70_INTERNALMASS_CONSTRUCTION,BREAK_ROOM_70_INTERNALMASS_MATERIAL,,,,,,,,,
+,STORAGE_85_INTERNALMASS_CONSTRUCTION,STORAGE_85_INTERNALMASS_MATERIAL,,,,,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Shading Summary
+FOR:,Entire Facility
+Sunlit Fraction
+
+,,March 21 9am,March 21 noon,March 21 3pm,June 21 9am,June 21 noon,June 21 3pm,December 21 9am,December 21 noon,December 21 3pm
+,STORAGE_11_WINDOW_1,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00
+,STORAGE_11_WINDOW_2,1.00,1.00,0.00,1.00,0.00,0.00,1.00,0.00,0.00
+,STORAGE_11_WINDOW_3,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,STORAGE_11_WINDOW_4,0.00,0.00,1.00,0.00,1.00,1.00,0.00,1.00,1.00
+,BREAK_ROOM_70_WINDOW_1,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00
+,BREAK_ROOM_70_WINDOW_2,1.00,1.00,0.00,1.00,0.00,0.00,1.00,0.00,0.00
+,BREAK_ROOM_70_WINDOW_3,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70_WINDOW_4,0.00,0.00,1.00,0.00,1.00,1.00,0.00,1.00,1.00
+,STORAGE_85_WINDOW_1,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00
+,STORAGE_85_WINDOW_2,1.00,1.00,0.00,1.00,0.00,0.00,1.00,0.00,0.00
+,STORAGE_85_WINDOW_3,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,STORAGE_85_WINDOW_4,0.00,0.00,1.00,0.00,1.00,1.00,0.00,1.00,1.00
+
+
+Window Control
+
+,,Name,Type,Shaded Construction,Control,Glare Control
+,None,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Lighting Summary
+FOR:,Entire Facility
+Interior Lighting
+
+,,Zone Name,Space Name,Space Type,Lighting Power Density [W/m2],Space Area [m2],Total Power [W],End Use Subcategory,Schedule Name,Scheduled Hours/Week [hr],Hours/Week > 1% [hr],Full Load Hours/Week [hr],Return Air Fraction,Conditioned (Y/N),Consumption [GJ]
+,STORAGE_11_LIGHTS,STORAGE_11,STORAGE_11,GENERAL,5.4000,10.25,55.36,General,STORAGE_LIGHTING,81.97,168.00,81.97,0.0000,Y,0.85
+,BREAK_ROOM_70_LIGHTS,BREAK_ROOM_70,BREAK_ROOM_70,GENERAL,8.1000,21.22,171.88,General,BREAK_ROOM_LIGHTING,81.97,168.00,47.45,0.0000,Y,1.53
+,STORAGE_85_LIGHTS,STORAGE_85,STORAGE_85,GENERAL,5.4000,17.89,96.61,General,STORAGE_LIGHTING,81.97,168.00,81.97,0.0000,Y,1.49
+,Interior Lighting Total,,,,6.5607,49.36,323.84,,,,,,,,3.87
+
+
+Daylighting
+
+,,Zone,Control Name,Daylighting Method,Control Type,Fraction Controlled,Lighting Installed in Zone [W],Lighting Controlled [W]
+,BREAK_ROOM_70_REFERENCEPOINT1,BREAK_ROOM_70,BREAK_ROOM_70_DAYLIGHT,SplitFlux,Continuous,0.90,171.88,154.69
+
+
+Exterior Lighting
+
+,,Total Watts,Astronomical Clock/Schedule,Schedule Name,Scheduled Hours/Week [hr],Hours/Week > 1% [hr],Full Load Hours/Week [hr],Consumption [GJ]
+,Exterior Lighting Total,0.00,,,,,,0.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Equipment Summary
+FOR:,Entire Facility
+Central Plant
+
+,,Type,Reference Capacity [W],Reference Efficiency [W/W],Rated Capacity [W],Rated Efficiency [W/W],IPLV in SI Units [W/W],IPLV in IP Units [Btu/W-h]
+,None,,,,,,,
+
+
+Cooling Coils
+
+,,Type,Design Coil Load [W],Nominal Total Capacity [W],Nominal Sensible Capacity [W],Nominal Latent Capacity [W],Nominal Sensible Heat Ratio,Nominal Efficiency [W/W],Nominal Coil UA Value [W/C],Nominal Coil Surface Area [m2]
+,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,,1025.08,768.81,256.27,0.75,2.29,,
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,,2121.99,1591.49,530.50,0.75,2.29,,
+,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,,1789.06,1341.80,447.27,0.75,2.29,,
+Nominal values are gross at rated conditions, i.e., the supply air fan heat and electric power NOT accounted for.
+
+
+DX Cooling Coil Standard Ratings 2017
+
+,,Cooling Coil Type [1],Standard Rating Net Cooling Capacity [W][2],Standard Rating Net COP [W/W][2],EER [Btu/W-h][2],SEER User [Btu/W-h][2,3],SEER Standard [Btu/W-h][2,3],IEER [Btu/W-h][2]
+,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,985.3,39.98,136.43,54.18,51.26,37.2
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,2039.6,39.98,136.43,54.18,51.26,37.2
+,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,1719.6,39.98,136.43,54.18,51.26,37.2
+ANSI/AHRI ratings account for supply air fan heat and electric power. <br/>1 - EnergyPlus object type. <br/>2 - Capacity less than 65K Btu/h (19050 W) - calculated as per AHRI Standard 210/240-2017. <br/>&emsp;&nbsp;Capacity of 65K Btu/h (19050 W) to less than 135K Btu/hv (39565 W) - calculated as per AHRI Standard 340/360-2007. <br/>&emsp;&nbsp;Capacity from 135K (39565 W) to 250K Btu/hr (73268 W) - calculated as per AHRI Standard 365-2009 - Ratings not yet supported in EnergyPlus. <br/>3 - SEER (User) is calculated using user-input PLF curve and cooling coefficient of degradation. <br/>&emsp;&nbsp;SEER (Standard) is calculated using the default PLF curve and cooling coefficient of degradationfrom the appropriate AHRI standard.
+
+
+DX Cooling Coil Standard Ratings 2023
+
+,,Cooling Coil Type [1],Standard Rating Net Cooling Capacity [W][2],Standard Rating Net COP2 [W/W][2,4],EER2 [Btu/W-h][2,4],SEER2 User [Btu/W-h][2,3],SEER2 Standard [Btu/W-h][2,3],IEER [Btu/W-h][2]
+,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,985.3,39.98,136.43,54.18,52.72,37.2
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,2039.6,39.98,136.43,54.18,52.72,37.2
+,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,1719.6,39.98,136.43,54.18,52.72,37.2
+ANSI/AHRI ratings account for supply air fan heat and electric power. <br/>1 - EnergyPlus object type. <br/>2 - Capacity less than 65K Btu/h (19050 W) - calculated as per AHRI Standard 210/240-2023. <br/>&emsp;&nbsp;Capacity of 65K Btu/h (19050 W) to less than 135K Btu/h (39565 W) - calculated as per AHRI Standard 340/360-2022. <br/>&emsp;&nbsp;Capacity from 135K (39565 W) to 250K Btu/hr (73268 W) - calculated as per AHRI Standard 365-2009 - Ratings not yet supported in EnergyPlus. <br/>3 - SEER2 (User) is calculated using user-input PLF curve and cooling coefficient of degradation. <br/>&emsp;&nbsp;SEER2 (Standard) is calculated using the default PLF curve and cooling coefficient of degradationfrom the appropriate AHRI standard. <br/>4 - Value for the Full Speed of the coil.
+
+
+DX Cooling Coil ASHRAE 127 Standard Ratings Report
+
+,,DX Cooling Coil Type,Rated Net Cooling Capacity Test A [W],Rated Electric Power Test A [W],Rated Net Cooling Capacity Test B [W],Rated Electric Power Test B [W],Rated Net Cooling Capacity Test C [W],Rated Electric Power Test C [W],Rated Net Cooling Capacity Test D [W],Rated Electric Power Test D [W]
+,None,,,,,,,,,
+
+
+Water-to-Air Heat Pumps at Rated Temperatures Report
+
+,,Coil Type,Rated Total Capacity [W],Rated Sensible Capacity [W],Rated Power[W],Rated COP [W/W],Rated Air Dry-bulb Temperature [C],Rated Air Wet-bulb Temperature [C],Rated Water Temperature [C],Design Day used for Sizing
+,None,,,,,,,,,
+
+
+DX Heating Coils
+
+,,DX Heating Coil Type,High Temperature Heating (net) Rating Capacity [W],Low Temperature Heating (net) Rating Capacity [W],HSPF [Btu/W-h],Region Number,Minimum Outdoor Dry-Bulb Temperature for Compressor Operation [C],Supplemental Heat High Shutoff Temperature [C],Airloop Name
+,None,,,,,,,,
+
+
+DX Heating Coils AHRI 2023
+
+,,DX Heating Coil Type,High Temperature Heating (net) Rating Capacity [W],Low Temperature Heating (net) Rating Capacity [W],HSPF2 [Btu/W-h],Region Number,Minimum Outdoor Dry-Bulb Temperature for Compressor Operation [C],Airloop Name
+,None,,,,,,,
+
+
+Heating Coils
+
+,,Type,Design Coil Load [W],Nominal Total Capacity [W],Nominal Efficiency [W/W],Used as Supplementary Heat,Airloop Name,Plantloop Name
+,STORAGE_11_Z1_REHEATCOIL,Coil:Heating:Electric,,246.02,1.00,No,N/A,N/A
+,BREAK_ROOM_70_Z2_REHEATCOIL,Coil:Heating:Electric,,509.28,1.00,No,N/A,N/A
+,STORAGE_85_Z3_REHEATCOIL,Coil:Heating:Electric,,429.37,1.00,No,N/A,N/A
+,STORAGE_11_Z1_HEATINGCOIL,Coil:Heating:Electric,,820.07,1.00,No,STORAGE_11_Z1_AIRLOOP,N/A
+,BREAK_ROOM_70_Z2_HEATINGCOIL,Coil:Heating:Electric,,1697.59,1.00,No,BREAK_ROOM_70_Z2_AIRLOOP,N/A
+,STORAGE_85_Z3_HEATINGCOIL,Coil:Heating:Electric,,1431.25,1.00,No,STORAGE_85_Z3_AIRLOOP,N/A
+
+
+Fans
+
+,,Type,Total Efficiency [W/W],Delta Pressure [pa],Max Air Flow Rate [m3/s],Rated Electricity Rate [W],Rated Power Per Max Air Flow Rate [W-s/m3],Motor Heat In Air Fraction,Fan Energy Index,End Use Subcategory,Design Day Name for Fan Sizing Peak,Date/Time for Fan Sizing Peak,Purpose,Is Autosized,Motor Efficiency,Motor Heat to Zone Fraction,Motor Loss Zone Name,Airloop Name
+,STORAGE_11_Z1_SUPPLYFAN,Fan:VariableVolume,0.70,600.00,0.05,43.93,857.14,1.00,6.58,General,,,N/A,Yes,1.00,0.00,N/A,STORAGE_11_Z1_AIRLOOP
+,BREAK_ROOM_70_Z2_SUPPLYFAN,Fan:VariableVolume,0.70,600.00,0.11,90.94,857.14,1.00,4.00,General,,,N/A,Yes,1.00,0.00,N/A,BREAK_ROOM_70_Z2_AIRLOOP
+,STORAGE_85_Z3_SUPPLYFAN,Fan:VariableVolume,0.70,600.00,0.09,76.67,857.14,1.00,4.45,General,,,N/A,Yes,1.00,0.00,N/A,STORAGE_85_Z3_AIRLOOP
+
+
+Pumps
+
+,,Type,Control,Head [pa],Water Flow [m3/s],Electricity Rate [W],Power Per Water Flow Rate [W-s/m3],Motor Efficiency [W/W],End Use Subcategory,Is Autosized,Plantloop Name,Plantloop Branch Name
+,None,,,,,,,,,,,
+
+
+Service Water Heating
+
+,,Type,Storage Volume [m3],Input [W],Thermal Efficiency [W/W],Recovery Efficiency [W/W],Energy Factor
+,None,,,,,,
+
+
+Chillers
+
+,,Type,Reference Capacity[W],TypeReference Efficiency [W/W],Rated Capacity [W],Rated Efficiency [W/W],IPLV in SI Units [W/W],IPLV in IP Units [Btu/W-h],Minimum Part Load Ratio,Fuel Type,Rated Entering Condenser Temperature [C],Rated Leaving Evaporator Temperature [C],Reference Entering Condenser Temperature [C],Reference Leaving Evaporator Temperature [C],Design Size Reference Chilled Water Flow Rate [kg/s],Design Size Reference Condenser Fluid Flow Rate [kg/s],Plantloop Name,Plantloop Branch Name,Condenser Loop Name,Condenser Loop Branch Name,Heat Recovery Plantloop Name,Heat Recovery Plantloop Branch Name,Recovery Relative Capacity Fraction
+,None,,,,,,,,,,,,,,,,,,,,,,
+
+
+Boilers
+
+,,Type,Reference Capacity [W],Reference Efficiency[W/W],Rated Capacity [W],Rated Efficiency [W/W],Minimum Part Load Ratio,Fuel Type,Parasitic Electric Load [W],Plantloop Name,Plantloop Branch Name
+,None,,,,,,,,,,
+
+
+Cooling Towers and Fluid Coolers
+
+,,Type,Fluid Type,Range [C],Approach [C],Design Fan Power [W],Design Inlet Air Wet-Bulb Temperature [C],Design Water Flow Rate [m3/s],Leaving Water Setpoint Temperature [C],Condenser Loop Name,Condenser Loop Branch Name
+,None,,,,,,,,,,
+
+
+PlantLoop or CondenserLoop
+
+,,Type,Provides Heating,Provides Cooling,Maximum Loop Flow Rate [m3/s],Minimum Loop Flow Rate [m3/s]
+,None,,,,,
+
+
+Air Terminals
+
+,,Zone Name,Minimum Flow [m3/s],Minimum Outdoor Flow [m3/s],Supply Cooling Setpoint [C],Supply Heating Setpoint [C],Heating Capacity [W],Cooling Capacity [W],Type of Input Object,Heat/Reheat Coil Object Type,Chilled Water Coil Object Type,Fan Object Type,Fan Name,Primary Air Flow Rate [m3/s],Secondary Air Flow Rate [m3/s],Minimum Flow Schedule Name,Maximum Flow During Reheat [m3/s],Minimum Outdoor Flow Schedule Name
+,STORAGE_11_Z1_ADU,STORAGE_11,,,,,,,AirTerminal:SingleDuct:VAV:Reheat,COIL:HEATING:ELECTRIC,n/a,n/a,,0.05,n/a,n/a,0.03,n/a
+,BREAK_ROOM_70_Z2_ADU,BREAK_ROOM_70,,,,,,,AirTerminal:SingleDuct:VAV:Reheat,COIL:HEATING:ELECTRIC,n/a,n/a,,0.11,n/a,n/a,0.06,n/a
+,STORAGE_85_Z3_ADU,STORAGE_85,,,,,,,AirTerminal:SingleDuct:VAV:Reheat,COIL:HEATING:ELECTRIC,n/a,n/a,,0.09,n/a,n/a,0.05,n/a
+
+
+Air Heat Recovery
+
+,,Name,Input object type,Plate/Rotary,Sensible Effectiveness at 100% Heating Air Flow,Sensible Effectiveness at 100% Cooling Air Flow,Latent Effectiveness at 100% Heating Air Flow,Latent Effectiveness at 100% Cooling Air Flow,Exhaust Airflow [kg/s],Outdoor Airflow [kg/s]
+,None,,,,,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,HVAC Sizing Summary
+FOR:,Entire Facility
+Space Sensible Cooling
+
+,,Calculated Design Load [W],User Design Load [W],User Design Load per Area [W/m2],Calculated Design Air Flow [m3/s],User Design Air Flow [m3/s],Design Day Name,Date/Time Of Peak {TIMESTAMP},Thermostat Setpoint Temperature at Peak Load [C],Indoor Temperature at Peak Load [C],Indoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Outdoor Temperature at Peak Load [C],Outdoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Minimum Outdoor Air Flow Rate [m3/s],Heat Gain Rate from DOAS [W]
+,None,,,,,,,,,,,,,,
+The Design Load is the space sensible load only. It does not include any system effects or ventilation loads.
+
+
+Zone Sensible Cooling
+
+,,Calculated Design Load [W],User Design Load [W],User Design Load per Area [W/m2],Calculated Design Air Flow [m3/s],User Design Air Flow [m3/s],Design Day Name,Date/Time Of Peak {TIMESTAMP},Thermostat Setpoint Temperature at Peak Load [C],Indoor Temperature at Peak Load [C],Indoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Outdoor Temperature at Peak Load [C],Outdoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Minimum Outdoor Air Flow Rate [m3/s],Heat Gain Rate from DOAS [W]
+,None,,,,,,,,,,,,,,
+The Design Load is the zone sensible load only. It does not include any system effects or ventilation loads.
+
+
+Space Sensible Heating
+
+,,Calculated Design Load [W],User Design Load [W],User Design Load per Area [W/m2],Calculated Design Air Flow [m3/s],User Design Air Flow [m3/s],Design Day Name,Date/Time Of Peak {TIMESTAMP},Thermostat Setpoint Temperature at Peak Load [C],Indoor Temperature at Peak Load [C],Indoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Outdoor Temperature at Peak Load [C],Outdoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Minimum Outdoor Air Flow Rate [m3/s],Heat Gain Rate from DOAS [W]
+,None,,,,,,,,,,,,,,
+The Design Load is the space sensible load only. It does not include any system effects or ventilation loads.
+
+
+Zone Sensible Heating
+
+,,Calculated Design Load [W],User Design Load [W],User Design Load per Area [W/m2],Calculated Design Air Flow [m3/s],User Design Air Flow [m3/s],Design Day Name,Date/Time Of Peak {TIMESTAMP},Thermostat Setpoint Temperature at Peak Load [C],Indoor Temperature at Peak Load [C],Indoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Outdoor Temperature at Peak Load [C],Outdoor Humidity Ratio at Peak Load [kgWater/kgDryAir],Minimum Outdoor Air Flow Rate [m3/s],Heat Gain Rate from DOAS [W]
+,None,,,,,,,,,,,,,,
+The Design Load is the zone sensible load only. It does not include any system effects or ventilation loads.
+
+
+System Design Air Flow Rates
+
+,,Calculated cooling [m3/s],User cooling [m3/s],Calculated heating [m3/s],User heating [m3/s],Adjusted cooling [m3/s],Adjusted heating [m3/s],Adjusted main [m3/s],Calculated Heating Air Flow Ratio [],User Heating Air Flow Ratio []
+,None,,,,,,,,,
+
+
+Plant Loop Coincident Design Fluid Flow Rate Adjustments
+
+,,Previous Design Volume Flow Rate [m3/s],Algorithm Volume Flow Rate [m3/s],Coincident Design Volume Flow Rate [m3/s],Coincident Size Adjusted,Peak Sizing Period Name,Peak Day into Period {TIMESTAMP}[day],Peak Hour Of Day {TIMESTAMP}[hr],Peak Step Start Minute {TIMESTAMP}[min]
+,None,,,,,,,,
+
+
+Coil Sizing Summary
+
+,,Coil Type,HVAC Type,HVAC Name,Coil Final Gross Total Capacity [W],Coil Final Gross Sensible Capacity [W],Coil Final Reference Air Volume Flow Rate [m3/s],Coil Final Reference Plant Fluid Volume Flow Rate [m3/s],Coil U-value Times Area Value [W/K],Design Day Name at Sensible Ideal Loads Peak,Date/Time at Sensible Ideal Loads Peak,Design Day Name at Air Flow Ideal Loads Peak,Date/Time at Air Flow Ideal Loads Peak,Coil Total Capacity at Ideal Loads Peak [W],Coil Sensible Capacity at Ideal Loads Peak [W],Coil Air Volume Flow Rate at Ideal Loads Peak [m3/s],Coil Entering Air Drybulb at Ideal Loads Peak [C],Coil Entering Air Wetbulb at Ideal Loads Peak [C],Coil Entering Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Coil Leaving Air Drybulb at Ideal Loads Peak [C],Coil Leaving Air Wetbulb at Ideal Loads Peak [C],Coil Leaving Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Outdoor Air Drybulb at Ideal Loads Peak [C],Outdoor Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Outdoor Air Wetbulb at Ideal Loads Peak [C],Outdoor Air Flow Percentage at Ideal Loads Peak [%],Zone Air Drybulb at Ideal Loads Peak [C],Zone Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Zone Air Relative Humidity at Ideal Loads Peak [%],Zone Sensible Heat Gain at Ideal Loads Peak [W],Zone Latent Heat Gain at Ideal Loads Peak [W],Coil Total Capacity at Rating Conditions [W],Coil Sensible Capacity at Rating Conditions [W]
+,STORAGE_11_Z1_REHEATCOIL,Coil:Heating:Electric,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,246.020,246.020,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,246.02,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+,BREAK_ROOM_70_Z2_REHEATCOIL,Coil:Heating:Electric,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,509.278,509.278,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,509.28,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+,STORAGE_85_Z3_REHEATCOIL,Coil:Heating:Electric,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,429.375,429.375,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,429.37,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,1025.085,768.814,0.051254,-999.0,-999.000,unknown,unknown,unknown,unknown,1025.08,-999.00,0.051254,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,Too Big,-999.00,-999.0,-999.0000,-999.00,0.00,1025.59,759.96
+,STORAGE_11_Z1_HEATINGCOIL,Coil:Heating:Electric,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,820.068,820.068,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,820.07,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,2121.993,1591.494,0.106100,-999.0,-999.000,unknown,unknown,unknown,unknown,2121.99,-999.00,0.106100,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-941567.8196,-999.00,-999.0,-999.0000,-999.00,0.00,2123.03,1573.17
+,BREAK_ROOM_70_Z2_HEATINGCOIL,Coil:Heating:Electric,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,1697.594,1697.594,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,1697.59,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,1789.062,1341.797,0.089453,-999.0,-999.000,unknown,unknown,unknown,unknown,1789.06,-999.00,0.089453,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,Too Big,-999.00,-999.0,-999.0000,-999.00,0.00,1789.94,1326.35
+,STORAGE_85_Z3_HEATINGCOIL,Coil:Heating:Electric,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,1431.250,1431.250,-999.0,-999.0,-999.000,unknown,unknown,unknown,unknown,1431.25,0.00,0.000000,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.00,-999.0,-999.00,-999.0000,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Coil Sizing Details
+FOR:,Entire Facility
+Coils
+
+,,Coil Type,Coil Location,HVAC Type,HVAC Name,Zone Name(s),System Sizing Method Concurrence,System Sizing Method Capacity,System Sizing Method Air Flow,Autosized Coil Capacity?,Autosized Coil Airflow?,Autosized Coil Water Flow?,OA Pretreated prior to coil inlet?,Coil Final Gross Total Capacity [W],Coil Final Gross Sensible Capacity [W],Coil Final Reference Air Volume Flow Rate [m3/s],Coil Final Reference Plant Fluid Volume Flow Rate [m3/s],Coil U-value Times Area Value [W/K],Terminal Unit Reheat Coil Multiplier,DX Coil Capacity Increase Ratio from Too Low Flow/Capacity Ratio,DX Coil Capacity Decrease Ratio from Too High Flow/Capacity Ratio,Moist Air Heat Capacity [J/kg-K],Dry Air Heat Capacity [J/kg-K],Standard Air Density Adjusted for Elevation [kg/m3],Supply Fan Name for Coil,Supply Fan Type for Coil,Supply Fan Maximum Air Volume Flow Rate [m3/s],Supply Fan Maximum Air Mass Flow Rate [kg/s],Plant Name for Coil,Plant Fluid Specific Heat Capacity [J/kg-K],Plant Fluid Density [kg/m3],Plant Maximum Fluid Mass Flow Rate [kg/s],Plant Design Fluid Return Temperature [C],Plant Design Fluid Supply Temperature [C],Plant Design Fluid Temperature Difference [deltaC],Plant Design Capacity [W],Coil Capacity Percentage of Plant Design Capacity [%],Coil Fluid Flow Rate Percentage of Plant Design Flow Rate [%],Design Day Name at Sensible Ideal Loads Peak,Date/Time at Sensible Ideal Loads Peak,Design Day Name at Total Ideal Loads Peak,Date/Time at Total Ideal Loads Peak,Design Day Name at Air Flow Ideal Loads Peak,Date/Time at Air Flow Ideal Loads Peak,Peak Load Type to Size On,Coil Total Capacity at Ideal Loads Peak [W],Coil Sensible Capacity at Ideal Loads Peak [W],Coil Off-Rating Capacity Modifier at Ideal Loads Peak [ ],Coil Air Mass Flow Rate at Ideal Loads Peak [kg/s],Coil Air Volume Flow Rate at Ideal Loads Peak [m3/s],Coil Entering Air Drybulb at Ideal Loads Peak [C],Coil Entering Air Wetbulb at Ideal Loads Peak [C],Coil Entering Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Coil Entering Air Enthalpy at Ideal Loads Peak [J/KG-K],Coil Leaving Air Drybulb at Ideal Loads Peak [C],Coil Leaving Air Wetbulb at Ideal Loads Peak [C],Coil Leaving Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Coil Leaving Air Enthalpy at Ideal Loads Peak [J/KG-K],Coil Plant Fluid Mass Flow Rate at Ideal Loads Peak [kg/s],Coil Entering Plant Fluid Temperature at Ideal Loads Peak [C],Coil Leaving Plant Fluid Temperature at Ideal Loads Peak [C],Coil Plant Fluid Temperature Difference at Ideal Loads Peak [deltaC],Supply Fan Air Heat Gain at Ideal Loads Peak [W],Coil and Fan Net Total Capacity at Ideal Loads Peak [W],Outdoor Air Drybulb at Ideal Loads Peak [C],Outdoor Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Outdoor Air Wetbulb at Ideal Loads Peak [C],Outdoor Air Volume Flow Rate at Ideal Loads Peak [m3/s],Outdoor Air Flow Percentage at Ideal Loads Peak [%],System Return Air Drybulb at Ideal Loads Peak [C],System Return Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Zone Air Drybulb at Ideal Loads Peak [C],Zone Air Humidity Ratio at Ideal Loads Peak [kgWater/kgDryAir],Zone Air Relative Humidity at Ideal Loads Peak [%],Zone Sensible Heat Gain at Ideal Loads Peak [W],Zone Latent Heat Gain at Ideal Loads Peak [W],Coil Total Capacity at Rating Conditions [W],Coil Sensible Capacity at Rating Conditions [W],Coil Air Mass Flow Rate at Rating Conditions [kg/s],Coil Entering Air Drybulb at Rating Conditions [C],Coil Entering Air Wetbulb at Rating Conditions [C],Coil Entering Air Humidity Ratio at Rating Conditions [kgWater/kgDryAir],Coil Entering Air Enthalpy at Rating Conditions [J/KG-K],Coil Leaving Air Drybulb at Rating Conditions [C],Coil Leaving Air Wetbulb at Rating Conditions [C],Coil Leaving Air Humidity Ratio at Rating Conditions [kgWater/kgDryAir],Coil Leaving Air Enthalpy at Rating Conditions [J/KG-K]
+,STORAGE_11_Z1_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,STORAGE_11,N/A,N/A,N/A,No,No,unknown,No,246.020,246.020,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,unknown,unknown,-999.0,-999.0,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,246.02,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,246.02,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+,BREAK_ROOM_70_Z2_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,BREAK_ROOM_70,N/A,N/A,N/A,No,No,unknown,No,509.278,509.278,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,unknown,unknown,-999.0,-999.0,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,509.28,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,509.28,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+,STORAGE_85_Z3_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,STORAGE_85,N/A,N/A,N/A,No,No,unknown,No,429.375,429.375,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,unknown,unknown,-999.0,-999.0,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,429.37,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,429.37,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,STORAGE_11,N/A,N/A,N/A,No,No,unknown,No,1025.085,768.814,0.051254,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,STORAGE_11_Z1_SUPPLYFAN,Fan:VariableVolume,0.051254,0.06026908,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,1025.08,-999.00,1.0000,0.06026908,0.051254,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,1025.08,-999.00,-999.0,-999.00,-999.0,Too Big,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,1025.59,759.96,0.05788891,26.67,19.44,0.01118466,55322.4,13.82,13.38,0.00938561,37605.9
+,STORAGE_11_Z1_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,STORAGE_11,N/A,N/A,N/A,No,No,unknown,No,820.068,820.068,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,STORAGE_11_Z1_SUPPLYFAN,Fan:VariableVolume,0.051254,0.06026908,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,820.07,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,820.07,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70,N/A,N/A,N/A,No,No,unknown,No,2121.993,1591.494,0.106100,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,BREAK_ROOM_70_Z2_SUPPLYFAN,Fan:VariableVolume,0.106100,0.12476093,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,2121.99,-999.00,1.0000,0.12476093,0.106100,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,2121.99,-999.00,-999.0,-999.00,-999.0,-941567.8196,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,2123.03,1573.17,0.11983382,26.67,19.44,0.01118466,55322.4,13.82,13.38,0.00938561,37605.9
+,BREAK_ROOM_70_Z2_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70,N/A,N/A,N/A,No,No,unknown,No,1697.594,1697.594,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,BREAK_ROOM_70_Z2_SUPPLYFAN,Fan:VariableVolume,0.106100,0.12476093,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,1697.59,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,1697.59,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,STORAGE_85,N/A,N/A,N/A,No,No,unknown,No,1789.062,1341.797,0.089453,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,STORAGE_85_Z3_SUPPLYFAN,Fan:VariableVolume,0.089453,0.10518655,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,1789.06,-999.00,1.0000,0.10518655,0.089453,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,1789.06,-999.00,-999.0,-999.00,-999.0,Too Big,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,1789.94,1326.35,0.10103248,26.67,19.44,0.01118466,55322.4,13.82,13.38,0.00938561,37605.9
+,STORAGE_85_Z3_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,STORAGE_85,N/A,N/A,N/A,No,No,unknown,No,1431.250,1431.250,-999.0,-999.0,-999.000,-999.0000,1.00000,1.00000,1004.8586,1004.8586,1.1759,STORAGE_85_Z3_SUPPLYFAN,Fan:VariableVolume,0.089453,0.10518655,,-999.0000,-999.0000,-999.0,-999.00,-999.00,-999.00,-999.00,-999.0000,-999.0,unknown,unknown,unknown,unknown,unknown,unknown,Sensible,1431.25,0.00,1.0000,0.00000000,0.000000,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0,-999.0,-999.00,-999.00,-999.00,0.000,1431.25,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,-999.0,-999.00,-999.0,-999.0000,-999.00,0.00,-999.00,-999.00,-999.0,-999.00,-999.00,-999.0,-999.0,-999.00,-999.00,-999.0,-999.0
+
+
+Coil Connections
+
+,,Coil Name,Coil Type,Coil Location,HVAC Type,HVAC Name,Zone Name(s),Supply Fan Name for HVAC,Supply Fan Type for HVAC,Airloop Name,Plant Name for Coil,Plant Loop Name
+,STORAGE_11_Z1_REHEATCOIL,STORAGE_11_Z1_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,STORAGE_11,unknown,unknown,N/A,unknown,unknown
+,BREAK_ROOM_70_Z2_REHEATCOIL,BREAK_ROOM_70_Z2_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,BREAK_ROOM_70,unknown,unknown,N/A,unknown,unknown
+,STORAGE_85_Z3_REHEATCOIL,STORAGE_85_Z3_REHEATCOIL,Coil:Heating:Electric,Zone Equipment,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,STORAGE_85,unknown,unknown,N/A,unknown,unknown
+,STORAGE_11_Z1_COOLINGCOILDX,STORAGE_11_Z1_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,STORAGE_11,STORAGE_11_Z1_SUPPLYFAN,Fan:VariableVolume,STORAGE_11_Z1_AIRLOOP,unknown,unknown
+,STORAGE_11_Z1_HEATINGCOIL,STORAGE_11_Z1_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,STORAGE_11_Z1_AIRLOOP,STORAGE_11,STORAGE_11_Z1_SUPPLYFAN,Fan:VariableVolume,STORAGE_11_Z1_AIRLOOP,unknown,unknown
+,BREAK_ROOM_70_Z2_COOLINGCOILDX,BREAK_ROOM_70_Z2_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70,BREAK_ROOM_70_Z2_SUPPLYFAN,Fan:VariableVolume,BREAK_ROOM_70_Z2_AIRLOOP,unknown,unknown
+,BREAK_ROOM_70_Z2_HEATINGCOIL,BREAK_ROOM_70_Z2_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70,BREAK_ROOM_70_Z2_SUPPLYFAN,Fan:VariableVolume,BREAK_ROOM_70_Z2_AIRLOOP,unknown,unknown
+,STORAGE_85_Z3_COOLINGCOILDX,STORAGE_85_Z3_COOLINGCOILDX,Coil:Cooling:DX:SingleSpeed,AirLoop,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,STORAGE_85,STORAGE_85_Z3_SUPPLYFAN,Fan:VariableVolume,STORAGE_85_Z3_AIRLOOP,unknown,unknown
+,STORAGE_85_Z3_HEATINGCOIL,STORAGE_85_Z3_HEATINGCOIL,Coil:Heating:Electric,AirLoop,AirLoopHVAC,STORAGE_85_Z3_AIRLOOP,STORAGE_85,STORAGE_85_Z3_SUPPLYFAN,Fan:VariableVolume,STORAGE_85_Z3_AIRLOOP,unknown,unknown
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,System Summary
+FOR:,Entire Facility
+Economizer
+
+,,High Limit Shutoff Control,Minimum Outdoor Air [m3/s],Maximum Outdoor Air [m3/s],Return Air Temp Limit,Return Air Enthalpy Limit,Outdoor Air Temperature Limit [C],Outdoor Air Enthalpy Limit [C]
+,None,,,,,,,
+
+
+Demand Controlled Ventilation using Controller:MechanicalVentilation
+
+,,Controller:MechanicalVentilation Name,Outdoor Air Per Person [m3/s-person],Outdoor Air Per Area [m3/s-m2],Outdoor Air Per Zone [m3/s],Outdoor Air ACH [ach],Outdoor Air Method,Outdoor Air Schedule Name,Air Distribution Effectiveness in Cooling Mode,Air Distribution Effectiveness in Heating Mode,Air Distribution Effectiveness Schedule Name,Type
+,None,,,,,,,,,,,
+
+
+Time Not Comfortable Based on Simple ASHRAE 55-2004
+
+,,Winter Clothes [hr],Summer Clothes [hr],Summer or Winter Clothes [hr]
+,STORAGE_11,8490.25,8487.00,8261.75
+,BREAK_ROOM_70,8753.50,8591.25,8588.25
+,STORAGE_85,8255.00,8433.00,7997.50
+,Facility,8756.00,8713.00,8592.25
+Aggregated over the RunPeriods for Weather
+
+
+Time Setpoint Not Met
+
+,,During Heating [hr],During Cooling [hr],During Occupied Heating [hr],During Occupied Cooling [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,0.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Facility,0.00,0.00,0.00,0.00
+Aggregated over the RunPeriods for Weather
+
+
+Thermostat Schedules
+
+,,Thermostat Name 1,Control Type Schedule,Control Type,Control Type Name,Heating Schedule,Cooling Schedule
+,None,,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,HVAC Topology
+FOR:,Entire Facility
+Air Loop Supply Side Component Arrangement
+
+,,Airloop Name,Splitter Name,Supply Branch Name,Supply Branch Type,Component Type,Component Name,Sub-Component Type,Sub-Component Name,Sub-Sub-Component Type,Sub-Sub-Component Name,Mixer Name
+,1,STORAGE_11_Z1_AIRLOOP,,,,,,,,,,
+,2,STORAGE_11_Z1_AIRLOOP,,STORAGE_11_Z1_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,STORAGE_11_Z1_COOLINGCOIL,,,,,
+,3,STORAGE_11_Z1_AIRLOOP,,STORAGE_11_Z1_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,STORAGE_11_Z1_COOLINGCOIL,COIL:COOLING:DX:SINGLESPEED,STORAGE_11_Z1_COOLINGCOILDX,,,
+,4,STORAGE_11_Z1_AIRLOOP,,STORAGE_11_Z1_MAINBRANCH,Main,COIL:HEATING:ELECTRIC,STORAGE_11_Z1_HEATINGCOIL,,,,,
+,5,STORAGE_11_Z1_AIRLOOP,,STORAGE_11_Z1_MAINBRANCH,Main,FAN:VARIABLEVOLUME,STORAGE_11_Z1_SUPPLYFAN,,,,,
+,6,BREAK_ROOM_70_Z2_AIRLOOP,,,,,,,,,,
+,7,BREAK_ROOM_70_Z2_AIRLOOP,,BREAK_ROOM_70_Z2_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,BREAK_ROOM_70_Z2_COOLINGCOIL,,,,,
+,8,BREAK_ROOM_70_Z2_AIRLOOP,,BREAK_ROOM_70_Z2_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,BREAK_ROOM_70_Z2_COOLINGCOIL,COIL:COOLING:DX:SINGLESPEED,BREAK_ROOM_70_Z2_COOLINGCOILDX,,,
+,9,BREAK_ROOM_70_Z2_AIRLOOP,,BREAK_ROOM_70_Z2_MAINBRANCH,Main,COIL:HEATING:ELECTRIC,BREAK_ROOM_70_Z2_HEATINGCOIL,,,,,
+,10,BREAK_ROOM_70_Z2_AIRLOOP,,BREAK_ROOM_70_Z2_MAINBRANCH,Main,FAN:VARIABLEVOLUME,BREAK_ROOM_70_Z2_SUPPLYFAN,,,,,
+,11,STORAGE_85_Z3_AIRLOOP,,,,,,,,,,
+,12,STORAGE_85_Z3_AIRLOOP,,STORAGE_85_Z3_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,STORAGE_85_Z3_COOLINGCOIL,,,,,
+,13,STORAGE_85_Z3_AIRLOOP,,STORAGE_85_Z3_MAINBRANCH,Main,COILSYSTEM:COOLING:DX,STORAGE_85_Z3_COOLINGCOIL,COIL:COOLING:DX:SINGLESPEED,STORAGE_85_Z3_COOLINGCOILDX,,,
+,14,STORAGE_85_Z3_AIRLOOP,,STORAGE_85_Z3_MAINBRANCH,Main,COIL:HEATING:ELECTRIC,STORAGE_85_Z3_HEATINGCOIL,,,,,
+,15,STORAGE_85_Z3_AIRLOOP,,STORAGE_85_Z3_MAINBRANCH,Main,FAN:VARIABLEVOLUME,STORAGE_85_Z3_SUPPLYFAN,,,,,
+
+
+Air Loop Demand Side Component Arrangement
+
+,,Airloop Name,Supply Branch Name,Supply Branch Type,Supply Path Component Type,Supply Path Component Name,Terminal Unit Type,Terminal Unit Name,Zone Name,Return Path Component Type,Return Path Component Name
+,1,STORAGE_11_Z1_AIRLOOP,,,,,,,,,
+,2,STORAGE_11_Z1_AIRLOOP,STORAGE_11_Z1_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,STORAGE_11_Z1_SUPPLYSPLITTER,,,,,
+,3,STORAGE_11_Z1_AIRLOOP,STORAGE_11_Z1_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,STORAGE_11_Z1_SUPPLYSPLITTER,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_11_Z1_VAVTERMINAL,STORAGE_11,AIRLOOPHVAC:ZONEMIXER,STORAGE_11_Z1_RETURNAIRMIXER
+,4,STORAGE_11_Z1_AIRLOOP,STORAGE_11_Z1_MAINBRANCH,Main,,,,,,AIRLOOPHVAC:ZONEMIXER,STORAGE_11_Z1_RETURNAIRMIXER
+,5,BREAK_ROOM_70_Z2_AIRLOOP,,,,,,,,,
+,6,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70_Z2_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,BREAK_ROOM_70_Z2_SUPPLYSPLITTER,,,,,
+,7,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70_Z2_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,BREAK_ROOM_70_Z2_SUPPLYSPLITTER,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,BREAK_ROOM_70_Z2_VAVTERMINAL,BREAK_ROOM_70,AIRLOOPHVAC:ZONEMIXER,BREAK_ROOM_70_Z2_RETURNAIRMIXER
+,8,BREAK_ROOM_70_Z2_AIRLOOP,BREAK_ROOM_70_Z2_MAINBRANCH,Main,,,,,,AIRLOOPHVAC:ZONEMIXER,BREAK_ROOM_70_Z2_RETURNAIRMIXER
+,9,STORAGE_85_Z3_AIRLOOP,,,,,,,,,
+,10,STORAGE_85_Z3_AIRLOOP,STORAGE_85_Z3_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,STORAGE_85_Z3_SUPPLYSPLITTER,,,,,
+,11,STORAGE_85_Z3_AIRLOOP,STORAGE_85_Z3_MAINBRANCH,Main,AIRLOOPHVAC:ZONESPLITTER,STORAGE_85_Z3_SUPPLYSPLITTER,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_85_Z3_VAVTERMINAL,STORAGE_85,AIRLOOPHVAC:ZONEMIXER,STORAGE_85_Z3_RETURNAIRMIXER
+,12,STORAGE_85_Z3_AIRLOOP,STORAGE_85_Z3_MAINBRANCH,Main,,,,,,AIRLOOPHVAC:ZONEMIXER,STORAGE_85_Z3_RETURNAIRMIXER
+
+
+Zone Equipment Component Arrangement
+
+,,Zone Name,Component Type,Component Name,Sub-Component Type,Sub-Component Name,Sub-Sub-Component Type,Sub-Sub-Component Name
+,1,STORAGE_11,,,,,,
+,2,STORAGE_11,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,,,,
+,3,STORAGE_11,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_11_Z1_VAVTERMINAL,,
+,4,STORAGE_11,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_11_Z1_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_11_Z1_VAVTERMINAL,COIL:HEATING:ELECTRIC,STORAGE_11_Z1_REHEATCOIL
+,5,BREAK_ROOM_70,,,,,,
+,6,BREAK_ROOM_70,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,,,,
+,7,BREAK_ROOM_70,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,BREAK_ROOM_70_Z2_VAVTERMINAL,,
+,8,BREAK_ROOM_70,ZONEHVAC:AIRDISTRIBUTIONUNIT,BREAK_ROOM_70_Z2_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,BREAK_ROOM_70_Z2_VAVTERMINAL,COIL:HEATING:ELECTRIC,BREAK_ROOM_70_Z2_REHEATCOIL
+,9,STORAGE_85,,,,,,
+,10,STORAGE_85,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,,,,
+,11,STORAGE_85,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_85_Z3_VAVTERMINAL,,
+,12,STORAGE_85,ZONEHVAC:AIRDISTRIBUTIONUNIT,STORAGE_85_Z3_ADU,AIRTERMINAL:SINGLEDUCT:VAV:REHEAT,STORAGE_85_Z3_VAVTERMINAL,COIL:HEATING:ELECTRIC,STORAGE_85_Z3_REHEATCOIL
+
+
+Plant Loop Component Arrangement
+
+,,Loop Type,Loop Name,Side,Splitter Name,Branch Name,Component Type,Component Name,Mixer Name
+,None,,,,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Outdoor Air Summary
+FOR:,Entire Facility
+Average Outdoor Air During Occupied Hours
+
+,,Average Number of Occupants,Nominal Number of Occupants,Zone Volume [m3],Mechanical Ventilation [ach],Infiltration [ach],AFN Infiltration [ach],Simple Ventilation [ach]
+,STORAGE_11,0.20,1.00,30.75,0.000,0.000,0.000,0.000
+,BREAK_ROOM_70,0.40,2.00,63.66,0.000,0.000,0.000,0.000
+,STORAGE_85,0.20,1.00,53.67,0.000,0.000,0.000,0.000
+Values shown for a single zone without multipliers
+
+
+Minimum Outdoor Air During Occupied Hours
+
+,,Average Number of Occupants,Nominal Number of Occupants,Zone Volume [m3],Mechanical Ventilation [ach],Infiltration [ach],AFN Infiltration [ach],Simple Ventilation [ach]
+,STORAGE_11,0.20,1.00,30.75,0.000,0.000,0.000,0.000
+,BREAK_ROOM_70,0.40,2.00,63.66,0.000,0.000,0.000,0.000
+,STORAGE_85,0.20,1.00,53.67,0.000,0.000,0.000,0.000
+Values shown for a single zone without multipliers
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Outdoor Air Details
+FOR:,Entire Facility
+Mechanical Ventilation Parameters by Zone
+
+,,AirLoop Name,Average Number of Occupants,Nominal Number of Occupants,Zone Volume [m3],Zone Area [m2],Design Zone Outdoor Airflow - Voz [m3/s],Minimum Dynamic Target Ventilation - Voz-dyn-min [m3/s]
+,STORAGE_11,STORAGE_11_Z1_AIRLOOP,0.20,1.00,30.75,10.25,,0.000
+,BREAK_ROOM_70,BREAK_ROOM_70_Z2_AIRLOOP,0.40,2.00,63.66,21.22,,0.000
+,STORAGE_85,STORAGE_85_Z3_AIRLOOP,0.20,1.00,53.67,17.89,,0.000
+,Total Facility,,0.80,4.00,148.08,49.36,0.0000,0.000
+
+
+Total Outdoor Air by Zone
+
+,,Mechanical Ventilation [m3],Natural Ventilation [m3],Total Ventilation [m3],Infiltration [m3],Total Ventilation and Infiltration [m3],Dynamic Target Ventilation - Voz-dyn [m3],Time Below Voz-dyn [hr],Time At Voz-dyn [hr],Time Above Voz-dyn [hr],Time Above Zero When Unoccupied [hr]
+,STORAGE_11,0.00,0.00,0.00,9.00,9.00,0.00,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,0.00,20.37,20.37,0.00,0.00,0.00,0.00,0.00
+,STORAGE_85,0.00,0.00,0.00,16.47,16.47,0.00,0.00,0.00,0.00,0.00
+,Total Facility,0.00,0.00,0.00,45.84,45.84,0.00,0.00,0.00,0.00,0.00
+
+
+Average Outdoor Air During Occupancy by Zone - Flow Rates
+
+,,Mechanical Ventilation [m3/s],Natural Ventilation [m3/s],Total Ventilation [m3/s],Infiltration [m3/s],Total Ventilation and Infiltration [m3/s],Dynamic Target Ventilation - Voz-dyn [m3/s],Time Below Voz-dyn [hr],Time At Voz-dyn [hr],Time Above Voz-dyn [hr]
+,STORAGE_11,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+,BREAK_ROOM_70,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+,STORAGE_85,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+,Total Facility,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+
+
+Total Outdoor Air by AirLoop
+
+,,Mechanical Ventilation [m3],Natural Ventilation [m3],Total Ventilation [m3],Sum Zone Dynamic Target Ventilation - Voz-sum-dyn [m3],Time Below Voz-sum-dyn [hr],Time At Voz-sum-dyn [hr],Time Above Voz-sum-dyn [hr],Time Above Zero When Unoccupied [hr]
+,STORAGE_11_Z1_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70_Z2_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,STORAGE_85_Z3_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Average Outdoor Air During Occupancy by AirLoop
+
+,,Mechanical Ventilation [m3/s],Natural Ventilation [m3/s],Total Ventilation [m3/s],Sum Zone Dynamic Target Ventilation - Voz-sum-dyn [m3/s],Time Below Voz-sum-dyn [hr],Time At Voz-sum-dyn [hr],Time Above Voz-sum-dyn [hr]
+,STORAGE_11_Z1_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+,BREAK_ROOM_70_Z2_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+,STORAGE_85_Z3_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.00,0.00,0.00
+
+
+Outdoor Air Controller Limiting Factors by AirLoop
+
+,,No Limiting Factor [hr],Limits and Scheduled Limits [hr],Economizer [hr],Exhaust Flow [hr],Mixed Air Flow [hr],High Humidity [hr],Demand Controlled Ventilation [hr],Night Ventilation [hr],Demand Limiting [hr],Energy Management System [hr]
+,STORAGE_11_Z1_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70_Z2_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,STORAGE_85_Z3_AIRLOOP,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+Average Outdoor Air for Limiting Factors During Occupancy
+
+,,No Limiting Factor [m3/s],Limits and Scheduled Limits [m3/s],Economizer [m3/s],Exhaust Flow [m3/s],Mixed Air Flow [m3/s],High Humidity [m3/s],Demand Controlled Ventilation [m3/s],Night Ventilation [m3/s],Demand Limiting [m3/s],Energy Management System [m3/s]
+,STORAGE_11_Z1_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+,BREAK_ROOM_70_Z2_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+,STORAGE_85_Z3_AIRLOOP,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Object Count Summary
+FOR:,Entire Facility
+Surfaces by Class
+
+,,Total,Outdoors
+,Wall,12,12
+,Floor,3,3
+,Roof,3,3
+,Internal Mass,3,0
+,Building Detached Shading,0,0
+,Fixed Detached Shading,0,0
+,Window,12,12
+,Door,0,0
+,Glass Door,0,0
+,Shading,0,0
+,Overhang,0,0
+,Fin,0,0
+,Tubular Daylighting Device Dome,0,0
+,Tubular Daylighting Device Diffuser,0,0
+
+
+HVAC
+
+,,Count
+,HVAC Air Loops,3
+,Conditioned Zones,3
+,Unconditioned Zones,0
+,Supply Plenums,0
+,Return Plenums,0
+
+
+Input Fields
+
+,,Count
+,IDF Objects,165
+,Defaulted Fields,181
+,Fields with Defaults,527
+,Autosized Fields,9
+,Autosizable Fields,51
+,Autocalculated Fields,39
+,Autocalculatable Fields,72
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Energy Meters
+FOR:,Entire Facility
+Annual and Peak Values - Electricity
+
+,,Electricity Annual Value [GJ],Electricity Minimum Value [W],Timestamp of Minimum {TIMESTAMP},Electricity Maximum Value [W],Timestamp of Maximum {TIMESTAMP}
+,Electricity:Facility,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,Electricity:Building,9.00,126.33,10-APR-06:00,603.24,02-JAN-16:30
+,Electricity:Zone:STORAGE_11,1.02,8.92,02-JAN-00:15,64.38,02-JAN-08:15
+,Electricity:SpaceType:GENERAL,9.00,126.33,10-APR-06:00,603.24,02-JAN-16:30
+,InteriorLights:Electricity,3.87,21.56,10-APR-06:00,323.84,02-JAN-06:15
+,InteriorLights:Electricity:Zone:STORAGE_11,0.85,5.54,02-JAN-00:15,55.36,02-JAN-06:15
+,InteriorLights:Electricity:SpaceType:GENERAL,3.87,21.56,10-APR-06:00,323.84,02-JAN-06:15
+,General:InteriorLights:Electricity,3.87,21.56,10-APR-06:00,323.84,02-JAN-06:15
+,General:InteriorLights:Electricity:Zone:STORAGE_11,0.85,5.54,02-JAN-00:15,55.36,02-JAN-06:15
+,General:InteriorLights:Electricity:SpaceType:GENERAL,3.87,21.56,10-APR-06:00,323.84,02-JAN-06:15
+,Electricity:Zone:BREAK_ROOM_70,6.21,101.85,10-APR-06:00,426.51,02-JAN-16:30
+,InteriorLights:Electricity:Zone:BREAK_ROOM_70,1.53,6.36,10-APR-06:00,171.88,02-JAN-06:15
+,General:InteriorLights:Electricity:Zone:BREAK_ROOM_70,1.53,6.36,10-APR-06:00,171.88,02-JAN-06:15
+,Electricity:Zone:STORAGE_85,1.78,15.56,02-JAN-00:15,112.35,02-JAN-08:15
+,InteriorLights:Electricity:Zone:STORAGE_85,1.49,9.66,02-JAN-00:15,96.61,02-JAN-06:15
+,General:InteriorLights:Electricity:Zone:STORAGE_85,1.49,9.66,02-JAN-00:15,96.61,02-JAN-06:15
+,InteriorEquipment:Electricity,5.13,104.77,01-JAN-00:15,279.40,02-JAN-08:15
+,InteriorEquipment:Electricity:Zone:STORAGE_11,0.17,3.38,01-JAN-00:15,9.02,02-JAN-08:15
+,InteriorEquipment:Electricity:SpaceType:GENERAL,5.13,104.77,01-JAN-00:15,279.40,02-JAN-08:15
+,General:InteriorEquipment:Electricity,5.13,104.77,01-JAN-00:15,279.40,02-JAN-08:15
+,General:InteriorEquipment:Electricity:Zone:STORAGE_11,0.17,3.38,01-JAN-00:15,9.02,02-JAN-08:15
+,General:InteriorEquipment:Electricity:SpaceType:GENERAL,5.13,104.77,01-JAN-00:15,279.40,02-JAN-08:15
+,InteriorEquipment:Electricity:Zone:BREAK_ROOM_70,4.68,95.49,01-JAN-00:15,254.63,02-JAN-08:15
+,General:InteriorEquipment:Electricity:Zone:BREAK_ROOM_70,4.68,95.49,01-JAN-00:15,254.63,02-JAN-08:15
+,InteriorEquipment:Electricity:Zone:STORAGE_85,0.29,5.90,01-JAN-00:15,15.74,02-JAN-08:15
+,General:InteriorEquipment:Electricity:Zone:STORAGE_85,0.29,5.90,01-JAN-00:15,15.74,02-JAN-08:15
+,Electricity:HVAC,21.01,42.33,11-MAR-11:30,1412.74,08-JAN-07:15
+,Heating:Electricity,19.82,26.40,11-MAR-11:30,1398.37,08-JAN-07:15
+,General:Heating:Electricity,19.82,26.40,11-MAR-11:30,1398.37,08-JAN-07:15
+,Fans:Electricity,0.45,14.37,01-JAN-00:15,14.37,01-JAN-00:15
+,General:Fans:Electricity,0.45,14.37,01-JAN-00:15,14.37,01-JAN-00:15
+,Cooling:Electricity,0.74,0.00,01-JAN-00:15,129.03,05-JUN-18:00
+,General:Cooling:Electricity,0.74,0.00,01-JAN-00:15,129.03,05-JUN-18:00
+,ElectricityPurchased:Facility,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,ElectricityPurchased:Plant,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,Cogeneration:ElectricityPurchased,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,General:Cogeneration:ElectricityPurchased,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,ElectricitySurplusSold:Facility,0.00,0.00,01-JAN-00:15,0.00,01-JAN-00:15
+,ElectricitySurplusSold:Plant,0.00,0.00,01-JAN-00:15,0.00,01-JAN-00:15
+,Cogeneration:ElectricitySurplusSold,0.00,0.00,01-JAN-00:15,0.00,01-JAN-00:15
+,General:Cogeneration:ElectricitySurplusSold,0.00,0.00,01-JAN-00:15,0.00,01-JAN-00:15
+,ElectricityNet:Facility,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,ElectricityNet:Plant,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,Cogeneration:ElectricityNet,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+,General:Cogeneration:ElectricityNet,30.01,181.09,15-MAY-06:00,1935.25,27-JAN-07:15
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Natural Gas
+
+,,Natural Gas Annual Value [GJ],Natural Gas Minimum Value [W],Timestamp of Minimum {TIMESTAMP},Natural Gas Maximum Value [W],Timestamp of Maximum {TIMESTAMP}
+,None,,,,,
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Cooling
+
+,,Cooling Annual Value [GJ],Cooling Minimum Value [W],Timestamp of Minimum {TIMESTAMP},Cooling Maximum Value [W],Timestamp of Maximum {TIMESTAMP}
+,None,,,,,
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Water
+
+,,Annual Value [m3],Minimum Value [m3/s],Timestamp of Minimum {TIMESTAMP},Maximum Value [m3/s],Timestamp of Maximum {TIMESTAMP}
+,None,,,,,
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Other by Weight/Mass
+
+,,Annual Value [kg],Minimum Value [kg/s],Timestamp of Minimum {TIMESTAMP},Maximum Value [kg/s],Timestamp of Maximum {TIMESTAMP}
+,Carbon Equivalent:Facility,0.00,0.000,01-JAN-00:15,0.000,01-JAN-00:15
+,CarbonEquivalentEmissions:Carbon Equivalent,0.00,0.000,01-JAN-00:15,0.000,01-JAN-00:15
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Other Volumetric
+
+,,Annual Value [m3],Minimum Value [m3/s],Timestamp of Minimum {TIMESTAMP},Maximum Value [m3/s],Timestamp of Maximum {TIMESTAMP}
+,None,,,,,
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Other Liquid/Gas
+
+,,Annual Value [L],Minimum Value [L],Timestamp of Minimum {TIMESTAMP},Maximum Value [L],Timestamp of Maximum {TIMESTAMP}
+,None,,,,,
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+Annual and Peak Values - Other
+
+,,Annual Value [GJ],Minimum Value [W],Timestamp of Minimum {TIMESTAMP},Maximum Value [W],Timestamp of Maximum {TIMESTAMP}
+,EnergyTransfer:Facility,43.27,69.63,11-MAR-11:15,3782.81,18-JUL-16:00
+,EnergyTransfer:Building,9.28,0.13,15-AUG-14:30,1415.52,08-JAN-07:15
+,EnergyTransfer:Zone:STORAGE_11,2.12,0.00,08-MAR-16:00,318.80,08-JAN-07:15
+,Heating:EnergyTransfer,8.59,0.00,10-FEB-14:45,1415.52,08-JAN-07:15
+,Heating:EnergyTransfer:Zone:STORAGE_11,1.91,0.00,17-JAN-13:00,318.80,08-JAN-07:15
+,General:Heating:EnergyTransfer,8.59,0.00,10-FEB-14:45,1415.52,08-JAN-07:15
+,General:Heating:EnergyTransfer:Zone:STORAGE_11,1.91,0.00,17-JAN-13:00,318.80,08-JAN-07:15
+,Cooling:EnergyTransfer,0.69,0.00,01-JAN-00:15,640.83,18-JUL-16:00
+,Cooling:EnergyTransfer:Zone:STORAGE_11,0.21,0.00,01-JAN-00:15,161.72,18-JUL-16:00
+,General:Cooling:EnergyTransfer,0.69,0.00,01-JAN-00:15,640.83,18-JUL-16:00
+,General:Cooling:EnergyTransfer:Zone:STORAGE_11,0.21,0.00,01-JAN-00:15,161.72,18-JUL-16:00
+,EnergyTransfer:Zone:BREAK_ROOM_70,3.58,0.00,15-NOV-12:30,569.25,08-JAN-07:15
+,Heating:EnergyTransfer:Zone:BREAK_ROOM_70,3.27,0.00,09-FEB-15:45,569.25,08-JAN-07:15
+,General:Heating:EnergyTransfer:Zone:BREAK_ROOM_70,3.27,0.00,09-FEB-15:45,569.25,08-JAN-07:15
+,Cooling:EnergyTransfer:Zone:BREAK_ROOM_70,0.31,0.00,01-JAN-00:15,275.23,18-JUL-16:00
+,General:Cooling:EnergyTransfer:Zone:BREAK_ROOM_70,0.31,0.00,01-JAN-00:15,275.23,18-JUL-16:00
+,EnergyTransfer:Zone:STORAGE_85,3.59,0.00,08-AUG-12:15,527.47,08-JAN-07:15
+,Heating:EnergyTransfer:Zone:STORAGE_85,3.42,0.00,10-FEB-14:45,527.47,08-JAN-07:15
+,General:Heating:EnergyTransfer:Zone:STORAGE_85,3.42,0.00,10-FEB-14:45,527.47,08-JAN-07:15
+,Cooling:EnergyTransfer:Zone:STORAGE_85,0.17,0.00,01-JAN-00:15,203.88,18-JUL-16:00
+,General:Cooling:EnergyTransfer:Zone:STORAGE_85,0.17,0.00,01-JAN-00:15,203.88,18-JUL-16:00
+,EnergyTransfer:HVAC,33.99,32.16,23-APR-22:15,3143.76,18-JUL-16:15
+,HeatingCoils:EnergyTransfer,19.82,26.40,11-MAR-11:30,1398.37,08-JAN-07:15
+,CoolingCoils:EnergyTransfer,14.17,0.00,01-JAN-00:15,1959.08,18-JUL-16:15
+Values shown are for all completed run periods - including any simulations run during sizing periods
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Sensible Heat Gain Summary
+FOR:,Entire Facility
+Annual Building Sensible Heat Gain Components
+
+,,HVAC Zone Eq & Other Sensible Air Heating [GJ],HVAC Zone Eq & Other Sensible Air Cooling [GJ],HVAC Terminal Unit Sensible Air Heating [GJ],HVAC Terminal Unit Sensible Air Cooling [GJ],HVAC Input Heated Surface Heating [GJ],HVAC Input Cooled Surface Cooling [GJ],People Sensible Heat Addition [GJ],Lights Sensible Heat Addition [GJ],Equipment Sensible Heat Addition [GJ],Window Heat Addition [GJ],Interzone Air Transfer Heat Addition [GJ],Infiltration Heat Addition [GJ],Opaque Surface Conduction and Other Heat Addition [GJ],Equipment Sensible Heat Removal [GJ],Window Heat Removal [GJ],Interzone Air Transfer Heat Removal [GJ],Infiltration Heat Removal [GJ],Opaque Surface Conduction and Other Heat Removal [GJ]
+,STORAGE_11,0.000,0.000,1.906,-0.214,0.000,0.000,0.076,0.852,0.149,10.603,0.000,0.000,0.000,0.000,-7.418,0.000,-0.000,-5.953
+,BREAK_ROOM_70,0.000,0.000,3.270,-0.308,0.000,0.000,0.151,1.531,4.212,15.200,0.000,0.000,0.000,0.000,-12.576,0.000,-0.000,-11.480
+,STORAGE_85,0.000,0.000,3.419,-0.168,0.000,0.000,0.076,1.486,0.260,14.461,0.000,0.000,0.000,0.000,-10.392,0.000,-0.000,-9.142
+,Total Facility,0.000,0.000,8.595,-0.690,0.000,0.000,0.303,3.869,4.621,40.264,0.000,0.000,0.001,0.000,-30.386,0.000,-0.001,-26.575
+
+
+Peak Cooling Sensible Heat Gain Components
+
+,,Time of Peak {TIMESTAMP},HVAC Zone Eq & Other Sensible Air Heating [W],HVAC Zone Eq & Other Sensible Air Cooling [W],HVAC Terminal Unit Sensible Air Heating [W],HVAC Terminal Unit Sensible Air Cooling [W],HVAC Input Heated Surface Heating [W],HVAC Input Cooled Surface Cooling [W],People Sensible Heat Addition [W],Lights Sensible Heat Addition [W],Equipment Sensible Heat Addition [W],Window Heat Addition [W],Interzone Air Transfer Heat Addition [W],Infiltration Heat Addition [W],Opaque Surface Conduction and Other Heat Addition [W],Equipment Sensible Heat Removal [W],Window Heat Removal [W],Interzone Air Transfer Heat Removal [W],Infiltration Heat Removal [W],Opaque Surface Conduction and Other Heat Removal [W]
+,STORAGE_11,18-JUL-15:00,0.00,0.00,0.00,-161.72,0.00,0.00,2.40,55.36,8.12,1100.06,0.00,0.00,0.00,0.00,-0.00,0.00,-0.01,-1004.21
+,BREAK_ROOM_70,18-JUL-15:00,0.00,0.00,0.00,-275.23,0.00,0.00,4.80,63.59,229.17,1621.64,0.00,0.00,0.00,0.00,-0.00,0.00,-0.02,-1643.96
+,STORAGE_85,18-JUL-15:00,0.00,0.00,0.00,-203.88,0.00,0.00,2.40,96.61,14.17,1526.70,0.00,0.00,0.00,0.00,-0.00,0.00,-0.02,-1435.99
+,Total Facility,18-JUL-15:00,0.00,0.00,0.00,-640.82,0.00,0.00,9.60,215.56,251.46,4248.41,0.00,0.00,0.00,0.00,0.00,0.00,-0.04,-4084.16
+
+
+Peak Heating Sensible Heat Gain Components
+
+,,Time of Peak {TIMESTAMP},HVAC Zone Eq & Other Sensible Air Heating [W],HVAC Zone Eq & Other Sensible Air Cooling [W],HVAC Terminal Unit Sensible Air Heating [W],HVAC Terminal Unit Sensible Air Cooling [W],HVAC Input Heated Surface Heating [W],HVAC Input Cooled Surface Cooling [W],People Sensible Heat Addition [W],Lights Sensible Heat Addition [W],Equipment Sensible Heat Addition [W],Window Heat Addition [W],Interzone Air Transfer Heat Addition [W],Infiltration Heat Addition [W],Opaque Surface Conduction and Other Heat Addition [W],Equipment Sensible Heat Removal [W],Window Heat Removal [W],Interzone Air Transfer Heat Removal [W],Infiltration Heat Removal [W],Opaque Surface Conduction and Other Heat Removal [W]
+,STORAGE_11,08-JAN-07:15,0.00,0.00,318.79,0.00,0.00,0.00,2.40,11.07,3.04,0.00,0.00,0.00,166.48,0.00,-501.78,0.00,-0.01,0.00
+,BREAK_ROOM_70,08-JAN-07:15,0.00,0.00,569.24,0.00,0.00,0.00,4.80,34.38,85.94,0.00,0.00,0.00,203.60,0.00,-897.93,0.00,-0.02,0.00
+,STORAGE_85,08-JAN-07:15,0.00,0.00,527.45,0.00,0.00,0.00,2.40,19.32,5.31,0.00,0.00,0.00,207.33,0.00,-761.80,0.00,-0.02,0.00
+,Total Facility,08-JAN-07:15,0.00,0.00,1415.48,0.00,0.00,0.00,9.60,64.77,94.30,0.00,0.00,0.00,577.41,0.00,-2161.51,0.00,-0.05,0.00
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,LEED Summary
+FOR:,Entire Facility
+Sec1.1A-General Information
+
+,,Data
+,Weather File,YEAR ROUND RUN PERIOD ** Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300
+,Total gross floor area [m2],49.36
+,Principal Heating Source,Electricity
+
+
+EAp2-1. Space Usage Type
+
+,,Space Area [m2],Regularly Occupied Area [m2],Unconditioned Area [m2],Typical Hours/Week in Operation [hr/wk]
+,STORAGE_11,10.25,10.25,0.00,168.00
+,BREAK_ROOM_70,21.22,21.22,0.00,168.00
+,STORAGE_85,17.89,17.89,0.00,168.00
+,Totals,49.36,49.36,0.00,
+
+
+EAp2-2. Advisory Messages
+
+,,Data
+,Number of hours heating loads not met,0.00
+,Number of hours cooling loads not met,0.00
+,Number of hours not met,0.00
+
+
+EAp2-3. Energy Type Summary
+
+,,Utility Rate,Virtual Rate [$/unit energy],Units of Energy,Units of Demand
+,None,,,,
+
+
+EAp2-4/5. Performance Rating Method Compliance
+
+,,Electricity Energy Use [GJ],Electricity Demand [W],Natural Gas Energy Use [GJ],Natural Gas Demand [W],Gasoline Use [GJ],Gasoline Demand [W],Diesel Use [GJ],Diesel Demand [W],Coal Use [GJ],Coal Demand [W],Fuel Oil No 1 Use [GJ],Fuel Oil No 1 Demand [W],Fuel Oil No 2 Use [GJ],Fuel Oil No 2 Demand [W],Propane Use [GJ],Propane Demand [W],Other Fuel 1 Use [GJ],Other Fuel 1 Demand [W],Other Fuel 2 Use [GJ],Other Fuel 2 Demand [W],District Cooling Use [GJ],District Cooling Demand [W],District Heating Water Use [GJ],District Heating Water Demand [W],District Heating Steam Use [GJ],District Heating Steam Demand [W]
+,Heating -- General,19.82,1398.37,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Cooling -- General,0.74,129.03,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Lighting -- General,3.87,323.84,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Lighting -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Interior Equipment -- General,5.13,279.40,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Exterior Equipment -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Fans -- General,0.45,14.37,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Pumps -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Rejection -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Humidification -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Heat Recovery -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Water Systems -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Refrigeration -- Not Subdivided,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+,Generators -- General,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+
+
+EAp2-6. Energy Use Summary
+
+,,Process Subtotal [GJ],Total Energy Use [GJ]
+,Electricity,5.13,30.01
+,Natural Gas,0.00,0.00
+,Additional,0.00,0.00
+,Total,5.13,30.01
+
+
+EAp2-7. Energy Cost Summary
+
+,,Process Subtotal [$],Total Energy Cost [$]
+,Electricity,0.00,
+,Natural Gas,0.00,
+,Additional,0.00,
+,Total,0.00,
+Process energy cost based on ratio of process to total energy.
+
+
+L-1. Renewable Energy Source Summary
+
+,,Rated Capacity [kW],Annual Energy Generated [GJ]
+,Photovoltaic,0.00,0.00
+,Wind,0.00,0.00
+
+
+EAp2-17a. Energy Use Intensity - Electricity
+
+,,Electricty [MJ/m2]
+,Interior Lighting (All),78.39
+,Space Heating,401.50
+,Space Cooling,14.92
+,Fans (All),9.18
+,Service Water Heating,0.00
+,Receptacle Equipment,104.03
+,Miscellaneous (All),608.01
+,Subtotal,608.01
+
+
+EAp2-17b. Energy Use Intensity - Natural Gas
+
+,,Natural Gas [MJ/m2]
+,Space Heating,0.00
+,Service Water Heating,0.00
+,Miscellaneous (All),0.00
+,Subtotal,0.00
+
+
+EAp2-17c. Energy Use Intensity - Additional
+
+,,Additional [MJ/m2]
+,Subtotal,0.00
+,Miscellaneous,0.00
+
+
+EAp2-18. End Use Percentage
+
+,,Percent [%]
+,Interior Lighting (All),12.89
+,Space Heating,66.03
+,Space Cooling,2.45
+,Fans (All),1.51
+,Service Water Heating,0.00
+,Receptacle Equipment,17.11
+,Miscellaneous,0.00
+
+
+Schedules-Equivalent Full Load Hours (Schedule Type=Fraction)
+
+,,Equivalent Full Load Hours of Operation Per Year [hr],Hours > 1% [hr]
+,STORAGE_11_INFILTRATION_SCHEDULE,8760.,8760.
+,BREAK_ROOM_70_INFILTRATION_SCHEDULE,8760.,8760.
+,STORAGE_85_INFILTRATION_SCHEDULE,8760.,8760.
+,BREAK_ROOM_OCCUPANCY,1752.,8760.
+,BREAK_ROOM_LIGHTING,4274.,8760.
+,BREAK_ROOM_EQUIPMENT,4084.,8760.
+,STORAGE_OCCUPANCY,1752.,8760.
+,STORAGE_LIGHTING,4274.,8760.
+,STORAGE_EQUIPMENT,4084.,8760.
+
+
+Schedules-SetPoints (Schedule Type=Temperature)
+
+,,First Object Used,Month Assumed,11am First Wednesday [C],Days with Same 11am Value,11pm First Wednesday [C],Days with Same 11pm Value
+,None,,,,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Annual CO2 Resilience Summary
+FOR:,Entire Facility
+CO2 Level Hours
+
+,,Safe (<= 1000 ppm) [hr],Caution (> 1000, <= 5000 ppm) [hr],Hazard (> 5000 ppm) [hr]
+,None,,,
+
+
+CO2 Level OccupantHours
+
+,,Safe (<= 1000 ppm) [hr],Caution (> 1000, <= 5000 ppm) [hr],Hazard (> 5000 ppm) [hr]
+,None,,,
+
+
+CO2 Level OccupiedHours
+
+,,Safe (<= 1000 ppm) [hr],Caution (> 1000, <= 5000 ppm) [hr],Hazard (> 5000 ppm) [hr]
+,None,,,
+
+
+----------------------------------------------------------------------------------------------------
+REPORT:,Annual Visual Resilience Summary
+FOR:,Entire Facility
+Illuminance Level Hours
+
+,,A Bit Dark (<= 100 lux) [hr],Dim (> 100, <= 300 lux) [hr],Adequate (> 300, <= 500 lux) [hr],Bright (>500 lux) [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,8760.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,8760.00,0.00
+,Average,0.00,0.00,2920.00,0.00
+,Sum,0.00,0.00,8760.00,0.00
+
+
+Illuminance Level OccupantHours
+
+,,A Bit Dark (<= 100 lux) [hr],Dim (> 100, <= 300 lux) [hr],Adequate (> 300, <= 500 lux) [hr],Bright (>500 lux) [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,3504.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,3504.00,0.00
+,Average,0.00,0.00,1168.00,0.00
+,Sum,0.00,0.00,3504.00,0.00
+
+
+Illuminance Level OccupiedHours
+
+,,A Bit Dark (<= 100 lux) [hr],Dim (> 100, <= 300 lux) [hr],Adequate (> 300, <= 500 lux) [hr],Bright (>500 lux) [hr]
+,STORAGE_11,0.00,0.00,0.00,0.00
+,BREAK_ROOM_70,0.00,0.00,8760.00,0.00
+,STORAGE_85,0.00,0.00,0.00,0.00
+,Min,0.00,0.00,0.00,0.00
+,Max,0.00,0.00,8760.00,0.00
+,Average,0.00,0.00,2920.00,0.00
+,Sum,0.00,0.00,8760.00,0.00
+
+

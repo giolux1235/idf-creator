@@ -1,0 +1,44 @@
+{
+  "test_date": "2025-11-02T10:29:08.140005",
+  "weather_file": "/Users/giovanniamenta/IDF - CREATOR /artifacts/desktop_files/weather/Chicago.epw",
+  "buildings_tested": 5,
+  "buildings_simulated": 0,
+  "buildings_with_results": 0,
+  "results": [
+    {
+      "building": "Willis Tower",
+      "status": "simulation_failed",
+      "errors": [
+        "Simulation timed out after 600 seconds"
+      ]
+    },
+    {
+      "building": "John Hancock Center",
+      "status": "simulation_failed",
+      "errors": [
+        "Simulation timed out after 600 seconds"
+      ]
+    },
+    {
+      "building": "Aon Center",
+      "status": "simulation_failed",
+      "errors": [
+        "Simulation timed out after 600 seconds"
+      ]
+    },
+    {
+      "building": "Trump International Hotel",
+      "status": "simulation_failed",
+      "errors": [
+        "**  Fatal  ** The SQLite database failed to open."
+      ]
+    },
+    {
+      "building": "Aqua Tower",
+      "status": "simulation_failed",
+      "errors": [
+        "Simulation timed out after 600 seconds"
+      ]
+    }
+  ]
+}

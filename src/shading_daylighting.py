@@ -169,46 +169,52 @@ Schedule:Compact,
     def generate_daylight_controls(self, zone_name: str, building_type: str) -> str:
         """Generate daylighting controls for a zone"""
         
-        # Daylighting:Controls
-        daylighting_controls = f"""Daylighting:Controls,
-  {zone_name}_Daylight,               !- Name
-  {zone_name}_Zone,                   !- Zone Name
-  SplitFlux,                          !- Daylighting Method
-  ,                                   !- Availability Schedule Name
-  Continuous,                         !- Lighting Control Type
-  300,                                !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
-  0.2,                                !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
-  ,                                   !- Number of Stepped Control Steps
-  ,                                   !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  {zone_name}_ReferencePoint1,        !- Glare Calculation Daylighting Reference Point Name
-  18000,                              !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone yAxis {{deg}}
-  0.8,                                !- Glare Calculation Maximum Allowable Discomfort Glare Index
-  1.0,                                !- Glare Calculation Minimum Allowable Illuminance Setpoint {{lux}}
-  -1,                                 !- DElight Gridding Resolution
-  ,                                   !- Control:Zone name
-  0.9,                                !- Fraction of Zone Controlled by Reference Point 1
-  10000,                              !- Illuminance Setpoint at Reference Point 1 {{lux}}
-  ,                                   !- Glare Setpoint at Reference Point 1
-  ,                                   !- Illuminance Setpoint at Reference Point 2 {{lux}}
-  ,                                   !- Glare Setpoint at Reference Point 2
-  ,                                   !- Angle Factor for Reference Point 1
-  ,                                   !- Fraction of Zone Controlled by Reference Point 2
-  ,                                   !- Angle Factor for Reference Point 2
-  1;                                  !- ID-Algorithm
-
-"""
+        # Generate reference point first (required by Daylighting:Controls)
+        reference_point_name = f"{zone_name}_ReferencePoint1"
         
         # Daylighting:ReferencePoint
+        # Zone name should match actual Zone name (without _Zone suffix)
         reference_point = f"""Daylighting:ReferencePoint,
-  {zone_name}_ReferencePoint1,        !- Name
-  {zone_name}_Zone,                   !- Zone Name
+  {reference_point_name},             !- Name
+  {zone_name},                        !- Zone Name
   2.0,                                !- X-Coordinate of Reference Point {{m}}
   2.0,                                !- Y-Coordinate of Reference Point {{m}}
   0.8;                                !- Z-Coordinate of Reference Point {{m}}
 
 """
         
-        return daylighting_controls + reference_point
+        # Daylighting:Controls
+        # Based on EnergyPlus IDD v24.2+ analysis:
+        # The error structure suggests control_data[0] expects reference_point_name FIRST
+        # Then control_data[1] expects fraction, control_data[2] expects illuminance
+        # Trying format: ReferencePointName, Fraction, Illuminance (all in correct positions)
+        # For Simple method, the order after DElight Gridding Resolution appears to be:
+        # Field N: Reference Point Name (REQUIRED - must come first in control data)
+        # Field N+1: Fraction (0.0-1.0)
+        # Field N+2: Illuminance Setpoint (numeric)
+        daylighting_controls = f"""Daylighting:Controls,
+  {zone_name}_Daylight,               !- Name
+  {zone_name},                        !- Zone Name
+  SplitFlux,                          !- Daylighting Method (valid: SplitFlux or DElight, not Simple)
+  ,                                   !- Availability Schedule Name
+  Continuous,                         !- Lighting Control Type
+  0.3,                                !- Minimum Input Power Fraction for Continuous Dimming Control
+  0.2,                                !- Minimum Light Output Fraction for Continuous Dimming Control
+  ,                                   !- Number of Stepped Control Steps
+  ,                                   !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+  ,                                   !- Glare Calculation Daylighting Reference Point Name (A6 - optional)
+  ,                                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone yAxis {{deg}} (N5)
+  ,                                   !- Glare Calculation Maximum Allowable Discomfort Glare Index (N6)
+  ,                                   !- DElight Gridding Resolution (N7) - NOTE: Removed extra \"Minimum Allowable Illuminance\" field that was not in IDD
+  {reference_point_name},            !- Daylighting Reference Point 1 Name (A7) - REQUIRED
+  0.9,                                !- Fraction of Lights Controlled by Reference Point 1 (N8)
+  500.0,                              !- Illuminance Setpoint at Reference Point 1 {{lux}} (N9)
+  ;                                   !- ID-Algorithm (only Reference Point 1 provided)
+
+"""
+        
+        # Return reference point first, then controls (reference point must exist first)
+        return reference_point + daylighting_controls
     
     def generate_lighting_control_schedule(self, zone_name: str, building_type: str) -> str:
         """Generate lighting control schedule"""

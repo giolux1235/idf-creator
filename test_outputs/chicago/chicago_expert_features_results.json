@@ -1,0 +1,21 @@
+{
+  "test_date": "2025-11-01T23:35:27.732532",
+  "weather_file": "./artifacts/desktop_files/weather/Chicago.epw",
+  "buildings_tested": 5,
+  "buildings_simulated": 1,
+  "buildings_with_results": 0,
+  "results": [
+    {
+      "building": "John Hancock Center",
+      "address": "875 N Michigan Ave, Chicago, IL 60611",
+      "floor_area_m2": 260000,
+      "actual_eui_kwh_m2": 165,
+      "simulation": {
+        "fatal_errors": 0,
+        "severe_errors": 0,
+        "warnings": 44
+      },
+      "energy_results": null
+    }
+  ]
+}

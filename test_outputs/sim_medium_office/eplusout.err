@@ -1,0 +1,16 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 16:24,
+   ** Warning ** CheckEnvironmentSpecifications: SimulationControl specified doing weather simulations; run periods for weather file specified; but no weather file specified.
+   ** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.
+   **   ~~~   ** These values may be inappropriate.  Please consult the Input Output Reference for more details.
+   ** Severe  ** Standard Time Meridian and Time Zone differ by more than 2, Difference="3.0"
+   **   ~~~   ** Solar Positions will be incorrect
+   ** Severe  ** GetNextEnvironment: Weather Environment(s) requested, but no weather file found
+   **  Fatal  ** Due to previous error condition, simulation terminated
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=2
+   ..... Last severe error=GetNextEnvironment: Weather Environment(s) requested, but no weather file found
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 2 Warning; 2 Severe Errors; Elapsed Time=00hr 00min  0.39sec

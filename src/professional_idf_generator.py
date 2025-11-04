@@ -8,7 +8,7 @@ import math
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from shapely.geometry import Polygon
-from .core.base_idf_generator import BaseIDFGenerator
+from src.core.base_idf_generator import BaseIDFGenerator
 from .advanced_geometry_engine import AdvancedGeometryEngine, BuildingFootprint, ZoneGeometry
 from .professional_material_library import ProfessionalMaterialLibrary
 from .multi_building_types import MultiBuildingTypes

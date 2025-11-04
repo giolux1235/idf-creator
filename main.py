@@ -3,8 +3,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List
-import yaml
+from typing import Dict, List, Optional
 
 from src.location_fetcher import LocationFetcher
 from src.enhanced_location_fetcher import EnhancedLocationFetcher
@@ -12,6 +11,7 @@ from src.document_parser import DocumentParser
 from src.building_estimator import BuildingEstimator
 from src.idf_generator import IDFGenerator
 from src.professional_idf_generator import ProfessionalIDFGenerator
+from src.utils import ConfigManager, merge_params, ensure_directory
 
 
 class IDFCreator:
@@ -26,8 +26,8 @@ class IDFCreator:
             enhanced: Use enhanced location fetcher with multiple API sources
             professional: Use professional IDF generator with advanced features
         """
-        with open(config_path, 'r') as f:
-            self.config = yaml.safe_load(f)
+        self.config_manager = ConfigManager.get_instance(config_path)
+        self.config = self.config_manager.config
         
         # Use enhanced fetcher if requested
         if enhanced:
@@ -87,17 +87,15 @@ class IDFCreator:
         
         # Merge all parameters (user params override doc params, which override defaults)
         defaults = self.building_estimator.get_defaults()
-        defaults.update(doc_params)
-        if user_params:
-            defaults.update(user_params)
+        merged_params = merge_params(defaults, doc_params, user_params)
         
-        print(f"✓ Building type: {defaults.get('building_type', 'Office')}")
-        print(f"✓ Stories: {defaults.get('stories', 3)}")
-        print(f"✓ Floor area: {defaults.get('floor_area', 1500)} m²")
+        print(f"✓ Building type: {merged_params.get('building_type', 'Office')}")
+        print(f"✓ Stories: {merged_params.get('stories', 3)}")
+        print(f"✓ Floor area: {merged_params.get('floor_area', 1500)} m²")
         
         return {
             'location': location,
-            'building_params': defaults
+            'building_params': merged_params
         }
     
     def estimate_missing_parameters(self, building_params: Dict) -> Dict:
@@ -130,8 +128,19 @@ class IDFCreator:
                 raise ValueError("strict_real_data is enabled: missing 'stories' and no OSM levels available")
             stories = 3
 
-        # Get floor area, prefer OSM footprint if available; then city data
+        # Get floor area - FIX: Check user-specified floor_area_per_story FIRST
         floor_area = building_params.get('floor_area')
+        
+        # FIX: If user specified floor_area_per_story_m2, use that instead of OSM
+        floor_area_per_story = building_params.get('floor_area_per_story_m2')
+        if floor_area_per_story is not None and floor_area is None:
+            # User explicitly specified floor area per story - use it
+            if stories is None or stories <= 0:
+                stories = 3
+            floor_area = floor_area_per_story * max(1, int(stories))
+            print(f"✓ Using user-specified floor area: {floor_area_per_story:.0f} m²/floor × {stories} floors = {floor_area:.0f} m²")
+        
+        # If still no floor area, check OSM (only if user didn't specify)
         if floor_area is None:
             osm_area = loc_building.get('osm_area_m2')
             try:
@@ -139,6 +148,8 @@ class IDFCreator:
                     floor_area = float(osm_area) * max(1, int(stories))
             except Exception:
                 pass
+        
+        # If still no floor area, check city data
         if floor_area is None:
             city_area = loc_building.get('city_area_m2')
             try:
@@ -151,12 +162,11 @@ class IDFCreator:
         if not stories:
             stories = 3
         
-        # If no floor area provided
+        # If no floor area provided, use defaults
         if floor_area is None:
             if strict:
                 raise ValueError("strict_real_data is enabled: missing 'floor_area' and no OSM/city/document area available")
-            floor_area_per_story = building_params.get('floor_area_per_story_m2', 500)
-            floor_area = floor_area_per_story * stories
+            floor_area = building_params.get('floor_area_per_story_m2', 500) * stories
         
         # Estimate building dimensions
         dimensions = self.building_estimator.estimate_building_dimensions(floor_area)
@@ -235,8 +245,8 @@ class IDFCreator:
         
         # Create output directory if needed
         output_dir = os.path.dirname(output_path)
-        if output_dir:  # Only create directory if path has a directory component
-            os.makedirs(output_dir, exist_ok=True)
+        if output_dir:
+            ensure_directory(output_dir)
         
         # Write IDF file
         with open(output_path, 'w') as f:
@@ -252,6 +262,67 @@ class IDFCreator:
         print("="*60 + "\n")
         
         return output_path
+
+
+def _parse_user_params(args: argparse.Namespace) -> Dict[str, any]:
+    """
+    Parse command-line arguments into user parameters dictionary.
+    
+    Args:
+        args: Parsed command-line arguments
+        
+    Returns:
+        Dictionary of user-provided parameters
+    """
+    user_params = {}
+    
+    # Basic building parameters
+    if args.building_type:
+        user_params['building_type'] = args.building_type
+    if args.stories:
+        user_params['stories'] = args.stories
+    if args.floor_area:
+        user_params['floor_area'] = args.floor_area
+    if args.window_ratio:
+        user_params['window_to_wall_ratio'] = args.window_ratio
+    
+    # Window-to-wall ratio overrides
+    if args.wwr is not None:
+        user_params['wwr'] = args.wwr
+    if args.wwr_n is not None:
+        user_params['wwr_n'] = args.wwr_n
+    if args.wwr_e is not None:
+        user_params['wwr_e'] = args.wwr_e
+    if args.wwr_s is not None:
+        user_params['wwr_s'] = args.wwr_s
+    if args.wwr_w is not None:
+        user_params['wwr_w'] = args.wwr_w
+    if args.force_area:
+        user_params['force_area'] = True
+    
+    # Equipment parameters
+    if args.equip_source:
+        user_params['equip_source'] = args.equip_source
+    if args.equip_type:
+        user_params['equip_type'] = args.equip_type
+    if args.equip_capacity:
+        user_params['equip_capacity'] = args.equip_capacity
+    if args.equip_id:
+        user_params['equip_id'] = args.equip_id
+    
+    # Age and certification parameters
+    if args.year_built:
+        user_params['year_built'] = args.year_built
+    if args.retrofit_year:
+        user_params['retrofit_year'] = args.retrofit_year
+    if args.leed_level:
+        user_params['leed_level'] = args.leed_level
+    if args.cogeneration_capacity_kw:
+        user_params['cogeneration_capacity_kw'] = args.cogeneration_capacity_kw
+    if args.chp_provides_percent:
+        user_params['chp_provides_percent'] = args.chp_provides_percent
+    
+    return user_params
 
 
 def main():
@@ -321,41 +392,21 @@ Examples:
                        help='Desired capacity (e.g., 3ton, 35000W) for catalog search')
     parser.add_argument('--equip-id', type=str,
                        help='Specific catalog equipment identifier')
+    parser.add_argument('--year-built', type=int,
+                          help='Year building was constructed (for age-based efficiency adjustments)')
+    parser.add_argument('--retrofit-year', type=int,
+                          help='Year of major retrofit (if applicable)')
+    parser.add_argument('--leed-level', type=str, choices=['Certified', 'Silver', 'Gold', 'Platinum'],
+                          help='LEED certification level (applies efficiency bonuses)')
+    parser.add_argument('--cogeneration-capacity-kw', type=float,
+                          help='Cogeneration/CHP system capacity in kW (reduces grid electricity)')
+    parser.add_argument('--chp-provides-percent', type=float,
+                          help='CHP provides this percent of electrical load (0-100). If not specified, calculated from capacity.')
     
     args = parser.parse_args()
     
-    # Prepare user parameters
-    user_params = {}
-    if args.building_type:
-        user_params['building_type'] = args.building_type
-    if args.stories:
-        user_params['stories'] = args.stories
-    if args.floor_area:
-        user_params['floor_area'] = args.floor_area
-    if args.window_ratio:
-        user_params['window_to_wall_ratio'] = args.window_ratio
-    # New WWR overrides
-    if args.wwr is not None:
-        user_params['wwr'] = args.wwr
-    if args.wwr_n is not None:
-        user_params['wwr_n'] = args.wwr_n
-    if args.wwr_e is not None:
-        user_params['wwr_e'] = args.wwr_e
-    if args.wwr_s is not None:
-        user_params['wwr_s'] = args.wwr_s
-    if args.wwr_w is not None:
-        user_params['wwr_w'] = args.wwr_w
-    if args.force_area:
-        user_params['force_area'] = True
-    # Equipment params
-    if args.equip_source:
-        user_params['equip_source'] = args.equip_source
-    if args.equip_type:
-        user_params['equip_type'] = args.equip_type
-    if args.equip_capacity:
-        user_params['equip_capacity'] = args.equip_capacity
-    if args.equip_id:
-        user_params['equip_id'] = args.equip_id
+    # Parse user parameters
+    user_params = _parse_user_params(args)
     
     # Determine mode
     enhanced = args.enhanced and not args.basic
@@ -383,4 +434,3 @@ Examples:
 
 if __name__ == "__main__":
     main()
-

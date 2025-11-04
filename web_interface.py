@@ -10,8 +10,12 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+# Add src to path - ensure app root is in Python path
+app_root = Path(__file__).parent.absolute()
+if str(app_root) not in sys.path:
+    sys.path.insert(0, str(app_root))
+# Also set PYTHONPATH environment variable for subprocesses
+os.environ.setdefault('PYTHONPATH', str(app_root))
 
 from src.nlp_building_parser import BuildingDescriptionParser
 from src.document_parser import DocumentParser

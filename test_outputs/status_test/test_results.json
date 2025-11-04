@@ -1,0 +1,312 @@
+{
+  "status_check": {
+    "api": {},
+    "components": {
+      "imports": {
+        "main": {
+          "imported": true,
+          "has_classes": true
+        },
+        "idf_generator": {
+          "imported": true,
+          "has_classes": true
+        },
+        "professional_idf_generator": {
+          "imported": true,
+          "has_classes": true
+        },
+        "location_fetcher": {
+          "imported": true,
+          "has_classes": true
+        },
+        "enhanced_location_fetcher": {
+          "imported": true,
+          "has_classes": true
+        },
+        "document_parser": {
+          "imported": true,
+          "has_classes": true
+        },
+        "building_estimator": {
+          "imported": true,
+          "has_classes": true
+        },
+        "nlp_building_parser": {
+          "imported": true,
+          "has_classes": true
+        },
+        "config_manager": {
+          "imported": true,
+          "has_classes": true
+        },
+        "nrel_fetcher": {
+          "imported": true,
+          "has_classes": true
+        },
+        "osm_fetcher": {
+          "imported": true,
+          "has_classes": true
+        }
+      },
+      "initialization": {
+        "idf_creator": {
+          "initialized": true,
+          "enhanced_mode": true,
+          "professional_mode": true
+        },
+        "location_fetcher": {
+          "initialized": true
+        },
+        "enhanced_location_fetcher": {
+          "initialized": true
+        },
+        "idf_generator": {
+          "initialized": true
+        },
+        "professional_idf_generator": {
+          "initialized": true
+        }
+      }
+    },
+    "files": {
+      "config": {
+        "config.yaml": {
+          "exists": true,
+          "description": "Main configuration file",
+          "size": 608,
+          "readable": true
+        },
+        "requirements.txt": {
+          "exists": true,
+          "description": "Python dependencies",
+          "size": 362,
+          "readable": true
+        }
+      },
+      "weather": {
+        "directory_exists": true,
+        "files": [
+          {
+            "name": "Chicago.epw",
+            "size": 1639985,
+            "readable": true
+          }
+        ],
+        "file_count": 1
+      },
+      "output": {
+        "total_files": 91,
+        "files": [
+          {
+            "name": "test_denver_small.idf",
+            "path": "artifacts/desktop_files/idf/test_denver_small.idf",
+            "size": 655400
+          },
+          {
+            "name": "test_willis_quick.idf",
+            "path": "artifacts/desktop_files/idf/test_willis_quick.idf",
+            "size": 52166592
+          },
+          {
+            "name": "idf-creator-COMPLETE.idf",
+            "path": "artifacts/desktop_files/idf/idf-creator-COMPLETE.idf",
+            "size": 31632
+          },
+          {
+            "name": "tester-14.idf",
+            "path": "artifacts/desktop_files/idf/tester-14.idf",
+            "size": 35684
+          },
+          {
+            "name": "tester-15.idf",
+            "path": "artifacts/desktop_files/idf/tester-15.idf",
+            "size": 29959
+          },
+          {
+            "name": "john_hancock_prof.idf",
+            "path": "artifacts/desktop_files/idf/john_hancock_prof.idf",
+            "size": 198697
+          },
+          {
+            "name": "willis-tower-chicago.idf",
+            "path": "artifacts/desktop_files/idf/willis-tower-chicago.idf",
+            "size": 106900
+          },
+          {
+            "name": "tester-17.idf",
+            "path": "artifacts/desktop_files/idf/tester-17.idf",
+            "size": 30187
+          },
+          {
+            "name": "tester-16.idf",
+            "path": "artifacts/desktop_files/idf/tester-16.idf",
+            "size": 30859
+          },
+          {
+            "name": "test_empire_state_building.idf",
+            "path": "artifacts/desktop_files/idf/test_empire_state_building.idf",
+            "size": 2402754
+          },
+          {
+            "name": "professional_test_2_mixed_use.idf",
+            "path": "output/professional_test_2_mixed_use.idf",
+            "size": 194024
+          },
+          {
+            "name": "professional_test_3_residential_multi.idf",
+            "path": "output/professional_test_3_residential_multi.idf",
+            "size": 129675
+          },
+          {
+            "name": "professional_test_1_office.idf",
+            "path": "output/professional_test_1_office.idf",
+            "size": 205339
+          },
+          {
+            "name": "Building.idf",
+            "path": "output/Building.idf",
+            "size": 740459
+          },
+          {
+            "name": "professional_test_4_retail.idf",
+            "path": "output/professional_test_4_retail.idf",
+            "size": 87524
+          },
+          {
+            "name": "Building_fixed.idf",
+            "path": "output/Building_fixed.idf",
+            "size": 35684
+          }
+        ]
+      }
+    },
+    "dependencies": {
+      "required": {
+        "requests": {
+          "installed": true
+        },
+        "geopy": {
+          "installed": true
+        },
+        "pillow": {
+          "installed": false
+        },
+        "PyPDF2": {
+          "installed": false
+        },
+        "pdf2image": {
+          "installed": false
+        },
+        "opencv-python": {
+          "installed": false
+        },
+        "pandas": {
+          "installed": true
+        },
+        "numpy": {
+          "installed": true
+        },
+        "shapely": {
+          "installed": true
+        },
+        "yaml": {
+          "installed": true
+        },
+        "flask": {
+          "installed": true
+        },
+        "flask_cors": {
+          "installed": false
+        }
+      },
+      "optional": {
+        "openai": {
+          "installed": false
+        },
+        "anthropic": {
+          "installed": false
+        }
+      }
+    },
+    "directories": {
+      "artifacts/desktop_files/idf": {
+        "exists": true,
+        "is_directory": true,
+        "description": "IDF output directory",
+        "writable": true
+      },
+      "artifacts/desktop_files/weather": {
+        "exists": true,
+        "is_directory": true,
+        "description": "Weather files directory",
+        "writable": true
+      },
+      "output": {
+        "exists": true,
+        "is_directory": true,
+        "description": "Output directory",
+        "writable": true
+      },
+      "src": {
+        "exists": true,
+        "is_directory": true,
+        "description": "Source code directory",
+        "writable": true
+      }
+    },
+    "overall": {
+      "status": "degraded",
+      "issues": [
+        "Missing required dependencies: pillow, PyPDF2, pdf2image, opencv-python, flask_cors"
+      ]
+    }
+  },
+  "weather_files": {
+    "Chicago": "artifacts/desktop_files/weather/Chicago.epw",
+    "New York": "artifacts/desktop_files/weather/artifacts/desktop_files/weather/USA_NY_New.York.LaGuardia.AP.725030_TMY3.epw",
+    "San Francisco": "artifacts/desktop_files/weather/artifacts/desktop_files/weather/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw"
+  },
+  "test_buildings": [
+    {
+      "building": "Test Office Chicago",
+      "address": "233 S Wacker Dr, Chicago, IL 60606",
+      "idf_path": "test_outputs/status_test/status_test_test_office_chicago.idf",
+      "weather_file": "artifacts/desktop_files/weather/Chicago.epw",
+      "idf_generated": true,
+      "simulation": {
+        "success": false,
+        "error": "No output files generated",
+        "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
+      }
+    },
+    {
+      "building": "Test Office NYC",
+      "address": "350 5th Ave, New York, NY 10118",
+      "idf_path": "test_outputs/status_test/status_test_test_office_nyc.idf",
+      "weather_file": "artifacts/desktop_files/weather/artifacts/desktop_files/weather/USA_NY_New.York.LaGuardia.AP.725030_TMY3.epw",
+      "idf_generated": true,
+      "simulation": {
+        "success": false,
+        "error": "No output files generated",
+        "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
+      }
+    },
+    {
+      "building": "Test Office SF",
+      "address": "600 Montgomery St, San Francisco, CA 94111",
+      "idf_path": "test_outputs/status_test/status_test_test_office_sf.idf",
+      "weather_file": "artifacts/desktop_files/weather/artifacts/desktop_files/weather/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw",
+      "idf_generated": true,
+      "simulation": {
+        "success": false,
+        "error": "No output files generated",
+        "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
+      }
+    }
+  ],
+  "summary": {
+    "total_buildings": 3,
+    "idf_generated": 3,
+    "simulations_successful": 0
+  }
+}

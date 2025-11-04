@@ -1,0 +1,72 @@
+{
+  "tests": [
+    {
+      "name": "Small Office",
+      "idf_path": "test_outputs/test_small_office.idf",
+      "weather_file": "artifacts/desktop_files/weather/Chicago.epw",
+      "simulation_results": {
+        "csv": {
+          "total_site_energy_gj": 1772.61,
+          "total_site_energy_kwh": 492392.06058,
+          "total_source_energy_gj": 2583.34,
+          "total_source_energy_kwh": 717595.01852,
+          "building_area_m2": 1289.95,
+          "end_uses": {
+            "Heating": {
+              "electricity_gj": 9.75,
+              "electricity_kwh": 2708.3355,
+              "natural_gas_gj": 1454.88,
+              "natural_gas_kwh": 404133.65664000006
+            },
+            "Cooling": {
+              "electricity_gj": 20.85,
+              "electricity_kwh": 5791.671300000001,
+              "natural_gas_gj": 0.0,
+              "natural_gas_kwh": 0.0
+            },
+            "Interior Lighting": {
+              "electricity_gj": 161.41,
+              "electricity_kwh": 44836.146980000005,
+              "natural_gas_gj": 0.0,
+              "natural_gas_kwh": 0.0
+            },
+            "Interior Equipment": {
+              "electricity_gj": 113.88,
+              "electricity_kwh": 31633.358640000002,
+              "natural_gas_gj": 0.0,
+              "natural_gas_kwh": 0.0
+            },
+            "Fans": {
+              "electricity_gj": 11.84,
+              "electricity_kwh": 3288.89152,
+              "natural_gas_gj": 0.0,
+              "natural_gas_kwh": 0.0
+            }
+          },
+          "eui_kwh_m2": 381.7140668863134
+        },
+        "sqlite": {
+          "error": "no such table: ReportMeterDictionary"
+        },
+        "output_directory": "test_outputs/sim_small_office"
+      }
+    },
+    {
+      "name": "Medium Office",
+      "idf_path": "test_outputs/test_medium_office.idf",
+      "weather_file": null,
+      "simulation_results": {
+        "csv": {},
+        "sqlite": {
+          "error": "no such table: ReportMeterDictionary"
+        },
+        "output_directory": "test_outputs/sim_medium_office"
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 2,
+    "successful_idfs": 2,
+    "successful_simulations": 2
+  }
+}

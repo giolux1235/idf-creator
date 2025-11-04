@@ -1,0 +1,21 @@
+{
+  "address": "233 S Wacker Dr, Chicago, IL 60606",
+  "idf_path": "test_outputs/api_test/api_test_233_S_Wacker_Dr__Chicago__IL_60606.idf",
+  "idf_generated": true,
+  "simulation": {
+    "success": false,
+    "status_code": 200,
+    "result": {
+      "version": "33.0.0",
+      "simulation_status": "error",
+      "energyplus_version": "25.1.0",
+      "real_simulation": true,
+      "error_message": "EnergyPlus ran but produced no energy results. This usually means:\n1. IDF file is missing required objects (RunPeriod, Schedules, etc.)\n2. Simulation ran for 0 days\n3. Output:* objects are missing from IDF\n",
+      "processing_time": "2025-11-04T06:00:30.162812"
+    },
+    "error": "EnergyPlus ran but produced no energy results. This usually means:\n1. IDF file is missing required objects (RunPeriod, Schedules, etc.)\n2. Simulation ran for 0 days\n3. Output:* objects are missing from IDF\n",
+    "simulation_status": "error",
+    "warnings": [],
+    "energy_results": null
+  }
+}

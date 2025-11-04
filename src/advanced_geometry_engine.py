@@ -498,14 +498,30 @@ class AdvancedGeometryEngine:
             base = z.name.rsplit('_', 1)[0]
             created_types.add(base)
         
-        # Calculate remaining area
+        # Calculate remaining area and create polygon excluding core zones
         used_area = sum(zone.area for zone in core_zones)
         remaining_area = floor_area - used_area
         
-        # Generate typical zones to fill remaining space, skipping duplicates
-        if remaining_area > 0:
+        # IMPROVED: Exclude core zones from floor polygon for grid generation
+        available_polygon = floor_polygon
+        if core_zones:
+            # Subtract core zone polygons from floor polygon
+            core_polygons = [zone.polygon for zone in core_zones]
+            if core_polygons:
+                try:
+                    core_union = unary_union(core_polygons)
+                    available_polygon = floor_polygon.difference(core_union)
+                    # If difference creates multiple polygons, use the largest
+                    if hasattr(available_polygon, 'geoms'):
+                        available_polygon = max(available_polygon.geoms, key=lambda p: p.area)
+                except Exception:
+                    # Fallback to original polygon if difference fails
+                    available_polygon = floor_polygon
+        
+        # Generate typical zones to fill remaining space using grid-based approach
+        if remaining_area > 50:  # Only if significant area remains
             typical_zones = self._generate_typical_zones(
-                floor_polygon, floor_level, template, remaining_area, created_types
+                available_polygon, floor_level, template, remaining_area, created_types
             )
             zones.extend(typical_zones)
         
@@ -541,77 +557,136 @@ class AdvancedGeometryEngine:
     def _generate_typical_zones(self, floor_polygon: Polygon, floor_level: int,
                               template: Dict, available_area: float,
                               created_types: Optional[set] = None) -> List[ZoneGeometry]:
-        """Generate typical zones to fill remaining floor area"""
+        """Generate typical zones using efficient grid-based tiling"""
         zones = []
         typical_zone_types = template['typical_zones']
-        
-        remaining_area = available_area
         created_types = created_types or set()
         
-        for zone_type in typical_zone_types:
-            if remaining_area <= 0:
-                break
-            # Skip types already present on this floor to avoid duplicate names
-            if zone_type in created_types:
-                continue
-            
-            if zone_type in template['zone_sizes']:
-                min_area, max_area = template['zone_sizes'][zone_type]
-                max_possible = min(max_area, remaining_area)
+        # IMPROVED: Use grid-based tiling for better coverage
+        # Calculate optimal zone size for grid
+        target_zone_area = 150.0  # Target ~150 m² per zone (good balance)
+        if available_area > 0:
+            # Adjust target based on available area
+            if available_area > 5000:
+                target_zone_area = 200.0
+            elif available_area < 1000:
+                target_zone_area = 100.0
+        
+        # Calculate grid dimensions
+        bounds = floor_polygon.bounds
+        footprint_width = bounds[2] - bounds[0]
+        footprint_height = bounds[3] - bounds[1]
+        
+        # Calculate cells per row/column to achieve target zone area
+        cells_per_row = max(3, int(math.sqrt(available_area / target_zone_area)))
+        cells_per_col = max(3, int(math.sqrt(available_area / target_zone_area)))
+        
+        # Adjust for aspect ratio
+        aspect_ratio = footprint_width / footprint_height if footprint_height > 0 else 1.0
+        if aspect_ratio > 1.5:
+            cells_per_row = int(cells_per_row * aspect_ratio)
+        elif aspect_ratio < 0.67:
+            cells_per_col = int(cells_per_col / aspect_ratio)
+        
+        # Calculate cell size
+        cell_width = footprint_width / cells_per_row
+        cell_height = footprint_height / cells_per_col
+        
+        # Generate grid cells and clip to footprint
+        zone_type_index = 0
+        for row in range(cells_per_row):
+            for col in range(cells_per_col):
+                # Create cell rectangle
+                x_min = bounds[0] + col * cell_width
+                x_max = bounds[0] + (col + 1) * cell_width
+                y_min = bounds[1] + row * cell_height
+                y_max = bounds[1] + (row + 1) * cell_height
                 
-                if max_possible >= min_area:
-                    area = np.random.uniform(min_area, max_possible)
+                cell_polygon = Polygon([
+                    (x_min, y_min),
+                    (x_max, y_min),
+                    (x_max, y_max),
+                    (x_min, y_max)
+                ])
+                
+                # Clip to actual footprint
+                clipped = floor_polygon.intersection(cell_polygon)
+                
+                # Only keep cells with sufficient area (at least 20 m²)
+                if isinstance(clipped, Polygon) and clipped.area > 20.0:
+                    # Select zone type (rotate through typical zones)
+                    if typical_zone_types:
+                        zone_type = typical_zone_types[zone_type_index % len(typical_zone_types)]
+                        zone_type_index += 1
+                        
+                        # Skip if already created
+                        if zone_type in created_types:
+                            zone_type = typical_zone_types[0]  # Default fallback
+                    else:
+                        zone_type = 'office_private'
                     
-                    zone_polygon = self._create_zone_polygon(floor_polygon, area)
-                    
-                    if zone_polygon and zone_polygon.area > 0:
-                        zone = ZoneGeometry(
-                            name=f"{zone_type}_{floor_level}",
-                            polygon=zone_polygon,
-                            floor_level=floor_level,
-                            height=3.0,
-                            area=zone_polygon.area,
-                            perimeter=zone_polygon.length
-                        )
-                        zones.append(zone)
-                        remaining_area -= zone.area
+                    zone = ZoneGeometry(
+                        name=f"{zone_type}_{floor_level}",
+                        polygon=clipped,
+                        floor_level=floor_level,
+                        height=3.0,
+                        area=clipped.area,
+                        perimeter=clipped.length
+                    )
+                    zones.append(zone)
+                    if zone_type not in created_types:
                         created_types.add(zone_type)
         
         return zones
     
     def _create_zone_polygon(self, floor_polygon: Polygon, target_area: float) -> Optional[Polygon]:
-        """Create a zone polygon within the floor polygon (simplified implementation)"""
-        # This is a simplified implementation
-        # In practice, you'd use proper space planning algorithms
-        
+        """Create a zone polygon within the floor polygon (improved implementation)"""
+        # IMPROVED: Try multiple attempts with different positions and sizes
         bounds = floor_polygon.bounds
         width = bounds[2] - bounds[0]
         height = bounds[3] - bounds[1]
         
-        # Calculate zone dimensions
-        aspect_ratio = np.random.uniform(1.0, 2.0)
-        zone_width = math.sqrt(target_area / aspect_ratio)
-        zone_height = target_area / zone_width
-        
-        # Ensure zone fits within floor
-        if zone_width > width or zone_height > height:
-            zone_width = min(zone_width, width * 0.8)
-            zone_height = min(zone_height, height * 0.8)
-        
-        # Random position within floor
-        x_offset = np.random.uniform(0, width - zone_width)
-        y_offset = np.random.uniform(0, height - zone_height)
-        
-        zone_polygon = Polygon([
-            (bounds[0] + x_offset, bounds[1] + y_offset),
-            (bounds[0] + x_offset + zone_width, bounds[1] + y_offset),
-            (bounds[0] + x_offset + zone_width, bounds[1] + y_offset + zone_height),
-            (bounds[0] + x_offset, bounds[1] + y_offset + zone_height)
-        ])
-        
-        # Ensure zone is within floor polygon
-        if floor_polygon.contains(zone_polygon):
-            return zone_polygon
+        # Try up to 10 random placements
+        for attempt in range(10):
+            # Calculate zone dimensions
+            aspect_ratio = np.random.uniform(1.0, 2.0)
+            zone_width = math.sqrt(target_area / aspect_ratio)
+            zone_height = target_area / zone_width
+            
+            # Ensure zone fits within floor
+            if zone_width > width or zone_height > height:
+                zone_width = min(zone_width, width * 0.9)
+                zone_height = min(zone_height, height * 0.9)
+                # Recalculate to maintain aspect ratio
+                actual_area = zone_width * zone_height
+                if actual_area < target_area * 0.5:
+                    continue  # Skip if too small
+            
+            # Random position within floor
+            max_x_offset = max(0, width - zone_width)
+            max_y_offset = max(0, height - zone_height)
+            
+            if max_x_offset <= 0 or max_y_offset <= 0:
+                continue
+            
+            x_offset = np.random.uniform(0, max_x_offset)
+            y_offset = np.random.uniform(0, max_y_offset)
+            
+            zone_polygon = Polygon([
+                (bounds[0] + x_offset, bounds[1] + y_offset),
+                (bounds[0] + x_offset + zone_width, bounds[1] + y_offset),
+                (bounds[0] + x_offset + zone_width, bounds[1] + y_offset + zone_height),
+                (bounds[0] + x_offset, bounds[1] + y_offset + zone_height)
+            ])
+            
+            # Clip to floor polygon and check if valid
+            clipped = floor_polygon.intersection(zone_polygon)
+            if isinstance(clipped, Polygon) and clipped.area > target_area * 0.7:
+                # Fix invalid polygons using buffer(0) trick
+                if not clipped.is_valid:
+                    clipped = clipped.buffer(0)
+                if isinstance(clipped, Polygon) and clipped.is_valid and clipped.area >= 0.1:
+                    return clipped
         
         return None
     
@@ -632,6 +707,10 @@ class AdvancedGeometryEngine:
         surfaces = []
         
         for zone in zones:
+            # Skip zones with invalid polygons
+            if not zone.polygon or not zone.polygon.is_valid or zone.polygon.area < 0.1:
+                continue
+                
             # Generate floor surface
             floor_surface = self._generate_floor_surface(zone, footprint)
             if floor_surface:
@@ -648,15 +727,33 @@ class AdvancedGeometryEngine:
         
         return surfaces
     
-    def _generate_floor_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Dict:
+    def _generate_floor_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Optional[Dict]:
         """Generate floor surface for zone"""
+        # Validate polygon has sufficient area
+        if not zone.polygon or zone.polygon.area < 0.1:
+            return None
+            
         coords = list(zone.polygon.exterior.coords[:-1])
+        # Ensure we have at least 3 vertices
+        if len(coords) < 3:
+            return None
+            
+        # Remove duplicate vertices (within tolerance)
+        cleaned_coords = []
+        for x, y in coords:
+            if not cleaned_coords or abs(x - cleaned_coords[-1][0]) > 0.001 or abs(y - cleaned_coords[-1][1]) > 0.001:
+                cleaned_coords.append((x, y))
+        
+        # Need at least 3 unique vertices
+        if len(cleaned_coords) < 3:
+            return None
+        
         # Reverse vertex order so outward normal points downward (tilt ~180)
-        coords = list(reversed(coords))
+        cleaned_coords = list(reversed(cleaned_coords))
         z_coord = zone.floor_level * 3.0
         
         vertices = []
-        for x, y in coords:
+        for x, y in cleaned_coords:
             vertices.append(f"{x:.4f},{y:.4f},{z_coord:.4f}")
         
         return {
@@ -672,13 +769,31 @@ class AdvancedGeometryEngine:
             'vertices': vertices
         }
     
-    def _generate_ceiling_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Dict:
+    def _generate_ceiling_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Optional[Dict]:
         """Generate ceiling surface for zone"""
+        # Validate polygon has sufficient area
+        if not zone.polygon or zone.polygon.area < 0.1:
+            return None
+            
         coords = list(zone.polygon.exterior.coords[:-1])
+        # Ensure we have at least 3 vertices
+        if len(coords) < 3:
+            return None
+            
+        # Remove duplicate vertices (within tolerance)
+        cleaned_coords = []
+        for x, y in coords:
+            if not cleaned_coords or abs(x - cleaned_coords[-1][0]) > 0.001 or abs(y - cleaned_coords[-1][1]) > 0.001:
+                cleaned_coords.append((x, y))
+        
+        # Need at least 3 unique vertices
+        if len(cleaned_coords) < 3:
+            return None
+        
         z_coord = (zone.floor_level + 1) * 3.0
         
         vertices = []
-        for x, y in coords:
+        for x, y in cleaned_coords:
             vertices.append(f"{x:.4f},{y:.4f},{z_coord:.4f}")
         
         return {
@@ -703,6 +818,20 @@ class AdvancedGeometryEngine:
         
         for i, (x1, y1) in enumerate(coords):
             x2, y2 = coords[(i + 1) % len(coords)]
+            
+            # Skip walls with zero length (same start and end points)
+            # Use a small tolerance to account for floating point precision
+            if abs(x2 - x1) < 0.001 and abs(y2 - y1) < 0.001:
+                continue
+            
+            # Calculate wall area to ensure it's not zero
+            wall_length = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+            wall_height = z_top - z_bottom
+            wall_area = wall_length * wall_height
+            
+            # Skip walls with very small area (< 0.01 m²)
+            if wall_area < 0.01:
+                continue
             
             wall = {
                 'type': 'BuildingSurface:Detailed',

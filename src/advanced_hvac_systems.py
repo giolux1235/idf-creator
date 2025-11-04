@@ -6,6 +6,7 @@ Real HVAC systems instead of simple ideal loads
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
+from .building_age_adjustments import BuildingAgeAdjuster
 
 
 @dataclass
@@ -28,6 +29,7 @@ class AdvancedHVACSystems:
         self.hvac_templates = self._load_hvac_templates()
         self.equipment_templates = self._load_equipment_templates()
         self.control_templates = self._load_control_templates()
+        self.age_adjuster = BuildingAgeAdjuster()
     
     def _load_hvac_templates(self) -> Dict[str, HVACSystem]:
         """Load HVAC system templates"""
@@ -35,12 +37,12 @@ class AdvancedHVACSystems:
             'VAV': HVACSystem(
                 name='Variable Air Volume',
                 system_type='VAV',
-                heating_fuel='Electric',
+                heating_fuel='Electric',  # Can be Electric (heat pump) or Gas (cold climates)
                 cooling_fuel='Electric',
-                efficiency={'heating_cop': 3.5, 'cooling_eer': 12.0},
+                efficiency={'heating_cop': 3.5, 'heating_efficiency': 0.80, 'cooling_eer': 12.0},  # COP for heat pump, efficiency for gas
                 controls='Advanced',
                 zoning='Multiple',
-                components=['AirLoopHVAC', 'Coil:Heating:Electric', 'Coil:Cooling:DX:SingleSpeed', 'Fan:VariableVolume']
+                components=['AirLoopHVAC', 'Coil:Heating:Electric', 'Coil:Heating:Fuel', 'Coil:Cooling:DX:SingleSpeed', 'Fan:VariableVolume']
             ),
             'RTU': HVACSystem(
                 name='Rooftop Unit',
@@ -135,7 +137,9 @@ class AdvancedHVACSystems:
                            zone_area: float, hvac_type: str,
                            climate_zone: str,
                            catalog_equipment: Optional[Dict] = None,
-                           unique_suffix: str = "") -> List[Dict]:
+                           unique_suffix: str = "",
+                           year_built: Optional[int] = None,
+                           leed_level: Optional[str] = None) -> List[Dict]:
         """Generate HVAC system for a zone.
 
         If catalog_equipment is provided, use pre-translated IDF strings from the
@@ -146,6 +150,27 @@ class AdvancedHVACSystems:
         if not hvac_template:
             hvac_template = self.hvac_templates['VAV']  # Default fallback
         
+        # Adjust efficiency based on building age and LEED certification
+        if year_built is not None or leed_level:
+            age_efficiency = self.age_adjuster.get_hvac_efficiency_values(year_built, hvac_type, leed_level)
+            # Create adjusted efficiency dict
+            adjusted_efficiency = hvac_template.efficiency.copy()
+            if 'heating_cop' in adjusted_efficiency and 'heating_cop' in age_efficiency:
+                adjusted_efficiency['heating_cop'] = age_efficiency['heating_cop']
+            if 'cooling_eer' in adjusted_efficiency and 'cooling_eer' in age_efficiency:
+                adjusted_efficiency['cooling_eer'] = age_efficiency['cooling_eer']
+            if 'cooling_cop' in adjusted_efficiency and 'cooling_cop' in age_efficiency:
+                adjusted_efficiency['cooling_cop'] = age_efficiency['cooling_cop']
+            elif 'cooling_eer' in adjusted_efficiency:
+                # Calculate COP from EER if not provided
+                adjusted_efficiency['cooling_cop'] = adjusted_efficiency['cooling_eer'] / 3.412
+            if 'heating_efficiency' in adjusted_efficiency and 'heating_efficiency' in age_efficiency:
+                adjusted_efficiency['heating_efficiency'] = age_efficiency['heating_efficiency']
+            
+            # Update template with adjusted values
+            from dataclasses import replace
+            hvac_template = replace(hvac_template, efficiency=adjusted_efficiency)
+        
         # Size equipment based on zone area and building type
         sizing_params = self._calculate_hvac_sizing(building_type, zone_area, climate_zone)
         
@@ -153,7 +178,7 @@ class AdvancedHVACSystems:
         components = []
         
         if hvac_template.system_type == 'VAV':
-            components.extend(self._generate_vav_system(zone_name, sizing_params, hvac_template, unique_suffix))
+            components.extend(self._generate_vav_system(zone_name, sizing_params, hvac_template, unique_suffix, climate_zone))
         elif hvac_template.system_type == 'RTU':
             components.extend(self._generate_rtu_system(zone_name, sizing_params, hvac_template))
         elif hvac_template.system_type == 'PTAC':
@@ -215,9 +240,13 @@ class AdvancedHVACSystems:
         cooling_load = zone_area * cooling_load_density * multipliers['cooling']
         heating_load = zone_area * heating_load_density * multipliers['heating']
         
-        # Air flow rates (L/s)
-        ventilation_rate = zone_area * 0.5  # 0.5 L/s-m²
-        supply_air_flow = max(ventilation_rate * 2, cooling_load / 1200)  # 1200 W per L/s
+        # Air flow rates
+        # EnergyPlus expects 0.00004027 to 0.00006041 m³/s per watt of cooling capacity
+        # Use middle value: 0.00005 m³/s per watt
+        supply_air_flow = cooling_load * 0.00005  # m³/s
+        
+        # Ventilation rate: 0.5 L/s-m² = 0.0005 m³/s-m²
+        ventilation_rate = zone_area * 0.0005  # m³/s
         
         return {
             'cooling_load': cooling_load,
@@ -228,10 +257,26 @@ class AdvancedHVACSystems:
         }
     
     def _generate_vav_system(self, zone_name: str, sizing_params: Dict, 
-                           hvac_template: HVACSystem, unique_suffix: str = "") -> List[Dict]:
+                           hvac_template: HVACSystem, unique_suffix: str = "", 
+                           climate_zone: str = "") -> List[Dict]:
         """Generate VAV system components"""
         components = []
         zn = f"{zone_name}{unique_suffix}" if unique_suffix else zone_name
+        
+        # Determine heating fuel type based on climate zone
+        # Cold climates (CZ 5-8) should use natural gas for efficiency
+        # Moderate climates (CZ 1-4) can use heat pump
+        # Extract climate zone number from string (e.g., "ASHRAE_C5" -> "5")
+        cz_num = '3'  # Default
+        if climate_zone:
+            # Handle formats like "ASHRAE_C5", "C5", "5", etc.
+            import re
+            match = re.search(r'[C_](\d)', str(climate_zone))
+            if match:
+                cz_num = match.group(1)
+            elif climate_zone[0].isdigit():
+                cz_num = climate_zone[0]
+        is_cold_climate = cz_num in ['5', '6', '7', '8']
         
         # Air Loop
         air_loop = {
@@ -241,9 +286,9 @@ class AdvancedHVACSystems:
             'branch_list': f"{zn}_BranchList",
             'connector_list': f"{zn}_ConnectorList",
             'supply_side_inlet_node_name': f"{zn}_SupplyInlet",
-            'demand_side_outlet_node_name': f"{zn}_DemandOutlet",
-            'demand_side_inlet_node_names': [f"{zn}_DemandInlet"],
-            'supply_side_outlet_node_names': [f"{zn}_SupplyOutlet"]
+            'demand_side_outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
+            'demand_side_inlet_node_names': [f"{zn}_ZoneEquipmentInlet"],  # SupplyPath inlet
+            'supply_side_outlet_node_names': [f"{zn}_SupplyEquipmentOutletNode"]  # Supply outlet
         }
         components.append(air_loop)
         
@@ -251,8 +296,8 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
-            'air_inlet_node_name': f"{zn}_FanInlet",
-            'air_outlet_node_name': f"{zn}_FanOutlet",
+            'air_inlet_node_name': f"{zn}_HeatC-FanNode",  # Match branch inlet
+            'air_outlet_node_name': f"{zn}_SupplyEquipmentOutletNode",  # Match branch outlet
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow'],
@@ -265,34 +310,112 @@ class AdvancedHVACSystems:
         }
         components.append(fan)
         
-        # Heating Coil
-        heating_coil = {
-            'type': 'Coil:Heating:Electric',
-            'name': f"{zn}_HeatingCoil",
-            'air_inlet_node_name': f"{zn}_HeatingCoilInlet",
-            'air_outlet_node_name': f"{zn}_HeatingCoilOutlet",
-            'nominal_capacity': sizing_params['heating_load'],
-            'efficiency': hvac_template.efficiency['heating_cop']
-        }
+        # Heating Coil - Use natural gas for cold climates, heat pump for moderate
+        if is_cold_climate:
+            # Natural gas heating for cold climates (more efficient and cost-effective)
+            heating_coil = {
+                'type': 'Coil:Heating:Fuel',
+                'name': f"{zn}_HeatingCoil",
+                'air_inlet_node_name': f"{zn}_CoolC-HeatCNode",  # Match cooling coil outlet
+                'air_outlet_node_name': f"{zn}_HeatC-FanNode",  # Match fan inlet
+                'nominal_capacity': sizing_params['heating_load'],
+                'efficiency': hvac_template.efficiency.get('heating_efficiency', 0.80),  # Gas efficiency
+                'temperature_setpoint_node_name': f"{zn}_HeatC-FanNode"
+            }
+        else:
+            # Heat pump for moderate climates (COP = 3.5)
+            heating_coil = {
+                'type': 'Coil:Heating:Electric',
+                'name': f"{zn}_HeatingCoil",
+                'air_inlet_node_name': f"{zn}_CoolC-HeatCNode",  # Match cooling coil outlet
+                'air_outlet_node_name': f"{zn}_HeatC-FanNode",  # Match fan inlet
+                'nominal_capacity': sizing_params['heating_load'],
+                'efficiency': hvac_template.efficiency.get('heating_cop', 3.5),  # COP for heat pump
+                'temperature_setpoint_node_name': f"{zn}_HeatC-FanNode"
+            }
         components.append(heating_coil)
+        
+        # Add SetpointManager:Scheduled for heating coil outlet (required by EnergyPlus)
+        # This sets the heating supply air temperature, not zone temperature
+        # Zone temperature is controlled by ThermostatSetpoint:DualSetpoint
+        # First create the schedule
+        heating_schedule = {
+            'type': 'Schedule:Constant',
+            'name': f"{zn}_HeatingSupplyAirTemp",
+            'schedule_type_limits_name': 'Any Number',
+            'hourly_value': 35.0  # Heating supply air temp (35°C = 95°F typical)
+        }
+        components.append(heating_schedule)
+        
+        # Then add the setpoint manager for heating
+        heating_setpoint_manager = {
+            'type': 'SetpointManager:Scheduled',
+            'name': f"{zn}_HeatingSetpointManager",
+            'control_variable': 'Temperature',
+            'schedule_name': f"{zn}_HeatingSupplyAirTemp",
+            'setpoint_node_or_nodelist_name': f"{zn}_HeatC-FanNode"  # Heating coil outlet node
+        }
+        components.append(heating_setpoint_manager)
+        
+        # Cooling Coil System (wrapper for DX coil in AirLoop)
+        # Note: Setpoint is managed by SetpointManager, not directly in CoilSystem:Cooling:DX
+        cooling_coil_system = {
+            'type': 'CoilSystem:Cooling:DX',
+            'name': f"{zn}_CoolingCoil",
+            'availability_schedule_name': 'Always On',
+            'dx_cooling_coil_system_inlet_node_name': f"{zn}_SupplyInlet",
+            'dx_cooling_coil_system_outlet_node_name': f"{zn}_CoolC-HeatCNode",
+            'dx_cooling_coil_system_sensor_node_name': f"{zn}_CoolC-HeatCNode",
+            'cooling_coil_object_type': 'Coil:Cooling:DX:SingleSpeed',
+            'cooling_coil_name': f"{zn}_CoolingCoilDX"
+        }
+        components.append(cooling_coil_system)
+        
+        # Add SetpointManager:Scheduled for cooling coil outlet (required by EnergyPlus)
+        # This sets the cooling supply air temperature, not zone temperature
+        # Zone temperature is controlled by ThermostatSetpoint:DualSetpoint
+        # First create the schedule
+        cooling_schedule = {
+            'type': 'Schedule:Constant',
+            'name': f"{zn}_CoolingSupplyAirTemp",
+            'schedule_type_limits_name': 'Any Number',
+            'hourly_value': 13.0  # Cooling supply air temp (13°C = 55°F typical)
+        }
+        components.append(cooling_schedule)
+        
+        # Then add the setpoint manager
+        cooling_setpoint_manager = {
+            'type': 'SetpointManager:Scheduled',
+            'name': f"{zn}_CoolingSetpointManager",
+            'control_variable': 'Temperature',
+            'schedule_name': f"{zn}_CoolingSupplyAirTemp",
+            'setpoint_node_or_nodelist_name': f"{zn}_CoolC-HeatCNode"
+        }
+        components.append(cooling_setpoint_manager)
         
         # Cooling Coil
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
-            'name': f"{zn}_CoolingCoil",
-            'air_inlet_node_name': f"{zn}_CoolingCoilInlet",
-            'air_outlet_node_name': f"{zn}_CoolingCoilOutlet",
+            'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': 'Always On',
             'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': sizing_params['supply_air_flow'],
-            'condenser_air_inlet_node_name': f"{zn}_CondenserInlet",
-            'condenser_type': 'AirCooled',
-            'evaporator_fan_power_included_in_rated_cop': True,
-            'condenser_fan_power_ratio': 0.2
+            'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
+            'air_inlet_node_name': f"{zn}_SupplyInlet",
+            'air_outlet_node_name': f"{zn}_CoolC-HeatCNode",
+            'total_cooling_capacity_function_of_temperature_curve_name': 'Cool-Cap-fT',
+            'total_cooling_capacity_function_of_flow_fraction_curve_name': 'ConstantCubic',
+            'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
+            'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
+            'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR'
         }
         components.append(cooling_coil)
+        
+        # REMOVED: Conflicting cooling setpoint manager
+        # Use ThermostatSetpoint:DualSetpoint in zone controls instead
+        # This prevents heating and cooling from fighting (both trying to maintain 24°C)
         
         # Zone Equipment
         zone_equipment = {
@@ -315,13 +438,13 @@ class AdvancedHVACSystems:
             'maximum_flow_per_zone_floor_area_during_reheat': 0.003,
             'maximum_flow_fraction_before_reheat': 0.2,
             'reheat_coil_name': f"{zn}_ReheatCoil",
+            'maximum_air_flow_rate': sizing_params['supply_air_flow'],  # Set explicit value to avoid sizing
             'maximum_hot_water_or_steam_flow_rate': sizing_params['heating_load'] / 1000,
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.001,
             'damper_air_outlet_node_name': f"{zn}_TerminalOutlet",
             'air_inlet_node_name': f"{zn}_TerminalInlet",
-            'reheat_coil_air_inlet_node_name': f"{zn}_ReheatInlet",
-            'reheat_coil_air_outlet_node_name': f"{zn}_ReheatOutlet"
+            'reheat_coil_air_outlet_node_name': f"{zn}_ADUOutlet"  # Must match ADU outlet
         }
         components.append(vav_terminal)
         
@@ -329,12 +452,49 @@ class AdvancedHVACSystems:
         reheat_coil = {
             'type': 'Coil:Heating:Electric',
             'name': f"{zn}_ReheatCoil",
-            'air_inlet_node_name': f"{zn}_ReheatInlet",
-            'air_outlet_node_name': f"{zn}_ReheatOutlet",
+            'air_inlet_node_name': f"{zn}_TerminalOutlet",  # Match terminal damper outlet
+            'air_outlet_node_name': f"{zn}_ADUOutlet",  # Must match ADU outlet
             'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
             'efficiency': 1.0  # Electric coils are 100% efficient
         }
         components.append(reheat_coil)
+        
+        # Zone Mixer (for return air)
+        zone_mixer = {
+            'type': 'AirLoopHVAC:ZoneMixer',
+            'name': f"{zn}_ReturnAirMixer",
+            'outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
+            'inlet_1_node_name': f"{zn}_ReturnAir"
+        }
+        components.append(zone_mixer)
+        
+        # Return Path (connects zone to air loop)
+        return_path = {
+            'type': 'AirLoopHVAC:ReturnPath',
+            'name': f"{zn}_ReturnAirPath",
+            'outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
+            'component_1_type': 'AirLoopHVAC:ZoneMixer',
+            'component_1_name': f"{zn}_ReturnAirMixer"
+        }
+        components.append(return_path)
+        
+        # Supply Path and Splitter (connects AirLoop to zones)
+        supply_path = {
+            'type': 'AirLoopHVAC:SupplyPath',
+            'name': f"{zn}",
+            'supply_air_path_inlet_node_name': f"{zn}_ZoneEquipmentInlet",
+            'component_1_type': 'AirLoopHVAC:ZoneSplitter',
+            'component_1_name': f"{zn}_SupplySplitter"
+        }
+        components.append(supply_path)
+        
+        zone_splitter = {
+            'type': 'AirLoopHVAC:ZoneSplitter',
+            'name': f"{zn}_SupplySplitter",
+            'inlet_node_name': f"{zn}_ZoneEquipmentInlet",
+            'outlet_1_node_name': f"{zn}_TerminalInlet"
+        }
+        components.append(zone_splitter)
         
         return components
     
@@ -430,12 +590,15 @@ class AdvancedHVACSystems:
         components = []
         
         # Packaged Terminal Air Conditioner
+        # For BlowThrough mode: OA Mixer → Fan → Cooling Coil → Heating Coil
+        # The PTAC inlet connects to OA mixer return air stream
+        # OA mixer also needs outdoor air stream node connected
         ptac = {
             'type': 'ZoneHVAC:PackagedTerminalAirConditioner',
             'name': f"{zone_name}_PTAC",
             'availability_schedule_name': 'Always On',
-            'air_inlet_node_name': f"{zone_name}_PTACInlet",
-            'air_outlet_node_name': f"{zone_name}_PTACOutlet",
+            'air_inlet_node_name': f"{zone_name}_PTACReturn",  # Return air from zone to PTAC (feeds OA mixer)
+            'air_outlet_node_name': f"{zone_name}_PTACZoneSupplyNode",  # Final supply air to zone (from heating coil)
             'cooling_supply_air_flow_rate': sizing_params['supply_air_flow'],
             'heating_supply_air_flow_rate': sizing_params['supply_air_flow'],
             'no_load_supply_air_flow_rate': sizing_params['supply_air_flow'] * 0.3,
@@ -458,8 +621,8 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:ConstantVolume',
             'name': f"{zone_name}_PTACFan",
-            'air_inlet_node_name': f"{zone_name}_PTACFanInlet",
-            'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",
+            'air_inlet_node_name': f"{zone_name}_PTACMixedAir",  # From OA mixer
+            'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",  # To cooling coil
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 400,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow']
@@ -470,17 +633,13 @@ class AdvancedHVACSystems:
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_PTACCoolingCoil",
-            'air_inlet_node_name': f"{zone_name}_PTACCoolingInlet",
-            'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",
+            'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
+            'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
             'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': sizing_params['supply_air_flow'],
-            'condenser_air_inlet_node_name': f"{zone_name}_PTACCondenserInlet",
-            'condenser_type': 'AirCooled',
-            'evaporator_fan_power_included_in_rated_cop': True,
-            'condenser_fan_power_ratio': 0.2
+            'rated_air_flow_rate': sizing_params['supply_air_flow']
         }
         components.append(cooling_coil)
         
@@ -488,24 +647,14 @@ class AdvancedHVACSystems:
         heating_coil = {
             'type': 'Coil:Heating:Electric',
             'name': f"{zone_name}_PTACHeatingCoil",
-            'air_inlet_node_name': f"{zone_name}_PTACHeatingInlet",
-            'air_outlet_node_name': f"{zone_name}_PTACHeatingOutlet",
+            'air_inlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # From cooling coil
+            'air_outlet_node_name': f"{zone_name}_PTACZoneSupplyNode",  # Final outlet to zone
             'availability_schedule_name': 'Always On',
             'efficiency': hvac_template.efficiency['heating_cop'],
             'nominal_capacity': sizing_params['heating_load']
         }
         components.append(heating_coil)
         
-        # Outdoor Air Mixer
-        mixer = {
-            'type': 'OutdoorAir:Mixer',
-            'name': f"{zone_name}_PTACMixer",
-            'outdoor_air_stream_node_name': f"{zone_name}_PTACOAMixerInlet",
-            'relief_air_stream_node_name': f"{zone_name}_PTACOAMixerOutlet",
-            'mixed_air_node_name': f"{zone_name}_PTACMixedAir",
-            'outdoor_air_node_name': f"{zone_name}_PTACOutdoorAir"
-        }
-        components.append(mixer)
         
         return components
     
@@ -652,25 +801,51 @@ class AdvancedHVACSystems:
         
         controls = []
         
-        # Thermostat
+        # Thermostat Setpoint (defines the setpoint values)
         if control_template['thermostat_type'] == 'ThermostatSetpoint:DualSetpoint':
-            thermostat = {
+            thermostat_setpoint = {
                 'type': 'ThermostatSetpoint:DualSetpoint',
                 'name': f"{zone_name}_Thermostat",
                 'heating_setpoint_temperature_schedule_name': f"{zone_name}_HeatingSetpoint",
                 'cooling_setpoint_temperature_schedule_name': f"{zone_name}_CoolingSetpoint"
             }
         else:
-            thermostat = {
+            thermostat_setpoint = {
                 'type': 'Thermostat',
                 'name': f"{zone_name}_Thermostat",
                 'heating_setpoint_temperature_schedule_name': f"{zone_name}_HeatingSetpoint",
                 'cooling_setpoint_temperature_schedule_name': f"{zone_name}_CoolingSetpoint"
             }
-        controls.append(thermostat)
+        controls.append(thermostat_setpoint)
         
-        # Setpoint Manager
-        if control_template['setpoint_manager'] == 'SetpointManager:OutdoorAirReset':
+        # ZoneControl:Thermostat (connects zone to thermostat - REQUIRED!)
+        zone_control = {
+            'type': 'ZoneControl:Thermostat',
+            'name': f"{zone_name}_ZoneControl",
+            'zone_or_zonelist_name': zone_name,
+            'control_type_schedule_name': 'Always On',
+            'control_1_object_type': 'ThermostatSetpoint:DualSetpoint' if control_template['thermostat_type'] == 'ThermostatSetpoint:DualSetpoint' else 'Thermostat',
+            'control_1_name': f"{zone_name}_Thermostat"
+        }
+        controls.append(zone_control)
+        
+        # Setpoint Manager - Use advanced outdoor air reset for VAV systems (energy efficient)
+        if hvac_type == 'VAV':
+            # Use outdoor air reset for VAV systems (standard efficiency practice)
+            # Node name should match the actual supply air node in VAV system
+            # For VAV, the setpoint node should be the supply air outlet node
+            # Use the fan outlet node which is the supply equipment outlet
+            setpoint_manager = {
+                'type': 'SetpointManager:OutdoorAirReset',
+                'name': f"{zone_name}_SetpointManager",
+                'control_variable': 'Temperature',
+                'setpoint_at_outdoor_low_temperature': 21.0,  # °C - warmer when cold outside
+                'outdoor_low_temperature': 15.6,  # °C
+                'setpoint_at_outdoor_high_temperature': 24.0,  # °C - cooler when warm outside
+                'outdoor_high_temperature': 23.3,  # °C
+                'setpoint_node_or_nodelist_name': f"{zone_name}_SupplyEquipmentOutletNode"  # Match VAV system node
+            }
+        elif control_template['setpoint_manager'] == 'SetpointManager:OutdoorAirReset':
             setpoint_manager = {
                 'type': 'SetpointManager:OutdoorAirReset',
                 'name': f"{zone_name}_SetpointManager",
@@ -682,6 +857,7 @@ class AdvancedHVACSystems:
                 'setpoint_node_or_nodelist_name': f"{zone_name}_SupplyAir"
             }
         else:
+            # Use scheduled setpoint for simpler systems (PTAC, RTU)
             setpoint_manager = {
                 'type': 'SetpointManager:Scheduled',
                 'name': f"{zone_name}_SetpointManager",

@@ -6,6 +6,7 @@ Models building air leakage and natural ventilation strategies
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 import math
+from .building_age_adjustments import BuildingAgeAdjuster
 
 
 @dataclass
@@ -22,6 +23,7 @@ class InfiltrationVentilationEngine:
     def __init__(self):
         self.infiltration_templates = self._load_infiltration_templates()
         self.ventilation_strategies = self._load_ventilation_strategies()
+        self.age_adjuster = BuildingAgeAdjuster()
     
     def _load_infiltration_templates(self) -> Dict:
         """Load infiltration templates by building type and climate"""
@@ -70,7 +72,7 @@ class InfiltrationVentilationEngine:
         }
     
     def generate_zone_infiltration(self, zone_name: str, building_type: str,
-                                   climate_zone: str) -> str:
+                                   climate_zone: str, year_built: Optional[int] = None) -> str:
         """Generate zone infiltration object"""
         template = self.infiltration_templates.get(building_type, 
                                                    self.infiltration_templates['office'])
@@ -78,6 +80,10 @@ class InfiltrationVentilationEngine:
         # Determine infiltration rate based on climate zone
         ach = self._adjust_infiltration_for_climate(template['air_changes_per_hour'], 
                                                      climate_zone)
+        
+        # Adjust for building age
+        if year_built is not None:
+            ach = self.age_adjuster.adjust_infiltration(ach, year_built)
         
         infiltration = f"""ZoneInfiltration:DesignFlowRate,
   {zone_name}_Infiltration,           !- Name

@@ -1,0 +1,91 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.01 22:56,
+   ** Severe  ** Line: 2025 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2025 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2025 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2153 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2153 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2153 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2253 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2253 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2253 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2381 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2381 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2381 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2481 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2481 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2481 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2609 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2609 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2609 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2709 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2709 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2709 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2809 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2809 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2809 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 2937 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 2937 Index: 0 - Error parsing "ZoneInfiltration:EffectiveLeakageArea". Error in following line.
+   ** Severe  ** ~~~   1.225,                               !- Air Density {kg/m3
+   ** Severe  ** Line: 2937 Index: 7 - "1.225" is not a valid Object Type.
+   ** Severe  ** Line: 3504 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 3504 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 3504 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 3778 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 3778 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 3778 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 4052 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 4052 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 4052 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 4326 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 4326 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 4326 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 4600 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 4600 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 4600 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 4874 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 4874 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 4874 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 5148 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 5148 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 5148 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 5422 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 5422 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 5422 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 5696 Index: 0 - Object contains more field values than maximum number of IDD fields and is not extensible.
+   ** Severe  ** Line: 5696 Index: 0 - Error parsing "DesignSpecification:OutdoorAir". Error in following line.
+   ** Severe  ** ~~~   Yes,                                    !- Demand Controlled Ventilation Typ
+   ** Severe  ** Line: 5696 Index: 5 - "Yes" is not a valid Object Type.
+   ** Severe  ** Line: 5857 Index: 16 - "Through: 12/31" is not a valid Object Type.
+   ** Severe  ** Line: 5951 Index: 16 - "Through: 12/31" is not a valid Object Type.
+   ** Severe  ** Line: 6021 Index: 16 - "Through: 12/31" is not a valid Object Type.
+   ** Severe  ** Line: 6115 Index: 16 - "Through: 12/31" is not a valid Object Type.
+   ** Severe  ** Line: 6185 Index: 16 - "Through: 12/31" is not a valid Object Type.
+   ** Severe  ** <root>[Controller:MechanicalVentilation][break_room_2_MechVent][demand_controlled_ventilation] - "Standard62.1VentilationRateProcedure" - Failed to match against any enum values.
+   ** Severe  ** <root>[Controller:OutdoorAir][break_room_2_z2_OAController][economizer_control_action_type] - "MinimumLimit" - Failed to match against any enum values.
+   ** Severe  ** <root>[Controller:OutdoorAir][break_room_2_z2_OAController][economizer_maximum_limit_dewpoint_temperature] - Value type "string" for input "DifferentialEnthalpy" not permitted by 'type' constraint.
+   ** Severe  ** <root>[Controller:OutdoorAir][break_room_2_z2_OAController][lockout_type] - "66000" - Failed to match against any enum values.
+   **  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=81
+   ..... Last severe error=<root>[Controller:OutdoorAir][break_room_2_z2_OAController][lockout_type] - "66000" - Failed to match against any enum values.
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 81 Severe Errors; Elapsed Time=00hr 00min  0.06sec

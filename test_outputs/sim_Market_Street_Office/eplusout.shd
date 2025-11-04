@@ -1,0 +1,918 @@
+Shadowing Combinations
+..Solar Distribution=FullInteriorAndExterior
+..In the following, only the first 10 reference surfaces will be shown.
+..But all surfaces are used in the calculations.
+==================================
+Surface=BREAK_ROOM_0_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=11
+..Surface=STORAGE_0_WALL_3
+..Surface=STORAGE_0_WALL_4
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=BREAK_ROOM_1_FLOOR
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=STORAGE_1_FLOOR
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+Number of back surfaces=8
+...Surface=BREAK_ROOM_0_WALL_2
+...Surface=BREAK_ROOM_0_WALL_3
+...Surface=BREAK_ROOM_0_WALL_4
+...Surface=BREAK_ROOM_0_FLOOR
+...Surface=BREAK_ROOM_0_CEILING
+...Surface=BREAK_ROOM_0_WINDOW_2
+...Surface=BREAK_ROOM_0_WINDOW_3
+...Surface=BREAK_ROOM_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_0_WINDOW_1
+==================================
+Surface=BREAK_ROOM_0_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=14
+..Surface=STORAGE_0_WALL_3
+..Surface=STORAGE_0_WALL_4
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=OFFICE_PRIVATE_1_FLOOR
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=STORAGE_1_FLOOR
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+Number of back surfaces=8
+...Surface=BREAK_ROOM_0_WALL_1
+...Surface=BREAK_ROOM_0_WALL_3
+...Surface=BREAK_ROOM_0_WALL_4
+...Surface=BREAK_ROOM_0_FLOOR
+...Surface=BREAK_ROOM_0_CEILING
+...Surface=BREAK_ROOM_0_WINDOW_1
+...Surface=BREAK_ROOM_0_WINDOW_3
+...Surface=BREAK_ROOM_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_0_WINDOW_2
+==================================
+Surface=BREAK_ROOM_0_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OFFICE_PRIVATE_0_WALL_1
+..Surface=OFFICE_PRIVATE_0_WALL_2
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=OFFICE_PRIVATE_1_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=BREAK_ROOM_0_WALL_1
+...Surface=BREAK_ROOM_0_WALL_2
+...Surface=BREAK_ROOM_0_WALL_4
+...Surface=BREAK_ROOM_0_FLOOR
+...Surface=BREAK_ROOM_0_CEILING
+...Surface=BREAK_ROOM_0_WINDOW_1
+...Surface=BREAK_ROOM_0_WINDOW_2
+...Surface=BREAK_ROOM_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_0_WINDOW_3
+==================================
+Surface=BREAK_ROOM_0_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OFFICE_PRIVATE_0_WALL_1
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=BREAK_ROOM_1_FLOOR
+Number of back surfaces=8
+...Surface=BREAK_ROOM_0_WALL_1
+...Surface=BREAK_ROOM_0_WALL_2
+...Surface=BREAK_ROOM_0_WALL_3
+...Surface=BREAK_ROOM_0_FLOOR
+...Surface=BREAK_ROOM_0_CEILING
+...Surface=BREAK_ROOM_0_WINDOW_1
+...Surface=BREAK_ROOM_0_WINDOW_2
+...Surface=BREAK_ROOM_0_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_0_WINDOW_4
+==================================
+Surface=BREAK_ROOM_0_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=12
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_0_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=16
+..Surface=BREAK_ROOM_0_WALL_3
+..Surface=BREAK_ROOM_0_WALL_4
+..Surface=STORAGE_0_WALL_3
+..Surface=STORAGE_0_WALL_4
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=BREAK_ROOM_1_FLOOR
+..Surface=OFFICE_PRIVATE_1_WALL_3
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=OFFICE_PRIVATE_1_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_0_WALL_2
+...Surface=OFFICE_PRIVATE_0_WALL_3
+...Surface=OFFICE_PRIVATE_0_WALL_4
+...Surface=OFFICE_PRIVATE_0_FLOOR
+...Surface=OFFICE_PRIVATE_0_CEILING
+...Surface=OFFICE_PRIVATE_0_WINDOW_2
+...Surface=OFFICE_PRIVATE_0_WINDOW_3
+...Surface=OFFICE_PRIVATE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_0_WINDOW_1
+==================================
+Surface=OFFICE_PRIVATE_0_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=15
+..Surface=BREAK_ROOM_0_WALL_3
+..Surface=STORAGE_0_WALL_3
+..Surface=STORAGE_0_WALL_4
+..Surface=OFFICE_PRIVATE_1_WALL_3
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=OFFICE_PRIVATE_1_FLOOR
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=STORAGE_1_FLOOR
+..Surface=LOBBY_2_WALL_3
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_0_WALL_1
+...Surface=OFFICE_PRIVATE_0_WALL_3
+...Surface=OFFICE_PRIVATE_0_WALL_4
+...Surface=OFFICE_PRIVATE_0_FLOOR
+...Surface=OFFICE_PRIVATE_0_CEILING
+...Surface=OFFICE_PRIVATE_0_WINDOW_1
+...Surface=OFFICE_PRIVATE_0_WINDOW_3
+...Surface=OFFICE_PRIVATE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_0_WINDOW_2
+==================================
+Surface=OFFICE_PRIVATE_0_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_0_WALL_1
+...Surface=OFFICE_PRIVATE_0_WALL_2
+...Surface=OFFICE_PRIVATE_0_WALL_4
+...Surface=OFFICE_PRIVATE_0_FLOOR
+...Surface=OFFICE_PRIVATE_0_CEILING
+...Surface=OFFICE_PRIVATE_0_WINDOW_1
+...Surface=OFFICE_PRIVATE_0_WINDOW_2
+...Surface=OFFICE_PRIVATE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_0_WINDOW_3
+==================================
+Surface=OFFICE_PRIVATE_0_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=BREAK_ROOM_1_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_0_WALL_1
+...Surface=OFFICE_PRIVATE_0_WALL_2
+...Surface=OFFICE_PRIVATE_0_WALL_3
+...Surface=OFFICE_PRIVATE_0_FLOOR
+...Surface=OFFICE_PRIVATE_0_CEILING
+...Surface=OFFICE_PRIVATE_0_WINDOW_1
+...Surface=OFFICE_PRIVATE_0_WINDOW_2
+...Surface=OFFICE_PRIVATE_0_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_0_WINDOW_4
+==================================
+Surface=OFFICE_PRIVATE_0_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=12
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=OFFICE_PRIVATE_1_WALL_3
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_0_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=STORAGE_0_WALL_2
+...Surface=STORAGE_0_WALL_3
+...Surface=STORAGE_0_WALL_4
+...Surface=STORAGE_0_FLOOR
+...Surface=STORAGE_0_CEILING
+...Surface=STORAGE_0_WINDOW_2
+...Surface=STORAGE_0_WINDOW_3
+...Surface=STORAGE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_0_WINDOW_1
+==================================
+Surface=STORAGE_0_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=STORAGE_1_WALL_1
+..Surface=STORAGE_1_WALL_4
+..Surface=STORAGE_1_FLOOR
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+Number of back surfaces=8
+...Surface=STORAGE_0_WALL_1
+...Surface=STORAGE_0_WALL_3
+...Surface=STORAGE_0_WALL_4
+...Surface=STORAGE_0_FLOOR
+...Surface=STORAGE_0_CEILING
+...Surface=STORAGE_0_WINDOW_1
+...Surface=STORAGE_0_WINDOW_3
+...Surface=STORAGE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_0_WINDOW_2
+==================================
+Surface=STORAGE_0_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=19
+..Surface=BREAK_ROOM_0_WALL_1
+..Surface=BREAK_ROOM_0_WALL_2
+..Surface=OFFICE_PRIVATE_0_WALL_1
+..Surface=OFFICE_PRIVATE_0_WALL_2
+..Surface=BREAK_ROOM_1_WALL_1
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_FLOOR
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_2
+..Surface=OFFICE_PRIVATE_1_FLOOR
+Number of back surfaces=8
+...Surface=STORAGE_0_WALL_1
+...Surface=STORAGE_0_WALL_2
+...Surface=STORAGE_0_WALL_4
+...Surface=STORAGE_0_FLOOR
+...Surface=STORAGE_0_CEILING
+...Surface=STORAGE_0_WINDOW_1
+...Surface=STORAGE_0_WINDOW_2
+...Surface=STORAGE_0_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_0_WINDOW_3
+==================================
+Surface=STORAGE_0_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=13
+..Surface=BREAK_ROOM_0_WALL_1
+..Surface=BREAK_ROOM_0_WALL_2
+..Surface=OFFICE_PRIVATE_0_WALL_1
+..Surface=OFFICE_PRIVATE_0_WALL_2
+..Surface=BREAK_ROOM_1_WALL_1
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_FLOOR
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_2
+..Surface=OFFICE_PRIVATE_1_FLOOR
+Number of back surfaces=8
+...Surface=STORAGE_0_WALL_1
+...Surface=STORAGE_0_WALL_2
+...Surface=STORAGE_0_WALL_3
+...Surface=STORAGE_0_FLOOR
+...Surface=STORAGE_0_CEILING
+...Surface=STORAGE_0_WINDOW_1
+...Surface=STORAGE_0_WINDOW_2
+...Surface=STORAGE_0_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=STORAGE_0_WINDOW_4
+==================================
+Surface=STORAGE_0_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=12
+..Surface=BREAK_ROOM_1_WALL_1
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_2
+..Surface=STORAGE_1_WALL_1
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_0_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=BREAK_ROOM_1_WALL_2
+...Surface=BREAK_ROOM_1_WALL_3
+...Surface=BREAK_ROOM_1_WALL_4
+...Surface=BREAK_ROOM_1_FLOOR
+...Surface=BREAK_ROOM_1_CEILING
+...Surface=BREAK_ROOM_1_WINDOW_2
+...Surface=BREAK_ROOM_1_WINDOW_3
+...Surface=BREAK_ROOM_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_1_WINDOW_1
+==================================
+Surface=BREAK_ROOM_1_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=11
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=STORAGE_1_WALL_1
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+Number of back surfaces=8
+...Surface=BREAK_ROOM_1_WALL_1
+...Surface=BREAK_ROOM_1_WALL_3
+...Surface=BREAK_ROOM_1_WALL_4
+...Surface=BREAK_ROOM_1_FLOOR
+...Surface=BREAK_ROOM_1_CEILING
+...Surface=BREAK_ROOM_1_WINDOW_1
+...Surface=BREAK_ROOM_1_WINDOW_3
+...Surface=BREAK_ROOM_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_1_WINDOW_2
+==================================
+Surface=BREAK_ROOM_1_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=7
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_4
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=BREAK_ROOM_1_WALL_1
+...Surface=BREAK_ROOM_1_WALL_2
+...Surface=BREAK_ROOM_1_WALL_4
+...Surface=BREAK_ROOM_1_FLOOR
+...Surface=BREAK_ROOM_1_CEILING
+...Surface=BREAK_ROOM_1_WINDOW_1
+...Surface=BREAK_ROOM_1_WINDOW_2
+...Surface=BREAK_ROOM_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_1_WINDOW_3
+==================================
+Surface=BREAK_ROOM_1_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=BREAK_ROOM_1_WALL_1
+...Surface=BREAK_ROOM_1_WALL_2
+...Surface=BREAK_ROOM_1_WALL_3
+...Surface=BREAK_ROOM_1_FLOOR
+...Surface=BREAK_ROOM_1_CEILING
+...Surface=BREAK_ROOM_1_WINDOW_1
+...Surface=BREAK_ROOM_1_WINDOW_2
+...Surface=BREAK_ROOM_1_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=BREAK_ROOM_1_WINDOW_4
+==================================
+Surface=BREAK_ROOM_1_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_WALL_4
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREAK_ROOM_1_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=7
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_1_WALL_2
+...Surface=OFFICE_PRIVATE_1_WALL_3
+...Surface=OFFICE_PRIVATE_1_WALL_4
+...Surface=OFFICE_PRIVATE_1_FLOOR
+...Surface=OFFICE_PRIVATE_1_CEILING
+...Surface=OFFICE_PRIVATE_1_WINDOW_2
+...Surface=OFFICE_PRIVATE_1_WINDOW_3
+...Surface=OFFICE_PRIVATE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_1_WINDOW_1
+==================================
+Surface=OFFICE_PRIVATE_1_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=STORAGE_1_WALL_3
+..Surface=STORAGE_1_WALL_4
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_1_WALL_1
+...Surface=OFFICE_PRIVATE_1_WALL_3
+...Surface=OFFICE_PRIVATE_1_WALL_4
+...Surface=OFFICE_PRIVATE_1_FLOOR
+...Surface=OFFICE_PRIVATE_1_CEILING
+...Surface=OFFICE_PRIVATE_1_WINDOW_1
+...Surface=OFFICE_PRIVATE_1_WINDOW_3
+...Surface=OFFICE_PRIVATE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_1_WINDOW_2
+==================================
+Surface=OFFICE_PRIVATE_1_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_1_WALL_1
+...Surface=OFFICE_PRIVATE_1_WALL_2
+...Surface=OFFICE_PRIVATE_1_WALL_4
+...Surface=OFFICE_PRIVATE_1_FLOOR
+...Surface=OFFICE_PRIVATE_1_CEILING
+...Surface=OFFICE_PRIVATE_1_WINDOW_1
+...Surface=OFFICE_PRIVATE_1_WINDOW_2
+...Surface=OFFICE_PRIVATE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_1_WINDOW_3
+==================================
+Surface=OFFICE_PRIVATE_1_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=BREAK_ROOM_1_WALL_3
+Number of back surfaces=8
+...Surface=OFFICE_PRIVATE_1_WALL_1
+...Surface=OFFICE_PRIVATE_1_WALL_2
+...Surface=OFFICE_PRIVATE_1_WALL_3
+...Surface=OFFICE_PRIVATE_1_FLOOR
+...Surface=OFFICE_PRIVATE_1_CEILING
+...Surface=OFFICE_PRIVATE_1_WINDOW_1
+...Surface=OFFICE_PRIVATE_1_WINDOW_2
+...Surface=OFFICE_PRIVATE_1_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=OFFICE_PRIVATE_1_WINDOW_4
+==================================
+Surface=OFFICE_PRIVATE_1_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_4
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OFFICE_PRIVATE_1_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=1
+..Surface=BREAK_ROOM_1_WALL_2
+Number of back surfaces=8
+...Surface=STORAGE_1_WALL_2
+...Surface=STORAGE_1_WALL_3
+...Surface=STORAGE_1_WALL_4
+...Surface=STORAGE_1_FLOOR
+...Surface=STORAGE_1_CEILING
+...Surface=STORAGE_1_WINDOW_2
+...Surface=STORAGE_1_WINDOW_3
+...Surface=STORAGE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_1_WINDOW_1
+==================================
+Surface=STORAGE_1_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=STORAGE_1_WALL_1
+...Surface=STORAGE_1_WALL_3
+...Surface=STORAGE_1_WALL_4
+...Surface=STORAGE_1_FLOOR
+...Surface=STORAGE_1_CEILING
+...Surface=STORAGE_1_WINDOW_1
+...Surface=STORAGE_1_WINDOW_3
+...Surface=STORAGE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_1_WINDOW_2
+==================================
+Surface=STORAGE_1_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_2
+..Surface=LOBBY_2_WALL_2
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_2
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=STORAGE_1_WALL_1
+...Surface=STORAGE_1_WALL_2
+...Surface=STORAGE_1_WALL_4
+...Surface=STORAGE_1_FLOOR
+...Surface=STORAGE_1_CEILING
+...Surface=STORAGE_1_WINDOW_1
+...Surface=STORAGE_1_WINDOW_2
+...Surface=STORAGE_1_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=STORAGE_1_WINDOW_3
+==================================
+Surface=STORAGE_1_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=BREAK_ROOM_1_WALL_2
+..Surface=OFFICE_PRIVATE_1_WALL_1
+..Surface=OFFICE_PRIVATE_1_WALL_2
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_FLOOR
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_2
+..Surface=MECHANICAL_2_FLOOR
+Number of back surfaces=8
+...Surface=STORAGE_1_WALL_1
+...Surface=STORAGE_1_WALL_2
+...Surface=STORAGE_1_WALL_3
+...Surface=STORAGE_1_FLOOR
+...Surface=STORAGE_1_CEILING
+...Surface=STORAGE_1_WINDOW_1
+...Surface=STORAGE_1_WINDOW_2
+...Surface=STORAGE_1_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=STORAGE_1_WINDOW_4
+==================================
+Surface=STORAGE_1_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=LOBBY_2_WALL_1
+..Surface=LOBBY_2_WALL_2
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_2
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=STORAGE_1_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=LOBBY_2_WALL_2
+...Surface=LOBBY_2_WALL_3
+...Surface=LOBBY_2_WALL_4
+...Surface=LOBBY_2_FLOOR
+...Surface=LOBBY_2_CEILING
+...Surface=LOBBY_2_WINDOW_2
+...Surface=LOBBY_2_WINDOW_3
+...Surface=LOBBY_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=LOBBY_2_WINDOW_1
+==================================
+Surface=LOBBY_2_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=LOBBY_2_WALL_1
+...Surface=LOBBY_2_WALL_3
+...Surface=LOBBY_2_WALL_4
+...Surface=LOBBY_2_FLOOR
+...Surface=LOBBY_2_CEILING
+...Surface=LOBBY_2_WINDOW_1
+...Surface=LOBBY_2_WINDOW_3
+...Surface=LOBBY_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=LOBBY_2_WINDOW_2
+==================================
+Surface=LOBBY_2_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_2
+Number of back surfaces=8
+...Surface=LOBBY_2_WALL_1
+...Surface=LOBBY_2_WALL_2
+...Surface=LOBBY_2_WALL_4
+...Surface=LOBBY_2_FLOOR
+...Surface=LOBBY_2_CEILING
+...Surface=LOBBY_2_WINDOW_1
+...Surface=LOBBY_2_WINDOW_2
+...Surface=LOBBY_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=LOBBY_2_WINDOW_3
+==================================
+Surface=LOBBY_2_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=MECHANICAL_2_WALL_1
+..Surface=MECHANICAL_2_WALL_2
+Number of back surfaces=8
+...Surface=LOBBY_2_WALL_1
+...Surface=LOBBY_2_WALL_2
+...Surface=LOBBY_2_WALL_3
+...Surface=LOBBY_2_FLOOR
+...Surface=LOBBY_2_CEILING
+...Surface=LOBBY_2_WINDOW_1
+...Surface=LOBBY_2_WINDOW_2
+...Surface=LOBBY_2_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=LOBBY_2_WINDOW_4
+==================================
+Surface=LOBBY_2_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=LOBBY_2_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_WALL_1 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+Number of back surfaces=8
+...Surface=MECHANICAL_2_WALL_2
+...Surface=MECHANICAL_2_WALL_3
+...Surface=MECHANICAL_2_WALL_4
+...Surface=MECHANICAL_2_FLOOR
+...Surface=MECHANICAL_2_CEILING
+...Surface=MECHANICAL_2_WINDOW_2
+...Surface=MECHANICAL_2_WINDOW_3
+...Surface=MECHANICAL_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=MECHANICAL_2_WINDOW_1
+==================================
+Surface=MECHANICAL_2_WINDOW_1 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_WALL_2 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=LOBBY_2_WALL_3
+..Surface=LOBBY_2_WALL_4
+Number of back surfaces=8
+...Surface=MECHANICAL_2_WALL_1
+...Surface=MECHANICAL_2_WALL_3
+...Surface=MECHANICAL_2_WALL_4
+...Surface=MECHANICAL_2_FLOOR
+...Surface=MECHANICAL_2_CEILING
+...Surface=MECHANICAL_2_WINDOW_1
+...Surface=MECHANICAL_2_WINDOW_3
+...Surface=MECHANICAL_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=MECHANICAL_2_WINDOW_2
+==================================
+Surface=MECHANICAL_2_WINDOW_2 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_WALL_3 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=MECHANICAL_2_WALL_1
+...Surface=MECHANICAL_2_WALL_2
+...Surface=MECHANICAL_2_WALL_4
+...Surface=MECHANICAL_2_FLOOR
+...Surface=MECHANICAL_2_CEILING
+...Surface=MECHANICAL_2_WINDOW_1
+...Surface=MECHANICAL_2_WINDOW_2
+...Surface=MECHANICAL_2_WINDOW_4
+Number of receiving sub surfaces=1
+....Surface=MECHANICAL_2_WINDOW_3
+==================================
+Surface=MECHANICAL_2_WINDOW_3 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_WALL_4 is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=8
+...Surface=MECHANICAL_2_WALL_1
+...Surface=MECHANICAL_2_WALL_2
+...Surface=MECHANICAL_2_WALL_3
+...Surface=MECHANICAL_2_FLOOR
+...Surface=MECHANICAL_2_CEILING
+...Surface=MECHANICAL_2_WINDOW_1
+...Surface=MECHANICAL_2_WINDOW_2
+...Surface=MECHANICAL_2_WINDOW_3
+Number of receiving sub surfaces=1
+....Surface=MECHANICAL_2_WINDOW_4
+==================================
+Surface=MECHANICAL_2_WINDOW_4 is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_FLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_CEILING is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=MECHANICAL_2_INTERNALMASS is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0

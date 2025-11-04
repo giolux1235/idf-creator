@@ -1,20 +1,27 @@
 """Module for estimating building parameters from minimal input."""
-from typing import Dict
-import yaml
+from typing import Dict, Optional
+from .building_age_adjustments import BuildingAgeAdjuster
+from .utils.config_manager import ConfigManager
 
 
 class BuildingEstimator:
     """Estimates missing building parameters using defaults and typical values."""
     
     def __init__(self, config_path: str = "config.yaml"):
-        with open(config_path, 'r') as f:
-            self.config = yaml.safe_load(f)
+        """
+        Initialize building estimator.
+        
+        Args:
+            config_path: Path to configuration file
+        """
+        self.config_manager = ConfigManager.get_instance(config_path)
+        self.age_adjuster = BuildingAgeAdjuster()
     
     def get_defaults(self) -> Dict:
         """Get default building parameters from config."""
-        return self.config.get('defaults', {})
+        return self.config_manager.get_defaults()
     
-    def estimate_from_type(self, building_type: str) -> Dict:
+    def estimate_from_type(self, building_type: str, year_built: Optional[int] = None) -> Dict:
         """
         Estimate typical parameters based on building type.
         
@@ -69,7 +76,21 @@ class BuildingEstimator:
             }
         }
         
-        return typical_params.get(building_type, typical_params['Office'])
+        base_params = typical_params.get(building_type, typical_params['Office'])
+        
+        # Adjust for building age
+        # NOTE: Only apply HVAC efficiency and infiltration adjustments by default.
+        # Internal load adjustments (lighting/equipment) are opt-in to avoid over-correction.
+        if year_built is not None:
+            age_params = self.age_adjuster.adjust_parameters(year_built)
+            # Adjust infiltration (this works well)
+            base_params['infiltration_ach'] = base_params['infiltration_ach'] * age_params.infiltration_multiplier
+            
+            # Internal load adjustments are now opt-in via apply_internal_load_adjustments flag
+            # These are disabled by default as they can over-correct
+            # Users can enable them if they know the building hasn't been retrofitted
+        
+        return base_params
     
     def calculate_zone_parameters(self, floor_area: float, 
                                    building_type: str = "Office",
