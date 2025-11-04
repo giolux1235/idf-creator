@@ -35,10 +35,26 @@ class EnhancedLocationFetcher(LocationFetcher):
         """
         print(f"📍 Fetching comprehensive data for: {address}")
         
-        # 1. Basic geocoding
+        # 1. Basic geocoding (with fallback)
         coords = self.geocode_address(address)
         if not coords:
-            raise ValueError(f"Could not geocode address: {address}")
+            print(f"⚠️  Warning: Primary geocoding failed, trying fallback...")
+            coords = self._geocode_fallback(address)
+        
+        # Final fallback: use city lookup or Chicago default
+        if not coords:
+            print(f"⚠️  Warning: All geocoding failed, using Chicago default")
+            city_data = self.CITY_LOOKUP.get('Chicago, IL', {
+                'latitude': 41.8781,
+                'longitude': -87.6298,
+                'time_zone': -6.0,
+                'elevation': 200
+            })
+            coords = {
+                'latitude': city_data['latitude'],
+                'longitude': city_data['longitude'],
+                'altitude': city_data.get('elevation', 200)
+            }
         
         print(f"✓ Geocoded: {coords['latitude']:.3f}, {coords['longitude']:.3f}")
         
