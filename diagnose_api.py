@@ -81,3 +81,5 @@ print("\n" + "="*70)
 print("Diagnostic complete")
 print("="*70)
 
+
+

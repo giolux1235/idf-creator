@@ -83,3 +83,5 @@ The simulation now runs successfully with:
 All energy improvements from previous fixes (natural gas heating, seasonal schedules, etc.) are preserved and working correctly.
 
 
+
+

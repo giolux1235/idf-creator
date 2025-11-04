@@ -60,3 +60,5 @@ zone_control = {
 4. Add validation warnings if energy consumption is outside expected range
 
 
+
+

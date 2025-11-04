@@ -107,3 +107,5 @@ EUI: ~98 kWh/m²
 The HVAC system is correctly configured and should produce realistic energy consumption once the geometry issues are resolved.
 
 
+
+

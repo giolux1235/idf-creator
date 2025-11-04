@@ -98,3 +98,5 @@ From the diagnostic tests:
 3. **Check EnergyPlus error logs** for specific missing objects
 4. **Test with a simpler IDF** first to verify API works end-to-end
 
+
+

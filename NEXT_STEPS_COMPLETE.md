@@ -154,3 +154,5 @@ When generating new IDF files, verify:
 The system is ready for production use. New IDF files will have properly configured thermostats, and energy consumption will be validated against the expected range.
 
 
+
+
