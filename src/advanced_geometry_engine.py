@@ -728,7 +728,10 @@ class AdvancedGeometryEngine:
         return surfaces
     
     def _generate_floor_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Optional[Dict]:
-        """Generate floor surface for zone"""
+        """Generate floor surface for zone with correct orientation (tilt ~180°)"""
+        # Import geometry utilities
+        from .geometry_utils import fix_vertex_ordering_for_floor
+        
         # Validate polygon has sufficient area
         if not zone.polygon or zone.polygon.area < 0.1:
             return None
@@ -748,22 +751,16 @@ class AdvancedGeometryEngine:
         if len(cleaned_coords) < 3:
             return None
         
-        # For floors with CounterClockWise vertex entry direction:
-        # Vertices should be ordered clockwise (when viewed from above) so normal points downward (tilt ~180°)
-        # Check current winding order - if polygon is counter-clockwise, reverse it
-        # Calculate signed area to determine winding order
-        area = 0.0
-        for i in range(len(cleaned_coords)):
-            j = (i + 1) % len(cleaned_coords)
-            area += (cleaned_coords[j][0] - cleaned_coords[i][0]) * (cleaned_coords[j][1] + cleaned_coords[i][1])
-        # If area is positive, polygon is counter-clockwise (normal points up), so reverse for floor
-        if area > 0:
-            cleaned_coords = list(reversed(cleaned_coords))
         z_coord = zone.floor_level * 3.0
         
+        # Fix vertex ordering to ensure floor normal points downward (tilt ~180°)
+        # This ensures EnergyPlus won't warn about inverted floor surfaces
+        vertices_3d = fix_vertex_ordering_for_floor(cleaned_coords, z_coord)
+        
+        # Format vertices as strings for EnergyPlus
         vertices = []
-        for x, y in cleaned_coords:
-            vertices.append(f"{x:.4f},{y:.4f},{z_coord:.4f}")
+        for x, y, z in vertices_3d:
+            vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
         
         return {
             'type': 'BuildingSurface:Detailed',
@@ -779,7 +776,10 @@ class AdvancedGeometryEngine:
         }
     
     def _generate_ceiling_surface(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> Optional[Dict]:
-        """Generate ceiling surface for zone"""
+        """Generate ceiling surface for zone with correct orientation (tilt ~0°)"""
+        # Import geometry utilities
+        from .geometry_utils import fix_vertex_ordering_for_ceiling
+        
         # Validate polygon has sufficient area
         if not zone.polygon or zone.polygon.area < 0.1:
             return None
@@ -799,23 +799,16 @@ class AdvancedGeometryEngine:
         if len(cleaned_coords) < 3:
             return None
         
-        # For ceilings with CounterClockWise vertex entry direction:
-        # Vertices should be ordered counter-clockwise (when viewed from above) so normal points upward (tilt ~0°)
-        # Check current winding order - if polygon is clockwise, reverse it
-        # Calculate signed area to determine winding order
-        area = 0.0
-        for i in range(len(cleaned_coords)):
-            j = (i + 1) % len(cleaned_coords)
-            area += (cleaned_coords[j][0] - cleaned_coords[i][0]) * (cleaned_coords[j][1] + cleaned_coords[i][1])
-        # If area is negative, polygon is clockwise (normal points down), so reverse for ceiling
-        if area < 0:
-            cleaned_coords = list(reversed(cleaned_coords))
-        
         z_coord = (zone.floor_level + 1) * 3.0
         
+        # Fix vertex ordering to ensure ceiling normal points upward (tilt ~0°)
+        # This ensures EnergyPlus won't warn about inverted ceiling/roof surfaces
+        vertices_3d = fix_vertex_ordering_for_ceiling(cleaned_coords, z_coord)
+        
+        # Format vertices as strings for EnergyPlus
         vertices = []
-        for x, y in cleaned_coords:
-            vertices.append(f"{x:.4f},{y:.4f},{z_coord:.4f}")
+        for x, y, z in vertices_3d:
+            vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
         
         return {
             'type': 'BuildingSurface:Detailed',

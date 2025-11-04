@@ -179,19 +179,42 @@ Schedule:Compact,
         reference_point_name = f"{zone_name}_ReferencePoint1"
         
         # Calculate reference point coordinates based on zone geometry
-        # If zone geometry is provided, use polygon centroid; otherwise use default
+        # Reference points MUST be within zone boundaries to avoid EnergyPlus warnings
         if zone_geometry and zone_geometry.polygon and zone_geometry.polygon.is_valid:
             # Get polygon bounds
             bounds = zone_geometry.polygon.bounds  # (minx, miny, maxx, maxy)
             # Calculate centroid
             centroid = zone_geometry.polygon.centroid
-            ref_x = centroid.x
-            ref_y = centroid.y
-            # Ensure point is within bounds (safety check)
-            ref_x = max(bounds[0] + 0.5, min(bounds[2] - 0.5, ref_x))
-            ref_y = max(bounds[1] + 0.5, min(bounds[3] - 0.5, ref_y))
+            
+            # Calculate zone center with margin from edges (at least 0.5m from boundaries)
+            margin = 0.5
+            min_x, min_y, max_x, max_y = bounds
+            
+            # Ensure margin is not larger than zone size
+            zone_width = max_x - min_x
+            zone_height = max_y - min_y
+            actual_margin_x = min(margin, zone_width / 4.0)  # Use 25% of width as max margin
+            actual_margin_y = min(margin, zone_height / 4.0)  # Use 25% of height as max margin
+            
+            # Calculate reference point within bounds with margin
+            ref_x = max(min_x + actual_margin_x, min(max_x - actual_margin_x, centroid.x))
+            ref_y = max(min_y + actual_margin_y, min(max_y - actual_margin_y, centroid.y))
+            
+            # Verify point is actually within polygon (in case polygon is irregular)
+            from shapely.geometry import Point
+            test_point = Point(ref_x, ref_y)
+            if not zone_geometry.polygon.contains(test_point):
+                # Point is outside polygon, use centroid instead
+                if zone_geometry.polygon.contains(centroid):
+                    ref_x = centroid.x
+                    ref_y = centroid.y
+                else:
+                    # Centroid also outside, use bounds center
+                    ref_x = (min_x + max_x) / 2.0
+                    ref_y = (min_y + max_y) / 2.0
         else:
-            # Default fallback: use center of typical zone (will be adjusted if zone is small)
+            # Default fallback: use center of typical zone
+            # This is a fallback - ideally zone_geometry should always be provided
             ref_x = 2.0
             ref_y = 2.0
         
@@ -230,7 +253,7 @@ Schedule:Compact,
   ,                                   !- Glare Calculation Maximum Allowable Discomfort Glare Index (N6)
   ,                                   !- DElight Gridding Resolution (N7) - NOTE: Removed extra \"Minimum Allowable Illuminance\" field that was not in IDD
   {reference_point_name},            !- Daylighting Reference Point 1 Name (A7) - REQUIRED
-  0.9,                                !- Fraction of Lights Controlled by Reference Point 1 (N8)
+  1.0,                                !- Fraction of Lights Controlled by Reference Point 1 (N8) - Changed to 1.0 for full coverage
   500.0,                              !- Illuminance Setpoint at Reference Point 1 {{lux}} (N9)
   ;                                   !- ID-Algorithm (only Reference Point 1 provided)
 

@@ -240,14 +240,27 @@ class AdvancedHVACSystems:
         cooling_load = zone_area * cooling_load_density * multipliers['cooling']
         heating_load = zone_area * heating_load_density * multipliers['heating']
         
-        # Air flow rates
+        # Air flow rates - CRITICAL FIX for DX coil warnings
         # EnergyPlus expects air volume flow rate per watt in range [2.684E-005--6.713E-005] m³/s/W
+        # Minimum: 2.684E-005 m³/s/W
+        # Maximum: 6.713E-005 m³/s/W
         # Use middle of range: ~4.7E-5 m³/s/W for proper coil sizing
-        # Minimum air flow rate: 0.00004027 m³/s per watt (2.684E-5 m³/s/W minimum)
-        # Maximum air flow rate: 0.00006041 m³/s per watt (6.713E-5 m³/s/W maximum)
-        # Use 4.7E-5 m³/s/W (middle of range) for proper operation
         air_flow_per_watt = 4.7e-5  # m³/s per watt (middle of acceptable range)
         supply_air_flow = cooling_load * air_flow_per_watt  # m³/s
+        
+        # Validate and fix air flow rate to ensure it's within acceptable range
+        if cooling_load > 0:
+            actual_flow_per_watt = supply_air_flow / cooling_load
+            if actual_flow_per_watt < 2.684e-5:
+                # Increase to meet minimum
+                supply_air_flow = cooling_load * 2.684e-5
+            elif actual_flow_per_watt > 6.713e-5:
+                # Decrease to meet maximum
+                supply_air_flow = cooling_load * 6.713e-5
+        
+        # Ensure minimum airflow (0.1 m³/s) for small zones
+        if supply_air_flow < 0.1:
+            supply_air_flow = 0.1
         
         # Ventilation rate: 0.5 L/s-m² = 0.0005 m³/s-m²
         ventilation_rate = zone_area * 0.0005  # m³/s

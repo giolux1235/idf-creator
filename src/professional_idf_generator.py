@@ -1383,8 +1383,37 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             return f"! {comp_type}: {component.get('name', 'UNKNOWN')}\n"
     
     def _generate_hvac_performance_curves(self) -> str:
-        """Generate performance curves for HVAC equipment"""
-        return """Curve:Biquadratic,
+        """Generate performance curves for HVAC equipment
+        
+        EIR curve is adjusted to evaluate to 1.0 at rated conditions:
+        - x = 19.4°C (indoor wet-bulb, evaporator inlet)
+        - y = 35.0°C (outdoor dry-bulb, condenser inlet)
+        """
+        # Calculate EIR curve coefficient1 to ensure EIR = 1.0 at rated conditions
+        # Rated conditions: x = 19.4°C, y = 35.0°C
+        # EIR = c1 + c2*x + c3*x² + c4*y + c5*y² + c6*x*y
+        # At rated: 1.0 = c1 + c2*19.4 + c3*19.4² + c4*35.0 + c5*35.0² + c6*19.4*35.0
+        
+        c2 = 0.0030892
+        c3 = 0.0000769888
+        c4 = -0.0155361
+        c5 = 0.0000800092
+        c6 = -0.0000282931
+        
+        x_rated = 19.4
+        y_rated = 35.0
+        
+        # Calculate non-constant terms at rated conditions
+        rated_value = (c2 * x_rated + 
+                      c3 * x_rated**2 + 
+                      c4 * y_rated + 
+                      c5 * y_rated**2 + 
+                      c6 * x_rated * y_rated)
+        
+        # Adjust c1 so total = 1.0
+        c1_adjusted = 1.0 - rated_value
+        
+        return f"""Curve:Biquadratic,
   Cool-Cap-fT,             !- Name
   0.942587793,   !- Coefficient1 Constant
   0.009543347,   !- Coefficient2 x
@@ -1408,7 +1437,7 @@ Curve:Cubic,
 
 Curve:Biquadratic,
   Cool-EIR-fT,             !- Name
-  0.342414409,   !- Coefficient1 Constant
+  {c1_adjusted:.9f},   !- Coefficient1 Constant (adjusted to evaluate to 1.0 at rated conditions)
   0.0030892,     !- Coefficient2 x
   0.0000769888,  !- Coefficient3 x**2
   -0.0155361,    !- Coefficient4 y
@@ -1664,9 +1693,7 @@ InternalMass,
             # Determine if this is an office/work space (higher occupancy) vs. other
             is_office_space = any(x in space_type.lower() for x in ['office', 'conference', 'classroom'])
             
-            # Occupancy schedule (simplified - single annual period to avoid field limit)
-            # Using Weekdays/Weekends only - EnergyPlus will use default values for Holiday/DesignDays
-            # This avoids "duplicate assignment" errors while maintaining functionality
+            # Occupancy schedule with all required day types to eliminate warnings
             if is_office_space:
                 schedules.append(f"""Schedule:Compact,
   {space_type}_Occupancy,  !- Name
@@ -1679,7 +1706,17 @@ InternalMass,
   Until: 18:00,0.3,
   Until: 24:00,0.1,
   For: Weekends,
-  Until: 24:00,0.1;
+  Until: 24:00,0.1,
+  For: Holiday,
+  Until: 24:00,0.0,
+  For: SummerDesignDay,
+  Until: 24:00,1.0,
+  For: WinterDesignDay,
+  Until: 24:00,1.0,
+  For: CustomDay1,
+  Until: 24:00,1.0,
+  For: CustomDay2,
+  Until: 24:00,1.0;
 """)
             else:
                 # Non-office spaces (storage, mechanical) - lower occupancy year-round
@@ -1693,8 +1730,7 @@ InternalMass,
   Until: 24:00,0.20;
 """)
             
-            # Lighting schedule (simplified - single annual period)
-            # Using Weekdays/Weekends only to avoid duplicate assignment errors
+            # Lighting schedule with all required day types to eliminate warnings
             schedules.append(f"""Schedule:Compact,
   {space_type}_Lighting,   !- Name
   Fraction,                !- Schedule Type Limits Name
@@ -1706,11 +1742,20 @@ InternalMass,
   Until: 20:00,0.5,
   Until: 24:00,0.1,
   For: Weekends,
-  Until: 24:00,0.2;
+  Until: 24:00,0.2,
+  For: Holiday,
+  Until: 24:00,0.1,
+  For: SummerDesignDay,
+  Until: 24:00,1.0,
+  For: WinterDesignDay,
+  Until: 24:00,1.0,
+  For: CustomDay1,
+  Until: 24:00,1.0,
+  For: CustomDay2,
+  Until: 24:00,1.0;
 """)
             
-            # Equipment schedule (simplified - single annual period)
-            # Using Weekdays/Weekends only to avoid duplicate assignment errors
+            # Equipment schedule with all required day types to eliminate warnings
             schedules.append(f"""Schedule:Compact,
   {space_type}_Equipment,  !- Name
   Fraction,                !- Schedule Type Limits Name
@@ -1722,7 +1767,17 @@ InternalMass,
   Until: 19:00,0.5,
   Until: 24:00,0.3,
   For: Weekends,
-  Until: 24:00,0.3;
+  Until: 24:00,0.3,
+  For: Holiday,
+  Until: 24:00,0.1,
+  For: SummerDesignDay,
+  Until: 24:00,1.0,
+  For: WinterDesignDay,
+  Until: 24:00,1.0,
+  For: CustomDay1,
+  Until: 24:00,1.0,
+  For: CustomDay2,
+  Until: 24:00,1.0;
 """)
 
             # People activity level schedule (Watts/person) - simplified single period
