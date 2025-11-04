@@ -65,12 +65,48 @@ class IDFGenerator(BaseIDFGenerator):
     
     def generate_site_location(self, location: Dict) -> str:
         """Generate Site:Location object."""
+        # Get latitude and longitude - REQUIRED, should come from geocoding
+        latitude = location.get('latitude')
+        longitude = location.get('longitude')
+        
+        # Validate coordinates are present
+        if latitude is None or longitude is None:
+            address = location.get('address', 'Unknown Location')
+            raise ValueError(
+                f"CRITICAL: Missing coordinates in location_data for address '{address}'. "
+                f"Geocoding must have failed. Latitude: {latitude}, Longitude: {longitude}"
+            )
+        
+        # Get elevation - check both 'elevation' and 'altitude' keys
+        elevation = location.get('elevation') or location.get('altitude')
+        if elevation is None:
+            elevation = 100.0  # Default elevation
+        
+        # Get time zone - should be calculated from coordinates
+        time_zone = location.get('time_zone')
+        if time_zone is None:
+            # Calculate timezone from longitude if not provided
+            if -125 <= longitude < -102:  # Pacific Time
+                time_zone = -8.0
+            elif -102 <= longitude < -90:  # Mountain Time
+                time_zone = -7.0
+            elif -90 <= longitude < -75:  # Central Time (includes Chicago)
+                time_zone = -6.0
+            elif -75 <= longitude < -60:  # Eastern Time
+                time_zone = -5.0
+            else:
+                time_zone = round(longitude / 15.0, 1)
+        
+        # Use address as location name, fallback to 'Custom Location'
+        address = location.get('address', '')
+        location_name = address if address else 'Custom Location'
+        
         return f"""Site:Location,
-  Custom Location,         !- Name
-  {location.get('latitude', 37.7):.3f},                  !- Latitude
-  {location.get('longitude', -122.4):.3f},                !- Longitude
-  {location.get('time_zone', -8.0):.1f},                  !- Time Zone
-  {location.get('altitude', 100.0):.1f};                 !- Elevation
+  {location_name},         !- Name
+  {latitude:.3f},                  !- Latitude
+  {longitude:.3f},                !- Longitude
+  {time_zone:.1f},                  !- Time Zone
+  {elevation:.1f};                 !- Elevation
 
 """
     

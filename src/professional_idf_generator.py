@@ -1000,14 +1000,52 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     
     def generate_site_location(self, location_data: Dict) -> str:
         """Generate Site:Location object."""
-        latitude = location_data.get('latitude', 37.7749)
-        longitude = location_data.get('longitude', -122.4194)
-        elevation = location_data.get('elevation', 10.0)
-        time_zone = location_data.get('time_zone', -8.0)
-        city_name = location_data.get('weather_city_name') or location_data.get('city', 'Site')
+        # Get latitude and longitude - REQUIRED, should come from geocoding
+        latitude = location_data.get('latitude')
+        longitude = location_data.get('longitude')
+        
+        # Validate coordinates are present
+        if latitude is None or longitude is None:
+            address = location_data.get('address', 'Unknown Location')
+            raise ValueError(
+                f"CRITICAL: Missing coordinates in location_data for address '{address}'. "
+                f"Geocoding must have failed. Latitude: {latitude}, Longitude: {longitude}"
+            )
+        
+        # Get elevation - check both 'elevation' and 'altitude' keys (location fetchers use 'altitude')
+        elevation = location_data.get('elevation') or location_data.get('altitude')
+        if elevation is None:
+            # Default elevation based on location (rough estimate)
+            # For Chicago: ~200m, for other cities: use reasonable default
+            if -88 < longitude < -87 and 41 < latitude < 42:  # Chicago area
+                elevation = 200.0
+            else:
+                elevation = 100.0  # Generic default
+        
+        # Get time zone - should be calculated from coordinates
+        time_zone = location_data.get('time_zone')
+        if time_zone is None:
+            # Calculate timezone from longitude if not provided
+            # US timezone approximations
+            if -125 <= longitude < -102:  # Pacific Time
+                time_zone = -8.0
+            elif -102 <= longitude < -90:  # Mountain Time
+                time_zone = -7.0
+            elif -90 <= longitude < -75:  # Central Time (includes Chicago)
+                time_zone = -6.0
+            elif -75 <= longitude < -60:  # Eastern Time
+                time_zone = -5.0
+            else:
+                # For other locations, use longitude/15 approximation
+                time_zone = round(longitude / 15.0, 1)
+        
+        # Use address as location name, fallback to city or 'Site'
+        address = location_data.get('address', '')
+        city_name = location_data.get('weather_city_name') or location_data.get('city')
+        location_name = address if address else (city_name if city_name else 'Site')
         
         site_location = f"""Site:Location,
-  {city_name}, !- Name
+  {location_name}, !- Name
   {latitude:.4f},          !- Latitude
   {longitude:.4f},         !- Longitude
   {time_zone:.1f},         !- Time Zone

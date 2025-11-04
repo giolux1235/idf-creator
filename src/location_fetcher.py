@@ -26,6 +26,11 @@ class LocationFetcher:
         Returns:
             Dictionary with 'latitude' and 'longitude' keys, or None if failed
         """
+        if not address or not address.strip():
+            print(f"⚠️  Warning: Empty address provided for geocoding")
+            return None
+        
+        # Try Nominatim geocoding first
         try:
             location = self.geolocator.geocode(address, timeout=10)
             if location:
@@ -34,17 +39,73 @@ class LocationFetcher:
                     'longitude': location.longitude,
                     'altitude': location.altitude if hasattr(location, 'altitude') else 0
                 }
+                
                 # Validate coordinates are reasonable (not 0,0 or clearly wrong)
                 if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
-                    print(f"⚠️  Warning: Geocoding returned suspicious coordinates (0,0)")
+                    print(f"⚠️  Warning: Geocoding returned suspicious coordinates (0,0) for '{address}'")
                     return None
+                
                 # Validate coordinates are within reasonable bounds
                 if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
-                    print(f"⚠️  Warning: Geocoding returned invalid coordinates")
+                    print(f"⚠️  Warning: Geocoding returned invalid coordinates for '{address}'")
                     return None
+                
+                # Additional validation: Check if coordinates look reasonable for US addresses
+                # US addresses should have negative longitude (west of prime meridian)
+                # and latitude between ~25-50 for continental US
+                if ', US' in address or ', USA' in address or any(state in address for state in [' IL', ' NY', ' CA', ' TX', ' FL', ' IL,', ' NY,', ' CA,', ' TX,', ' FL,']):
+                    if coords['longitude'] > 0:
+                        print(f"⚠️  Warning: US address '{address}' geocoded to positive longitude ({coords['longitude']:.4f}), which is likely wrong")
+                        # Try fallback geocoding
+                        return self._geocode_fallback(address)
+                    if coords['latitude'] < 20 or coords['latitude'] > 55:
+                        print(f"⚠️  Warning: US address '{address}' geocoded to latitude {coords['latitude']:.4f}, which seems unusual")
+                        # Try fallback geocoding
+                        return self._geocode_fallback(address)
+                
+                print(f"✓ Geocoded '{address}' to {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°E")
                 return coords
+            else:
+                print(f"⚠️  Warning: Nominatim geocoding returned no results for '{address}'")
+                # Try fallback
+                return self._geocode_fallback(address)
         except Exception as e:
-            print(f"Geocoding error: {e}")
+            print(f"⚠️  Geocoding error for '{address}': {e}")
+            # Try fallback
+            return self._geocode_fallback(address)
+    
+    def _geocode_fallback(self, address: str) -> Optional[Dict[str, float]]:
+        """
+        Fallback geocoding using OpenStreetMap Nominatim API directly.
+        This is a secondary attempt if the primary geocoding fails.
+        """
+        try:
+            import re
+            # Extract city and state from address for better geocoding
+            # Pattern: "..., City, State ZIP" or "..., City, State"
+            city_state_match = re.search(r',\s*([^,]+?),\s*([A-Z]{2})(?:\s+\d{5})?', address)
+            if city_state_match:
+                city = city_state_match.group(1).strip()
+                state = city_state_match.group(2).strip()
+                city_state_query = f"{city}, {state}, USA"
+                print(f"🔄 Trying fallback geocoding for '{city_state_query}'")
+                
+                location = self.geolocator.geocode(city_state_query, timeout=10)
+                if location:
+                    coords = {
+                        'latitude': location.latitude,
+                        'longitude': location.longitude,
+                        'altitude': location.altitude if hasattr(location, 'altitude') else 0
+                    }
+                    # Validate coordinates
+                    if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
+                        return None
+                    if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
+                        return None
+                    print(f"✓ Fallback geocoding succeeded: {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°E")
+                    return coords
+        except Exception as e:
+            print(f"⚠️  Fallback geocoding also failed: {e}")
         
         return None
     
@@ -140,33 +201,45 @@ class LocationFetcher:
             
         Returns:
             Dictionary with location and climate information
+            
+        Raises:
+            ValueError: If geocoding fails or returns invalid coordinates
         """
+        if not address or not address.strip():
+            raise ValueError(f"Address is required and cannot be empty")
+        
         coords = self.geocode_address(address)
         
         if not coords:
-            raise ValueError(f"Could not geocode address: {address}")
+            raise ValueError(
+                f"CRITICAL: Could not geocode address '{address}'. "
+                f"Please check the address format and try again. "
+                f"Geocoding service may be unavailable or the address may be invalid."
+            )
         
-        climate_zone = self.get_climate_zone(
-            coords['latitude'], 
-            coords['longitude']
-        )
+        # Validate coordinates are present
+        if 'latitude' not in coords or 'longitude' not in coords:
+            raise ValueError(
+                f"CRITICAL: Geocoding returned incomplete coordinates for '{address}'. "
+                f"Coordinates: {coords}"
+            )
         
-        weather_file = self.get_weather_file_name(
-            coords['latitude'],
-            coords['longitude']
-        )
+        latitude = coords['latitude']
+        longitude = coords['longitude']
+        
+        climate_zone = self.get_climate_zone(latitude, longitude)
+        
+        weather_file = self.get_weather_file_name(latitude, longitude)
         
         # Calculate timezone from coordinates
-        time_zone = self.get_time_zone(
-            coords['latitude'],
-            coords['longitude']
-        )
+        time_zone = self.get_time_zone(latitude, longitude)
         
         return {
             'address': address,
-            'latitude': coords['latitude'],
-            'longitude': coords['longitude'],
+            'latitude': latitude,
+            'longitude': longitude,
             'altitude': coords.get('altitude', 0),
+            'elevation': coords.get('altitude', 0),  # Also provide as 'elevation' for compatibility
             'time_zone': time_zone,
             'climate_zone': climate_zone,
             'weather_file': weather_file

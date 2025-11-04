@@ -138,6 +138,7 @@ class EnhancedLocationFetcher(LocationFetcher):
             'latitude': coords['latitude'],
             'longitude': coords['longitude'],
             'altitude': coords.get('altitude', 0),
+            'elevation': coords.get('altitude', 0),  # Also provide as 'elevation' for compatibility
             'time_zone': time_zone,
             'climate_zone': climate_zone,
             'weather_file': weather_info['file'],
