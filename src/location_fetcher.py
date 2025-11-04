@@ -117,6 +117,13 @@ class LocationFetcher:
         Convert address to lat/lon coordinates.
         CHECKS CITY LOOKUP TABLE FIRST for reliability.
         
+        Priority order:
+        1. Lookup table (fast, free, reliable for 50+ major cities)
+        2. Google Maps API (accurate, requires API key, costs money)
+        3. Nominatim API (free, rate-limited)
+        4. Keyword detection (backup)
+        5. Fallback to Chicago (with warning)
+        
         Args:
             address: Street address string
             
@@ -170,7 +177,20 @@ class LocationFetcher:
                         'elevation': city_data['elevation']
                     }
         
-        # STEP 4: Try Nominatim geocoding API (for addresses not in lookup table)
+        # STEP 4: Try Google Maps API (if API key is available)
+        if self.google_api_key:
+            try:
+                print(f"🗺️  Trying Google Maps API geocoding...")
+                coords = self._geocode_with_google(address)
+                if coords:
+                    print(f"✅ Geocoded with Google Maps API: {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°W")
+                    return coords
+                else:
+                    print(f"⚠️  Google Maps API returned no results")
+            except Exception as e:
+                print(f"⚠️  Google Maps API error: {e}")
+        
+        # STEP 5: Try Nominatim geocoding API (free fallback)
         try:
             # Respect rate limit (1 request per second)
             self._respect_rate_limit()
@@ -243,6 +263,62 @@ class LocationFetcher:
             print(f"⚠️  Geocoding error for '{address}': {e}")
             # Try final fallback
             return self._geocode_fallback_final(address)
+    
+    def _geocode_with_google(self, address: str) -> Optional[Dict[str, float]]:
+        """
+        Geocode address using Google Maps API.
+        
+        Requires GOOGLE_MAPS_API_KEY environment variable.
+        Costs approximately $5 per 1,000 requests after free tier.
+        
+        Args:
+            address: Street address string
+            
+        Returns:
+            Dictionary with coordinates, time_zone, and elevation, or None if failed
+        """
+        if not self.google_api_key:
+            return None
+        
+        try:
+            url = "https://maps.googleapis.com/maps/api/geocode/json"
+            params = {
+                'address': address,
+                'key': self.google_api_key
+            }
+            
+            response = requests.get(url, params=params, timeout=10)
+            
+            if response.status_code != 200:
+                print(f"⚠️  Google Maps API returned status {response.status_code}")
+                return None
+            
+            data = response.json()
+            
+            if data.get('status') != 'OK' or not data.get('results'):
+                print(f"⚠️  Google Maps API status: {data.get('status', 'UNKNOWN')}")
+                return None
+            
+            # Extract location from first result
+            location = data['results'][0]['geometry']['location']
+            lat = location['lat']
+            lng = location['lng']
+            
+            # Calculate timezone and elevation
+            time_zone = self.get_time_zone(lat, lng)
+            elevation = self._get_elevation_from_coords(lat, lng)
+            
+            return {
+                'latitude': lat,
+                'longitude': lng,
+                'time_zone': time_zone,
+                'altitude': elevation,
+                'elevation': elevation
+            }
+            
+        except Exception as e:
+            print(f"⚠️  Google Maps API error: {e}")
+            return None
     
     def _get_elevation_from_coords(self, lat: float, lon: float) -> float:
         """Get elevation from coordinates (reasonable defaults based on location)"""
