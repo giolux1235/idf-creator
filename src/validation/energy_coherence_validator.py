@@ -146,7 +146,9 @@ class EnergyCoherenceValidator:
         
         # Compare against CBECS benchmarks
         if eui_kbtu_ft2 > 0:
-            typical_eui = self.cbecs.get_site_eui(building_type.lower())
+            # Handle None building_type
+            building_type_normalized = building_type.lower() if building_type else 'office'
+            typical_eui = self.cbecs.get_site_eui(building_type_normalized)
             
             # Also check against absolute kWh/m²/year range (100-200 kWh/m²/year)
             # Convert to kBtu/ft² for comparison: 100 kWh/m² = 31.7 kBtu/ft², 200 kWh/m² = 63.4 kBtu/ft²

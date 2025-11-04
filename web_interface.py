@@ -276,6 +276,10 @@ def api_generate_idf():
             }), 400
         
         # Use NLP parsing if description provided
+        # Handle None description - convert to empty string
+        if description is None:
+            description = ''
+        
         if description:
             use_llm = llm_provider != 'none' and llm_api_key
             nlp_parser = BuildingDescriptionParser(
@@ -364,6 +368,10 @@ def generate_idf():
         # Get LLM settings from form
         llm_provider = request.form.get('llm_provider', 'none')
         llm_api_key = request.form.get('llm_api_key', None)
+        
+        # Handle None description
+        if description is None:
+            description = ''
         
         # Parse description with optional LLM
         use_llm = llm_provider != 'none' and llm_api_key
@@ -496,13 +504,85 @@ def simulate_energyplus():
                 except:
                     continue
             
+            # If EnergyPlus not found locally, use external EnergyPlus API
             if not energyplus_path:
-                return jsonify({
-                    'version': '33.0.0',
-                    'simulation_status': 'error',
-                    'error_message': 'EnergyPlus executable not found',
-                    'timestamp': datetime.now().isoformat()
-                }), 200
+                import requests
+                external_api_url = os.getenv('ENERGYPLUS_API_URL', 'https://web-production-1d1be.up.railway.app/simulate')
+                
+                # Prepare payload for external API
+                external_payload = {
+                    'idf_content': idf_content,
+                    'idf_filename': data.get('idf_filename', 'input.idf')
+                }
+                
+                if weather_content_b64:
+                    external_payload['weather_content'] = weather_content_b64
+                    external_payload['weather_filename'] = weather_filename
+                
+                try:
+                    # Call external EnergyPlus API
+                    external_response = requests.post(
+                        external_api_url,
+                        json=external_payload,
+                        headers={'Content-Type': 'application/json'},
+                        timeout=600  # 10 minute timeout
+                    )
+                    
+                    if external_response.status_code == 200:
+                        # Return the response from external API
+                        external_data = external_response.json()
+                        # Add metadata to indicate it used external API
+                        external_data['used_external_api'] = True
+                        external_data['external_api_url'] = external_api_url
+                        
+                        # Check if we got energy results - if not, try to extract from SQLite if available
+                        if external_data.get('simulation_status') == 'success' and not external_data.get('energy_results'):
+                            # If simulation succeeded but no results, might need SQLite extraction
+                            # Note: This would require the SQLite file to be accessible, which it isn't in this case
+                            # The external API should handle SQLite extraction
+                            pass
+                        
+                        # Add diagnostic information if simulation failed or no results
+                        if external_data.get('simulation_status') == 'error' or (
+                            external_data.get('simulation_status') == 'success' and not external_data.get('energy_results')
+                        ):
+                            # Add request diagnostics
+                            external_data['diagnostics'] = {
+                                'idf_size': len(idf_content),
+                                'weather_file_included': bool(weather_content_b64),
+                                'weather_filename': weather_filename if weather_content_b64 else None,
+                                'external_api_response_time': external_response.elapsed.total_seconds() if hasattr(external_response, 'elapsed') else None
+                            }
+                            
+                            # Check output files
+                            output_files = external_data.get('output_files', [])
+                            if output_files:
+                                sql_file = next((f for f in output_files if 'sql' in f.get('name', '').lower() and 'sqlite.err' not in f.get('name', '')), None)
+                                csv_file = next((f for f in output_files if 'csv' in f.get('name', '').lower()), None)
+                                external_data['diagnostics']['sqlite_file_exists'] = sql_file is not None and sql_file.get('size', 0) > 0
+                                external_data['diagnostics']['csv_file_exists'] = csv_file is not None and csv_file.get('size', 0) > 0
+                                if sql_file:
+                                    external_data['diagnostics']['sqlite_file_size'] = sql_file.get('size', 0)
+                            
+                            # If external API provides debug_info, include it
+                            if 'debug_info' in external_data:
+                                external_data['diagnostics']['external_debug_info'] = external_data['debug_info']
+                        
+                        return jsonify(external_data), 200
+                    else:
+                        return jsonify({
+                            'version': '33.0.0',
+                            'simulation_status': 'error',
+                            'error_message': f'External EnergyPlus API returned status {external_response.status_code}: {external_response.text[:500]}',
+                            'timestamp': datetime.now().isoformat()
+                        }), 200
+                except requests.exceptions.RequestException as e:
+                    return jsonify({
+                        'version': '33.0.0',
+                        'simulation_status': 'error',
+                        'error_message': f'Failed to connect to external EnergyPlus API ({external_api_url}): {str(e)}',
+                        'timestamp': datetime.now().isoformat()
+                    }), 200
             
             # Run EnergyPlus simulation
             output_dir = os.path.join(temp_dir, 'output')
@@ -616,46 +696,185 @@ def simulate_energyplus():
                         conn = sqlite3.connect(sql_file)
                         cursor = conn.cursor()
                         
-                        # Query for electricity meter (value is in Joules)
-                        cursor.execute("""
+                        # First, check what tables exist
+                        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+                        tables = [row[0] for row in cursor.fetchall()]
+                        
+                        energy_results = {}
+                        total_site_energy_j = 0
+                        
+                        # Try multiple query strategies for electricity
+                        electricity_queries = [
+                            # Strategy 1: ReportMeterData with ReportMeterDataDictionary
+                            """
                             SELECT SUM(d.Value) 
                             FROM ReportMeterData d
                             JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
                             WHERE m.Name LIKE '%Electricity%Facility%'
                             AND m.ReportingFrequency = 'RunPeriod'
-                        """)
-                        result_electricity = cursor.fetchone()
+                            """,
+                            # Strategy 2: ReportMeterData with ReportMeterDictionary
+                            """
+                            SELECT SUM(d.Value) 
+                            FROM ReportMeterData d
+                            JOIN ReportMeterDictionary m ON d.ReportMeterDictionaryIndex = m.ReportMeterDictionaryIndex
+                            WHERE m.Name LIKE '%Electricity%Facility%'
+                            AND m.ReportingFrequency = 'RunPeriod'
+                            """,
+                            # Strategy 3: Direct meter name lookup
+                            """
+                            SELECT SUM(Value) 
+                            FROM ReportMeterData
+                            WHERE ReportMeterDataDictionaryIndex IN (
+                                SELECT ReportMeterDataDictionaryIndex
+                                FROM ReportMeterDataDictionary
+                                WHERE Name = 'Electricity:Facility'
+                                AND ReportingFrequency = 'RunPeriod'
+                            )
+                            """,
+                            # Strategy 4: Alternative table structure
+                            """
+                            SELECT SUM(Value) 
+                            FROM ReportMeterData
+                            WHERE ReportMeterDictionaryIndex IN (
+                                SELECT ReportMeterDictionaryIndex
+                                FROM ReportMeterDictionary
+                                WHERE Name = 'Electricity:Facility'
+                                AND ReportingFrequency = 'RunPeriod'
+                            )
+                            """,
+                            # Strategy 5: Generic electricity search
+                            """
+                            SELECT SUM(Value) 
+                            FROM ReportMeterData
+                            WHERE ReportMeterDataDictionaryIndex IN (
+                                SELECT ReportMeterDataDictionaryIndex
+                                FROM ReportMeterDataDictionary
+                                WHERE Name LIKE '%Electricity%'
+                                AND ReportingFrequency = 'RunPeriod'
+                            )
+                            """
+                        ]
                         
-                        if result_electricity and result_electricity[0] and result_electricity[0] > 0:
+                        # Try each query strategy
+                        for query in electricity_queries:
+                            try:
+                                cursor.execute(query)
+                                result = cursor.fetchone()
+                                if result and result[0] and result[0] > 0:
+                                    total_site_energy_j = float(result[0])
+                                    break
+                            except:
+                                continue
+                        
+                        # If we got electricity, convert and add to results
+                        if total_site_energy_j > 0:
                             # Value is in Joules, convert to kWh (1 kWh = 3,600,000 J)
-                            total_joules = float(result_electricity[0])
-                            energy_results = {
-                                'total_electricity_kwh': total_joules / 3600000.0,
-                                'total_site_energy_kwh': total_joules / 3600000.0  # Use as site energy
-                            }
-                        
-                        # Also try to get building area from SQLite
-                        if energy_results:
-                            cursor.execute("""
+                            energy_results['total_electricity_kwh'] = total_site_energy_j / 3600000.0
+                            energy_results['total_site_energy_kwh'] = total_site_energy_j / 3600000.0
+                            energy_results['total_site_energy_j'] = total_site_energy_j
+                            
+                            # Try to get natural gas
+                            gas_queries = [
+                                """
+                                SELECT SUM(d.Value) 
+                                FROM ReportMeterData d
+                                JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
+                                WHERE m.Name LIKE '%NaturalGas%Facility%'
+                                AND m.ReportingFrequency = 'RunPeriod'
+                                """,
+                                """
+                                SELECT SUM(d.Value) 
+                                FROM ReportMeterData d
+                                JOIN ReportMeterDictionary m ON d.ReportMeterDictionaryIndex = m.ReportMeterDictionaryIndex
+                                WHERE m.Name LIKE '%NaturalGas%Facility%'
+                                AND m.ReportingFrequency = 'RunPeriod'
+                                """,
+                                """
                                 SELECT SUM(Value) 
-                                FROM ReportVariableData d
-                                JOIN ReportVariableDataDictionary v ON d.ReportVariableDataDictionaryIndex = v.ReportVariableDataDictionaryIndex
-                                WHERE v.Name LIKE '%Floor Area%'
-                                AND v.ReportingFrequency = 'RunPeriod'
-                                LIMIT 1
-                            """)
-                            area_result = cursor.fetchone()
-                            if area_result and area_result[0] and area_result[0] > 0:
-                                energy_results['building_area_m2'] = float(area_result[0])
-                                if energy_results.get('total_site_energy_kwh'):
-                                    energy_results['eui_kwh_m2'] = (
-                                        energy_results['total_site_energy_kwh'] / 
-                                        energy_results['building_area_m2']
-                                    )
+                                FROM ReportMeterData
+                                WHERE ReportMeterDataDictionaryIndex IN (
+                                    SELECT ReportMeterDataDictionaryIndex
+                                    FROM ReportMeterDataDictionary
+                                    WHERE Name LIKE '%Gas%'
+                                    AND ReportingFrequency = 'RunPeriod'
+                                )
+                                """
+                            ]
+                            
+                            total_gas_j = 0
+                            for query in gas_queries:
+                                try:
+                                    cursor.execute(query)
+                                    result = cursor.fetchone()
+                                    if result and result[0] and result[0] > 0:
+                                        total_gas_j = float(result[0])
+                                        break
+                                except:
+                                    continue
+                            
+                            if total_gas_j > 0:
+                                # Gas is typically in Joules, convert to kWh
+                                energy_results['total_gas_kwh'] = total_gas_j / 3600000.0
+                                # Add gas to total site energy
+                                energy_results['total_site_energy_kwh'] += energy_results['total_gas_kwh']
+                        
+                        # Try to get building area from SQLite
+                        area_queries = [
+                            """
+                            SELECT SUM(Value) 
+                            FROM ReportVariableData d
+                            JOIN ReportVariableDataDictionary v ON d.ReportVariableDataDictionaryIndex = v.ReportVariableDataDictionaryIndex
+                            WHERE v.Name LIKE '%Floor Area%'
+                            AND v.ReportingFrequency = 'RunPeriod'
+                            LIMIT 1
+                            """,
+                            """
+                            SELECT SUM(Value) 
+                            FROM ReportVariableData d
+                            JOIN ReportVariableDictionary v ON d.ReportVariableDictionaryIndex = v.ReportVariableDictionaryIndex
+                            WHERE v.Name LIKE '%Floor Area%'
+                            AND v.ReportingFrequency = 'RunPeriod'
+                            LIMIT 1
+                            """,
+                            """
+                            SELECT Value 
+                            FROM ReportVariableData
+                            WHERE ReportVariableDataDictionaryIndex IN (
+                                SELECT ReportVariableDataDictionaryIndex
+                                FROM ReportVariableDataDictionary
+                                WHERE Name LIKE '%Building%Area%'
+                                AND ReportingFrequency = 'RunPeriod'
+                            )
+                            LIMIT 1
+                            """
+                        ]
+                        
+                        for query in area_queries:
+                            try:
+                                cursor.execute(query)
+                                area_result = cursor.fetchone()
+                                if area_result and area_result[0] and area_result[0] > 0:
+                                    area = float(area_result[0])
+                                    if area > 0:
+                                        energy_results['building_area_m2'] = area
+                                        if energy_results.get('total_site_energy_kwh'):
+                                            energy_results['eui_kwh_m2'] = (
+                                                energy_results['total_site_energy_kwh'] / area
+                                            )
+                                        break
+                            except:
+                                continue
                         
                         conn.close()
+                        
+                        # Only use results if we got at least energy data
+                        if not energy_results.get('total_site_energy_kwh'):
+                            energy_results = None
+                            
                     except Exception as e:
-                        pass
+                        # Log error but don't fail completely
+                        energy_results = None
             
             # Check if simulation ran but produced no results
             if simulation_completed and not energy_results:

@@ -127,6 +127,19 @@ class BuildingDescriptionParser:
         Returns:
             Dictionary with extracted building parameters
         """
+        # Handle None or empty description
+        if not description:
+            return {
+                'building_type': 'office',
+                'stories': None,
+                'area': None,
+                'dimensions': None,
+                'hvac_system': None,
+                'construction': {},
+                'year_built': None,
+                'special_features': []
+            }
+        
         # Try LLM first if available
         if self.use_llm and self.api_key:
             try:
@@ -162,6 +175,10 @@ class BuildingDescriptionParser:
         Returns:
             Parsed parameters or None if failed
         """
+        # Handle None or empty description
+        if not description:
+            return None
+        
         system_prompt = """You are an expert building energy modeler. Extract building parameters from descriptions 
 and return a JSON object with these fields:
 - building_type: office, retail, residential, school, hospital, warehouse, hotel, restaurant
@@ -231,6 +248,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_building_type(self, text: str) -> str:
         """Extract building type from description"""
+        if not text:
+            return 'office'  # Default for empty text
+        
         scores = {}
         
         for btype, patterns in self.building_type_patterns.items():
@@ -244,6 +264,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_stories(self, text: str) -> Optional[int]:
         """Extract number of stories"""
+        if not text:
+            return None
+        
         for pattern in self.size_patterns['stories']:
             match = re.search(pattern, text)
             if match:
@@ -262,6 +285,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_area(self, text: str) -> Optional[float]:
         """Extract floor area"""
+        if not text:
+            return None
+        
         areas = []
         
         # Check for sq ft
@@ -283,6 +309,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_dimensions(self, text: str) -> Optional[Dict]:
         """Extract building dimensions"""
+        if not text:
+            return None
+        
         for pattern in self.size_patterns['dimensions']:
             match = re.search(pattern, text)
             if match:
@@ -297,6 +326,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_hvac_system(self, text: str) -> Optional[str]:
         """Extract HVAC system type"""
+        if not text:
+            return None
+        
         for hvac_type, keywords in self.hvac_patterns.items():
             if any(keyword in text for keyword in keywords):
                 return hvac_type
@@ -310,6 +342,9 @@ Return ONLY valid JSON, no markdown or explanation."""
             'roof_type': None,
             'window_type': None
         }
+        
+        if not text:
+            return construction
         
         # Wall types
         if 'brick' in text:
@@ -339,6 +374,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     
     def _extract_year_built(self, text: str) -> Optional[int]:
         """Extract year built"""
+        if not text:
+            return None
+        
         # Look for year patterns (1900-2100)
         year_pattern = r'\b(19|20)\d{2}\b'
         matches = re.findall(year_pattern, text)
@@ -352,6 +390,9 @@ Return ONLY valid JSON, no markdown or explanation."""
     def _extract_special_features(self, text: str) -> List[str]:
         """Extract special features"""
         features = []
+        
+        if not text:
+            return features
         
         feature_keywords = {
             'parking': ['parking', 'garage', 'car park'],
@@ -421,12 +462,16 @@ Return ONLY valid JSON, no markdown or explanation."""
         Complete pipeline: parse description and return IDF-ready parameters
         
         Args:
-            description: Natural language building description
+            description: Natural language building description (can be None)
             address: Building address
             
         Returns:
             Complete parameter dictionary for IDF generation
         """
+        # Handle None or empty description
+        if not description:
+            description = ''
+        
         # Parse the description
         parsed = self.parse_description(description)
         

@@ -204,8 +204,10 @@ class ASHRAE901ComplianceChecker:
         issues = []
         
         # Get max LPD for building type
+        # Handle None building_type
+        building_type_normalized = building_type.lower() if building_type else 'office'
         lpd_max = self.requirements['lighting']['lpd_max'].get(
-            building_type.lower(), 11.8
+            building_type_normalized, 11.8
         )
         
         # Find Watts per Zone Floor Area values in Lights objects

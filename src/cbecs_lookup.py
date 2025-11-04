@@ -126,6 +126,10 @@ class CBECSLookup:
         Returns:
             Site EUI or None
         """
+        # Handle None building_type
+        if not building_type:
+            building_type = 'office'  # Default
+        
         # Normalize building type
         btype = building_type.lower().replace(' ', '_')
         
@@ -151,6 +155,10 @@ class CBECSLookup:
     
     def get_source_eui(self, building_type: str) -> Optional[float]:
         """Get typical source energy use intensity (kBtu/ft²/year)"""
+        # Handle None building_type
+        if not building_type:
+            building_type = 'office'  # Default
+        
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {
@@ -183,6 +191,10 @@ class CBECSLookup:
         Returns:
             Dictionary with 'site' and 'source' EUI in kWh/m²/year
         """
+        # Handle None building_type
+        if not building_type:
+            building_type = 'office'  # Default
+        
         site_eui_kbtu = self.get_site_eui(building_type)
         source_eui_kbtu = self.get_source_eui(building_type)
         
@@ -215,6 +227,10 @@ class CBECSLookup:
     
     def get_hvac_distribution(self, building_type: str) -> Dict:
         """Get typical HVAC system distribution for building type"""
+        # Handle None building_type
+        if not building_type:
+            building_type = 'office'  # Default
+        
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {
@@ -231,6 +247,10 @@ class CBECSLookup:
     
     def get_operating_hours(self, building_type: str) -> Dict:
         """Get typical operating hours for building type"""
+        # Handle None building_type
+        if not building_type:
+            building_type = 'office'  # Default
+        
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {
