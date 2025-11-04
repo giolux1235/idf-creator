@@ -4,7 +4,9 @@ import requests
 from geopy.geocoders import Nominatim
 import ssl
 import certifi
+import time
 from typing import Dict, Tuple, Optional
+from threading import Lock
 
 
 class LocationFetcher:
@@ -28,11 +30,25 @@ class LocationFetcher:
         'Washington, DC': {'latitude': 38.9072, 'longitude': -77.0369, 'time_zone': -5.0, 'elevation': 72},
     }
     
+    # Rate limiting: Nominatim allows 1 request per second
+    _last_request_time = 0.0
+    _rate_limit_lock = Lock()
+    
     def __init__(self):
         # Fix SSL certificate issue on macOS
         ctx = ssl.create_default_context(cafile=certifi.where())
         self.geolocator = Nominatim(user_agent="idf_creator", scheme='https', ssl_context=ctx)
         self.google_api_key = os.getenv('GOOGLE_MAPS_API_KEY', '')
+    
+    @classmethod
+    def _respect_rate_limit(cls):
+        """Ensure we respect Nominatim's 1 request per second rate limit."""
+        with cls._rate_limit_lock:
+            elapsed = time.time() - cls._last_request_time
+            if elapsed < 1.1:  # Add 0.1s buffer for safety
+                sleep_time = 1.1 - elapsed
+                time.sleep(sleep_time)
+            cls._last_request_time = time.time()
     
     def geocode_address(self, address: str) -> Optional[Dict[str, float]]:
         """
@@ -50,7 +66,32 @@ class LocationFetcher:
         
         # Try Nominatim geocoding first
         try:
-            location = self.geolocator.geocode(address, timeout=10)
+            # Respect rate limit (1 request per second)
+            self._respect_rate_limit()
+            
+            # Try geocoding with retry logic
+            location = None
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    location = self.geolocator.geocode(address, timeout=15)
+                    if location:
+                        break
+                    elif attempt < max_retries - 1:
+                        # If no results, wait a bit longer before retry
+                        wait_time = (attempt + 1) * 2  # 2s, 4s, 6s
+                        print(f"    ⏳ No results, waiting {wait_time}s before retry {attempt + 2}/{max_retries}...")
+                        time.sleep(wait_time)
+                        self._respect_rate_limit()
+                except Exception as retry_error:
+                    if attempt < max_retries - 1:
+                        wait_time = (attempt + 1) * 2
+                        print(f"    ⏳ Geocoding error (attempt {attempt + 1}/{max_retries}): {retry_error}, retrying in {wait_time}s...")
+                        time.sleep(wait_time)
+                        self._respect_rate_limit()
+                    else:
+                        raise retry_error
+            
             if location:
                 coords = {
                     'latitude': location.latitude,
@@ -121,7 +162,9 @@ class LocationFetcher:
                 city_state_query = f"{city}, {state}, USA"
                 print(f"🔄 Trying Nominatim fallback for '{city_state_query}'")
                 
-                location = self.geolocator.geocode(city_state_query, timeout=10)
+                # Respect rate limit for fallback too
+                self._respect_rate_limit()
+                location = self.geolocator.geocode(city_state_query, timeout=15)
                 if location:
                     coords = {
                         'latitude': location.latitude,
