@@ -10,6 +10,11 @@ from typing import Dict, Tuple, Optional
 from threading import Lock
 
 
+class GeocodingError(Exception):
+    """Raised when geocoding fails to find real coordinates for an address."""
+    pass
+
+
 class LocationFetcher:
     """Handles geocoding and climate zone determination."""
     
@@ -122,13 +127,16 @@ class LocationFetcher:
         2. Google Maps API (accurate, requires API key, costs money)
         3. Nominatim API (free, rate-limited)
         4. Keyword detection (backup)
-        5. Fallback to Chicago (with warning)
+        5. Raises GeocodingError if no real coordinates found
         
         Args:
             address: Street address string
             
         Returns:
             Dictionary with 'latitude', 'longitude', 'time_zone', 'elevation' keys, or None if failed
+            
+        Raises:
+            GeocodingError: If real coordinates cannot be found for the address
         """
         if not address or not address.strip():
             print(f"⚠️  Warning: Empty address provided for geocoding")
@@ -227,24 +235,34 @@ class LocationFetcher:
                 
                 # Validate coordinates are reasonable (not 0,0 or clearly wrong)
                 if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
-                    print(f"⚠️  Warning: Geocoding returned suspicious coordinates (0,0) for '{address}'")
-                    return self._geocode_fallback_final(address)
+                    print(f"❌ Error: Geocoding returned invalid coordinates (0,0) for '{address}'")
+                    raise GeocodingError(
+                        f"Geocoding API returned invalid coordinates (0,0) for address '{address}'. "
+                        "This is not a real location."
+                    )
                 
                 # Validate coordinates are within reasonable bounds
                 if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
-                    print(f"⚠️  Warning: Geocoding returned invalid coordinates for '{address}'")
-                    return self._geocode_fallback_final(address)
+                    print(f"❌ Error: Geocoding returned invalid coordinates for '{address}'")
+                    raise GeocodingError(
+                        f"Geocoding API returned invalid coordinates (lat={coords['latitude']:.4f}, lon={coords['longitude']:.4f}) "
+                        f"for address '{address}'. Coordinates are outside valid range."
+                    )
                 
                 # Additional validation: Check if coordinates look reasonable for US addresses
                 # US addresses should have negative longitude (west of prime meridian)
                 # and latitude between ~25-50 for continental US
                 if ', US' in address or ', USA' in address or any(state in address for state in [' IL', ' NY', ' CA', ' TX', ' FL', ' IL,', ' NY,', ' CA,', ' TX,', ' FL,']):
                     if coords['longitude'] > 0:
-                        print(f"⚠️  Warning: US address '{address}' geocoded to positive longitude ({coords['longitude']:.4f}), which is likely wrong")
-                        return self._geocode_fallback_final(address)
+                        print(f"❌ Error: US address '{address}' geocoded to positive longitude ({coords['longitude']:.4f}), which is invalid for US addresses")
+                        raise GeocodingError(
+                            f"Geocoding returned invalid coordinates for US address '{address}'. "
+                            f"US addresses should have negative longitude (west of prime meridian), "
+                            f"but got {coords['longitude']:.4f}."
+                        )
                     if coords['latitude'] < 20 or coords['latitude'] > 55:
                         print(f"⚠️  Warning: US address '{address}' geocoded to latitude {coords['latitude']:.4f}, which seems unusual")
-                        return self._geocode_fallback_final(address)
+                        # Don't raise error for this, just warn - could be Alaska or Hawaii
                 
                 # Calculate timezone and elevation from coordinates
                 time_zone = self.get_time_zone(coords['latitude'], coords['longitude'])
@@ -256,12 +274,15 @@ class LocationFetcher:
                 print(f"✓ Geocoded '{address}' to {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°W")
                 return coords
             else:
-                print(f"⚠️  Warning: Nominatim geocoding returned no results for '{address}'")
-                # Try final fallback
+                print(f"❌ Error: Nominatim geocoding returned no results for '{address}'")
+                # Try final fallback (which may raise error if nothing found)
                 return self._geocode_fallback_final(address)
+        except GeocodingError:
+            # Re-raise GeocodingError
+            raise
         except Exception as e:
             print(f"⚠️  Geocoding error for '{address}': {e}")
-            # Try final fallback
+            # Try final fallback (which may raise error if nothing found)
             return self._geocode_fallback_final(address)
     
     def _geocode_with_google(self, address: str) -> Optional[Dict[str, float]]:
@@ -344,7 +365,7 @@ class LocationFetcher:
     def _geocode_fallback_final(self, address: str) -> Optional[Dict[str, float]]:
         """
         Final fallback: Try to extract city/state again or use keyword detection.
-        Only returns Chicago as absolute last resort with warning.
+        Raises GeocodingError if no real coordinates can be found.
         """
         try:
             # Try city/state extraction again (maybe with different pattern)
@@ -387,16 +408,12 @@ class LocationFetcher:
         except Exception as e:
             print(f"⚠️  Fallback geocoding error: {e}")
         
-        # ULTIMATE FALLBACK: Chicago (with warning)
-        print(f"⚠️  ⚠️  WARNING: All geocoding attempts failed for '{address}'")
-        print(f"⚠️  Using Chicago default coordinates - results may be inaccurate")
-        return {
-            'latitude': 41.8781,
-            'longitude': -87.6298,
-            'time_zone': -6.0,
-            'altitude': 200,
-            'elevation': 200
-        }
+        # NO FALLBACK: Raise error if real coordinates cannot be found
+        raise GeocodingError(
+            f"Failed to geocode address '{address}'. "
+            "Could not find real coordinates from any source (lookup table, Google Maps API, or Nominatim). "
+            "Please provide a valid address with city and state information."
+        )
     
     def _geocode_fallback(self, address: str) -> Optional[Dict[str, float]]:
         """
@@ -504,52 +521,40 @@ class LocationFetcher:
         Returns:
             Dictionary with location and climate information
             
-        Note:
-            Uses fallback city lookup table if geocoding fails, so never raises errors.
-            This ensures service remains functional even when geocoding API is unavailable.
+        Raises:
+            GeocodingError: If real coordinates cannot be found for the address
         """
         if not address or not address.strip():
-            print(f"⚠️  Warning: Empty address provided, using Chicago default")
-            # Use Chicago as default
-            address = "Chicago, IL"
-            city_data = self.CITY_LOOKUP.get('Chicago, IL', {
-                'latitude': 41.8781,
-                'longitude': -87.6298,
-                'time_zone': -6.0,
-                'elevation': 200
-            })
-            return {
-                'address': address,
-                'latitude': city_data['latitude'],
-                'longitude': city_data['longitude'],
-                'altitude': city_data.get('elevation', 200),
-                'elevation': city_data.get('elevation', 200),
-                'time_zone': city_data.get('time_zone', -6.0),
-                'climate_zone': self.get_climate_zone(city_data['latitude'], city_data['longitude']),
-                'weather_file': self.get_weather_file_name(city_data['latitude'], city_data['longitude'])
-            }
+            raise GeocodingError(
+                "Empty address provided. Please provide a valid address with city and state information."
+            )
         
         coords = self.geocode_address(address)
         
-        # If geocoding failed, use fallback (which should never return None)
+        # If geocoding failed, try fallback (which will raise error if nothing found)
         if not coords:
-            print(f"⚠️  Warning: Primary geocoding failed for '{address}', using fallback")
+            print(f"⚠️  Warning: Primary geocoding failed for '{address}', trying fallback...")
             coords = self._geocode_fallback_final(address)
         
-        # Validate coordinates are present (fallback should always provide them)
+        # Validate coordinates are present and valid
         if not coords or 'latitude' not in coords or 'longitude' not in coords:
-            print(f"⚠️  Warning: All geocoding attempts failed, using Chicago default")
-            city_data = self.CITY_LOOKUP.get('Chicago, IL', {
-                'latitude': 41.8781,
-                'longitude': -87.6298,
-                'time_zone': -6.0,
-                'elevation': 200
-            })
-            coords = {
-                'latitude': city_data['latitude'],
-                'longitude': city_data['longitude'],
-                'altitude': city_data.get('elevation', 200)
-            }
+            raise GeocodingError(
+                f"Failed to obtain valid coordinates for address '{address}'. "
+                "Geocoding returned incomplete data."
+            )
+        
+        # Validate coordinates are real (not synthetic defaults)
+        lat = coords['latitude']
+        lon = coords['longitude']
+        
+        # Check if coordinates are the Chicago default (which we should never use as fallback)
+        if abs(lat - 41.8781) < 0.0001 and abs(lon - (-87.6298)) < 0.0001:
+            # Only allow Chicago if the address actually contains Chicago
+            if 'chicago' not in address.lower() and 'il' not in address.lower():
+                raise GeocodingError(
+                    f"Geocoding returned Chicago default coordinates for non-Chicago address '{address}'. "
+                    "This indicates geocoding failed. Please provide a valid address."
+                )
         
         latitude = coords['latitude']
         longitude = coords['longitude']

@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from src.location_fetcher import LocationFetcher
+from src.location_fetcher import LocationFetcher, GeocodingError
 from src.enhanced_location_fetcher import EnhancedLocationFetcher
 from src.document_parser import DocumentParser
 from src.building_estimator import BuildingEstimator

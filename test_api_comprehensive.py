@@ -204,6 +204,153 @@ def test_root_endpoint():
         print(f"{Colors.RED}✗ Error: {e}{Colors.RESET}")
         return False
 
+def test_full_workflow():
+    """Test complete workflow: Address → Generate IDF → Simulate → Results"""
+    print_header("TEST 5: Full Workflow - Address to Production Results")
+    
+    test_address = "233 S Wacker Dr, Chicago, IL 60606"
+    print(f"Test Address: {test_address}\n")
+    
+    try:
+        # Step 1: Generate IDF from address
+        print(f"{Colors.BOLD}Step 1: Generating IDF from address...{Colors.RESET}")
+        generate_url = f"{API_BASE}/api/generate"
+        generate_payload = {
+            "address": test_address,
+            "building_type": "Office",
+            "stories": 5,
+            "floor_area": 50000
+        }
+        
+        generate_response = requests.post(
+            generate_url,
+            json=generate_payload,
+            headers={'Content-Type': 'application/json'},
+            timeout=120
+        )
+        
+        if generate_response.status_code != 200:
+            print(f"{Colors.RED}✗ IDF generation failed: {generate_response.status_code}{Colors.RESET}")
+            print(f"Response: {generate_response.text[:500]}")
+            return False
+        
+        generate_data = generate_response.json()
+        if not generate_data.get('success'):
+            print(f"{Colors.RED}✗ IDF generation returned error{Colors.RESET}")
+            print(f"Error: {generate_data.get('error', 'Unknown error')}")
+            return False
+        
+        filename = generate_data.get('filename')
+        download_url = generate_data.get('download_url')
+        
+        if not filename or not download_url:
+            print(f"{Colors.RED}✗ Missing filename or download_url in response{Colors.RESET}")
+            return False
+        
+        print(f"{Colors.GREEN}✓ IDF generated: {filename}{Colors.RESET}")
+        print(f"Download URL: {download_url}\n")
+        
+        # Step 2: Download IDF file
+        print(f"{Colors.BOLD}Step 2: Downloading IDF file...{Colors.RESET}")
+        if download_url.startswith('/'):
+            download_url = f"{API_BASE}{download_url}"
+        
+        idf_response = requests.get(download_url, timeout=60)
+        
+        if idf_response.status_code != 200:
+            print(f"{Colors.RED}✗ Failed to download IDF: {idf_response.status_code}{Colors.RESET}")
+            return False
+        
+        idf_content = idf_response.text
+        print(f"{Colors.GREEN}✓ IDF downloaded ({len(idf_content)} characters){Colors.RESET}\n")
+        
+        # Step 3: Simulate the IDF
+        print(f"{Colors.BOLD}Step 3: Running EnergyPlus simulation...{Colors.RESET}")
+        simulate_url = f"{API_BASE}/simulate"
+        simulate_payload = {
+            'idf_content': idf_content,
+            'idf_filename': filename
+        }
+        
+        simulate_response = requests.post(
+            simulate_url,
+            json=simulate_payload,
+            headers={'Content-Type': 'application/json'},
+            timeout=600  # 10 minutes for simulation
+        )
+        
+        if simulate_response.status_code != 200:
+            print(f"{Colors.RED}✗ Simulation request failed: {simulate_response.status_code}{Colors.RESET}")
+            print(f"Response: {simulate_response.text[:500]}")
+            return False
+        
+        simulate_data = simulate_response.json()
+        simulation_status = simulate_data.get('simulation_status', 'unknown')
+        
+        print(f"Simulation Status: {simulation_status}")
+        print(f"EnergyPlus Version: {simulate_data.get('energyplus_version', 'N/A')}")
+        print(f"Real Simulation: {simulate_data.get('real_simulation', False)}\n")
+        
+        # Step 4: Display results
+        if simulation_status == 'success':
+            print(f"{Colors.GREEN}✓ Simulation completed successfully!{Colors.RESET}\n")
+            
+            energy_results = simulate_data.get('energy_results', {})
+            if energy_results:
+                print(f"{Colors.BOLD}Energy Results:{Colors.RESET}")
+                print(f"{'='*70}")
+                for key, value in energy_results.items():
+                    if isinstance(value, (int, float)):
+                        if 'energy' in key.lower() or 'eui' in key.lower():
+                            print(f"  {key:30s}: {value:,.2f}")
+                        else:
+                            print(f"  {key:30s}: {value:,.2f}")
+                    else:
+                        print(f"  {key:30s}: {value}")
+                print(f"{'='*70}\n")
+            else:
+                print(f"{Colors.YELLOW}⚠ No energy results in response{Colors.RESET}\n")
+            
+            warnings = simulate_data.get('warnings', [])
+            if warnings:
+                print(f"{Colors.YELLOW}Warnings ({len(warnings)}):{Colors.RESET}")
+                for warning in warnings[:5]:  # Show first 5
+                    print(f"  - {warning[:100]}")
+                if len(warnings) > 5:
+                    print(f"  ... and {len(warnings) - 5} more warnings")
+                print()
+            
+            return True
+        else:
+            print(f"{Colors.RED}✗ Simulation failed{Colors.RESET}\n")
+            error_message = simulate_data.get('error_message', 'Unknown error')
+            print(f"Error: {error_message[:500]}\n")
+            
+            warnings = simulate_data.get('warnings', [])
+            if warnings:
+                print(f"{Colors.YELLOW}Warnings ({len(warnings)}):{Colors.RESET}")
+                for warning in warnings[:3]:
+                    print(f"  - {warning[:100]}")
+                print()
+            
+            debug_info = simulate_data.get('debug_info', {})
+            if debug_info:
+                print(f"{Colors.YELLOW}Debug Info:{Colors.RESET}")
+                for key, value in debug_info.items():
+                    print(f"  {key}: {value}")
+                print()
+            
+            return False
+            
+    except requests.exceptions.Timeout:
+        print(f"{Colors.RED}✗ Request timed out{Colors.RESET}")
+        return False
+    except Exception as e:
+        print(f"{Colors.RED}✗ Error: {e}{Colors.RESET}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 def main():
     print(f"\n{Colors.BOLD}{Colors.BLUE}{'='*70}{Colors.RESET}")
     print(f"{Colors.BOLD}{Colors.BLUE}{'Comprehensive API Test for Railway'.center(70)}{Colors.RESET}")
@@ -217,14 +364,16 @@ def main():
     results['generate'] = test_generate_endpoint()
     results['simulate'] = test_simulate_endpoint()
     results['root'] = test_root_endpoint()
+    results['full_workflow'] = test_full_workflow()
     
     # Summary
     print_header("TEST SUMMARY")
     
-    print(f"Health Endpoint (/api/health):    {'✓ PASS' if results['health'] else '✗ FAIL'}")
-    print(f"Generate Endpoint (/api/generate): {'✓ PASS' if results['generate'] else '✗ FAIL'}")
-    print(f"Simulate Endpoint (/simulate):    {'✓ PASS' if results['simulate'] else '✗ FAIL'}")
-    print(f"Root Endpoint (/):                {'✓ PASS' if results['root'] else '✗ FAIL'}")
+    print(f"Health Endpoint (/api/health):          {'✓ PASS' if results['health'] else '✗ FAIL'}")
+    print(f"Generate Endpoint (/api/generate):      {'✓ PASS' if results['generate'] else '✗ FAIL'}")
+    print(f"Simulate Endpoint (/simulate):          {'✓ PASS' if results['simulate'] else '✗ FAIL'}")
+    print(f"Root Endpoint (/):                      {'✓ PASS' if results['root'] else '✗ FAIL'}")
+    print(f"Full Workflow (Address → Results):      {'✓ PASS' if results['full_workflow'] else '✗ FAIL'}")
     
     passed = sum(results.values())
     total = len(results)

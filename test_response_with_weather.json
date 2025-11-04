@@ -1,0 +1,56 @@
+{
+  "version": "33.0.0",
+  "simulation_status": "error",
+  "energyplus_version": "25.1.0",
+  "real_simulation": true,
+  "error_message": "EnergyPlus ran but produced no energy results. This usually means:\n1. IDF file is missing required objects (RunPeriod, Schedules, etc.)\n2. Simulation ran for 0 days\n3. Output:* objects are missing from IDF\n",
+  "processing_time": "2025-11-04T18:16:14.503268",
+  "error_file_content": "SQLite3 message, /tmp/tmpeaftmldo/output/sqlite.err open for processing!\n",
+  "output_files": [
+    {
+      "name": "eplusout.audit",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.bnd",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.dbg",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.eio",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.err",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.eso",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.mtr",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "name": "eplusout.sql",
+      "size": 180224,
+      "type": "file"
+    },
+    {
+      "name": "sqlite.err",
+      "size": 73,
+      "type": "file"
+    }
+  ]
+}

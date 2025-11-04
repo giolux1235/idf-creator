@@ -1,7 +1,7 @@
 """Enhanced location fetcher that integrates multiple data sources."""
 from typing import Dict, Optional
 import os
-from .location_fetcher import LocationFetcher
+from .location_fetcher import LocationFetcher, GeocodingError
 from .osm_fetcher import OSMFetcher
 from .nrel_fetcher import NRELFetcher
 from .census_fetcher import CensusFetcher
@@ -41,20 +41,26 @@ class EnhancedLocationFetcher(LocationFetcher):
             print(f"⚠️  Warning: Primary geocoding failed, trying fallback...")
             coords = self._geocode_fallback(address)
         
-        # Final fallback: use city lookup or Chicago default
+        # Validate that we have real coordinates (no synthetic defaults)
         if not coords:
-            print(f"⚠️  Warning: All geocoding failed, using Chicago default")
-            city_data = self.CITY_LOOKUP.get('Chicago, IL', {
-                'latitude': 41.8781,
-                'longitude': -87.6298,
-                'time_zone': -6.0,
-                'elevation': 200
-            })
-            coords = {
-                'latitude': city_data['latitude'],
-                'longitude': city_data['longitude'],
-                'altitude': city_data.get('elevation', 200)
-            }
+            from .location_fetcher import GeocodingError
+            raise GeocodingError(
+                f"Failed to geocode address '{address}'. "
+                "Could not find real coordinates from any source. "
+                "Please provide a valid address with city and state information."
+            )
+        
+        # Validate coordinates are not synthetic Chicago default for non-Chicago addresses
+        lat = coords['latitude']
+        lon = coords['longitude']
+        if abs(lat - 41.8781) < 0.0001 and abs(lon - (-87.6298)) < 0.0001:
+            # Only allow Chicago if the address actually contains Chicago
+            if 'chicago' not in address.lower() and 'il' not in address.lower():
+                from .location_fetcher import GeocodingError
+                raise GeocodingError(
+                    f"Geocoding returned Chicago default coordinates for non-Chicago address '{address}'. "
+                    "This indicates geocoding failed. Please provide a valid address."
+                )
         
         print(f"✓ Geocoded: {coords['latitude']:.3f}, {coords['longitude']:.3f}")
         

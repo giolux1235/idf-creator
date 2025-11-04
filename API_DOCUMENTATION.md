@@ -101,7 +101,17 @@ Content-Type: application/json
 }
 ```
 
-**Error Response (400/500):**
+**Error Response (400):**
+```json
+{
+  "success": false,
+  "error": "Failed to geocode address 'Invalid Address XYZ'. Could not find real coordinates from any source (lookup table, Google Maps API, or Nominatim). Please provide a valid address with city and state information.",
+  "type": "GeocodingError",
+  "message": "Geocoding failed: Could not find real coordinates for the provided address. Please provide a valid address with city and state information."
+}
+```
+
+**Error Response (500):**
 ```json
 {
   "success": false,
@@ -135,7 +145,9 @@ The IDF Creator uses a **hybrid geocoding approach** for optimal performance and
 2. **Google Maps API** (optional) - Accurate, requires API key, costs money 💰
 3. **Nominatim API** (free) - OpenStreetMap geocoding, rate-limited
 4. **Keyword Detection** - Backup for common city names
-5. **Fallback** - Chicago coordinates with warning
+5. **Error** - Raises `GeocodingError` if no real coordinates found
+
+**⚠️ Important:** The system now **enforces real coordinates only**. If geocoding cannot find real coordinates for an address, the API will return a `400 Bad Request` error with a clear message. No synthetic defaults are used.
 
 ### Supported Cities (Lookup Table)
 50+ major US cities are supported instantly via lookup table:
@@ -516,13 +528,26 @@ All responses follow a consistent format:
 }
 ```
 
-**Invalid Address:**
+**Geocoding Error (400 Bad Request):**
 ```json
 {
   "success": false,
-  "error": "Could not geocode address: [address]"
+  "error": "Failed to geocode address 'Invalid Address XYZ'. Could not find real coordinates from any source (lookup table, Google Maps API, or Nominatim). Please provide a valid address with city and state information.",
+  "type": "GeocodingError",
+  "message": "Geocoding failed: Could not find real coordinates for the provided address. Please provide a valid address with city and state information."
 }
 ```
+
+**Common Geocoding Errors:**
+- Empty address provided
+- Invalid address format (missing city/state)
+- Address that cannot be geocoded by any source
+- Invalid coordinates returned from API (0,0, out of range, etc.)
+
+**How to Fix:**
+- Ensure address includes city and state (e.g., "123 Main St, San Francisco, CA")
+- Use standard address format: "Street, City, State ZIP"
+- For US addresses, include state abbreviation (CA, NY, TX, etc.)
 
 **Generation Failed:**
 ```json
@@ -617,10 +642,13 @@ GET /api/health
 
 ### Common Issues
 
-**Issue: Address not geocoding correctly**
+**Issue: Geocoding Error (400 Bad Request)**
+- ✅ **Required**: Address must include city and state (e.g., "123 Main St, San Francisco, CA")
 - ✅ Check if city is in lookup table (50+ major cities supported)
-- ✅ Verify address format: "Street, City, State ZIP"
-- ✅ Optional: Set `GOOGLE_MAPS_API_KEY` for more accuracy
+- ✅ Verify address format: "Street, City, State ZIP" or "City, State"
+- ✅ For US addresses, include state abbreviation (CA, NY, TX, IL, etc.)
+- ✅ Optional: Set `GOOGLE_MAPS_API_KEY` for more accurate geocoding
+- ❌ **No fallback**: System will return error if address cannot be geocoded (no synthetic defaults)
 
 **Issue: Slow geocoding**
 - ✅ Major cities use lookup table (instant)

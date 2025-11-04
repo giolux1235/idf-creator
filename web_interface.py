@@ -19,6 +19,7 @@ os.environ.setdefault('PYTHONPATH', str(app_root))
 
 from src.nlp_building_parser import BuildingDescriptionParser
 from src.document_parser import DocumentParser
+from src.location_fetcher import GeocodingError
 from main import IDFCreator
 
 app = Flask(__name__)
@@ -381,6 +382,13 @@ def api_generate_idf():
             'parameters_used': user_params
         })
         
+    except GeocodingError as e:
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'type': 'GeocodingError',
+            'message': 'Geocoding failed: Could not find real coordinates for the provided address. Please provide a valid address with city and state information.'
+        }), 400
     except Exception as e:
         return jsonify({
             'success': False,
@@ -480,6 +488,11 @@ def generate_idf():
             'filename': output_file
         })
         
+    except GeocodingError as e:
+        return jsonify({
+            'success': False,
+            'message': f'Geocoding failed: {str(e)}. Please provide a valid address with city and state information.'
+        }), 400
     except Exception as e:
         return jsonify({
             'success': False,
