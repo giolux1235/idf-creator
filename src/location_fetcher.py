@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 import ssl
 import certifi
 import time
+import re
 from typing import Dict, Tuple, Optional
 from threading import Lock
 
@@ -12,22 +13,83 @@ from threading import Lock
 class LocationFetcher:
     """Handles geocoding and climate zone determination."""
     
-    # City lookup table for fallback when geocoding fails
+    @staticmethod
+    def extract_city_state(address: str) -> Optional[str]:
+        """Extract city and state from address string"""
+        if not address:
+            return None
+        
+        # Pattern 1: "City, State ZIP" or "City, State"
+        # Example: "147 Sutter St, San Francisco, CA 94104"
+        match = re.search(r',\s*([^,]+?),\s*([A-Z]{2})(?:\s+\d+)?', address)
+        if match:
+            city = match.group(1).strip()
+            state = match.group(2).strip()
+            return f"{city}, {state}"
+        
+        # Pattern 2: "City State ZIP" (no comma before state)
+        # Example: "Chicago IL 60601"
+        match = re.search(r'([^,]+?)\s+([A-Z]{2})(?:\s+\d+)?', address)
+        if match:
+            city = match.group(1).strip()
+            state = match.group(2).strip()
+            return f"{city}, {state}"
+        
+        return None
+    
+    # City lookup table with 50+ major US cities - CHECKED FIRST for reliability
     CITY_LOOKUP = {
         'Chicago, IL': {'latitude': 41.8781, 'longitude': -87.6298, 'time_zone': -6.0, 'elevation': 200},
+        'San Francisco, CA': {'latitude': 37.7749, 'longitude': -122.4194, 'time_zone': -8.0, 'elevation': 2},
         'New York, NY': {'latitude': 40.7128, 'longitude': -74.0060, 'time_zone': -5.0, 'elevation': 10},
         'Los Angeles, CA': {'latitude': 34.0522, 'longitude': -118.2437, 'time_zone': -8.0, 'elevation': 100},
-        'San Francisco, CA': {'latitude': 37.7749, 'longitude': -122.4194, 'time_zone': -8.0, 'elevation': 52},
-        'Boston, MA': {'latitude': 42.3601, 'longitude': -71.0589, 'time_zone': -5.0, 'elevation': 43},
-        'Seattle, WA': {'latitude': 47.6062, 'longitude': -122.3321, 'time_zone': -8.0, 'elevation': 137},
-        'Miami, FL': {'latitude': 25.7617, 'longitude': -80.1918, 'time_zone': -5.0, 'elevation': 2},
-        'Houston, TX': {'latitude': 29.7604, 'longitude': -95.3698, 'time_zone': -6.0, 'elevation': 32},
+        'Houston, TX': {'latitude': 29.7604, 'longitude': -95.3698, 'time_zone': -6.0, 'elevation': 13},
         'Phoenix, AZ': {'latitude': 33.4484, 'longitude': -112.0740, 'time_zone': -7.0, 'elevation': 331},
-        'Denver, CO': {'latitude': 39.7392, 'longitude': -104.9903, 'time_zone': -7.0, 'elevation': 1609},
-        'Atlanta, GA': {'latitude': 33.7490, 'longitude': -84.3880, 'time_zone': -5.0, 'elevation': 320},
+        'Philadelphia, PA': {'latitude': 39.9526, 'longitude': -75.1652, 'time_zone': -5.0, 'elevation': 12},
+        'San Antonio, TX': {'latitude': 29.4241, 'longitude': -98.4936, 'time_zone': -6.0, 'elevation': 198},
+        'San Diego, CA': {'latitude': 32.7157, 'longitude': -117.1611, 'time_zone': -8.0, 'elevation': 20},
         'Dallas, TX': {'latitude': 32.7767, 'longitude': -96.7970, 'time_zone': -6.0, 'elevation': 131},
-        'Philadelphia, PA': {'latitude': 39.9526, 'longitude': -75.1652, 'time_zone': -5.0, 'elevation': 39},
-        'Washington, DC': {'latitude': 38.9072, 'longitude': -77.0369, 'time_zone': -5.0, 'elevation': 72},
+        'San Jose, CA': {'latitude': 37.3382, 'longitude': -121.8863, 'time_zone': -8.0, 'elevation': 26},
+        'Austin, TX': {'latitude': 30.2672, 'longitude': -97.7431, 'time_zone': -6.0, 'elevation': 149},
+        'Jacksonville, FL': {'latitude': 30.3322, 'longitude': -81.6557, 'time_zone': -5.0, 'elevation': 5},
+        'Fort Worth, TX': {'latitude': 32.7555, 'longitude': -97.3308, 'time_zone': -6.0, 'elevation': 199},
+        'Columbus, OH': {'latitude': 39.9612, 'longitude': -82.9988, 'time_zone': -5.0, 'elevation': 275},
+        'Charlotte, NC': {'latitude': 35.2271, 'longitude': -80.8431, 'time_zone': -5.0, 'elevation': 229},
+        'Seattle, WA': {'latitude': 47.6062, 'longitude': -122.3321, 'time_zone': -8.0, 'elevation': 56},
+        'Denver, CO': {'latitude': 39.7392, 'longitude': -104.9903, 'time_zone': -7.0, 'elevation': 1609},
+        'Washington, DC': {'latitude': 38.9072, 'longitude': -77.0369, 'time_zone': -5.0, 'elevation': 7},
+        'Boston, MA': {'latitude': 42.3601, 'longitude': -71.0589, 'time_zone': -5.0, 'elevation': 14},
+        'El Paso, TX': {'latitude': 31.7619, 'longitude': -106.4850, 'time_zone': -7.0, 'elevation': 1140},
+        'Detroit, MI': {'latitude': 42.3314, 'longitude': -83.0458, 'time_zone': -5.0, 'elevation': 183},
+        'Nashville, TN': {'latitude': 36.1627, 'longitude': -86.7816, 'time_zone': -6.0, 'elevation': 170},
+        'Portland, OR': {'latitude': 45.5152, 'longitude': -122.6784, 'time_zone': -8.0, 'elevation': 15},
+        'Oklahoma City, OK': {'latitude': 35.4676, 'longitude': -97.5164, 'time_zone': -6.0, 'elevation': 396},
+        'Las Vegas, NV': {'latitude': 36.1699, 'longitude': -115.1398, 'time_zone': -8.0, 'elevation': 610},
+        'Memphis, TN': {'latitude': 35.1495, 'longitude': -90.0490, 'time_zone': -6.0, 'elevation': 87},
+        'Louisville, KY': {'latitude': 38.2527, 'longitude': -85.7585, 'time_zone': -5.0, 'elevation': 142},
+        'Baltimore, MD': {'latitude': 39.2904, 'longitude': -76.6122, 'time_zone': -5.0, 'elevation': 10},
+        'Milwaukee, WI': {'latitude': 43.0389, 'longitude': -87.9065, 'time_zone': -6.0, 'elevation': 188},
+        'Albuquerque, NM': {'latitude': 35.0844, 'longitude': -106.6504, 'time_zone': -7.0, 'elevation': 1619},
+        'Tucson, AZ': {'latitude': 32.2226, 'longitude': -110.9747, 'time_zone': -7.0, 'elevation': 728},
+        'Fresno, CA': {'latitude': 36.7378, 'longitude': -119.7871, 'time_zone': -8.0, 'elevation': 94},
+        'Sacramento, CA': {'latitude': 38.5816, 'longitude': -121.4944, 'time_zone': -8.0, 'elevation': 9},
+        'Kansas City, MO': {'latitude': 39.0997, 'longitude': -94.5786, 'time_zone': -6.0, 'elevation': 277},
+        'Mesa, AZ': {'latitude': 33.4152, 'longitude': -111.8315, 'time_zone': -7.0, 'elevation': 378},
+        'Atlanta, GA': {'latitude': 33.7490, 'longitude': -84.3880, 'time_zone': -5.0, 'elevation': 320},
+        'Omaha, NE': {'latitude': 41.2565, 'longitude': -95.9345, 'time_zone': -6.0, 'elevation': 333},
+        'Colorado Springs, CO': {'latitude': 38.8339, 'longitude': -104.8214, 'time_zone': -7.0, 'elevation': 1839},
+        'Raleigh, NC': {'latitude': 35.7796, 'longitude': -78.6382, 'time_zone': -5.0, 'elevation': 96},
+        'Virginia Beach, VA': {'latitude': 36.8529, 'longitude': -75.9780, 'time_zone': -5.0, 'elevation': 3},
+        'Miami, FL': {'latitude': 25.7617, 'longitude': -80.1918, 'time_zone': -5.0, 'elevation': 2},
+        'Oakland, CA': {'latitude': 37.8044, 'longitude': -122.2712, 'time_zone': -8.0, 'elevation': 13},
+        'Minneapolis, MN': {'latitude': 44.9778, 'longitude': -93.2650, 'time_zone': -6.0, 'elevation': 253},
+        'Tulsa, OK': {'latitude': 36.1540, 'longitude': -95.9928, 'time_zone': -6.0, 'elevation': 194},
+        'Cleveland, OH': {'latitude': 41.4993, 'longitude': -81.6944, 'time_zone': -5.0, 'elevation': 199},
+        'Wichita, KS': {'latitude': 37.6872, 'longitude': -97.3301, 'time_zone': -6.0, 'elevation': 396},
+        'Arlington, TX': {'latitude': 32.7357, 'longitude': -97.1081, 'time_zone': -6.0, 'elevation': 184},
+        'New Orleans, LA': {'latitude': 29.9511, 'longitude': -90.0715, 'time_zone': -6.0, 'elevation': -2},
+        'Honolulu, HI': {'latitude': 21.3099, 'longitude': -157.8581, 'time_zone': -10.0, 'elevation': 6},
+        'Anchorage, AK': {'latitude': 61.2181, 'longitude': -149.9003, 'time_zone': -9.0, 'elevation': 31}
     }
     
     # Rate limiting: Nominatim allows 1 request per second
@@ -53,18 +115,62 @@ class LocationFetcher:
     def geocode_address(self, address: str) -> Optional[Dict[str, float]]:
         """
         Convert address to lat/lon coordinates.
+        CHECKS CITY LOOKUP TABLE FIRST for reliability.
         
         Args:
             address: Street address string
             
         Returns:
-            Dictionary with 'latitude' and 'longitude' keys, or None if failed
+            Dictionary with 'latitude', 'longitude', 'time_zone', 'elevation' keys, or None if failed
         """
         if not address or not address.strip():
             print(f"⚠️  Warning: Empty address provided for geocoding")
             return None
         
-        # Try Nominatim geocoding first
+        # STEP 1: Extract city and state from address
+        city_state = self.extract_city_state(address)
+        
+        # STEP 2: Check city lookup table FIRST (fast, reliable)
+        if city_state and city_state in self.CITY_LOOKUP:
+            city_data = self.CITY_LOOKUP[city_state]
+            print(f"✅ Found city in lookup table: {city_state} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
+            return {
+                'latitude': city_data['latitude'],
+                'longitude': city_data['longitude'],
+                'time_zone': city_data['time_zone'],
+                'altitude': city_data['elevation'],
+                'elevation': city_data['elevation']
+            }
+        
+        # STEP 3: Try keyword detection as backup (for addresses like "147 Sutter St, SF, CA")
+        address_lower = address.lower()
+        keyword_cities = {
+            'chicago': 'Chicago, IL',
+            'san francisco': 'San Francisco, CA',
+            'sf,': 'San Francisco, CA',
+            'sf ': 'San Francisco, CA',
+            'new york': 'New York, NY',
+            'nyc': 'New York, NY',
+            'manhattan': 'New York, NY',
+            'los angeles': 'Los Angeles, CA',
+            'la,': 'Los Angeles, CA',
+            'la ': 'Los Angeles, CA',
+        }
+        
+        for keyword, city_key in keyword_cities.items():
+            if keyword in address_lower:
+                if city_key in self.CITY_LOOKUP:
+                    city_data = self.CITY_LOOKUP[city_key]
+                    print(f"✅ Detected city from keywords: {city_key} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
+                    return {
+                        'latitude': city_data['latitude'],
+                        'longitude': city_data['longitude'],
+                        'time_zone': city_data['time_zone'],
+                        'altitude': city_data['elevation'],
+                        'elevation': city_data['elevation']
+                    }
+        
+        # STEP 4: Try Nominatim geocoding API (for addresses not in lookup table)
         try:
             # Respect rate limit (1 request per second)
             self._respect_rate_limit()
@@ -102,12 +208,12 @@ class LocationFetcher:
                 # Validate coordinates are reasonable (not 0,0 or clearly wrong)
                 if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
                     print(f"⚠️  Warning: Geocoding returned suspicious coordinates (0,0) for '{address}'")
-                    return None
+                    return self._geocode_fallback_final(address)
                 
                 # Validate coordinates are within reasonable bounds
                 if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
                     print(f"⚠️  Warning: Geocoding returned invalid coordinates for '{address}'")
-                    return None
+                    return self._geocode_fallback_final(address)
                 
                 # Additional validation: Check if coordinates look reasonable for US addresses
                 # US addresses should have negative longitude (west of prime meridian)
@@ -115,105 +221,145 @@ class LocationFetcher:
                 if ', US' in address or ', USA' in address or any(state in address for state in [' IL', ' NY', ' CA', ' TX', ' FL', ' IL,', ' NY,', ' CA,', ' TX,', ' FL,']):
                     if coords['longitude'] > 0:
                         print(f"⚠️  Warning: US address '{address}' geocoded to positive longitude ({coords['longitude']:.4f}), which is likely wrong")
-                        # Try fallback geocoding
-                        return self._geocode_fallback(address)
+                        return self._geocode_fallback_final(address)
                     if coords['latitude'] < 20 or coords['latitude'] > 55:
                         print(f"⚠️  Warning: US address '{address}' geocoded to latitude {coords['latitude']:.4f}, which seems unusual")
-                        # Try fallback geocoding
-                        return self._geocode_fallback(address)
+                        return self._geocode_fallback_final(address)
                 
-                print(f"✓ Geocoded '{address}' to {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°E")
+                # Calculate timezone and elevation from coordinates
+                time_zone = self.get_time_zone(coords['latitude'], coords['longitude'])
+                elevation = self._get_elevation_from_coords(coords['latitude'], coords['longitude'])
+                
+                coords['time_zone'] = time_zone
+                coords['elevation'] = elevation
+                
+                print(f"✓ Geocoded '{address}' to {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°W")
                 return coords
             else:
                 print(f"⚠️  Warning: Nominatim geocoding returned no results for '{address}'")
-                # Try fallback
-                return self._geocode_fallback(address)
+                # Try final fallback
+                return self._geocode_fallback_final(address)
         except Exception as e:
             print(f"⚠️  Geocoding error for '{address}': {e}")
-            # Try fallback
-            return self._geocode_fallback(address)
+            # Try final fallback
+            return self._geocode_fallback_final(address)
     
-    def _geocode_fallback(self, address: str) -> Optional[Dict[str, float]]:
+    def _get_elevation_from_coords(self, lat: float, lon: float) -> float:
+        """Get elevation from coordinates (reasonable defaults based on location)"""
+        # San Francisco area
+        if 37 < lat < 38 and -123 < lon < -122:
+            return 2
+        # New York area
+        elif 40 < lat < 41 and -74 < lon < -73:
+            return 10
+        # Los Angeles area
+        elif 34 < lat < 35 and -119 < lon < -118:
+            return 100
+        # Chicago area
+        elif 41 < lat < 42 and -88 < lon < -87:
+            return 200
+        # Denver area (high elevation)
+        elif 39 < lat < 40 and -105 < lon < -104:
+            return 1609
+        # Default
+        else:
+            return 200
+    
+    def _geocode_fallback_final(self, address: str) -> Optional[Dict[str, float]]:
         """
-        Fallback geocoding using city/state lookup table or Nominatim API.
-        This is a secondary attempt if the primary geocoding fails.
+        Final fallback: Try to extract city/state again or use keyword detection.
+        Only returns Chicago as absolute last resort with warning.
         """
         try:
-            import re
-            # Extract city and state from address for lookup
-            # Pattern: "..., City, State ZIP" or "..., City, State"
-            city_state_match = re.search(r',\s*([^,]+?),\s*([A-Z]{2})(?:\s+\d{5})?', address)
-            if city_state_match:
-                city = city_state_match.group(1).strip()
-                state = city_state_match.group(2).strip()
-                city_state_key = f"{city}, {state}"
-                
-                # First try city lookup table
-                if city_state_key in self.CITY_LOOKUP:
-                    city_data = self.CITY_LOOKUP[city_state_key]
-                    print(f"✓ Using city lookup table for '{city_state_key}': {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°E")
-                    return {
-                        'latitude': city_data['latitude'],
-                        'longitude': city_data['longitude'],
-                        'altitude': city_data.get('elevation', 100)
-                    }
-                
-                # If not in lookup table, try Nominatim API for city/state
-                city_state_query = f"{city}, {state}, USA"
-                print(f"🔄 Trying Nominatim fallback for '{city_state_query}'")
-                
-                # Respect rate limit for fallback too
-                self._respect_rate_limit()
-                location = self.geolocator.geocode(city_state_query, timeout=15)
-                if location:
-                    coords = {
-                        'latitude': location.latitude,
-                        'longitude': location.longitude,
-                        'altitude': location.altitude if hasattr(location, 'altitude') else 0
-                    }
-                    # Validate coordinates
-                    if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
-                        return None
-                    if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
-                        return None
-                    print(f"✓ Fallback geocoding succeeded: {coords['latitude']:.4f}°N, {coords['longitude']:.4f}°E")
-                    return coords
+            # Try city/state extraction again (maybe with different pattern)
+            city_state = self.extract_city_state(address)
+            if city_state and city_state in self.CITY_LOOKUP:
+                city_data = self.CITY_LOOKUP[city_state]
+                print(f"✅ Fallback found city in lookup table: {city_state}")
+                return {
+                    'latitude': city_data['latitude'],
+                    'longitude': city_data['longitude'],
+                    'time_zone': city_data['time_zone'],
+                    'altitude': city_data['elevation'],
+                    'elevation': city_data['elevation']
+                }
+            
+            # Try keyword detection one more time
+            address_lower = address.lower()
+            keyword_cities = {
+                'chicago': 'Chicago, IL',
+                'san francisco': 'San Francisco, CA',
+                'sf': 'San Francisco, CA',
+                'new york': 'New York, NY',
+                'nyc': 'New York, NY',
+                'los angeles': 'Los Angeles, CA',
+                'la': 'Los Angeles, CA',
+            }
+            
+            for keyword, city_key in keyword_cities.items():
+                if keyword in address_lower:
+                    if city_key in self.CITY_LOOKUP:
+                        city_data = self.CITY_LOOKUP[city_key]
+                        print(f"✅ Fallback detected city from keywords: {city_key}")
+                        return {
+                            'latitude': city_data['latitude'],
+                            'longitude': city_data['longitude'],
+                            'time_zone': city_data['time_zone'],
+                            'altitude': city_data['elevation'],
+                            'elevation': city_data['elevation']
+                        }
         except Exception as e:
-            print(f"⚠️  Fallback geocoding also failed: {e}")
+            print(f"⚠️  Fallback geocoding error: {e}")
         
-        # Ultimate fallback: Use Chicago coordinates if we can't determine location
-        print(f"⚠️  All geocoding attempts failed, using Chicago default coordinates")
+        # ULTIMATE FALLBACK: Chicago (with warning)
+        print(f"⚠️  ⚠️  WARNING: All geocoding attempts failed for '{address}'")
+        print(f"⚠️  Using Chicago default coordinates - results may be inaccurate")
         return {
             'latitude': 41.8781,
             'longitude': -87.6298,
-            'altitude': 200
+            'time_zone': -6.0,
+            'altitude': 200,
+            'elevation': 200
         }
+    
+    def _geocode_fallback(self, address: str) -> Optional[Dict[str, float]]:
+        """
+        Legacy fallback method - now redirects to final fallback.
+        Kept for backwards compatibility.
+        """
+        return self._geocode_fallback_final(address)
     
     def get_time_zone(self, latitude: float, longitude: float) -> float:
         """
-        Calculate timezone offset from longitude.
-        Uses a simplified approximation: timezone ≈ longitude / 15
+        Calculate timezone offset from coordinates.
+        Handles US timezones including Hawaii and Alaska.
         
         Args:
             latitude: Latitude coordinate
             longitude: Longitude coordinate
             
         Returns:
-            Timezone offset in hours (e.g., -6.0 for Chicago)
+            Timezone offset in hours (e.g., -6.0 for Chicago, -8.0 for San Francisco, -10.0 for Hawaii)
         """
-        # Simplified timezone calculation based on longitude
-        # More accurate would use timezonefinder or similar library
-        # For US locations, use approximate timezone boundaries
+        # Check Hawaii first (has specific lat/lon range)
+        if 18 < latitude < 23 and -161 < longitude < -154:
+            return -10.0
         
-        # US timezone approximations (longitude-based)
-        if -125 <= longitude < -102:  # Pacific Time
+        # Check Alaska (west coast + specific lat range)
+        if latitude > 55 and longitude < -125:
+            return -9.0
+        
+        # Continental US timezone approximations (longitude-based)
+        if -127 <= longitude < -112:  # Pacific Time (west coast)
             return -8.0
-        elif -102 <= longitude < -90:  # Mountain Time
+        elif -112 <= longitude < -102:  # Mountain Time
             return -7.0
-        elif -90 <= longitude < -75:  # Central Time (includes Chicago)
+        elif -102 <= longitude < -82:  # Central Time (includes Chicago at -87.63)
             return -6.0
-        elif -75 <= longitude < -60:  # Eastern Time
+        elif -82 <= longitude < -67:  # Eastern Time
             return -5.0
+        elif -67 <= longitude < -60:  # Atlantic Time
+            return -4.0
         else:
             # For other locations, use longitude/15 approximation
             # This is a rough approximation but works for most cases
@@ -312,7 +458,7 @@ class LocationFetcher:
         # If geocoding failed, use fallback (which should never return None)
         if not coords:
             print(f"⚠️  Warning: Primary geocoding failed for '{address}', using fallback")
-            coords = self._geocode_fallback(address)
+            coords = self._geocode_fallback_final(address)
         
         # Validate coordinates are present (fallback should always provide them)
         if not coords or 'latitude' not in coords or 'longitude' not in coords:
