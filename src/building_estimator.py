@@ -120,7 +120,11 @@ class BuildingEstimator:
         elif floor_area <= 0:
             floor_area = 1000.0
         
-        zone_area = floor_area / stories
+        # Safe division: ensure stories is valid before dividing
+        if stories and stories > 0:
+            zone_area = floor_area / stories
+        else:
+            zone_area = floor_area  # Fallback if stories is invalid
         
         return {
             'zone_area': zone_area,

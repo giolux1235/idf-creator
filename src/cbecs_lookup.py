@@ -130,7 +130,9 @@ class CBECSLookup:
         if not building_type:
             building_type = 'office'  # Default
         
-        # Normalize building type
+        # Normalize building type (safe handling of None)
+        if building_type is None:
+            building_type = 'office'
         btype = building_type.lower().replace(' ', '_')
         
         # Map common variations
@@ -159,6 +161,9 @@ class CBECSLookup:
         if not building_type:
             building_type = 'office'  # Default
         
+        # Safe handling of None
+        if building_type is None:
+            building_type = 'office'
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {
@@ -231,6 +236,9 @@ class CBECSLookup:
         if not building_type:
             building_type = 'office'  # Default
         
+        # Safe handling of None
+        if building_type is None:
+            building_type = 'office'
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {
@@ -251,6 +259,9 @@ class CBECSLookup:
         if not building_type:
             building_type = 'office'  # Default
         
+        # Safe handling of None
+        if building_type is None:
+            building_type = 'office'
         btype = building_type.lower().replace(' ', '_')
         
         type_mapping = {

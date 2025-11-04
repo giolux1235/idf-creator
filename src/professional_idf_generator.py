@@ -153,7 +153,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         if user_floor_area is not None:
             estimated_params['floor_area'] = user_floor_area
             estimated_params['total_area'] = user_floor_area  # Also update total_area for consistency
-            print(f"  ✓ Using user-specified floor area: {user_floor_area:.0f} m² total ({user_floor_area/stories:.0f} m²/floor)")
+            # Safe division: check stories before dividing
+            if stories and stories > 0:
+                area_per_floor = user_floor_area / stories
+            else:
+                area_per_floor = user_floor_area
+            print(f"  ✓ Using user-specified floor area: {user_floor_area:.0f} m² total ({area_per_floor:.0f} m²/floor)")
         
         # Generate complex building footprint
         footprint = self._generate_complex_footprint(
@@ -492,7 +497,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Get footprint area FIRST to decide if we should use OSM geometry
         footprint_area = None
         user_specified_area = estimated_params.get('floor_area')
-        stories = max(1, int(estimated_params.get('stories') or 1))
+        stories = estimated_params.get('stories')
+        # Ensure stories is valid (not None and > 0)
+        if stories is None or stories <= 0:
+            stories = 1
+        else:
+            stories = max(1, int(stories))
         
         # FIX: Only use OSM if user didn't specify floor_area
         if user_specified_area is not None and user_specified_area > 0:
@@ -512,6 +522,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             
             if footprint_area is None:
                 total_area = estimated_params.get('total_area', 1000)
+                # Safe division: ensure stories is valid
+                if total_area is None:
+                    total_area = 1000
                 footprint_area = total_area / stories if stories > 0 else 1000
                 print(f"  Using default area: {footprint_area:.0f} m²/floor")
         

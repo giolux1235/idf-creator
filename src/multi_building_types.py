@@ -430,7 +430,10 @@ class MultiBuildingTypes:
         if stories is None or stories <= 0:
             stories = 3
         
-        floor_area = total_area / stories
+        # Safe division: ensure total_area is valid
+        if total_area is None or total_area <= 0:
+            total_area = 1000  # Default fallback
+        floor_area = total_area / stories if stories > 0 else total_area
         
         # Adjust for building type
         if building_type in ['residential_single', 'residential_multi']:

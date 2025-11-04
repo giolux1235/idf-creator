@@ -237,6 +237,36 @@ from flask_cors import CORS
 # Enable CORS for all routes
 CORS(app)
 
+# Helper functions for safe operations
+def safe_divide(numerator, denominator, default=0):
+    """Safely divide two numbers, handling None and zero"""
+    if denominator is None or denominator == 0:
+        return default
+    if numerator is None:
+        return default
+    try:
+        return numerator / denominator
+    except (TypeError, ZeroDivisionError):
+        return default
+
+def safe_lower(value, default=''):
+    """Safely convert to lowercase, handling None"""
+    if value is None:
+        return default
+    try:
+        return str(value).lower()
+    except:
+        return default
+
+def safe_get(data, key, default=None):
+    """Safely get value from dict with default"""
+    if data is None:
+        return default
+    value = data.get(key, default)
+    if value is None:
+        return default
+    return value
+
 @app.route('/')
 def index():
     """Render the main page"""
@@ -296,10 +326,21 @@ def api_generate_idf():
         user_params_request = data.get('user_params', {})
         
         # Merge parameters: user_params from request > direct parameters > parsed from description
+        # Apply safe defaults for all numeric parameters
+        stories = user_params_request.get('stories') or data.get('stories') or idf_params.get('stories')
+        floor_area = user_params_request.get('floor_area') or data.get('floor_area') or idf_params.get('floor_area')
+        building_type = user_params_request.get('building_type') or data.get('building_type') or idf_params.get('building_type') or 'Building'
+        
+        # Ensure numeric values are valid (not None and > 0)
+        if stories is None or stories <= 0:
+            stories = 1
+        if floor_area is None or floor_area <= 0:
+            floor_area = 500  # Default 500 m²
+        
         user_params = {
-            'stories': user_params_request.get('stories') or data.get('stories') or idf_params.get('stories'),
-            'floor_area': user_params_request.get('floor_area') or data.get('floor_area') or idf_params.get('floor_area'),
-            'building_type': user_params_request.get('building_type') or data.get('building_type') or idf_params.get('building_type') or 'Building'
+            'stories': stories,
+            'floor_area': floor_area,
+            'building_type': building_type
         }
         
         # Also check for floor_area_per_story_m2
@@ -393,14 +434,27 @@ def generate_idf():
         # Generate IDF
         creator = IDFCreator(enhanced=True, professional=True)
         
+        # Apply safe defaults for all parameters
+        stories = idf_params.get('stories')
+        floor_area = idf_params.get('floor_area')
+        building_type = idf_params.get('building_type') or 'Building'
+        
+        # Ensure numeric values are valid (not None and > 0)
+        if stories is None or stories <= 0:
+            stories = 1
+        if floor_area is None or floor_area <= 0:
+            floor_area = 500  # Default 500 m²
+        
         user_params = {
-            'stories': idf_params.get('stories'),
-            'floor_area': idf_params.get('floor_area'),
-            'building_type': idf_params.get('building_type') or 'Building'
+            'stories': stories,
+            'floor_area': floor_area,
+            'building_type': building_type
         }
         
-        # Generate output filename
-        building_name = (idf_params.get('building_type') or 'Building').replace(' ', '_')
+        # Generate output filename (safe lowercase conversion)
+        building_name = safe_lower(building_type, 'Building').replace(' ', '_')
+        if not building_name:
+            building_name = 'Building'
         output_file = f"{building_name}_nlp.idf"
         output_path = os.path.join(temp_dir, output_file)
         
