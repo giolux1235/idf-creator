@@ -446,13 +446,18 @@ class AdvancedHVACSystems:
         components.append(zone_equipment)
         
         # VAV Terminal
+        # Note: When damper_heating_action = 'Normal', Maximum Flow per Zone Floor Area During Reheat
+        # and Maximum Flow Fraction During Reheat are ignored (per EnergyPlus documentation)
+        # However, these fields are still required by the schema, so we include them but EnergyPlus will warn
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'name': f"{zn}_VAVTerminal",
             'availability_schedule_name': 'Always On',
             'damper_heating_action': 'Normal',
-            'maximum_flow_fraction_during_reheat': 0.5,
-            'maximum_flow_per_zone_floor_area_during_reheat': 0.003,
+            # Note: These are ignored when heating action is NORMAL, but required by schema
+            # Set to empty (,) to minimize warnings, though EnergyPlus may still warn
+            'maximum_flow_fraction_during_reheat': None,  # Will be set to empty in formatter
+            'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_fraction_before_reheat': 0.2,
             'reheat_coil_name': f"{zn}_ReheatCoil",
             'maximum_air_flow_rate': sizing_params['supply_air_flow'],  # Set explicit value to avoid sizing

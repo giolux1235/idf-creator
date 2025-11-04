@@ -213,6 +213,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         
         # Simulation Control
         idf_content.append(self.generate_simulation_control())
+        idf_content.append(self.generate_system_convergence_limits())
         
         # Building
         idf_content.append(self.generate_building_section(
@@ -417,7 +418,14 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         used_space_types = set()
         for zone in zones:
             used_space_types.add(self._determine_space_type(zone.name, building_type))
-        idf_content.append(self.generate_schedules(building_type, sorted(used_space_types)))
+        schedules_text = self.generate_schedules(building_type, sorted(used_space_types))
+        
+        # Filter out unused schedules to reduce warnings
+        # Build IDF content so far to check schedule references
+        temp_idf_content = idf_content + [schedules_text]
+        temp_idf_string = '\n'.join(temp_idf_content)
+        schedules_text = self._filter_unused_schedules(schedules_text, temp_idf_string)
+        idf_content.append(schedules_text)
         
         # Run Period (allow quick one-month run for faster API validation)
         if building_params.get('quick_run_period'):
@@ -425,8 +433,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         else:
             idf_content.append(self.generate_run_period())
         
-        # Outputs
-        idf_content.append(self.generate_output_objects())
+        # Outputs - check if gas equipment exists
+        has_gas_equipment = self._check_for_gas_equipment(hvac_components)
+        idf_content.append(self.generate_output_objects(has_gas_equipment=has_gas_equipment))
         
         # Weather File (ground temps already added in generate_site_location)
         idf_content.append(self.generate_weather_file_object(
@@ -973,6 +982,20 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
 
 """
     
+    def generate_system_convergence_limits(self) -> str:
+        """Generate System Convergence Limits object to improve HVAC convergence.
+        
+        This increases maximum HVAC iterations from default 20 to 30 to reduce
+        convergence warnings while still maintaining reasonable simulation time.
+        """
+        return """SystemConvergenceLimits,
+  1,                       !- Minimum System TimeStep {minutes}
+  30,                      !- Maximum HVAC Iterations (increased from default 20 to improve convergence)
+  2,                       !- Minimum Plant Iterations
+  20;                      !- Maximum Plant Iterations
+
+"""
+    
     def generate_building_section(self, name: str, north_axis: float = 0.0) -> str:
         """Generate Building object."""
         # Use MinimalShadowing instead of FullInteriorAndExterior to avoid
@@ -1200,8 +1223,24 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             # Correct field order per EnergyPlus 24.2/25.1 schema
             max_air_flow = component.get('maximum_air_flow_rate', 'Autosize')
             max_reheat_flow = component.get('maximum_hot_water_or_steam_flow_rate', 'Autosize')
-            max_flow_per_area = component.get('maximum_flow_per_zone_floor_area_during_reheat', 0.003)
-            max_flow_fraction = component.get('maximum_flow_fraction_during_reheat', 0.5)
+            damper_heating_action = component.get('damper_heating_action', 'Normal')
+            
+            # When damper_heating_action = 'Normal', these fields are ignored but still required
+            # Set to empty/commented values to avoid warnings
+            # Note: EnergyPlus requires these fields even when ignored
+            max_flow_per_area = component.get('maximum_flow_per_zone_floor_area_during_reheat')
+            max_flow_fraction = component.get('maximum_flow_fraction_during_reheat')
+            
+            # Only include these if heating action is REVERSE (when they're actually used)
+            if damper_heating_action == 'Reverse' and max_flow_per_area is not None and max_flow_fraction is not None:
+                flow_per_area_str = str(max_flow_per_area)
+                flow_fraction_str = str(max_flow_fraction)
+            else:
+                # When NORMAL, these are ignored - set to default but EnergyPlus will warn
+                # Best practice: don't include them when NORMAL (but schema requires them)
+                flow_per_area_str = component.get('maximum_flow_per_zone_floor_area_during_reheat', ',')  # Empty field
+                flow_fraction_str = component.get('maximum_flow_fraction_during_reheat', ',')  # Empty field
+            
             return f"""AirTerminal:SingleDuct:VAV:Reheat,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
@@ -1218,9 +1257,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   0.0,                                 !- Minimum Hot Water or Steam Flow Rate {{m3/s}}
   {component.get('reheat_coil_air_outlet_node_name', component['name'] + 'Outlet')}, !- Air Outlet Node Name
   {component.get('convergence_tolerance', 0.001)}, !- Convergence Tolerance
-  {component['damper_heating_action']}, !- Damper Heating Action
-  {max_flow_per_area},                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}}
-  {max_flow_fraction};                       !- Maximum Flow Fraction During Reheat
+  {damper_heating_action}, !- Damper Heating Action
+  {flow_per_area_str if flow_per_area_str != ',' else ','},                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}} (ignored when NORMAL)
+  {flow_fraction_str if flow_fraction_str != ',' else ','};                       !- Maximum Flow Fraction During Reheat (ignored when NORMAL)
 
 """
         
@@ -1831,13 +1870,160 @@ InternalMass,
 
 """
     
-    def generate_output_objects(self) -> str:
+    def _filter_unused_schedules(self, schedules_text: str, idf_content: str) -> str:
+        """Filter out schedules that are defined but never referenced in the IDF.
+        
+        This reduces warnings about unused schedules by only including schedules
+        that are actually referenced by other objects (People, Lights, ElectricEquipment,
+        ThermostatSetpoint, etc.).
+        
+        Args:
+            schedules_text: The generated schedules text to filter
+            idf_content: The full IDF content string to search for references
+            
+        Returns:
+            Filtered schedules text with only used schedules
+        """
+        import re
+        
+        # Extract all schedule names from the schedules text
+        schedule_pattern = r'Schedule:\w+,\s*\n\s*([^,\n!]+)'
+        defined_schedules = set()
+        for match in re.finditer(schedule_pattern, schedules_text):
+            schedule_name = match.group(1).strip()
+            defined_schedules.add(schedule_name)
+        
+        # Also extract ScheduleTypeLimits (always keep these)
+        type_limits_pattern = r'ScheduleTypeLimits,\s*\n\s*([^,\n!]+)'
+        type_limits = set()
+        for match in re.finditer(type_limits_pattern, schedules_text):
+            type_limit_name = match.group(1).strip()
+            type_limits.add(type_limit_name)
+        
+        # Always keep these essential schedules (they're commonly used)
+        essential_schedules = {'Always On', 'Always Off', 'Always 24.0', 'DualSetpoint Control Type'}
+        
+        # Find all schedule references in IDF content
+        # Patterns to match schedule references:
+        # - Schedule Name,
+        # - Availability Schedule Name,
+        # - Heating Setpoint Temperature Schedule Name,
+        # - Cooling Setpoint Temperature Schedule Name,
+        # - etc.
+        ref_patterns = [
+            r'Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Availability\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Heating\s+Setpoint\s+Temperature\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Cooling\s+Setpoint\s+Temperature\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Occupancy\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Activity\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Lighting\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Equipment\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'(\w+_Occupancy)\s*,',  # Pattern for space_type_Occupancy
+            r'(\w+_Lighting)\s*,',   # Pattern for space_type_Lighting
+            r'(\w+_Equipment)\s*,',  # Pattern for space_type_Equipment
+            r'(\w+_Activity)\s*,',   # Pattern for space_type_Activity
+        ]
+        
+        used_schedules = set(essential_schedules)
+        for pattern in ref_patterns:
+            for match in re.finditer(pattern, idf_content, re.IGNORECASE):
+                schedule_ref = match.group(1).strip().lstrip('!').strip()
+                # Remove trailing comments if present
+                if '!' in schedule_ref:
+                    schedule_ref = schedule_ref.split('!')[0].strip()
+                if schedule_ref:
+                    used_schedules.add(schedule_ref)
+        
+        # Filter schedules text - keep only used schedules
+        filtered_lines = []
+        current_schedule_name = None
+        in_schedule = False
+        keep_schedule = False
+        in_type_limits = False
+        
+        lines = schedules_text.split('\n')
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            
+            # Check if this is a ScheduleTypeLimits line (always keep)
+            if 'ScheduleTypeLimits,' in line:
+                in_type_limits = True
+                filtered_lines.append(line)
+                i += 1
+                continue
+            elif in_type_limits:
+                filtered_lines.append(line)
+                if line.strip().endswith(';') or line.strip().endswith('CONTINUOUS;'):
+                    in_type_limits = False
+                i += 1
+                continue
+            
+            # Check if this is a schedule definition line
+            if re.match(r'\s*Schedule:\w+,', line):
+                # Extract schedule name
+                match = re.search(r'([^,\n!]+)', line)
+                if match:
+                    current_schedule_name = match.group(1).strip()
+                    # Check if we should keep this schedule
+                    keep_schedule = (
+                        current_schedule_name in used_schedules or
+                        current_schedule_name in type_limits
+                    )
+                    in_schedule = True
+                else:
+                    keep_schedule = False
+                    in_schedule = False
+                
+                if keep_schedule:
+                    filtered_lines.append(line)
+            elif in_schedule:
+                if keep_schedule:
+                    filtered_lines.append(line)
+                    # Check if schedule ends (line ends with semicolon)
+                    if line.strip().endswith(';'):
+                        in_schedule = False
+                        current_schedule_name = None
+                else:
+                    # Skip lines until schedule ends
+                    if line.strip().endswith(';'):
+                        in_schedule = False
+                        current_schedule_name = None
+            else:
+                # Not in a schedule, keep the line (comments, blank lines, etc.)
+                filtered_lines.append(line)
+            
+            i += 1
+        
+        return '\n'.join(filtered_lines)
+    
+    def _check_for_gas_equipment(self, hvac_components: List[Dict]) -> bool:
+        """Check if any gas equipment exists in HVAC components."""
+        gas_keywords = ['gas', 'Gas', 'NaturalGas', 'naturalgas', 'Coil:Heating:Fuel', 'Boiler']
+        for component in hvac_components:
+            comp_type = component.get('type', '')
+            comp_name = component.get('name', '')
+            # Check component type and name for gas equipment
+            if any(keyword in comp_type or keyword in comp_name for keyword in gas_keywords):
+                return True
+            # Check if it's a raw IDF string with gas equipment
+            if component.get('type') == 'IDF_STRING':
+                raw = component.get('raw', '')
+                if any(keyword in raw for keyword in gas_keywords):
+                    return True
+        return False
+    
+    def generate_output_objects(self, has_gas_equipment: bool = False) -> str:
         """Generate output objects with energy consumption variables.
+        
+        Args:
+            has_gas_equipment: Whether gas equipment exists in the building
         
         Note: Output:Table:SummaryReports with AnnualBuildingUtilityPerformanceSummary
         is critical for generating eplustbl.csv with energy totals that APIs can parse.
         """
-        return """Output:VariableDictionary,
+        output = """Output:VariableDictionary,
   Regular;                 !- Key Field
 
 Output:SQLite,
@@ -1857,13 +2043,21 @@ Output:Variable,
   Site Total Electricity Energy,  !- Variable Name
   RunPeriod;              !- Reporting Frequency
 
-Output:Variable,
-  *,                      !- Key Value
-  Site Total Gas Energy,  !- Variable Name
+Output:Meter,
+  Electricity:Facility,   !- Name
   RunPeriod;              !- Reporting Frequency
 
 Output:Meter,
-  Electricity:Facility,   !- Name
+  Electricity:Building,   !- Name
+  RunPeriod;              !- Reporting Frequency
+
+"""
+        
+        # Only add gas-related outputs if gas equipment exists
+        if has_gas_equipment:
+            output += """Output:Variable,
+  *,                      !- Key Value
+  Site Total Gas Energy,  !- Variable Name
   RunPeriod;              !- Reporting Frequency
 
 Output:Meter,
@@ -1871,14 +2065,12 @@ Output:Meter,
   RunPeriod;              !- Reporting Frequency
 
 Output:Meter,
-  Electricity:Building,   !- Name
-  RunPeriod;              !- Reporting Frequency
-
-Output:Meter,
   NaturalGas:Facility,    !- Name
   RunPeriod;              !- Reporting Frequency
 
 """
+        
+        return output
     
     def generate_weather_file_object(self, weather_file: str, climate_zone: str = None) -> str:
         """Generate weather file reference and ground temperatures."""

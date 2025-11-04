@@ -177,6 +177,7 @@ Schedule:Compact,
         
         # Generate reference point first (required by Daylighting:Controls)
         reference_point_name = f"{zone_name}_ReferencePoint1"
+        glare_reference_point_name = f"{zone_name}_GlareReferencePoint"
         
         # Calculate reference point coordinates based on zone geometry
         # Reference points MUST be within zone boundaries to avoid EnergyPlus warnings
@@ -200,32 +201,58 @@ Schedule:Compact,
             ref_x = max(min_x + actual_margin_x, min(max_x - actual_margin_x, centroid.x))
             ref_y = max(min_y + actual_margin_y, min(max_y - actual_margin_y, centroid.y))
             
-            # Verify point is actually within polygon (in case polygon is irregular)
+            # Glare reference point: typically positioned 2-3m from windows (toward interior)
+            # For glare calculation, position slightly away from daylight reference point
+            glare_x = ref_x + (zone_width * 0.1)  # Offset 10% of zone width
+            glare_y = ref_y
+            
+            # Verify points are actually within polygon (in case polygon is irregular)
             from shapely.geometry import Point
             test_point = Point(ref_x, ref_y)
+            glare_test_point = Point(glare_x, glare_y)
             if not zone_geometry.polygon.contains(test_point):
                 # Point is outside polygon, use centroid instead
                 if zone_geometry.polygon.contains(centroid):
                     ref_x = centroid.x
                     ref_y = centroid.y
+                    glare_x = ref_x
+                    glare_y = ref_y
                 else:
                     # Centroid also outside, use bounds center
                     ref_x = (min_x + max_x) / 2.0
                     ref_y = (min_y + max_y) / 2.0
+                    glare_x = ref_x
+                    glare_y = ref_y
+            elif not zone_geometry.polygon.contains(glare_test_point):
+                # Glare point outside, use same as reference point
+                glare_x = ref_x
+                glare_y = ref_y
         else:
             # Default fallback: use center of typical zone
             # This is a fallback - ideally zone_geometry should always be provided
             ref_x = 2.0
             ref_y = 2.0
+            glare_x = 2.5
+            glare_y = 2.0
         
-        # Daylighting:ReferencePoint
+        # Daylighting:ReferencePoint (for illuminance control)
         # Zone name should match actual Zone name (without _Zone suffix)
         reference_point = f"""Daylighting:ReferencePoint,
   {reference_point_name},             !- Name
   {zone_name},                        !- Zone Name
   {ref_x:.2f},                                !- X-Coordinate of Reference Point {{m}}
   {ref_y:.2f},                                !- Y-Coordinate of Reference Point {{m}}
-  0.8;                                !- Z-Coordinate of Reference Point {{m}}
+  0.8;                                !- Z-Coordinate of Reference Point {{m}} (workplane height)
+
+"""
+        
+        # Glare Reference Point (at eye level, typically 1.2m from floor for seated occupants)
+        glare_reference_point = f"""Daylighting:ReferencePoint,
+  {glare_reference_point_name},       !- Name
+  {zone_name},                        !- Zone Name
+  {glare_x:.2f},                      !- X-Coordinate of Reference Point {{m}}
+  {glare_y:.2f},                      !- Y-Coordinate of Reference Point {{m}}
+  1.2;                                !- Z-Coordinate of Reference Point {{m}} (eye level for glare calculation)
 
 """
         
@@ -248,9 +275,9 @@ Schedule:Compact,
   0.2,                                !- Minimum Light Output Fraction for Continuous Dimming Control
   ,                                   !- Number of Stepped Control Steps
   ,                                   !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-  ,                                   !- Glare Calculation Daylighting Reference Point Name (A6 - optional)
-  ,                                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone yAxis {{deg}} (N5)
-  ,                                   !- Glare Calculation Maximum Allowable Discomfort Glare Index (N6)
+  {glare_reference_point_name},       !- Glare Calculation Daylighting Reference Point Name (A6) - Added to eliminate warnings
+  0.0,                                !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone yAxis {{deg}} (N5) - 0° = looking along +Y axis
+  22.0,                               !- Glare Calculation Maximum Allowable Discomfort Glare Index (N6) - 22 = "Just Perceptible" (ASHRAE recommended)
   ,                                   !- DElight Gridding Resolution (N7) - NOTE: Removed extra \"Minimum Allowable Illuminance\" field that was not in IDD
   {reference_point_name},            !- Daylighting Reference Point 1 Name (A7) - REQUIRED
   1.0,                                !- Fraction of Lights Controlled by Reference Point 1 (N8) - Changed to 1.0 for full coverage
@@ -259,8 +286,8 @@ Schedule:Compact,
 
 """
         
-        # Return reference point first, then controls (reference point must exist first)
-        return reference_point + daylighting_controls
+        # Return glare reference point first, then daylighting reference point, then controls (reference points must exist first)
+        return glare_reference_point + reference_point + daylighting_controls
     
     def generate_lighting_control_schedule(self, zone_name: str, building_type: str) -> str:
         """Generate lighting control schedule"""

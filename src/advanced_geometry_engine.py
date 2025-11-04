@@ -824,11 +824,17 @@ class AdvancedGeometryEngine:
         }
     
     def _generate_wall_surfaces(self, zone: ZoneGeometry, footprint: BuildingFootprint) -> List[Dict]:
-        """Generate wall surfaces for zone"""
+        """Generate wall surfaces for zone with correct normal orientation (pointing outward)"""
+        # Import geometry utilities
+        from .geometry_utils import fix_vertex_ordering_for_wall, calculate_polygon_center_2d
+        
         walls = []
         coords = list(zone.polygon.exterior.coords[:-1])
         z_bottom = zone.floor_level * 3.0
         z_top = (zone.floor_level + 1) * 3.0
+        
+        # Calculate zone center for wall normal correction
+        zone_center_2d = calculate_polygon_center_2d(coords)
         
         for i, (x1, y1) in enumerate(coords):
             x2, y2 = coords[(i + 1) % len(coords)]
@@ -847,6 +853,22 @@ class AdvancedGeometryEngine:
             if wall_area < 0.01:
                 continue
             
+            # Create initial wall vertices
+            wall_vertices_3d = [
+                (x1, y1, z_bottom),
+                (x2, y2, z_bottom),
+                (x2, y2, z_top),
+                (x1, y1, z_top)
+            ]
+            
+            # Fix vertex ordering to ensure normal points outward from zone
+            wall_vertices_3d = fix_vertex_ordering_for_wall(wall_vertices_3d, zone_center_2d)
+            
+            # Format vertices as strings for EnergyPlus
+            vertices = []
+            for x, y, z in wall_vertices_3d:
+                vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
+            
             wall = {
                 'type': 'BuildingSurface:Detailed',
                 'name': f"{zone.name}_Wall_{i+1}",
@@ -857,12 +879,7 @@ class AdvancedGeometryEngine:
                 'sun_exposure': 'SunExposed',
                 'wind_exposure': 'WindExposed',
                 'view_factor_to_ground': 'AutoCalculate',
-                'vertices': [
-                    f"{x1:.4f},{y1:.4f},{z_bottom:.4f}",
-                    f"{x2:.4f},{y2:.4f},{z_bottom:.4f}",
-                    f"{x2:.4f},{y2:.4f},{z_top:.4f}",
-                    f"{x1:.4f},{y1:.4f},{z_top:.4f}"
-                ]
+                'vertices': vertices
             }
             walls.append(wall)
         
