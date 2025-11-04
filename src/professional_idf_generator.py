@@ -213,7 +213,6 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         
         # Simulation Control
         idf_content.append(self.generate_simulation_control())
-        idf_content.append(self.generate_system_convergence_limits())
         
         # Building
         idf_content.append(self.generate_building_section(
@@ -982,19 +981,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
 
 """
     
-    def generate_system_convergence_limits(self) -> str:
-        """Generate System Convergence Limits object to improve HVAC convergence.
-        
-        This increases maximum HVAC iterations from default 20 to 30 to reduce
-        convergence warnings while still maintaining reasonable simulation time.
-        """
-        return """SystemConvergenceLimits,
-  1,                       !- Minimum System TimeStep {minutes}
-  30,                      !- Maximum HVAC Iterations (increased from default 20 to improve convergence)
-  2,                       !- Minimum Plant Iterations
-  20;                      !- Maximum Plant Iterations
 
-"""
     
     def generate_building_section(self, name: str, north_axis: float = 0.0) -> str:
         """Generate Building object."""
@@ -1225,9 +1212,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             max_reheat_flow = component.get('maximum_hot_water_or_steam_flow_rate', 'Autosize')
             damper_heating_action = component.get('damper_heating_action', 'Normal')
             
-            # When damper_heating_action = 'Normal', these fields are ignored but still required
-            # Set to empty/commented values to avoid warnings
-            # Note: EnergyPlus requires these fields even when ignored
+            # When damper_heating_action = 'Normal', these fields are ignored but still required by schema
+            # Set to empty (blank) fields to avoid fatal errors (EnergyPlus cannot parse string "None")
+            # Note: EnergyPlus requires these fields even when ignored, but they must be blank or numeric
             max_flow_per_area = component.get('maximum_flow_per_zone_floor_area_during_reheat')
             max_flow_fraction = component.get('maximum_flow_fraction_during_reheat')
             
@@ -1236,10 +1223,17 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 flow_per_area_str = str(max_flow_per_area)
                 flow_fraction_str = str(max_flow_fraction)
             else:
-                # When NORMAL, these are ignored - set to default but EnergyPlus will warn
-                # Best practice: don't include them when NORMAL (but schema requires them)
-                flow_per_area_str = component.get('maximum_flow_per_zone_floor_area_during_reheat', ',')  # Empty field
-                flow_fraction_str = component.get('maximum_flow_fraction_during_reheat', ',')  # Empty field
+                # When NORMAL, these are ignored - output blank fields (not "None" string)
+                # Check explicitly for None to avoid outputting "None" as a string
+                if max_flow_per_area is None:
+                    flow_per_area_str = ','  # Blank field
+                else:
+                    flow_per_area_str = str(max_flow_per_area)
+                
+                if max_flow_fraction is None:
+                    flow_fraction_str = ','  # Blank field
+                else:
+                    flow_fraction_str = str(max_flow_fraction)
             
             return f"""AirTerminal:SingleDuct:VAV:Reheat,
   {component['name']},                 !- Name
@@ -1258,8 +1252,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   {component.get('reheat_coil_air_outlet_node_name', component['name'] + 'Outlet')}, !- Air Outlet Node Name
   {component.get('convergence_tolerance', 0.001)}, !- Convergence Tolerance
   {damper_heating_action}, !- Damper Heating Action
-  {flow_per_area_str if flow_per_area_str != ',' else ','},                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}} (ignored when NORMAL)
-  {flow_fraction_str if flow_fraction_str != ',' else ','};                       !- Maximum Flow Fraction During Reheat (ignored when NORMAL)
+  {flow_per_area_str},                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}} (ignored when NORMAL)
+  {flow_fraction_str};                       !- Maximum Flow Fraction During Reheat (ignored when NORMAL)
 
 """
         
