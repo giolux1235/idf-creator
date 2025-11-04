@@ -77,7 +77,6 @@ class WeatherFileFinder:
         if weather_dirs is None:
             weather_dirs = [
                 'artifacts/desktop_files/weather',
-                'artifacts/desktop_files/weather/artifacts/desktop_files/weather',
                 '/usr/share/EnergyPlus/weather',
                 '/opt/EnergyPlus/weather',
                 '~/EnergyPlus/weather',
