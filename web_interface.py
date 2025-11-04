@@ -683,7 +683,7 @@ def simulate_energyplus():
             sql_file = os.path.join(output_dir, 'eplusout.sql')
             
             if simulation_completed:
-                # Try to extract from CSV
+                # PRIORITIZE CSV EXTRACTION - it's more reliable and complete
                 if os.path.exists(csv_file):
                     try:
                         with open(csv_file, 'r') as f:
@@ -710,22 +710,71 @@ def simulate_energyplus():
                             
                             if site_energy_gj:
                                 energy_results['total_site_energy_gj'] = site_energy_gj
+                                # Convert GJ to kWh: 1 GJ = 277.778 kWh
                                 energy_results['total_site_energy_kwh'] = site_energy_gj * 277.778
+                                
+                                # Extract end uses to verify we have all energy sources
+                                end_uses = {}
+                                # Pattern: "End Use,<name>,Electricity (GJ),Natural Gas (GJ)"
+                                end_use_pattern = r',([^,]+),([\d.]+),([\d.]+)'
+                                
+                                # Look for common end uses
+                                for end_use_name in ['Heating', 'Cooling', 'Interior Lighting', 
+                                                     'Interior Equipment', 'Fans', 'Pumps', 
+                                                     'Exterior Lighting', 'Water Systems']:
+                                    # Try multiple patterns
+                                    patterns = [
+                                        rf',{re.escape(end_use_name)},([\d.]+),([\d.]+)',
+                                        rf'{re.escape(end_use_name)},([\d.]+),([\d.]+)',
+                                    ]
+                                    for pattern in patterns:
+                                        match = re.search(pattern, csv_content, re.IGNORECASE)
+                                        if match:
+                                            try:
+                                                elec_gj = float(match.group(1).replace(',', ''))
+                                                gas_gj = float(match.group(2).replace(',', ''))
+                                                if elec_gj > 0 or gas_gj > 0:
+                                                    end_uses[end_use_name] = {
+                                                        'electricity_gj': elec_gj,
+                                                        'electricity_kwh': elec_gj * 277.778,
+                                                        'natural_gas_gj': gas_gj,
+                                                        'natural_gas_kwh': gas_gj * 277.778
+                                                    }
+                                                break
+                                            except:
+                                                continue
+                                
+                                if end_uses:
+                                    energy_results['end_uses'] = end_uses
+                                    
+                                    # Verify total matches sum of end uses (optional validation)
+                                    total_elec_gj = sum(e.get('electricity_gj', 0) for e in end_uses.values())
+                                    total_gas_gj = sum(e.get('natural_gas_gj', 0) for e in end_uses.values())
+                                    total_calculated_gj = total_elec_gj + total_gas_gj
+                                    
+                                    # Allow 5% tolerance for rounding differences
+                                    if abs(total_calculated_gj - site_energy_gj) / site_energy_gj > 0.05:
+                                        print(f"⚠️  Warning: Sum of end uses ({total_calculated_gj:.2f} GJ) doesn't match Total Site Energy ({site_energy_gj:.2f} GJ)")
                             
-                            # Extract building area
+                            # Extract building area (prioritize "Total Building Area" from CSV)
+                            # CSV "Total Building Area" is the most reliable source as it matches
+                            # EnergyPlus's official building area calculation
                             area_patterns = [
-                                r'Total Building Area,([\d.]+)',
+                                r'Total Building Area,([\d.]+)',  # Preferred - matches CSV header exactly
                                 r'Total Building Area\s+([\d,]+\.?\d*)',
                                 r'Conditioned Floor Area.*?([\d,]+\.?\d*)',
                             ]
                             
+                            building_area_m2 = None
                             for pattern in area_patterns:
                                 match = re.search(pattern, csv_content, re.IGNORECASE)
                                 if match:
                                     try:
                                         area = float(match.group(1).replace(',', ''))
                                         if area > 0:
+                                            building_area_m2 = area
                                             energy_results['building_area_m2'] = area
+                                            energy_results['building_area_source'] = 'CSV - Total Building Area'
                                             if energy_results.get('total_site_energy_kwh'):
                                                 energy_results['eui_kwh_m2'] = (
                                                     energy_results['total_site_energy_kwh'] / area
@@ -734,13 +783,18 @@ def simulate_energyplus():
                                     except:
                                         continue
                             
-                            # If we got any results, use them
-                            if energy_results:
-                                pass  # energy_results already set
+                            if building_area_m2:
+                                print(f"✓ Building area from CSV: {building_area_m2:.2f} m²")
+                            
+                            # Only use CSV results if we got at least site energy
+                            if energy_results.get('total_site_energy_kwh'):
+                                # CSV extraction successful
+                                print(f"✓ Extracted from CSV: {energy_results['total_site_energy_kwh']:.2f} kWh")
                             else:
                                 energy_results = None
                                 
                     except Exception as e:
+                        print(f"⚠️  Error extracting from CSV: {e}")
                         energy_results = None
                 
                 # Try SQLite if CSV didn't work
@@ -873,54 +927,77 @@ def simulate_energyplus():
                                 # Add gas to total site energy
                                 energy_results['total_site_energy_kwh'] += energy_results['total_gas_kwh']
                         
-                        # Try to get building area from SQLite
-                        area_queries = [
-                            """
-                            SELECT SUM(Value) 
-                            FROM ReportVariableData d
-                            JOIN ReportVariableDataDictionary v ON d.ReportVariableDataDictionaryIndex = v.ReportVariableDataDictionaryIndex
-                            WHERE v.Name LIKE '%Floor Area%'
-                            AND v.ReportingFrequency = 'RunPeriod'
-                            LIMIT 1
-                            """,
-                            """
-                            SELECT SUM(Value) 
-                            FROM ReportVariableData d
-                            JOIN ReportVariableDictionary v ON d.ReportVariableDictionaryIndex = v.ReportVariableDictionaryIndex
-                            WHERE v.Name LIKE '%Floor Area%'
-                            AND v.ReportingFrequency = 'RunPeriod'
-                            LIMIT 1
-                            """,
-                            """
-                            SELECT Value 
-                            FROM ReportVariableData
-                            WHERE ReportVariableDataDictionaryIndex IN (
-                                SELECT ReportVariableDataDictionaryIndex
-                                FROM ReportVariableDataDictionary
-                                WHERE Name LIKE '%Building%Area%'
-                                AND ReportingFrequency = 'RunPeriod'
-                            )
-                            LIMIT 1
-                            """
-                        ]
-                        
-                        for query in area_queries:
-                            try:
-                                cursor.execute(query)
-                                area_result = cursor.fetchone()
-                                if area_result and area_result[0] and area_result[0] > 0:
-                                    area = float(area_result[0])
-                                    if area > 0:
-                                        energy_results['building_area_m2'] = area
-                                        if energy_results.get('total_site_energy_kwh'):
-                                            energy_results['eui_kwh_m2'] = (
-                                                energy_results['total_site_energy_kwh'] / area
-                                            )
-                                        break
-                            except:
-                                continue
+                        # Try to get building area from SQLite (only if not already set from CSV)
+                        # Note: SQLite area may differ from CSV "Total Building Area" as it may sum
+                        # individual zone areas or use a different calculation method
+                        if 'building_area_m2' not in energy_results:
+                            area_queries = [
+                                """
+                                SELECT SUM(Value) 
+                                FROM ReportVariableData d
+                                JOIN ReportVariableDataDictionary v ON d.ReportVariableDataDictionaryIndex = v.ReportVariableDataDictionaryIndex
+                                WHERE v.Name LIKE '%Building%Area%'
+                                AND v.ReportingFrequency = 'RunPeriod'
+                                LIMIT 1
+                                """,
+                                """
+                                SELECT SUM(Value) 
+                                FROM ReportVariableData d
+                                JOIN ReportVariableDictionary v ON d.ReportVariableDictionaryIndex = v.ReportVariableDictionaryIndex
+                                WHERE v.Name LIKE '%Building%Area%'
+                                AND v.ReportingFrequency = 'RunPeriod'
+                                LIMIT 1
+                                """,
+                                """
+                                SELECT SUM(Value) 
+                                FROM ReportVariableData d
+                                JOIN ReportVariableDataDictionary v ON d.ReportVariableDataDictionaryIndex = v.ReportVariableDataDictionaryIndex
+                                WHERE v.Name LIKE '%Floor Area%'
+                                AND v.ReportingFrequency = 'RunPeriod'
+                                LIMIT 1
+                                """,
+                            ]
+                            
+                            for query in area_queries:
+                                try:
+                                    cursor.execute(query)
+                                    area_result = cursor.fetchone()
+                                    if area_result and area_result[0] and area_result[0] > 0:
+                                        area = float(area_result[0])
+                                        if area > 0:
+                                            energy_results['building_area_m2'] = area
+                                            energy_results['building_area_source'] = 'SQLite'
+                                            if energy_results.get('total_site_energy_kwh'):
+                                                energy_results['eui_kwh_m2'] = (
+                                                    energy_results['total_site_energy_kwh'] / area
+                                                )
+                                            break
+                                except:
+                                    continue
                         
                         conn.close()
+                        
+                        # Validate SQLite results if we also have CSV results for comparison
+                        if energy_results.get('total_site_energy_kwh') and os.path.exists(csv_file):
+                            # Try to get CSV energy for comparison
+                            try:
+                                with open(csv_file, 'r') as f:
+                                    csv_check = f.read()
+                                    csv_match = re.search(r'Total Site Energy,([\d.]+)', csv_check)
+                                    if csv_match:
+                                        csv_energy_gj = float(csv_match.group(1).replace(',', ''))
+                                        csv_energy_kwh = csv_energy_gj * 277.778
+                                        sqlite_energy_kwh = energy_results.get('total_site_energy_kwh', 0)
+                                        
+                                        # Check if SQLite energy is significantly different (>10% difference)
+                                        if abs(sqlite_energy_kwh - csv_energy_kwh) / csv_energy_kwh > 0.10:
+                                            print(f"⚠️  Warning: SQLite energy ({sqlite_energy_kwh:.2f} kWh) differs significantly from CSV ({csv_energy_kwh:.2f} kWh)")
+                                            print(f"   Using CSV value as it's more reliable. CSV is {((csv_energy_kwh - sqlite_energy_kwh) / sqlite_energy_kwh * 100):.1f}% different")
+                                            # Prefer CSV over SQLite if CSV is available
+                                            # Re-extract from CSV (this should have been done first, but double-check)
+                                            energy_results = None  # Will trigger re-extraction
+                            except:
+                                pass  # If CSV check fails, continue with SQLite results
                         
                         # Only use results if we got at least energy data
                         if not energy_results.get('total_site_energy_kwh'):

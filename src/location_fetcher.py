@@ -29,15 +29,54 @@ class LocationFetcher:
         try:
             location = self.geolocator.geocode(address, timeout=10)
             if location:
-                return {
+                coords = {
                     'latitude': location.latitude,
                     'longitude': location.longitude,
                     'altitude': location.altitude if hasattr(location, 'altitude') else 0
                 }
+                # Validate coordinates are reasonable (not 0,0 or clearly wrong)
+                if abs(coords['latitude']) < 0.1 and abs(coords['longitude']) < 0.1:
+                    print(f"⚠️  Warning: Geocoding returned suspicious coordinates (0,0)")
+                    return None
+                # Validate coordinates are within reasonable bounds
+                if abs(coords['latitude']) > 90 or abs(coords['longitude']) > 180:
+                    print(f"⚠️  Warning: Geocoding returned invalid coordinates")
+                    return None
+                return coords
         except Exception as e:
             print(f"Geocoding error: {e}")
         
         return None
+    
+    def get_time_zone(self, latitude: float, longitude: float) -> float:
+        """
+        Calculate timezone offset from longitude.
+        Uses a simplified approximation: timezone ≈ longitude / 15
+        
+        Args:
+            latitude: Latitude coordinate
+            longitude: Longitude coordinate
+            
+        Returns:
+            Timezone offset in hours (e.g., -6.0 for Chicago)
+        """
+        # Simplified timezone calculation based on longitude
+        # More accurate would use timezonefinder or similar library
+        # For US locations, use approximate timezone boundaries
+        
+        # US timezone approximations (longitude-based)
+        if -125 <= longitude < -102:  # Pacific Time
+            return -8.0
+        elif -102 <= longitude < -90:  # Mountain Time
+            return -7.0
+        elif -90 <= longitude < -75:  # Central Time (includes Chicago)
+            return -6.0
+        elif -75 <= longitude < -60:  # Eastern Time
+            return -5.0
+        else:
+            # For other locations, use longitude/15 approximation
+            # This is a rough approximation but works for most cases
+            return round(longitude / 15.0, 1)
     
     def get_climate_zone(self, latitude: float, longitude: float) -> str:
         """
@@ -117,11 +156,18 @@ class LocationFetcher:
             coords['longitude']
         )
         
+        # Calculate timezone from coordinates
+        time_zone = self.get_time_zone(
+            coords['latitude'],
+            coords['longitude']
+        )
+        
         return {
             'address': address,
             'latitude': coords['latitude'],
             'longitude': coords['longitude'],
             'altitude': coords.get('altitude', 0),
+            'time_zone': time_zone,
             'climate_zone': climate_zone,
             'weather_file': weather_file
         }

@@ -126,12 +126,19 @@ class EnhancedLocationFetcher(LocationFetcher):
         except Exception as e:
             print(f"⚠️  CBECS lookup failed: {e}")
         
+        # Calculate timezone from coordinates
+        time_zone = self.get_time_zone(
+            coords['latitude'],
+            coords['longitude']
+        )
+        
         # Combine all data
         comprehensive_data = {
             'address': address,
             'latitude': coords['latitude'],
             'longitude': coords['longitude'],
             'altitude': coords.get('altitude', 0),
+            'time_zone': time_zone,
             'climate_zone': climate_zone,
             'weather_file': weather_info['file'],
             'weather_description': weather_info['description'],
