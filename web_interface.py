@@ -398,39 +398,85 @@ def api_generate_idf():
 
 @app.route('/generate', methods=['POST'])
 def generate_idf():
-    """Generate IDF from form data"""
+    """Generate IDF from JSON or form data"""
     try:
-        address = request.form.get('address')
-        description = request.form.get('description')
-        files = request.files.getlist('documents')
+        # Check if request contains JSON data
+        json_data = request.get_json(silent=True)
         
-        # Save uploaded files
-        temp_dir = tempfile.mkdtemp()
-        document_paths = []
+        if json_data:
+            # Handle JSON request
+            # Extract address - prefer 'address' field, fall back to 'description' if address not provided
+            address = json_data.get('address')
+            description = json_data.get('description', '')
+            
+            # If no address provided, use description as address
+            if not address and description:
+                address = description
+                # Don't parse description as building description if it's being used as address
+                description = ''
+            
+            files = []  # No file uploads in JSON requests
+            document_paths = []
+            llm_provider = json_data.get('llm_provider', 'none')
+            llm_api_key = json_data.get('llm_api_key', None)
+            
+            # Extract user_params or direct parameters for JSON requests
+            user_params_request = json_data.get('user_params', {})
+            
+            # Get direct parameters if not in user_params
+            stories = user_params_request.get('stories') or json_data.get('stories')
+            floor_area = user_params_request.get('floor_area') or json_data.get('floor_area')
+            building_type = user_params_request.get('building_type') or json_data.get('building_type')
+        else:
+            # Handle form data request
+            address = request.form.get('address')
+            description = request.form.get('description', '')
+            files = request.files.getlist('documents')
+            stories = None
+            floor_area = None
+            building_type = None
+            
+            # Save uploaded files
+            temp_dir = tempfile.mkdtemp()
+            document_paths = []
+            
+            for file in files:
+                if file.filename:
+                    filepath = os.path.join(temp_dir, file.filename)
+                    file.save(filepath)
+                    document_paths.append(filepath)
+            
+            # Get LLM settings from form
+            llm_provider = request.form.get('llm_provider', 'none')
+            llm_api_key = request.form.get('llm_api_key', None)
         
-        for file in files:
-            if file.filename:
-                filepath = os.path.join(temp_dir, file.filename)
-                file.save(filepath)
-                document_paths.append(filepath)
-        
-        # Get LLM settings from form
-        llm_provider = request.form.get('llm_provider', 'none')
-        llm_api_key = request.form.get('llm_api_key', None)
+        # Validate address
+        if not address:
+            return jsonify({
+                'success': False,
+                'error': 'Address is required',
+                'message': 'Address or description is required'
+            }), 400
         
         # Handle None description
         if description is None:
             description = ''
         
-        # Parse description with optional LLM
-        use_llm = llm_provider != 'none' and llm_api_key
-        nlp_parser = BuildingDescriptionParser(
-            use_llm=use_llm,
-            llm_provider=llm_provider if use_llm else 'openai',
-            api_key=llm_api_key
-        )
-        result = nlp_parser.process_and_generate_idf(description, address)
-        idf_params = result['idf_parameters']
+        # Create temp directory if not already created (for form data)
+        if json_data:
+            temp_dir = tempfile.mkdtemp()
+        
+        # Parse description with optional LLM (only if description provided)
+        idf_params = {}
+        if description:
+            use_llm = llm_provider != 'none' and llm_api_key
+            nlp_parser = BuildingDescriptionParser(
+                use_llm=use_llm,
+                llm_provider=llm_provider if use_llm else 'openai',
+                api_key=llm_api_key
+            )
+            result = nlp_parser.process_and_generate_idf(description, address)
+            idf_params = result['idf_parameters']
         
         # Parse documents if any
         if document_paths:
@@ -439,13 +485,22 @@ def generate_idf():
                 doc_params = doc_parser.parse_document(doc_path)
                 idf_params.update(doc_params)
         
-        # Generate IDF
-        creator = IDFCreator(enhanced=True, professional=True)
+        # Merge parameters: JSON/form params > parsed from description
+        # For JSON requests, use provided params; for form requests, use parsed params
+        if json_data:
+            # JSON request: use provided params or parsed params as fallback
+            stories = stories or idf_params.get('stories')
+            floor_area = floor_area or idf_params.get('floor_area')
+            building_type = building_type or idf_params.get('building_type')
+        else:
+            # Form request: use parsed params
+            stories = idf_params.get('stories')
+            floor_area = idf_params.get('floor_area')
+            building_type = idf_params.get('building_type')
         
         # Apply safe defaults for all parameters
-        stories = idf_params.get('stories')
-        floor_area = idf_params.get('floor_area')
-        building_type = idf_params.get('building_type') or 'Building'
+        if not building_type:
+            building_type = 'Building'
         
         # Ensure numeric values are valid (not None and > 0)
         if stories is None or stories <= 0:
@@ -458,6 +513,15 @@ def generate_idf():
             'floor_area': floor_area,
             'building_type': building_type
         }
+        
+        # Add floor_area_per_story_m2 if provided in JSON
+        if json_data:
+            floor_area_per_story = user_params_request.get('floor_area_per_story_m2') or json_data.get('floor_area_per_story_m2')
+            if floor_area_per_story:
+                user_params['floor_area_per_story_m2'] = floor_area_per_story
+        
+        # Generate IDF
+        creator = IDFCreator(enhanced=True, professional=True)
         
         # Generate output filename (safe lowercase conversion)
         building_name = safe_lower(building_type, 'Building').replace(' ', '_')
@@ -482,20 +546,31 @@ def generate_idf():
         import shutil
         shutil.move(created_path, final_path)
         
-        return jsonify({
+        response_data = {
             'success': True,
             'message': f'IDF file generated successfully: {building_name}',
             'filename': output_file
-        })
+        }
+        
+        # For JSON requests, include download_url like /api/generate endpoint
+        if json_data:
+            response_data['download_url'] = f'/download/{output_file}'
+            response_data['parameters_used'] = user_params
+        
+        return jsonify(response_data)
         
     except GeocodingError as e:
         return jsonify({
             'success': False,
+            'error': str(e),
+            'type': 'GeocodingError',
             'message': f'Geocoding failed: {str(e)}. Please provide a valid address with city and state information.'
         }), 400
     except Exception as e:
         return jsonify({
             'success': False,
+            'error': str(e),
+            'type': type(e).__name__,
             'message': f'Error generating IDF: {str(e)}'
         }), 500
 
