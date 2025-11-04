@@ -192,7 +192,7 @@
           "installed": false
         },
         "PyPDF2": {
-          "installed": false
+          "installed": true
         },
         "pdf2image": {
           "installed": false
@@ -201,7 +201,7 @@
           "installed": false
         },
         "pandas": {
-          "installed": true
+          "installed": false
         },
         "numpy": {
           "installed": true
@@ -216,7 +216,7 @@
           "installed": true
         },
         "flask_cors": {
-          "installed": false
+          "installed": true
         }
       },
       "optional": {
@@ -257,7 +257,7 @@
     "overall": {
       "status": "degraded",
       "issues": [
-        "Missing required dependencies: pillow, PyPDF2, pdf2image, opencv-python, flask_cors"
+        "Missing required dependencies: pillow, pdf2image, opencv-python, pandas"
       ]
     }
   },
@@ -275,7 +275,22 @@
       "idf_generated": true,
       "simulation": {
         "success": false,
-        "error": "No output files generated",
+        "error": "Simulation failed or incomplete",
+        "fatal_errors": [
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"LOBBY_0_Z1_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"LOBBY_0_Z1_HEATINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"LOBBY_0_Z1_THERMOSTAT\" invalid Cooling Setpoint Temperature Schedule Name=\"LOBBY_0_Z1_COOLINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"CONFERENCE_0_Z2_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"CONFERENCE_0_Z2_HEATINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"CONFERENCE_0_Z2_THERMOSTAT\" invalid Cooling Setpoint Temperature Schedule Name=\"CONFERENCE_0_Z2_COOLINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"BREAK_ROOM_0_Z3_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"BREAK_ROOM_0_Z3_HEATINGSETPOINT\" not found."
+        ],
+        "warnings": [
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.",
+          "** Warning ** Weather file location will be used rather than entered (IDF) Location object.",
+          "** Warning ** ProcessScheduleInput: Schedule:Compact=\"BREAK_ROOM_LIGHTING\" has missing day types in Through=12/31"
+        ],
+        "has_output_files": true,
         "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
       }
     },
@@ -287,7 +302,16 @@
       "idf_generated": true,
       "simulation": {
         "success": false,
-        "error": "No output files generated",
+        "error": "Simulation failed or incomplete",
+        "fatal_errors": [
+          "************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages."
+        ],
+        "warnings": [
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning)."
+        ],
+        "has_output_files": true,
         "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
       }
     },
@@ -299,7 +323,22 @@
       "idf_generated": true,
       "simulation": {
         "success": false,
-        "error": "No output files generated",
+        "error": "Simulation failed or incomplete",
+        "fatal_errors": [
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"LOBBY_0_Z1_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"LOBBY_0_Z1_HEATINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"LOBBY_0_Z1_THERMOSTAT\" invalid Cooling Setpoint Temperature Schedule Name=\"LOBBY_0_Z1_COOLINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"CONFERENCE_0_Z2_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"CONFERENCE_0_Z2_HEATINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"CONFERENCE_0_Z2_THERMOSTAT\" invalid Cooling Setpoint Temperature Schedule Name=\"CONFERENCE_0_Z2_COOLINGSETPOINT\" not found.",
+          "** Severe  ** ThermostatSetpoint:DualSetpoint=\"BREAK_ROOM_0_Z3_THERMOSTAT\" invalid Heating Setpoint Temperature Schedule Name=\"BREAK_ROOM_0_Z3_HEATINGSETPOINT\" not found."
+        ],
+        "warnings": [
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "** Warning ** Version: in IDF=\"25.1\" not the same as expected=\"24.2\"",
+          "** Warning ** Site:GroundTemperature:BuildingSurface: Some values fall outside the range of 15-25C.",
+          "** Warning ** Weather file location will be used rather than entered (IDF) Location object.",
+          "** Warning ** ProcessScheduleInput: Schedule:Compact=\"BREAK_ROOM_LIGHTING\" has missing day types in Through=12/31"
+        ],
+        "has_output_files": true,
         "stderr": "Program terminated: EnergyPlus Terminated--Error(s) Detected.\n"
       }
     }

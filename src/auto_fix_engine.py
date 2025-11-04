@@ -244,11 +244,18 @@ class IDFAutoFixer:
             fixed_content = self._add_missing_materials(fixed_content)
             fixes_applied.append('Added missing materials')
         
-        # Fix 9: ZoneControl:Thermostat:StagedDualSetpoint errors
-        if 'zonecontrol:thermostat:stageddualsetpoint' in error_text.lower() or \
-           'stageddualsetpoint' in error_text.lower():
-            fixed_content = self._fix_staged_thermostat_errors(fixed_content, error_messages)
-            fixes_applied.append('Fixed staged thermostat errors')
+        # Fix 9: Thermostat control type schedule and staged dual setpoint normalization
+        if ('zonecontrol:thermostat:stageddualsetpoint' in error_text.lower() or
+            'stageddualsetpoint' in error_text.lower() or
+            'control type schedule=always on' in error_text.lower()):
+            before = fixed_content
+            fixed_content = self._normalize_thermostat_control_types(fixed_content)
+            if fixed_content != before:
+                fixes_applied.append('Normalized thermostat control types and schedules')
+            else:
+                # Fallback: ensure missing schedules are added
+                fixed_content = self._fix_staged_thermostat_errors(fixed_content, error_messages)
+                fixes_applied.append('Fixed staged thermostat errors')
         
         # Fix 10: Duplicate name errors
         if 'duplicate name found' in error_text.lower():
@@ -466,21 +473,14 @@ Output:Variable,
             return content
         
         thermostat_objects = []
-        thermostat_schedule = """Schedule:Compact,
-    Thermostat Schedule,    !- Name
-    Temperature,             !- Schedule Type Limits Name
+        # Provide default control type schedule selecting DualSetpoint (value 4)
+        thermostat_header = """Schedule:Compact,
+    DualSetpoint Control Type,    !- Name
+    Any Number,             !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
-    22.0;                    !- Field 4
-
-ZoneControl:Thermostat,
-    Thermostat Control Type,  !- Name
-    ,                        !- Zone or ZoneList Name
-    Thermostat Schedule,     !- Control Type Schedule Name
-    Thermostat Setpoint Dual Setpoint,  !- Control 1 Object Type
-    Heating Setpoint,        !- Control 1 Name
-    Cooling Setpoint;        !- Control 2 Name
+    4;                       !- Field 4
 
 ThermostatSetpoint:DualSetpoint,
     Heating Setpoint,        !- Name
@@ -504,14 +504,14 @@ Schedule:Compact,
     26.0;                    !- Field 4
 
 """
-        thermostat_objects.append(thermostat_schedule)
+        thermostat_objects.append(thermostat_header)
         
         # Add thermostat for each zone
         for zone in zones:
             thermostat = f"""ZoneControl:Thermostat,
     {zone} Thermostat,       !- Name
     {zone},                   !- Zone or ZoneList Name
-    Thermostat Schedule,     !- Control Type Schedule Name
+    DualSetpoint Control Type,     !- Control Type Schedule Name
     ThermostatSetpoint:DualSetpoint,  !- Control 1 Object Type
     Heating Setpoint,        !- Control 1 Name
     Cooling Setpoint;        !- Control 2 Name
@@ -527,6 +527,98 @@ Schedule:Compact,
             content = '\n'.join(thermostat_objects) + '\n' + content
         
         return content
+
+    def _normalize_thermostat_control_types(self, content: str) -> str:
+        """Ensure ZoneControl:Thermostat objects use DualSetpoint control type schedule (value 4)
+        and replace any StagedDualSetpoint usages with standard DualSetpoint objects.
+        """
+        lines = content.split('\n')
+        new_lines = []
+        i = 0
+        # Ensure control type schedule exists
+        if 'DualSetpoint Control Type' not in content:
+            control_sched = """Schedule:Compact,
+    DualSetpoint Control Type,    !- Name
+    Any Number,             !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    4;                       !- Field 4
+
+"""
+            # Prepend before RunPeriod if present
+            if 'RunPeriod,' in content:
+                idx = content.find('RunPeriod,')
+                content = content[:idx] + control_sched + content[idx:]
+            else:
+                content = control_sched + content
+            lines = content.split('\n')
+        # Normalize ZoneControl objects
+        while i < len(lines):
+            line = lines[i]
+            stripped = line.strip()
+            # Replace ZoneControl:Thermostat:StagedDualSetpoint header with ZoneControl:Thermostat
+            if stripped.startswith('ZoneControl:Thermostat:StagedDualSetpoint'):
+                line = line.replace('ZoneControl:Thermostat:StagedDualSetpoint', 'ZoneControl:Thermostat')
+                stripped = line.strip()
+            new_lines.append(line)
+            # For ZoneControl:Thermostat blocks, ensure control type schedule is correct and control object type is DualSetpoint
+            if stripped.startswith('ZoneControl:Thermostat'):
+                # Collect block until semicolon
+                block = [line]
+                j = i + 1
+                while j < len(lines):
+                    block.append(lines[j])
+                    if ';' in lines[j]:
+                        j += 1
+                        break
+                    j += 1
+                # Modify block: line 3 is control type schedule name, line 4 is control object type
+                if len(block) >= 5:
+                    # Control Type Schedule Name line (index 3)
+                    # Format: whitespace + name + , + comment
+                    parts = block[3].split('!')[0].split(',')
+                    if parts and parts[0].strip():
+                        block[3] = re.sub(r'^(\s*)([^,]+)(,)', r"\1DualSetpoint Control Type,", block[3])
+                    # Control 1 Object Type line (index 4)
+                    block[4] = re.sub(r'ThermostatSetpoint:[^,]+', 'ThermostatSetpoint:DualSetpoint', block[4])
+                # Replace in new_lines
+                new_lines[-1] = block[0]
+                new_lines.extend(block[1:])
+                i = j
+                continue
+            i += 1
+        normalized = '\n'.join(new_lines)
+        # Ensure a default ThermostatSetpoint:DualSetpoint exists (create if missing)
+        if 'ThermostatSetpoint:DualSetpoint,' not in normalized:
+            default_blocks = """
+ThermostatSetpoint:DualSetpoint,
+    Heating Setpoint,        !- Name
+    Heating Schedule,        !- Heating Setpoint Temperature Schedule Name
+    Cooling Schedule;        !- Cooling Setpoint Temperature Schedule Name
+
+Schedule:Compact,
+    Heating Schedule,        !- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    20.0;                    !- Field 4
+
+Schedule:Compact,
+    Cooling Schedule,        !- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,            !- Field 3
+    26.0;                    !- Field 4
+"""
+            if 'RunPeriod,' in normalized:
+                idx = normalized.find('RunPeriod,')
+                normalized = normalized[:idx] + default_blocks + '\n' + normalized[idx:]
+            else:
+                normalized = default_blocks + '\n' + normalized
+        return normalized
     
     def _fix_invalid_zone_names(self, content: str, error_messages: List[str] = None) -> str:
         """
@@ -822,6 +914,52 @@ Schedule:Compact,
         Based on research: Duplicate names cause severe errors that can lead to fatal termination
         """
         import re
+
+        # Pass 1: Aggressively deduplicate Schedule:Compact by name.
+        # Keep first occurrence for each schedule name, remove subsequent blocks.
+        lines = content.split('\n')
+        i = 0
+        kept_schedule_names_lower = set()
+        removed_schedules = 0
+        new_lines_sched = []
+
+        while i < len(lines):
+            line = lines[i]
+            stripped = line.strip()
+            if stripped.startswith('Schedule:Compact,'):
+                # Capture full block and extract name from next line
+                block_start = i
+                block = [line]
+                j = i + 1
+                schedule_name = None
+                if j < len(lines):
+                    name_line = lines[j]
+                    name_token = name_line.split('!')[0].split(',')[0].strip()
+                    schedule_name = name_token if name_token else None
+                # advance to end of object (';')
+                while j < len(lines):
+                    block.append(lines[j])
+                    if ';' in lines[j]:
+                        j += 1
+                        break
+                    j += 1
+                if schedule_name:
+                    key = schedule_name.lower()
+                    if key in kept_schedule_names_lower:
+                        removed_schedules += 1
+                        i = j
+                        continue
+                    kept_schedule_names_lower.add(key)
+                new_lines_sched.extend(block)
+                i = j
+                continue
+            # default: keep
+            new_lines_sched.append(line)
+            i += 1
+
+        if removed_schedules > 0:
+            print(f"      ✅ Removed {removed_schedules} duplicate Schedule:Compact objects")
+        content = '\n'.join(new_lines_sched)
         
         # Find duplicate names from error messages
         duplicate_names = set()

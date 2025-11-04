@@ -42,8 +42,8 @@ def format_coil_heating_electric(component: dict) -> str:
     # Optional setpoint node
     setpoint_node = component.get('temperature_setpoint_node_name', '')
     # Use efficiency from component dict if provided, otherwise default to 1.0 (resistance heating)
-    # For heat pumps, efficiency should be COP (e.g., 3.5)
-    efficiency = component.get('efficiency', 1.0)
+    # Clamp to <= 1.0 because Coil:Heating:Electric expects resistance-like efficiency, not COP
+    efficiency = min(float(component.get('efficiency', 1.0)), 1.0)
     output = f"""Coil:Heating:Electric,
   {component['name']},                 !- Name
   Always On,                           !- Availability Schedule Name

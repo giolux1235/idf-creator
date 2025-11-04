@@ -1,4 +1,6 @@
-Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 21:32,
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 23:59,
+   ** Warning ** Version: in IDF="25.1" not the same as expected="24.2"
+   ** Warning ** Version: in IDF="25.1" not the same as expected="24.2"
    **  Fatal  ** OpenWeatherFile: Unexpected End-of-File on EPW Weather file, while reading header information, looking for header=LOCATION
    ...Summary of Errors that led to program termination:
    ..... Reference severe error count=0
@@ -7,4 +9,4 @@ Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.03 21:32,
    ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
    ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
    ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
-   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  0.20sec
+   ************* EnergyPlus Terminated--Fatal Error Detected. 2 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  0.22sec

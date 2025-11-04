@@ -819,11 +819,14 @@ class AdvancedHVACSystems:
         controls.append(thermostat_setpoint)
         
         # ZoneControl:Thermostat (connects zone to thermostat - REQUIRED!)
+        # Ensure zone name matches actual Zone object (strip any _zN suffix)
+        import re
+        zone_base_name = re.sub(r'_z\d+$', '', zone_name)
         zone_control = {
             'type': 'ZoneControl:Thermostat',
             'name': f"{zone_name}_ZoneControl",
-            'zone_or_zonelist_name': zone_name,
-            'control_type_schedule_name': 'Always On',
+            'zone_or_zonelist_name': zone_base_name,
+            'control_type_schedule_name': 'DualSetpoint Control Type',
             'control_1_object_type': 'ThermostatSetpoint:DualSetpoint' if control_template['thermostat_type'] == 'ThermostatSetpoint:DualSetpoint' else 'Thermostat',
             'control_1_name': f"{zone_name}_Thermostat"
         }

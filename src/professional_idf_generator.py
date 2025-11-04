@@ -364,8 +364,17 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 
                 # Skip components without name or type
                 if not comp_name or not comp_type:
+                    # Allow raw IDF strings without names
+                    if comp_type == 'IDF_STRING' and 'raw' in component:
+                        hvac_strings.append(component['raw'])
+                        continue
                     continue
                 
+                # Do not deduplicate raw IDF strings; append directly
+                if comp_type == 'IDF_STRING' and 'raw' in component:
+                    hvac_strings.append(component['raw'])
+                    continue
+
                 # Normalize key (lowercase, stripped) for reliable matching
                 norm_key = f"{comp_type.lower()}::{comp_name.lower()}"
                 
@@ -377,10 +386,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             
             # Format all unique components
             for component in hvac_by_key.values():
-                if component.get('type') == 'IDF_STRING' and 'raw' in component:
-                    hvac_strings.append(component['raw'])
-                else:
-                    hvac_strings.append(self.format_hvac_object(component))
+                hvac_strings.append(self.format_hvac_object(component))
             
             # Final string-level deduplication (in case formatting creates duplicates)
             seen_strings = set()
@@ -1308,7 +1314,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             return f"""ZoneControl:Thermostat,
   {component['name']},                 !- Name
   {component.get('zone_or_zonelist_name', component['name'].replace('_ZoneControl', ''))}, !- Zone or ZoneList Name
-  {component.get('control_type_schedule_name', 'Always On')}, !- Control Type Schedule Name
+  {component.get('control_type_schedule_name', 'DualSetpoint Control Type')}, !- Control Type Schedule Name
   {component.get('control_1_object_type', 'ThermostatSetpoint:DualSetpoint')}, !- Control 1 Object Type
   {component.get('control_1_name', component.get('control_1_name', component['name'].replace('_ZoneControl', '_Thermostat')))}; !- Control 1 Name
 
@@ -1552,6 +1558,16 @@ InternalMass,
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
   1.0;                     !- Field 4
+""")
+        
+        # Thermostat Control Type schedule selecting DualSetpoint (value 4 per IDD)
+        schedules.append("""Schedule:Compact,
+  DualSetpoint Control Type,    !- Name
+  Any Number,              !- Schedule Type Limits Name
+  Through: 12/31,          !- Field 1
+  For: AllDays,            !- Field 2
+  Until: 24:00,            !- Field 3
+  4;                       !- Field 4
 """)
         
         # Always Off schedule
