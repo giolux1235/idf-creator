@@ -354,3 +354,5 @@ def fix_vertex_ordering_for_ceiling(vertices_2d: List[Tuple[float, float]],
             vertices_3d = list(reversed(vertices_3d))
     
     return vertices_3d
+
+

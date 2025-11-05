@@ -2475,14 +2475,12 @@ Output:Meter,
 """
         
         # Only add gas-related outputs if gas equipment exists
+        # Note: NaturalGas:Facility meter is already added above unconditionally
+        # (it will be zero if no gas equipment exists, which is fine)
         if has_gas_equipment:
             output += """Output:Variable,
   *,                      !- Key Value
   Site Total Gas Energy,  !- Variable Name
-  RunPeriod;              !- Reporting Frequency
-
-Output:Meter,
-  Gas:Facility,           !- Name
   RunPeriod;              !- Reporting Frequency
 
 """

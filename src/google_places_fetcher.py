@@ -293,3 +293,4 @@ class GooglePlacesFetcher:
         area = abs(area) / 2.0
         return area
 
+
