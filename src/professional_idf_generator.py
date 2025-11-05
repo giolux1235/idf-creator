@@ -1952,7 +1952,7 @@ InternalMass,
             
             # Equipment schedule with all required day types to eliminate warnings
             if is_lobby:
-            schedules.append(f"""Schedule:Compact,
+                schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
   Through: 12/31,                 !- Field 1
@@ -1973,7 +1973,7 @@ InternalMass,
   0.05;                           !- Field 16
 """)
             elif 'conference' in space_type.lower():
-            schedules.append(f"""Schedule:Compact,
+                schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
   Through: 12/31,                 !- Field 1
