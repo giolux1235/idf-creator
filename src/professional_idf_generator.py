@@ -1506,17 +1506,20 @@ Curve:Quadratic,
             occupancy_density = space_template['occupancy_density']
         total_people = max(1, int(zone.area * occupancy_density))
         
+        # Convert space_type to uppercase for schedule names to match EnergyPlus naming conventions
+        space_type_upper = space_type.upper().replace('-', '_')
+        
         return f"""People,
   {zone.name}_People,      !- Name
   {zone.name},             !- Zone or ZoneList Name
-  {space_type}_Occupancy,  !- Number of People Schedule Name
+  {space_type_upper}_OCCUPANCY,  !- Number of People Schedule Name
   People,                  !- Number of People Calculation Method
   {total_people},          !- Number of People
   ,                        !- People per Zone Floor Area {{person/m2}}
   ,                        !- Zone Floor Area per Person {{m2/person}}
   0.3,                     !- Fraction Radiant
   0.1,                     !- Sensible Heat Fraction
-  {space_type}_Activity;   !- Activity Level Schedule Name
+  {space_type_upper}_ACTIVITY;   !- Activity Level Schedule Name
 
 """
     
@@ -1542,10 +1545,13 @@ Curve:Quadratic,
         
         total_lighting = zone.area * lighting_power_density
         
+        # Convert space_type to uppercase for schedule names to match EnergyPlus naming conventions
+        space_type_upper = space_type.upper().replace('-', '_')
+        
         return f"""Lights,
   {zone.name}_Lights,      !- Name
   {zone.name},             !- Zone or ZoneList Name
-  {space_type}_Lighting,   !- Schedule Name
+  {space_type_upper}_LIGHTING,   !- Schedule Name
   Watts/Area,              !- Design Level Calculation Method
   ,                        !- Lighting Level {{W}}
   {lighting_power_density:.1f}, !- Watts per Zone Floor Area {{W/m2}}
@@ -1578,10 +1584,13 @@ Curve:Quadratic,
             # More efficient equipment = lower power density
             equipment_power_density = equipment_power_density / equipment_efficiency_bonus
         
+        # Convert space_type to uppercase for schedule names to match EnergyPlus naming conventions
+        space_type_upper = space_type.upper().replace('-', '_')
+        
         return f"""ElectricEquipment,
   {zone.name}_Equipment,   !- Name
   {zone.name},             !- Zone or ZoneList Name
-  {space_type}_Equipment,  !- Schedule Name
+  {space_type_upper}_EQUIPMENT,  !- Schedule Name
   Watts/Area,              !- Design Level Calculation Method
   ,                        !- Design Level {{W}}
   {equipment_power_density:.1f}, !- Watts per Zone Floor Area {{W/m2}}
@@ -1724,103 +1733,323 @@ InternalMass,
 
         # Advanced schedules with seasonal variations (what senior engineers include)
         for space_type in space_types:
+            # Convert space_type to uppercase for schedule names to match EnergyPlus naming conventions
+            # e.g., 'lobby' -> 'LOBBY', 'office_open' -> 'OFFICE_OPEN'
+            space_type_upper = space_type.upper().replace('-', '_')
+            
             # Determine if this is an office/work space (higher occupancy) vs. other
             is_office_space = any(x in space_type.lower() for x in ['office', 'conference', 'classroom'])
+            is_lobby = 'lobby' in space_type.lower()
+            is_break_room = 'break' in space_type.lower()
+            is_mechanical = 'mechanical' in space_type.lower()
             
             # Occupancy schedule with all required day types to eliminate warnings
-            if is_office_space:
+            if is_lobby:
+                # Lobby: 6am-8am: 0.5, 8am-6pm: 1.0, 6pm-12am: 0.0
                 schedules.append(f"""Schedule:Compact,
-  {space_type}_Occupancy,  !- Name
-  Fraction,                !- Schedule Type Limits Name
-  Through: 12/31,
-  For: Weekdays,
-  Until: 07:00,0.0,
-  Until: 08:00,0.5,
-  Until: 17:00,1.0,
-  Until: 18:00,0.3,
-  Until: 24:00,0.1,
-  For: Weekends,
-  Until: 24:00,0.1,
-  For: Holiday,
-  Until: 24:00,0.0,
-  For: SummerDesignDay,
-  Until: 24:00,1.0,
-  For: WinterDesignDay,
-  Until: 24:00,1.0,
-  For: CustomDay1,
-  Until: 24:00,1.0,
-  For: CustomDay2,
-  Until: 24:00,1.0;
+  {space_type_upper}_OCCUPANCY,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.0,                            !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.5,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  1.0,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.0,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.0,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.0;                            !- Field 16
+""")
+            elif is_office_space:
+                # Office spaces: 6am-8am: 0.8, 8am-6pm: 1.0, 6pm-12am: 0.0
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_OCCUPANCY,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.0,                            !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.8,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  1.0,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.0,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.0,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.0;                            !- Field 16
+""")
+            elif 'conference' in space_type.lower():
+                # Conference: 8am-5pm: 0.5, otherwise 0.0
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_OCCUPANCY,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 08:00,                   !- Field 3
+  0.0,                            !- Field 4
+  Until: 17:00,                   !- Field 5
+  0.5,                            !- Field 6
+  Until: 24:00,                   !- Field 7
+  0.0,                            !- Field 8
+  For: Weekends,                  !- Field 9
+  Until: 24:00,                   !- Field 10
+  0.0,                            !- Field 11
+  For: Holidays,                  !- Field 12
+  Until: 24:00,                   !- Field 13
+  0.0;                            !- Field 14
+""")
+            elif is_mechanical:
+                # Mechanical: 10% occupancy (maintenance staff)
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_OCCUPANCY,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.1;                            !- Field 4
 """)
             else:
-                # Non-office spaces (storage, mechanical) - lower occupancy year-round
-                # Use AllDays which includes all day types (Holiday, SummerDesignDay, etc.)
-                # Don't add specific day types after AllDays - that causes duplicates
+                # Other spaces (storage, etc.) - lower occupancy year-round
                 schedules.append(f"""Schedule:Compact,
-  {space_type}_Occupancy,  !- Name
-  Fraction,                !- Schedule Type Limits Name
-  Through: 12/31,
-  For: AllDays,
-  Until: 24:00,0.20;
+  {space_type_upper}_OCCUPANCY,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.2;                            !- Field 4
+""")
+            
+            # Activity schedule - varies by space type
+            if is_lobby:
+                activity_level = 120.0  # W/person - standing/walking
+            elif is_mechanical:
+                activity_level = 150.0  # W/person - moderate work
+            elif is_break_room:
+                activity_level = 125.0  # W/person - light activity
+            else:
+                activity_level = 130.0  # W/person - office work (default)
+            
+            schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_ACTIVITY,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  {activity_level};                !- Field 4
 """)
             
             # Lighting schedule with all required day types to eliminate warnings
+            if is_lobby:
             schedules.append(f"""Schedule:Compact,
-  {space_type}_Lighting,   !- Name
-  Fraction,                !- Schedule Type Limits Name
-  Through: 12/31,
-  For: Weekdays,
-  Until: 06:00,0.1,
-  Until: 08:00,1.0,
-  Until: 19:00,1.0,
-  Until: 20:00,0.5,
-  Until: 24:00,0.1,
-  For: Weekends,
-  Until: 24:00,0.2,
-  For: Holiday,
-  Until: 24:00,0.1,
-  For: SummerDesignDay,
-  Until: 24:00,1.0,
-  For: WinterDesignDay,
-  Until: 24:00,1.0,
-  For: CustomDay1,
-  Until: 24:00,1.0,
-  For: CustomDay2,
-  Until: 24:00,1.0;
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.05,                           !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.9,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  1.0,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.3,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.1,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.05;                           !- Field 16
+""")
+            elif 'conference' in space_type.lower():
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 08:00,                   !- Field 3
+  0.1,                            !- Field 4
+  Until: 17:00,                   !- Field 5
+  0.9,                            !- Field 6
+  Until: 24:00,                   !- Field 7
+  0.1,                            !- Field 8
+  For: Weekends,                  !- Field 9
+  Until: 24:00,                   !- Field 10
+  0.05,                           !- Field 11
+  For: Holidays,                  !- Field 12
+  Until: 24:00,                   !- Field 13
+  0.05;                           !- Field 14
+""")
+            elif is_break_room:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.05,                           !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.8,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  0.9,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.2,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.1,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.05;                           !- Field 16
+""")
+            elif is_mechanical:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.5;                            !- Field 4
+""")
+            elif is_office_space:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.05,                           !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.9,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  0.95,                           !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.1,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.05,                           !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.05;                           !- Field 16
+""")
+            else:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_LIGHTING,   !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.1;                            !- Field 4
 """)
             
             # Equipment schedule with all required day types to eliminate warnings
+            if is_lobby:
             schedules.append(f"""Schedule:Compact,
-  {space_type}_Equipment,  !- Name
-  Fraction,                !- Schedule Type Limits Name
-  Through: 12/31,
-  For: Weekdays,
-  Until: 07:00,0.3,
-  Until: 08:00,0.7,
-  Until: 18:00,0.8,
-  Until: 19:00,0.5,
-  Until: 24:00,0.3,
-  For: Weekends,
-  Until: 24:00,0.3,
-  For: Holiday,
-  Until: 24:00,0.1,
-  For: SummerDesignDay,
-  Until: 24:00,1.0,
-  For: WinterDesignDay,
-  Until: 24:00,1.0,
-  For: CustomDay1,
-  Until: 24:00,1.0,
-  For: CustomDay2,
-  Until: 24:00,1.0;
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.1,                            !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.5,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  0.7,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.1,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.1,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.05;                           !- Field 16
 """)
-
-            # People activity level schedule (Watts/person) - simplified single period
+            elif 'conference' in space_type.lower():
             schedules.append(f"""Schedule:Compact,
-  {space_type}_Activity,   !- Name
-  Any Number,              !- Schedule Type Limits Name
-  Through: 12/31,
-  For: AllDays,
-  Until: 24:00,120.0;      !- Standard activity level (W/person)
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 08:00,                   !- Field 3
+  0.1,                            !- Field 4
+  Until: 17:00,                   !- Field 5
+  0.8,                            !- Field 6
+  Until: 24:00,                   !- Field 7
+  0.1,                            !- Field 8
+  For: Weekends,                  !- Field 9
+  Until: 24:00,                   !- Field 10
+  0.05,                           !- Field 11
+  For: Holidays,                  !- Field 12
+  Until: 24:00,                   !- Field 13
+  0.05;                           !- Field 14
+""")
+            elif is_break_room:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.2,                            !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.6,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  0.7,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.3,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.2,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.1;                            !- Field 16
+""")
+            elif is_mechanical:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.3;                            !- Field 4
+""")
+            elif is_office_space:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: Weekdays,                  !- Field 2
+  Until: 06:00,                   !- Field 3
+  0.1,                            !- Field 4
+  Until: 08:00,                   !- Field 5
+  0.7,                            !- Field 6
+  Until: 18:00,                   !- Field 7
+  0.8,                            !- Field 8
+  Until: 24:00,                   !- Field 9
+  0.1,                            !- Field 10
+  For: Weekends,                  !- Field 11
+  Until: 24:00,                   !- Field 12
+  0.1,                            !- Field 13
+  For: Holidays,                  !- Field 14
+  Until: 24:00,                   !- Field 15
+  0.05;                           !- Field 16
+""")
+            else:
+                schedules.append(f"""Schedule:Compact,
+  {space_type_upper}_EQUIPMENT,  !- Name
+  AnyNumber,                      !- Schedule Type Limits Name
+  Through: 12/31,                 !- Field 1
+  For: AllDays,                   !- Field 2
+  Until: 24:00,                   !- Field 3
+  0.1;                            !- Field 4
 """)
 
         return '\n'.join(schedules)
@@ -1910,11 +2139,17 @@ InternalMass,
             r'Availability\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
             r'Heating\s+Setpoint\s+Temperature\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
             r'Cooling\s+Setpoint\s+Temperature\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
+            r'Number\s+of\s+People\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',  # For People objects
+            r'Activity\s+Level\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',  # For People objects
             r'Occupancy\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
             r'Activity\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
             r'Lighting\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
             r'Equipment\s+Schedule\s+Name\s*,\s*\n\s*([^\n,]+)',
-            r'(\w+_Occupancy)\s*,',  # Pattern for space_type_Occupancy
+            r'(\w+_OCCUPANCY)\s*,',  # Pattern for SPACE_TYPE_OCCUPANCY (uppercase)
+            r'(\w+_ACTIVITY)\s*,',  # Pattern for SPACE_TYPE_ACTIVITY (uppercase)
+            r'(\w+_LIGHTING)\s*,',  # Pattern for SPACE_TYPE_LIGHTING (uppercase)
+            r'(\w+_EQUIPMENT)\s*,',  # Pattern for SPACE_TYPE_EQUIPMENT (uppercase)
+            r'(\w+_Occupancy)\s*,',  # Pattern for space_type_Occupancy (legacy lowercase)
             r'(\w+_Lighting)\s*,',   # Pattern for space_type_Lighting
             r'(\w+_Equipment)\s*,',  # Pattern for space_type_Equipment
             r'(\w+_Activity)\s*,',   # Pattern for space_type_Activity
