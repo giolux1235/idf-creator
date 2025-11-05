@@ -900,26 +900,28 @@ def simulate_energyplus():
                         total_site_energy_j = 0
                         
                         # Try multiple query strategies for electricity
+                        # NOTE: For RunPeriod frequency, EnergyPlus stores cumulative/annual totals.
+                        # Use MAX() instead of SUM() to get the final cumulative value, not timestep sums.
                         electricity_queries = [
-                            # Strategy 1: ReportMeterData with ReportMeterDataDictionary
+                            # Strategy 1: ReportMeterData with ReportMeterDataDictionary (MAX for cumulative)
                             """
-                            SELECT SUM(d.Value) 
+                            SELECT MAX(d.Value) 
                             FROM ReportMeterData d
                             JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
                             WHERE m.Name LIKE '%Electricity%Facility%'
                             AND m.ReportingFrequency = 'RunPeriod'
                             """,
-                            # Strategy 2: ReportMeterData with ReportMeterDictionary
+                            # Strategy 2: ReportMeterData with ReportMeterDictionary (MAX for cumulative)
                             """
-                            SELECT SUM(d.Value) 
+                            SELECT MAX(d.Value) 
                             FROM ReportMeterData d
                             JOIN ReportMeterDictionary m ON d.ReportMeterDictionaryIndex = m.ReportMeterDictionaryIndex
                             WHERE m.Name LIKE '%Electricity%Facility%'
                             AND m.ReportingFrequency = 'RunPeriod'
                             """,
-                            # Strategy 3: Direct meter name lookup
+                            # Strategy 3: Direct meter name lookup (MAX for cumulative)
                             """
-                            SELECT SUM(Value) 
+                            SELECT MAX(Value) 
                             FROM ReportMeterData
                             WHERE ReportMeterDataDictionaryIndex IN (
                                 SELECT ReportMeterDataDictionaryIndex
@@ -928,9 +930,9 @@ def simulate_energyplus():
                                 AND ReportingFrequency = 'RunPeriod'
                             )
                             """,
-                            # Strategy 4: Alternative table structure
+                            # Strategy 4: Alternative table structure (MAX for cumulative)
                             """
-                            SELECT SUM(Value) 
+                            SELECT MAX(Value) 
                             FROM ReportMeterData
                             WHERE ReportMeterDictionaryIndex IN (
                                 SELECT ReportMeterDictionaryIndex
@@ -939,9 +941,9 @@ def simulate_energyplus():
                                 AND ReportingFrequency = 'RunPeriod'
                             )
                             """,
-                            # Strategy 5: Generic electricity search
+                            # Strategy 5: Generic electricity search (MAX for cumulative)
                             """
-                            SELECT SUM(Value) 
+                            SELECT MAX(Value) 
                             FROM ReportMeterData
                             WHERE ReportMeterDataDictionaryIndex IN (
                                 SELECT ReportMeterDataDictionaryIndex
@@ -949,6 +951,14 @@ def simulate_energyplus():
                                 WHERE Name LIKE '%Electricity%'
                                 AND ReportingFrequency = 'RunPeriod'
                             )
+                            """,
+                            # Strategy 6: Fallback - try SUM if MAX doesn't work (shouldn't happen for RunPeriod)
+                            """
+                            SELECT SUM(d.Value) 
+                            FROM ReportMeterData d
+                            JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
+                            WHERE m.Name = 'Electricity:Facility'
+                            AND m.ReportingFrequency = 'RunPeriod'
                             """
                         ]
                         
@@ -971,30 +981,49 @@ def simulate_energyplus():
                             energy_results['total_site_energy_j'] = total_site_energy_j
                             
                             # Try to get natural gas
+                            # NOTE: For RunPeriod frequency, use MAX() for cumulative values
                             gas_queries = [
                                 """
-                                SELECT SUM(d.Value) 
+                                SELECT MAX(d.Value) 
                                 FROM ReportMeterData d
                                 JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
                                 WHERE m.Name LIKE '%NaturalGas%Facility%'
                                 AND m.ReportingFrequency = 'RunPeriod'
                                 """,
                                 """
-                                SELECT SUM(d.Value) 
+                                SELECT MAX(d.Value) 
                                 FROM ReportMeterData d
                                 JOIN ReportMeterDictionary m ON d.ReportMeterDictionaryIndex = m.ReportMeterDictionaryIndex
                                 WHERE m.Name LIKE '%NaturalGas%Facility%'
                                 AND m.ReportingFrequency = 'RunPeriod'
                                 """,
                                 """
-                                SELECT SUM(Value) 
+                                SELECT MAX(Value) 
                                 FROM ReportMeterData
                                 WHERE ReportMeterDataDictionaryIndex IN (
                                     SELECT ReportMeterDataDictionaryIndex
                                     FROM ReportMeterDataDictionary
-                                    WHERE Name LIKE '%Gas%'
+                                    WHERE Name = 'NaturalGas:Facility'
                                     AND ReportingFrequency = 'RunPeriod'
                                 )
+                                """,
+                                """
+                                SELECT MAX(Value) 
+                                FROM ReportMeterData
+                                WHERE ReportMeterDictionaryIndex IN (
+                                    SELECT ReportMeterDictionaryIndex
+                                    FROM ReportMeterDictionary
+                                    WHERE Name = 'NaturalGas:Facility'
+                                    AND ReportingFrequency = 'RunPeriod'
+                                )
+                                """,
+                                # Fallback - try SUM if MAX doesn't work
+                                """
+                                SELECT SUM(d.Value) 
+                                FROM ReportMeterData d
+                                JOIN ReportMeterDataDictionary m ON d.ReportMeterDataDictionaryIndex = m.ReportMeterDataDictionaryIndex
+                                WHERE m.Name LIKE '%Gas%'
+                                AND m.ReportingFrequency = 'RunPeriod'
                                 """
                             ]
                             

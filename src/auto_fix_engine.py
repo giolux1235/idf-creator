@@ -317,7 +317,7 @@ class IDFAutoFixer:
     def _add_output_objects(self, content: str) -> str:
         """Add Output objects for energy reporting"""
         output_objects = """Output:VariableDictionary,
-    IDD;                     !- Key Field
+    IDF;                     !- Key Field (generates MDD/RDD files for meter verification)
 
 Output:Table:SummaryReports,
     AllSummary;              !- Report 1 Name

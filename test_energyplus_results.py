@@ -123,8 +123,9 @@ def extract_results_from_sqlite(sqlite_path: str) -> Dict:
                 results['electricity_meters'][name] = total
         
         # Get total facility electricity
+        # NOTE: For RunPeriod frequency, use MAX() for cumulative values (not SUM())
         cursor.execute("""
-            SELECT SUM(Value)
+            SELECT MAX(Value)
             FROM ReportMeterData
             WHERE ReportMeterDictionaryIndex IN (
                 SELECT ReportMeterDictionaryIndex
@@ -136,11 +137,13 @@ def extract_results_from_sqlite(sqlite_path: str) -> Dict:
         
         facility_elec = cursor.fetchone()
         if facility_elec and facility_elec[0]:
-            results['total_electricity_kwh'] = facility_elec[0]
+            # Value is in Joules, convert to kWh
+            results['total_electricity_kwh'] = facility_elec[0] / 3600000.0
         
         # Get natural gas
+        # NOTE: For RunPeriod frequency, use MAX() for cumulative values (not SUM())
         cursor.execute("""
-            SELECT SUM(Value)
+            SELECT MAX(Value)
             FROM ReportMeterData
             WHERE ReportMeterDictionaryIndex IN (
                 SELECT ReportMeterDictionaryIndex
@@ -152,7 +155,8 @@ def extract_results_from_sqlite(sqlite_path: str) -> Dict:
         
         facility_gas = cursor.fetchone()
         if facility_gas and facility_gas[0]:
-            results['total_natural_gas_kwh'] = facility_gas[0]
+            # Value is in Joules, convert to kWh
+            results['total_natural_gas_kwh'] = facility_gas[0] / 3600000.0
         
         # Get building area if available
         cursor.execute("""

@@ -2441,7 +2441,7 @@ InternalMass,
         is critical for generating eplustbl.csv with energy totals that APIs can parse.
         """
         output = """Output:VariableDictionary,
-  Regular;                 !- Key Field
+  IDF;                     !- Key Field (generates MDD/RDD files for meter verification)
 
 Output:SQLite,
   SimpleAndTabular;        !- Option Type
@@ -2469,8 +2469,8 @@ Output:Meter,
   RunPeriod;                               !- Reporting Frequency
 
 Output:Meter,
-  Electricity:Building,   !- Name
-  RunPeriod;              !- Reporting Frequency
+  Electricity:Building,                    !- Key Name
+  RunPeriod;                               !- Reporting Frequency
 
 """
         
