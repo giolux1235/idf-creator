@@ -332,6 +332,14 @@ Output:Variable,
     Site Total Zone Electricity Demand,  !- Variable Name
     Hourly;                  !- Reporting Frequency
 
+Output:Meter,
+    Electricity:Facility,                    !- Key Name
+    RunPeriod;                               !- Reporting Frequency
+
+Output:Meter,
+    NaturalGas:Facility,                     !- Key Name
+    RunPeriod;                               !- Reporting Frequency
+
 """
         if 'Output:Variable,' not in content:
             # Add before RunPeriod or at end

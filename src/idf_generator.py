@@ -498,6 +498,14 @@ Output:SQLite,
 Output:Table:SummaryReports,
   AllSummary;              !- Report Name
 
+Output:Meter,
+  Electricity:Facility,                    !- Key Name
+  RunPeriod;                               !- Reporting Frequency
+
+Output:Meter,
+  NaturalGas:Facility,                     !- Key Name
+  RunPeriod;                               !- Reporting Frequency
+
 """
     
     def generate_complete_idf(self, location: Dict, building_params: Dict, 

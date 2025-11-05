@@ -2461,8 +2461,12 @@ Output:Variable,
   RunPeriod;              !- Reporting Frequency
 
 Output:Meter,
-  Electricity:Facility,   !- Name
-  RunPeriod;              !- Reporting Frequency
+  Electricity:Facility,                    !- Key Name
+  RunPeriod;                               !- Reporting Frequency
+
+Output:Meter,
+  NaturalGas:Facility,                     !- Key Name
+  RunPeriod;                               !- Reporting Frequency
 
 Output:Meter,
   Electricity:Building,   !- Name
@@ -2479,10 +2483,6 @@ Output:Meter,
 
 Output:Meter,
   Gas:Facility,           !- Name
-  RunPeriod;              !- Reporting Frequency
-
-Output:Meter,
-  NaturalGas:Facility,    !- Name
   RunPeriod;              !- Reporting Frequency
 
 """
