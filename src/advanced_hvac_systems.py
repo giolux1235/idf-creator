@@ -359,7 +359,7 @@ class AdvancedHVACSystems:
         heating_schedule = {
             'type': 'Schedule:Constant',
             'name': f"{zn}_HeatingSupplyAirTemp",
-            'schedule_type_limits_name': 'Any Number',
+            'schedule_type_limits_name': 'AnyNumber',
             'hourly_value': 35.0  # Heating supply air temp (35°C = 95°F typical)
         }
         components.append(heating_schedule)
@@ -395,7 +395,7 @@ class AdvancedHVACSystems:
         cooling_schedule = {
             'type': 'Schedule:Constant',
             'name': f"{zn}_CoolingSupplyAirTemp",
-            'schedule_type_limits_name': 'Any Number',
+            'schedule_type_limits_name': 'AnyNumber',
             'hourly_value': 13.0  # Cooling supply air temp (13°C = 55°F typical)
         }
         components.append(cooling_schedule)
@@ -463,7 +463,7 @@ class AdvancedHVACSystems:
             'maximum_air_flow_rate': sizing_params['supply_air_flow'],  # Set explicit value to avoid sizing
             'maximum_hot_water_or_steam_flow_rate': sizing_params['heating_load'] / 1000,
             'minimum_hot_water_or_steam_flow_rate': 0.0,
-            'convergence_tolerance': 0.001,
+            'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
             'damper_air_outlet_node_name': f"{zn}_TerminalOutlet",
             'air_inlet_node_name': f"{zn}_TerminalInlet",
             'reheat_coil_air_outlet_node_name': f"{zn}_ADUOutlet"  # Must match ADU outlet

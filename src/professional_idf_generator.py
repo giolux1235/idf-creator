@@ -215,6 +215,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Simulation Control
         idf_content.append(self.generate_simulation_control())
         
+        # System Convergence Limits (improves HVAC convergence)
+        idf_content.append(self.generate_system_convergence_limits())
+        
         # Building
         idf_content.append(self.generate_building_section(
             building_params.get('name', 'Professional Building')
@@ -969,6 +972,20 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
 
 """
     
+    def generate_system_convergence_limits(self) -> str:
+        """Generate SystemConvergenceLimits object to improve HVAC convergence.
+        
+        This increases the maximum HVAC iterations from default 20 to 30,
+        which helps complex HVAC systems converge properly.
+        """
+        return """SystemConvergenceLimits,
+  1,                       !- Minimum System TimeStep {minutes}
+  30,                      !- Maximum HVAC Iterations (increased from default 20)
+  2,                       !- Minimum Plant Iterations
+  20;                      !- Maximum Plant Iterations
+
+"""
+    
     def generate_simulation_control(self) -> str:
         """Generate SimulationControl object."""
         return """SimulationControl,
@@ -1390,7 +1407,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         elif comp_type == 'Schedule:Constant':
             return f"""Schedule:Constant,
   {component['name']},                 !- Name
-  {component.get('schedule_type_limits_name', 'Any Number')}, !- Schedule Type Limits Name
+  {component.get('schedule_type_limits_name', 'AnyNumber')}, !- Schedule Type Limits Name
   {component.get('hourly_value', 1.0)}; !- Hourly Value
 
 """
@@ -1663,6 +1680,79 @@ InternalMass,
 
 """
     
+    def _add_missing_day_types(self, schedule_values: str, default_value: float = 0.0) -> str:
+        """Add missing day types to schedule if Through=12/31 is used.
+        
+        EnergyPlus requires SummerDesignDay, WinterDesignDay, CustomDay1, and CustomDay2
+        for schedules that use Through=12/31.
+        
+        Args:
+            schedule_values: Schedule values string (may include semicolon)
+            default_value: Default value for design days
+            
+        Returns:
+            Schedule values string with missing day types added
+        """
+        # Check if schedule uses Through=12/31
+        if 'Through: 12/31' not in schedule_values:
+            return schedule_values  # No need to add day types
+        
+        # Check if day types are already present
+        if 'For: SummerDesignDay' in schedule_values:
+            return schedule_values  # Already complete
+        
+        # Remove trailing semicolon if present
+        schedule_values = schedule_values.rstrip(';')
+        
+        # Add missing day types
+        missing_day_types = f', For: SummerDesignDay, Until: 24:00, {default_value}, For: WinterDesignDay, Until: 24:00, {default_value}, For: CustomDay1, Until: 24:00, {default_value}, For: CustomDay2, Until: 24:00, {default_value}'
+        
+        schedule_values = schedule_values + missing_day_types + ';'
+        
+        return schedule_values
+    
+    def _create_schedule_compact(self, schedule_name: str, schedule_type_limits: str, 
+                                  schedule_values: str) -> str:
+        """Create a Schedule:Compact object with proper formatting.
+        
+        Args:
+            schedule_name: Name of the schedule
+            schedule_type_limits: Schedule Type Limits Name (e.g., 'AnyNumber', 'Fraction')
+            schedule_values: Schedule values string (may include Through, For, Until, etc.)
+            
+        Returns:
+            Formatted Schedule:Compact string
+        """
+        # Add missing day types if Through=12/31 is used
+        if schedule_type_limits == 'AnyNumber':
+            # For occupancy/equipment/lighting schedules, use 0.0 for design days
+            # For activity schedules, use the same value
+            if '_ACTIVITY' in schedule_name:
+                # Activity schedules keep the same value
+                # Extract the activity value if it's a simple AllDays schedule
+                if 'For: AllDays' in schedule_values and 'Until: 24:00' in schedule_values:
+                    # Try to extract the value
+                    import re
+                    match = re.search(r'Until: 24:00,\s*([\d.]+)', schedule_values)
+                    if match:
+                        default_value = float(match.group(1))
+                    else:
+                        default_value = 130.0  # Default activity level
+                else:
+                    default_value = 130.0  # Default activity level
+            else:
+                default_value = 0.0  # For occupancy/equipment/lighting, use 0.0 for design days
+        else:
+            default_value = 0.0
+        
+        schedule_values = self._add_missing_day_types(schedule_values, default_value)
+        
+        return f"""Schedule:Compact,
+  {schedule_name},               !- Name
+  {schedule_type_limits},         !- Schedule Type Limits Name
+  {schedule_values}
+"""
+    
     def generate_schedules(self, building_type: str, space_types_filter: List[str] = None) -> str:
         """Generate comprehensive schedules for building type."""
         schedules = []
@@ -1675,7 +1765,7 @@ InternalMass,
   CONTINUOUS;              !- Numeric Type
 """)
         schedules.append("""ScheduleTypeLimits,
-  Any Number,              !- Name
+  AnyNumber,               !- Name
   ,                        !- Lower Limit Value
   ,                        !- Upper Limit Value
   CONTINUOUS;              !- Numeric Type
@@ -1684,7 +1774,7 @@ InternalMass,
         # Always On schedule (required for HVAC components)
         schedules.append("""Schedule:Compact,
   Always On,               !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -1694,7 +1784,7 @@ InternalMass,
         # Thermostat Control Type schedule selecting DualSetpoint (value 4 per IDD)
         schedules.append("""Schedule:Compact,
   DualSetpoint Control Type,    !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -1704,7 +1794,7 @@ InternalMass,
         # Always Off schedule
         schedules.append("""Schedule:Compact,
   Always Off,              !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -1714,7 +1804,7 @@ InternalMass,
         # Always 24.0 schedule for cooling coil setpoint
         schedules.append("""Schedule:Compact,
   Always 24.0,             !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -1746,87 +1836,48 @@ InternalMass,
             # Occupancy schedule with all required day types to eliminate warnings
             if is_lobby:
                 # Lobby: 6am-8am: 0.5, 8am-6pm: 1.0, 6pm-12am: 0.0
+                occupancy_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.0, Until: 08:00, 0.5, Until: 18:00, 1.0, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.0,                            !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.5,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  1.0,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.0,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.0,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.0;                            !- Field 16
+  {occupancy_values}
 """)
             elif is_office_space:
                 # Office spaces: 6am-8am: 0.8, 8am-6pm: 1.0, 6pm-12am: 0.0
+                occupancy_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.0, Until: 08:00, 0.8, Until: 18:00, 1.0, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.0,                            !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.8,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  1.0,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.0,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.0,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.0;                            !- Field 16
+  {occupancy_values}
 """)
             elif 'conference' in space_type.lower():
                 # Conference: 8am-5pm: 0.5, otherwise 0.0
+                occupancy_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.0, Until: 17:00, 0.5, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 08:00,                   !- Field 3
-  0.0,                            !- Field 4
-  Until: 17:00,                   !- Field 5
-  0.5,                            !- Field 6
-  Until: 24:00,                   !- Field 7
-  0.0,                            !- Field 8
-  For: Weekends,                  !- Field 9
-  Until: 24:00,                   !- Field 10
-  0.0,                            !- Field 11
-  For: Holidays,                  !- Field 12
-  Until: 24:00,                   !- Field 13
-  0.0;                            !- Field 14
+  {occupancy_values}
 """)
             elif is_mechanical:
                 # Mechanical: 10% occupancy (maintenance staff)
+                occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.1;                            !- Field 4
+  {occupancy_values}
 """)
             else:
                 # Other spaces (storage, etc.) - lower occupancy year-round
+                occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.2'
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.2;                            !- Field 4
+  {occupancy_values}
 """)
             
             # Activity schedule - varies by space type
@@ -1839,217 +1890,112 @@ InternalMass,
             else:
                 activity_level = 130.0  # W/person - office work (default)
             
+            activity_values = f'Through: 12/31, For: AllDays, Until: 24:00, {activity_level}'
+            activity_values = self._add_missing_day_types(activity_values, default_value=activity_level)
             schedules.append(f"""Schedule:Compact,
   {space_type_upper}_ACTIVITY,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  {activity_level};                !- Field 4
+  {activity_values}
 """)
             
             # Lighting schedule with all required day types to eliminate warnings
             if is_lobby:
+                lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.9, Until: 18:00, 1.0, Until: 24:00, 0.3, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.05,                           !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.9,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  1.0,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.3,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.1,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.05;                           !- Field 16
+  {lighting_values}
 """)
             elif 'conference' in space_type.lower():
+                lighting_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.1, Until: 17:00, 0.9, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 08:00,                   !- Field 3
-  0.1,                            !- Field 4
-  Until: 17:00,                   !- Field 5
-  0.9,                            !- Field 6
-  Until: 24:00,                   !- Field 7
-  0.1,                            !- Field 8
-  For: Weekends,                  !- Field 9
-  Until: 24:00,                   !- Field 10
-  0.05,                           !- Field 11
-  For: Holidays,                  !- Field 12
-  Until: 24:00,                   !- Field 13
-  0.05;                           !- Field 14
+  {lighting_values}
 """)
             elif is_break_room:
+                lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.8, Until: 18:00, 0.9, Until: 24:00, 0.2, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.05,                           !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.8,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  0.9,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.2,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.1,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.05;                           !- Field 16
+  {lighting_values}
 """)
             elif is_mechanical:
+                lighting_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.5'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.5;                            !- Field 4
+  {lighting_values}
 """)
             elif is_office_space:
+                lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.9, Until: 18:00, 0.95, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.05,                           !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.9,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  0.95,                           !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.1,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.05,                           !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.05;                           !- Field 16
+  {lighting_values}
 """)
             else:
+                lighting_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.1;                            !- Field 4
+  {lighting_values}
 """)
             
             # Equipment schedule with all required day types to eliminate warnings
             if is_lobby:
+                equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.1, Until: 08:00, 0.5, Until: 18:00, 0.7, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.1,                            !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.5,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  0.7,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.1,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.1,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.05;                           !- Field 16
+  {equipment_values}
 """)
             elif 'conference' in space_type.lower():
+                equipment_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.1, Until: 17:00, 0.8, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 08:00,                   !- Field 3
-  0.1,                            !- Field 4
-  Until: 17:00,                   !- Field 5
-  0.8,                            !- Field 6
-  Until: 24:00,                   !- Field 7
-  0.1,                            !- Field 8
-  For: Weekends,                  !- Field 9
-  Until: 24:00,                   !- Field 10
-  0.05,                           !- Field 11
-  For: Holidays,                  !- Field 12
-  Until: 24:00,                   !- Field 13
-  0.05;                           !- Field 14
+  {equipment_values}
 """)
             elif is_break_room:
+                equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.2, Until: 08:00, 0.6, Until: 18:00, 0.7, Until: 24:00, 0.3, For: Weekends, Until: 24:00, 0.2, For: Holidays, Until: 24:00, 0.1'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.2,                            !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.6,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  0.7,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.3,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.2,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.1;                            !- Field 16
+  {equipment_values}
 """)
             elif is_mechanical:
+                equipment_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.3'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.3;                            !- Field 4
+  {equipment_values}
 """)
             elif is_office_space:
+                equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.1, Until: 08:00, 0.7, Until: 18:00, 0.8, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: Weekdays,                  !- Field 2
-  Until: 06:00,                   !- Field 3
-  0.1,                            !- Field 4
-  Until: 08:00,                   !- Field 5
-  0.7,                            !- Field 6
-  Until: 18:00,                   !- Field 7
-  0.8,                            !- Field 8
-  Until: 24:00,                   !- Field 9
-  0.1,                            !- Field 10
-  For: Weekends,                  !- Field 11
-  Until: 24:00,                   !- Field 12
-  0.1,                            !- Field 13
-  For: Holidays,                  !- Field 14
-  Until: 24:00,                   !- Field 15
-  0.05;                           !- Field 16
+  {equipment_values}
 """)
             else:
+                equipment_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
-  Through: 12/31,                 !- Field 1
-  For: AllDays,                   !- Field 2
-  Until: 24:00,                   !- Field 3
-  0.1;                            !- Field 4
+  {equipment_values}
 """)
 
         return '\n'.join(schedules)
