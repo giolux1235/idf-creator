@@ -2222,30 +2222,28 @@ Output:Meter,
                 bx = center_x + ux * half_w
                 by = center_y + uy * half_w
 
-                # Construct rectangle window vertices (consistent outward normal)
-                # Create a small normal vector for thickness in plan (for coordinates only)
-                nx = -uy
-                ny = ux
-                half_t = 0.05  # small offset to give window a finite width in the perpendicular direction
-
-                v1x = ax + nx * half_t
-                v1y = ay + ny * half_t
-                v2x = ax - nx * half_t
-                v2y = ay - ny * half_t
-                v3x = bx - nx * half_t
-                v3y = by - ny * half_t
-                v4x = bx + nx * half_t
-                v4y = by + ny * half_t
-
+                # Construct rectangle window vertices matching wall's vertex ordering
+                # Window vertices must be ordered counter-clockwise when viewed from outside
+                # (same as wall) to ensure azimuth matches the base wall
+                # Wall vertices after fix_vertex_ordering_for_wall are:
+                #   v1: (x1, y1, z_bottom) - bottom-left
+                #   v2: (x2, y2, z_bottom) - bottom-right  
+                #   v3: (x2, y2, z_top)    - top-right
+                #   v4: (x1, y1, z_top)    - top-left
+                # Window should follow same pattern with window endpoints (ax,ay) and (bx,by)
+                
+                # Window vertices ordered to match wall's counter-clockwise ordering:
+                # bottom-left → bottom-right → top-right → top-left
+                # This ensures window normal matches wall normal (same azimuth)
                 window = {
                     'name': f"{zone.name}_Window_{i+1}",
                     'construction': 'Window_Double_Clear',
                     'building_surface_name': f"{zone.name}_Wall_{i+1}",
                     'vertices': [
-                        f"{v1x:.4f},{v1y:.4f},{win_z_top:.4f}",
-                        f"{v2x:.4f},{v2y:.4f},{win_z_bottom:.4f}",
-                        f"{v3x:.4f},{v3y:.4f},{win_z_bottom:.4f}",
-                        f"{v4x:.4f},{v4y:.4f},{win_z_top:.4f}"
+                        f"{ax:.4f},{ay:.4f},{win_z_bottom:.4f}",  # Bottom-left
+                        f"{bx:.4f},{by:.4f},{win_z_bottom:.4f}",  # Bottom-right
+                        f"{bx:.4f},{by:.4f},{win_z_top:.4f}",     # Top-right
+                        f"{ax:.4f},{ay:.4f},{win_z_top:.4f}"      # Top-left
                     ]
                 }
                 windows.append(window)
