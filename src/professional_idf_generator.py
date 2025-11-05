@@ -25,6 +25,7 @@ from .advanced_infiltration import AdvancedInfiltration
 from .equipment_catalog.adapters import bcl as bcl_adapter
 from .equipment_catalog.translator.idf_translator import translate as translate_equipment
 from .utils.idf_utils import dedupe_idf_string
+from .geometry_utils import fix_vertex_ordering_for_wall, calculate_polygon_center_2d
 from .formatters.hvac_objects import (
     format_fan_variable_volume,
     format_fan_constant_volume,
@@ -2170,6 +2171,9 @@ Output:Meter,
             z_bottom = zone.floor_level * 3.0
             z_top = (zone.floor_level + 1) * 3.0
             story_height = max(0.5, z_top - z_bottom)
+            
+            # Calculate zone center for window vertex ordering (must match wall ordering)
+            zone_center_2d = calculate_polygon_center_2d(coords)
 
             for i, (x1, y1) in enumerate(coords):
                 x2, y2 = coords[(i + 1) % len(coords)]
@@ -2222,29 +2226,29 @@ Output:Meter,
                 bx = center_x + ux * half_w
                 by = center_y + uy * half_w
 
-                # Construct rectangle window vertices matching wall's vertex ordering
-                # Window vertices must be ordered counter-clockwise when viewed from outside
-                # (same as wall) to ensure azimuth matches the base wall
-                # Wall vertices after fix_vertex_ordering_for_wall are:
-                #   v1: (x1, y1, z_bottom) - bottom-left
-                #   v2: (x2, y2, z_bottom) - bottom-right  
-                #   v3: (x2, y2, z_top)    - top-right
-                #   v4: (x1, y1, z_top)    - top-left
-                # Window should follow same pattern with window endpoints (ax,ay) and (bx,by)
+                # Create initial window vertices matching the wall's initial vertex pattern
+                # This matches the pattern used in _generate_wall_surfaces before fix_vertex_ordering_for_wall
+                window_vertices_3d = [
+                    (ax, ay, win_z_bottom),  # Bottom-left
+                    (bx, by, win_z_bottom),  # Bottom-right
+                    (bx, by, win_z_top),     # Top-right
+                    (ax, ay, win_z_top)      # Top-left
+                ]
                 
-                # Window vertices ordered to match wall's counter-clockwise ordering:
-                # bottom-left → bottom-right → top-right → top-left
-                # This ensures window normal matches wall normal (same azimuth)
+                # Fix vertex ordering to match wall orientation (same logic as walls)
+                # This ensures window normal points outward (same direction as wall normal)
+                window_vertices_3d = fix_vertex_ordering_for_wall(window_vertices_3d, zone_center_2d)
+                
+                # Format vertices as strings for EnergyPlus
+                window_vertices = []
+                for x, y, z in window_vertices_3d:
+                    window_vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
+                
                 window = {
                     'name': f"{zone.name}_Window_{i+1}",
                     'construction': 'Window_Double_Clear',
                     'building_surface_name': f"{zone.name}_Wall_{i+1}",
-                    'vertices': [
-                        f"{ax:.4f},{ay:.4f},{win_z_bottom:.4f}",  # Bottom-left
-                        f"{bx:.4f},{by:.4f},{win_z_bottom:.4f}",  # Bottom-right
-                        f"{bx:.4f},{by:.4f},{win_z_top:.4f}",     # Top-right
-                        f"{ax:.4f},{ay:.4f},{win_z_top:.4f}"      # Top-left
-                    ]
+                    'vertices': window_vertices
                 }
                 windows.append(window)
 
