@@ -536,37 +536,84 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             footprint_area = user_specified_area / stories if stories > 0 else user_specified_area
             print(f"  ✓ Using user-specified area: {footprint_area:.0f} m²/floor (from {user_specified_area:.0f} m² total)")
         else:
-            # Check OSM for area (OSM area is per-floor)
-            area_source = 'default'
+            # Collect area from multiple sources for verification
+            address = location_data.get('address', 'unknown')
+            building_type_lower = building_type.lower() if building_type else 'office'
+            
+            # Gather all available area sources
+            area_sources = {}
+            
+            # Source 1: OSM area
             try:
                 osm_area = building_info.get('osm_area_m2')
                 if osm_area and float(osm_area) > 10:
-                    footprint_area = float(osm_area)
-                    area_source = 'osm'
-                    print(f"  Using OSM area: {footprint_area:.0f} m²/floor")
+                    area_sources['osm'] = float(osm_area)
             except Exception:
                 pass
             
-            if footprint_area is None:
-                total_area = estimated_params.get('total_area', 1000)
-                # Safe division: ensure stories is valid
-                if total_area is None:
-                    total_area = 1000
-                footprint_area = total_area / stories if stories > 0 else 1000
-                area_source = 'default'
-                print(f"  Using default area: {footprint_area:.0f} m²/floor")
+            # Source 2: City data area
+            try:
+                city_area = building_info.get('city_area_m2')
+                if city_area and float(city_area) > 10:
+                    # City data might be total area, convert to per-floor if stories available
+                    city_area_value = float(city_area)
+                    if stories and stories > 0:
+                        city_area_value = city_area_value / stories
+                    area_sources['city'] = city_area_value
+            except Exception:
+                pass
             
-            # Validate area and log warnings for outliers
+            # Source 3: Estimated/default area
+            total_area = estimated_params.get('total_area', 1000)
+            if total_area is None:
+                total_area = 1000
+            estimated_area = total_area / stories if stories > 0 else 1000
+            area_sources['estimated'] = estimated_area
+            
+            # Perform multi-source verification
+            source_used = 'default'
+            if len(area_sources) > 1:
+                # Multiple sources available - use verification
+                verification_result = self.area_validator.verify_multiple_sources(
+                    area_sources,
+                    building_type=building_type_lower,
+                    stories=stories
+                )
+                
+                footprint_area = verification_result['recommended_area']
+                source_used = verification_result['source_used']
+                confidence = verification_result['confidence']
+                agreement = verification_result['sources_agreement']
+                
+                # Print verification results
+                print(f"  🔍 Multi-source verification:")
+                for source_name, area_value in area_sources.items():
+                    status = "✓" if source_name == source_used else " "
+                    print(f"    {status} {source_name}: {area_value:.1f} m²")
+                
+                print(f"  → Using {source_used}: {footprint_area:.1f} m² (confidence: {confidence}, agreement: {agreement})")
+                
+                # Log discrepancies if any
+                if verification_result.get('discrepancies'):
+                    print(f"  ⚠️  Discrepancies detected:")
+                    for discrepancy in verification_result['discrepancies']:
+                        print(f"     - {discrepancy}")
+            else:
+                # Single source - use it directly
+                source_name = list(area_sources.keys())[0] if area_sources else 'default'
+                footprint_area = area_sources.get(source_name, estimated_area)
+                source_used = source_name
+                print(f"  Using {source_name} area: {footprint_area:.0f} m²/floor")
+            
+            # Validate the final area and log warnings
             if footprint_area is not None:
-                address = location_data.get('address', 'unknown')
-                building_type_lower = building_type.lower() if building_type else 'office'
                 validated_area, validation_result = self.area_validator.validate_and_log(
                     footprint_area,
                     building_type=building_type_lower,
-                    area_source=area_source,
+                    area_source=source_used,
                     address=address,
                     stories=stories,
-                    auto_cap=False  # Don't auto-cap, just warn
+                    auto_cap=False  # Don't cap - we've already verified with multiple sources
                 )
                 
                 # Log validation warning if outlier
@@ -577,7 +624,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 elif validation_result['warning_level'] == 'minor':
                     print(f"  ℹ️  NOTE: {validation_result['warning_message']}")
                 
-                # Use validated area (currently same, but ready for future auto-capping)
+                # Use validated area
                 footprint_area = validated_area
         
         # Now decide whether to use OSM geometry
