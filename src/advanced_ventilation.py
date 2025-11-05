@@ -85,7 +85,7 @@ Controller:MechanicalVentilation,
 
 Schedule:Compact,
   {zone_name}_DCV_Schedule,              !- Name
-  Any Number,                            !- Schedule Type Limits Name
+  AnyNumber,                             !- Schedule Type Limits Name
   Through: 12/31,                        !- Field 1
   For: AllDays,                          !- Field 2
   Until: 24:00,                          !- Field 3
@@ -190,7 +190,7 @@ Controller:MechanicalVentilation,
 
 Schedule:Compact,
   {zone_name}_ERV_Availability,         !- Name
-  Any Number,                            !- Schedule Type Limits Name
+  AnyNumber,                             !- Schedule Type Limits Name
   Through: 12/31,                        !- Field 1
   For: AllDays,                          !- Field 2
   Until: 24:00,                          !- Field 3

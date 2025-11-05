@@ -372,7 +372,7 @@ ZoneControl:Thermostatic,
             # Cooling: 26°C in summer (Apr-Sep), 35°C (off) in winter (Oct-Mar)
             schedule = f"""Schedule:Compact,
   {name}_HeatingSetpoint,             !- Name
-  Any Number,                         !- Schedule Type Limits Name
+  AnyNumber,                          !- Schedule Type Limits Name
   Through: 3/31,                      !- Winter: Jan-Mar
   For: AllDays,
   Until: 24:00,
@@ -388,7 +388,7 @@ ZoneControl:Thermostatic,
 
 Schedule:Compact,
   {name}_CoolingSetpoint,             !- Name
-  Any Number,                         !- Schedule Type Limits Name
+  AnyNumber,                          !- Schedule Type Limits Name
   Through: 3/31,                      !- Winter: Jan-Mar
   For: AllDays,
   Until: 24:00,

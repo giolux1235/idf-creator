@@ -1691,25 +1691,33 @@ InternalMass,
         EnergyPlus requires SummerDesignDay, WinterDesignDay, CustomDay1, and CustomDay2
         for schedules that use Through=12/31.
         
+        IMPORTANT: If schedule uses "For: AllDays", design days are already included,
+        so we should NOT add them separately to avoid duplicates.
+        
         Args:
             schedule_values: Schedule values string (may include semicolon)
             default_value: Default value for design days
             
         Returns:
-            Schedule values string with missing day types added
+            Schedule values string with missing day types added (if needed)
         """
         # Check if schedule uses Through=12/31
         if 'Through: 12/31' not in schedule_values:
             return schedule_values  # No need to add day types
         
-        # Check if day types are already present
+        # CRITICAL FIX: If schedule uses "For: AllDays", design days are already included
+        # Do NOT add them separately to avoid duplicate day type errors
+        if 'For: AllDays' in schedule_values:
+            return schedule_values  # AllDays already includes design days - don't add duplicates
+        
+        # Check if day types are already explicitly present
         if 'For: SummerDesignDay' in schedule_values:
-            return schedule_values  # Already complete
+            return schedule_values  # Already complete with explicit day types
         
         # Remove trailing semicolon if present
         schedule_values = schedule_values.rstrip(';')
         
-        # Add missing day types
+        # Add missing day types (only if not using AllDays and not already present)
         missing_day_types = f', For: SummerDesignDay, Until: 24:00, {default_value}, For: WinterDesignDay, Until: 24:00, {default_value}, For: CustomDay1, Until: 24:00, {default_value}, For: CustomDay2, Until: 24:00, {default_value}'
         
         schedule_values = schedule_values + missing_day_types + ';'

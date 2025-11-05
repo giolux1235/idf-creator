@@ -475,7 +475,7 @@ Output:Variable,
         # Provide default control type schedule selecting DualSetpoint (value 4)
         thermostat_header = """Schedule:Compact,
     DualSetpoint Control Type,    !- Name
-    Any Number,             !- Schedule Type Limits Name
+    AnyNumber,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
@@ -538,7 +538,7 @@ Schedule:Compact,
         if 'DualSetpoint Control Type' not in content:
             control_sched = """Schedule:Compact,
     DualSetpoint Control Type,    !- Name
-    Any Number,             !- Schedule Type Limits Name
+    AnyNumber,              !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3

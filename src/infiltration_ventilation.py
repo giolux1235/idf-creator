@@ -241,7 +241,7 @@ class InfiltrationVentilationEngine:
         # Minimum OA flow schedule
         min_oa_schedule = f"""Schedule:Compact,
   {zone_name}_MinOAFlow,             !- Name
-  Any Number,                         !- Schedule Type Limits Name
+  AnyNumber,                          !- Schedule Type Limits Name
   Through: 12/31,
   For: AllDays,
   Until: 24:00,0.02;

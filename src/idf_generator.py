@@ -373,14 +373,14 @@ Construction,
     def generate_schedules(self) -> str:
         """Generate Schedule objects."""
         return f"""ScheduleTypeLimits,
-  Any Number;              !- Name
+  AnyNumber;               !- Name
 
 ScheduleTypeLimits,
   Fraction;                !- Name
 
 Schedule:Compact,
   Always On,               !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -388,7 +388,7 @@ Schedule:Compact,
 
 Schedule:Compact,
   Always Off,              !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
@@ -438,7 +438,7 @@ Schedule:Compact,
 
 Schedule:Compact,
   Activity Schedule,       !- Name
-  Any Number,              !- Schedule Type Limits Name
+  AnyNumber,               !- Schedule Type Limits Name
   Through: 12/31,          !- Field 1
   For: AllDays,            !- Field 2
   Until: 24:00,            !- Field 3
