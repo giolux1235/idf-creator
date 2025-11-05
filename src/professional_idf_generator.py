@@ -1694,28 +1694,34 @@ InternalMass,
         IMPORTANT: If schedule uses "For: AllDays", design days are already included,
         so we should NOT add them separately to avoid duplicates.
         
+        CRITICAL: Always ensures schedule ends with semicolon - required by EnergyPlus.
+        
         Args:
             schedule_values: Schedule values string (may include semicolon)
             default_value: Default value for design days
             
         Returns:
-            Schedule values string with missing day types added (if needed)
+            Schedule values string with missing day types added (if needed) and semicolon ensured
         """
+        # CRITICAL FIX: Always ensure semicolon is present at the end
+        # Remove any existing semicolon first, then add one at the end
+        schedule_values = schedule_values.rstrip().rstrip(';')
+        
         # Check if schedule uses Through=12/31
         if 'Through: 12/31' not in schedule_values:
-            return schedule_values  # No need to add day types
+            # Still need semicolon even if not Through=12/31
+            return schedule_values + ';'
         
         # CRITICAL FIX: If schedule uses "For: AllDays", design days are already included
         # Do NOT add them separately to avoid duplicate day type errors
+        # BUT still ensure semicolon is present
         if 'For: AllDays' in schedule_values:
-            return schedule_values  # AllDays already includes design days - don't add duplicates
+            return schedule_values + ';'  # AllDays already includes design days - don't add duplicates, but add semicolon
         
         # Check if day types are already explicitly present
         if 'For: SummerDesignDay' in schedule_values:
-            return schedule_values  # Already complete with explicit day types
-        
-        # Remove trailing semicolon if present
-        schedule_values = schedule_values.rstrip(';')
+            # Already complete with explicit day types, but ensure semicolon
+            return schedule_values + ';'
         
         # Add missing day types (only if not using AllDays and not already present)
         missing_day_types = f', For: SummerDesignDay, Until: 24:00, {default_value}, For: WinterDesignDay, Until: 24:00, {default_value}, For: CustomDay1, Until: 24:00, {default_value}, For: CustomDay2, Until: 24:00, {default_value}'
@@ -1759,6 +1765,9 @@ InternalMass,
             default_value = 0.0
         
         schedule_values = self._add_missing_day_types(schedule_values, default_value)
+        
+        # CRITICAL: Final validation - ensure semicolon is present
+        schedule_values = schedule_values.rstrip().rstrip(';') + ';'
         
         return f"""Schedule:Compact,
   {schedule_name},               !- Name
