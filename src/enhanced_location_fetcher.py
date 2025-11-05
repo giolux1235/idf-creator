@@ -3,6 +3,8 @@ from typing import Dict, Optional
 import os
 from .location_fetcher import LocationFetcher, GeocodingError
 from .osm_fetcher import OSMFetcher
+from .microsoft_footprints_fetcher import MicrosoftFootprintsFetcher
+from .google_places_fetcher import GooglePlacesFetcher
 from .nrel_fetcher import NRELFetcher
 from .census_fetcher import CensusFetcher
 from .city_data_fetcher import CityDataFetcher
@@ -17,6 +19,11 @@ class EnhancedLocationFetcher(LocationFetcher):
     def __init__(self):
         """Initialize enhanced location fetcher with all data sources."""
         super().__init__()
+        # Microsoft Building Footprints (higher priority for US locations)
+        self.microsoft_fetcher = MicrosoftFootprintsFetcher()
+        # Google Places API (optional, only if API key available)
+        self.google_places_fetcher = GooglePlacesFetcher()
+        # OSM (fallback for non-US or when Microsoft/Google data unavailable)
         self.osm_fetcher = OSMFetcher()
         self.nrel_fetcher = NRELFetcher()
         self.census_fetcher = CensusFetcher()
@@ -68,33 +75,70 @@ class EnhancedLocationFetcher(LocationFetcher):
         climate_zone = self.get_climate_zone(coords['latitude'], coords['longitude'])
         print(f"✓ Climate zone: {climate_zone}")
         
-        # 3. OSM building data
-        print(f"🗺️  Fetching building footprint from OpenStreetMap...")
-        osm_data = self.osm_fetcher.get_building_footprint(
-            coords['latitude'], 
-            coords['longitude']
-        )
-        
+        # 3. Building footprint data (priority: Microsoft → Google → OSM)
         building_info = {}
-        if osm_data:
-            print(f"✓ Found building in OSM")
-            building_info = {
-                'osm_footprint': osm_data.get('footprint'),
-                'osm_area_m2': osm_data.get('area_estimate_m2'),
-                'osm_building_type': osm_data['properties'].get('building'),
-                'osm_levels': osm_data['properties'].get('levels'),
-                'osm_height_m': osm_data['properties'].get('height'),
-                'osm_roof_shape': osm_data['properties'].get('roof:shape'),
-                'osm_tags': osm_data.get('tags', {})
-            }
-            print(f"  - Type: {building_info['osm_building_type']}")
-            if building_info.get('osm_levels'):
-                print(f"  - Levels: {building_info['osm_levels']}")
-            if building_info.get('osm_area_m2'):
-                print(f"  - Area: {building_info['osm_area_m2']:.1f} m²")
-        else:
-            print("⚠️  No building found in OSM")
-            building_info['note'] = 'OSM missing; will try city and census sources'
+        lat = coords['latitude']
+        lon = coords['longitude']
+        
+        # Try Microsoft Building Footprints first (for US locations - higher accuracy)
+        microsoft_data = None
+        if self.microsoft_fetcher.is_us_location(lat, lon):
+            print(f"🏢 Fetching building footprint from Microsoft Building Footprints...")
+            microsoft_data = self.microsoft_fetcher.get_building_footprint(lat, lon)
+            if microsoft_data:
+                print(f"✓ Found building in Microsoft Footprints")
+                building_info['microsoft_footprint'] = microsoft_data.get('footprint')
+                building_info['microsoft_area_m2'] = microsoft_data.get('area_estimate_m2')
+                building_info['microsoft_source'] = microsoft_data.get('source', 'microsoft')
+                if building_info.get('microsoft_area_m2'):
+                    print(f"  - Area: {building_info['microsoft_area_m2']:.1f} m² (Microsoft)")
+        
+        # Try Google Places API (if API key available - optional)
+        google_data = None
+        if not microsoft_data and self.google_places_fetcher.is_available():
+            print(f"🗺️  Fetching building footprint from Google Places API...")
+            google_data = self.google_places_fetcher.get_building_footprint(lat, lon)
+            if google_data:
+                print(f"✓ Found building in Google Places")
+                building_info['google_footprint'] = google_data.get('footprint')
+                building_info['google_area_m2'] = google_data.get('area_estimate_m2')
+                building_info['google_source'] = google_data.get('source', 'google_places')
+                if building_info.get('google_area_m2'):
+                    print(f"  - Area: {building_info['google_area_m2']:.1f} m² (Google Places)")
+        
+        # Fallback to OSM if Microsoft/Google data not available
+        if not microsoft_data and not google_data:
+            print(f"🗺️  Fetching building footprint from OpenStreetMap...")
+            osm_data = self.osm_fetcher.get_building_footprint(lat, lon)
+            
+            if osm_data:
+                print(f"✓ Found building in OSM")
+                building_info['osm_footprint'] = osm_data.get('footprint')
+                building_info['osm_area_m2'] = osm_data.get('area_estimate_m2')
+                building_info['osm_building_type'] = osm_data['properties'].get('building')
+                building_info['osm_levels'] = osm_data['properties'].get('levels')
+                building_info['osm_height_m'] = osm_data['properties'].get('height')
+                building_info['osm_roof_shape'] = osm_data['properties'].get('roof:shape')
+                building_info['osm_tags'] = osm_data.get('tags', {})
+                print(f"  - Type: {building_info['osm_building_type']}")
+                if building_info.get('osm_levels'):
+                    print(f"  - Levels: {building_info['osm_levels']}")
+                if building_info.get('osm_area_m2'):
+                    print(f"  - Area: {building_info['osm_area_m2']:.1f} m² (OSM)")
+            else:
+                print("⚠️  No building found in Microsoft Footprints, Google Places, or OSM")
+                building_info['note'] = 'Building footprint missing; will try city and census sources'
+        
+        # Prioritize area sources: Microsoft → Google → OSM
+        if building_info.get('microsoft_area_m2'):
+            building_info['primary_area_m2'] = building_info['microsoft_area_m2']
+            building_info['primary_area_source'] = 'microsoft'
+        elif building_info.get('google_area_m2'):
+            building_info['primary_area_m2'] = building_info['google_area_m2']
+            building_info['primary_area_source'] = 'google_places'
+        elif building_info.get('osm_area_m2'):
+            building_info['primary_area_m2'] = building_info['osm_area_m2']
+            building_info['primary_area_source'] = 'osm'
         
         # 4. Weather file
         print(f"🌤️  Getting weather data from NREL...")

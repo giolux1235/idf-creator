@@ -8,6 +8,7 @@ import math
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from shapely.geometry import Polygon
+from shapely.affinity import scale
 from src.core.base_idf_generator import BaseIDFGenerator
 from .advanced_geometry_engine import AdvancedGeometryEngine, BuildingFootprint, ZoneGeometry
 from .professional_material_library import ProfessionalMaterialLibrary
@@ -181,6 +182,37 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 z.name = f"{base}_{name_counts[base]}"
         if not zones:
             print(f"⚠️  Warning: No zones generated. Footprint area: {footprint.polygon.area:.2f} m²")
+        
+        # CRITICAL FIX: Validate total zone area matches requested area
+        # This ensures EUI calculations use the correct building area
+        if zones:
+            total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
+            requested_total_area = user_floor_area if user_floor_area else estimated_params.get('floor_area', 0)
+            
+            if requested_total_area > 0:
+                area_difference_pct = abs(total_zone_area - requested_total_area) / requested_total_area * 100
+                
+                # If area difference is > 10%, warn and potentially scale zones
+                if area_difference_pct > 10:
+                    print(f"⚠️  Warning: Total zone area ({total_zone_area:.2f} m²) differs from requested area ({requested_total_area:.2f} m²) by {area_difference_pct:.1f}%")
+                    print(f"   This may cause EUI calculation discrepancies. Consider adjusting footprint or zone generation.")
+                    
+                    # Optionally scale zones to match requested area (conservative approach)
+                    # Only scale if significantly under (to avoid over-sizing)
+                    if total_zone_area < requested_total_area * 0.9 and area_difference_pct > 15:
+                        scale_factor = min(1.1, requested_total_area / total_zone_area)  # Max 10% scale up
+                        if scale_factor > 1.01:  # Only scale if meaningful
+                            print(f"   Scaling zones by {scale_factor:.3f} to better match requested area")
+                            for zone in zones:
+                                if hasattr(zone, 'area') and zone.area:
+                                    zone.area = zone.area * scale_factor
+                                    # Also scale polygon if available
+                                    if hasattr(zone, 'polygon') and zone.polygon:
+                                        zone.polygon = scale(zone.polygon, xfact=scale_factor, yfact=scale_factor, origin='center')
+                            total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
+                            print(f"   Scaled total zone area: {total_zone_area:.2f} m²")
+                elif area_difference_pct <= 10:
+                    print(f"✓ Total zone area ({total_zone_area:.2f} m²) matches requested area ({requested_total_area:.2f} m²) within {area_difference_pct:.1f}% tolerance")
         
         # Generate professional materials and constructions (with LEED envelope improvements if applicable)
         climate_zone = location_data.get('climate_zone', '3A')
@@ -540,18 +572,61 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             address = location_data.get('address', 'unknown')
             building_type_lower = building_type.lower() if building_type else 'office'
             
-            # Gather all available area sources
+            # Gather all available area sources (in priority order)
             area_sources = {}
             
-            # Source 1: OSM area
+            # Source 1: Microsoft Building Footprints (highest priority for US locations - most accurate)
+            try:
+                microsoft_area = building_info.get('microsoft_area_m2')
+                primary_area = building_info.get('primary_area_m2')
+                primary_source = building_info.get('primary_area_source', '')
+                
+                # Use Microsoft area if available (it's already prioritized in enhanced_location_fetcher)
+                if microsoft_area and float(microsoft_area) > 10:
+                    area_sources['microsoft'] = float(microsoft_area)
+                elif primary_area and primary_source == 'microsoft' and float(primary_area) > 10:
+                    area_sources['microsoft'] = float(primary_area)
+            except Exception:
+                pass
+            
+            # Source 2: Google Places API (second priority - only if API key available)
+            try:
+                google_area = building_info.get('google_area_m2')
+                primary_area = building_info.get('primary_area_m2')
+                primary_source = building_info.get('primary_area_source', '')
+                
+                # Use Google area if available and Microsoft not already added
+                if google_area and float(google_area) > 10 and 'microsoft' not in area_sources:
+                    area_sources['google_places'] = float(google_area)
+                elif primary_area and primary_source == 'google_places' and float(primary_area) > 10 and 'microsoft' not in area_sources:
+                    area_sources['google_places'] = float(primary_area)
+            except Exception:
+                pass
+            
+            # Source 3: Primary area (from enhanced_location_fetcher - could be Microsoft, Google, or OSM)
+            try:
+                primary_area = building_info.get('primary_area_m2')
+                primary_source = building_info.get('primary_area_source', '')
+                # Only add if not already added
+                if primary_area and float(primary_area) > 10:
+                    if primary_source == 'microsoft' and 'microsoft' not in area_sources:
+                        area_sources['microsoft'] = float(primary_area)
+                    elif primary_source == 'google_places' and 'google_places' not in area_sources and 'microsoft' not in area_sources:
+                        area_sources['google_places'] = float(primary_area)
+                    elif primary_source == 'osm' and 'osm' not in area_sources and 'microsoft' not in area_sources and 'google_places' not in area_sources:
+                        area_sources['osm'] = float(primary_area)
+            except Exception:
+                pass
+            
+            # Source 4: OSM area (fallback if Microsoft/Google not available)
             try:
                 osm_area = building_info.get('osm_area_m2')
-                if osm_area and float(osm_area) > 10:
+                if osm_area and float(osm_area) > 10 and 'osm' not in area_sources:
                     area_sources['osm'] = float(osm_area)
             except Exception:
                 pass
             
-            # Source 2: City data area
+            # Source 5: City data area
             try:
                 city_area = building_info.get('city_area_m2')
                 if city_area and float(city_area) > 10:
@@ -656,6 +731,23 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             total_area=footprint_area,  # This is actually per-floor area
             stories=estimated_params['stories']
         )
+        
+        # CRITICAL FIX: Scale footprint polygon to match requested area exactly
+        # This ensures the geometry matches the requested area, reducing EUI discrepancies
+        if footprint and footprint.polygon and footprint_area and footprint_area > 0:
+            actual_footprint_area = footprint.polygon.area
+            if actual_footprint_area > 0:
+                area_ratio = footprint_area / actual_footprint_area
+                # Only scale if there's a meaningful difference (>2%)
+                if abs(area_ratio - 1.0) > 0.02:
+                    # Scale polygon to match requested area
+                    footprint.polygon = scale(
+                        footprint.polygon,
+                        xfact=math.sqrt(area_ratio),
+                        yfact=math.sqrt(area_ratio),
+                        origin='center'
+                    )
+                    print(f"  ✓ Scaled footprint from {actual_footprint_area:.2f} m² to {footprint.polygon.area:.2f} m² to match requested {footprint_area:.2f} m²")
         
         return footprint
     
@@ -1191,7 +1283,17 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         return site_location + ground_temps
     
     def generate_zone_object(self, zone: ZoneGeometry) -> str:
-        """Generate Zone object."""
+        """Generate Zone object.
+        
+        CRITICAL FIX: Explicitly set Floor Area to match zone.area from ZoneGeometry.
+        This ensures EnergyPlus uses the correct area for EUI calculations instead of
+        autocalculating from BuildingSurface:Detailed floor surfaces, which can have
+        rounding errors or gaps.
+        """
+        # Use zone.area if available, otherwise let EnergyPlus autocalculate
+        # Round to 2 decimal places for EnergyPlus compatibility
+        floor_area_str = f"{zone.area:.2f}" if hasattr(zone, 'area') and zone.area and zone.area > 0 else "autocalculate"
+        
         return f"""Zone,
   {zone.name},             !- Name
   0,                       !- Direction of Relative North {{deg}}
@@ -1202,7 +1304,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   1,                       !- Multiplier
   autocalculate,           !- Ceiling Height {{m}}
   autocalculate,           !- Volume {{m3}}
-  ,                        !- Floor Area {{m2}}
+  {floor_area_str},        !- Floor Area {{m2}}
   ,                        !- Zone Inside Convection Algorithm
   ,                        !- Zone Outside Convection Algorithm
   Yes;                     !- Part of Total Floor Area

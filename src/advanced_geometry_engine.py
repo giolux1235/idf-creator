@@ -612,8 +612,10 @@ class AdvancedGeometryEngine:
                 # Clip to actual footprint
                 clipped = floor_polygon.intersection(cell_polygon)
                 
-                # Only keep cells with sufficient area (at least 20 m²)
-                if isinstance(clipped, Polygon) and clipped.area > 20.0:
+                # IMPROVED: Reduced minimum area threshold from 20 m² to 5 m² to improve coverage
+                # This helps fill irregular footprints more completely, reducing area discrepancies
+                # Minimum threshold prevents tiny sliver zones that cause simulation issues
+                if isinstance(clipped, Polygon) and clipped.area > 5.0:
                     # Select zone type (rotate through typical zones)
                     if typical_zone_types:
                         zone_type = typical_zone_types[zone_type_index % len(typical_zone_types)]
