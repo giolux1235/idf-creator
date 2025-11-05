@@ -2,6 +2,13 @@
 import requests
 from typing import Dict, List, Optional
 import json
+import math
+try:
+    from shapely.geometry import Polygon
+    from pyproj import Transformer
+    SHAPELY_AVAILABLE = True
+except ImportError:
+    SHAPELY_AVAILABLE = False
 
 
 class OSMFetcher:
@@ -134,27 +141,72 @@ class OSMFetcher:
     
     def _calculate_polygon_area(self, nodes: List) -> float:
         """
-        Calculate polygon area using shoelace formula.
+        Calculate polygon area using accurate spherical geometry.
         Returns area in square meters.
+        
+        Uses proper coordinate projection for accurate area calculation,
+        falling back to latitude-aware approximation if pyproj unavailable.
         """
         if len(nodes) < 3:
             return 0.0
         
-        # Shoelace formula for spherical coordinates
+        # Extract coordinates (nodes are in format [(lat, lon), ...])
+        coords = [(float(lat), float(lon)) for lat, lon in nodes]
+        
+        # Method 1: Use shapely + pyproj for accurate projection-based area
+        if SHAPELY_AVAILABLE:
+            try:
+                # Calculate average latitude for UTM zone selection
+                avg_lat = sum(lat for lat, lon in coords) / len(coords)
+                avg_lon = sum(lon for lat, lon in coords) / len(coords)
+                
+                # Determine appropriate UTM zone (for accurate area calculation)
+                # UTM zones are 6 degrees wide, numbered 1-60 from -180 to +180
+                utm_zone = int((avg_lon + 180) / 6) + 1
+                # UTM uses "N" (north) for positive latitudes, "S" for negative
+                utm_hemisphere = 'N' if avg_lat >= 0 else 'S'
+                utm_crs = f'EPSG:326{utm_zone:02d}' if utm_hemisphere == 'N' else f'EPSG:327{utm_zone:02d}'
+                
+                # Project to UTM for accurate area calculation
+                transformer = Transformer.from_crs("EPSG:4326", utm_crs, always_xy=True)
+                projected_coords = [transformer.transform(lon, lat) for lat, lon in coords]
+                
+                # Create polygon and calculate area (already in square meters)
+                polygon = Polygon(projected_coords)
+                if polygon.is_valid:
+                    return abs(polygon.area)
+            except Exception as e:
+                # Fall back to improved approximation if projection fails
+                print(f"Warning: Could not use projected area calculation: {e}")
+                pass
+        
+        # Method 2: Improved latitude-aware approximation
+        # This accounts for the fact that 1° longitude = 111 km × cos(latitude)
+        avg_lat = sum(lat for lat, lon in coords) / len(coords)
+        lat_rad = math.radians(avg_lat)
+        
+        # Conversion factors (meters per degree)
+        meters_per_deg_lat = 111000.0  # Constant
+        meters_per_deg_lon = 111000.0 * math.cos(lat_rad)  # Varies with latitude
+        
+        # Shoelace formula on projected coordinates
         area = 0.0
-        for i in range(len(nodes)):
-            j = (i + 1) % len(nodes)
-            lat_i, lon_i = nodes[i]
-            lat_j, lon_j = nodes[j]
+        for i in range(len(coords)):
+            j = (i + 1) % len(coords)
+            lat_i, lon_i = coords[i]
+            lat_j, lon_j = coords[j]
             
-            area += (lon_i * lat_j - lon_j * lat_i)
+            # Project to approximate meters
+            x_i = lon_i * meters_per_deg_lon
+            y_i = lat_i * meters_per_deg_lat
+            x_j = lon_j * meters_per_deg_lon
+            y_j = lat_j * meters_per_deg_lat
+            
+            area += (x_i * y_j - x_j * y_i)
         
         area = abs(area) / 2.0
         
-        # Convert to square meters (approximate)
-        # 1 degree latitude ≈ 111 km
-        # This is a simplified calculation
-        return area * 111000 * 111000
+        return area
     
     def search_area_buildings(self, latitude: float, longitude: float,
                              radius_meters: int = 100) -> List[Dict]:

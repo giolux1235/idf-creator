@@ -22,6 +22,7 @@ from .advanced_ventilation import AdvancedVentilation
 from .advanced_window_modeling import AdvancedWindowModeling
 from .advanced_ground_coupling import AdvancedGroundCoupling
 from .advanced_infiltration import AdvancedInfiltration
+from .area_validator import AreaValidator
 from .equipment_catalog.adapters import bcl as bcl_adapter
 from .equipment_catalog.translator.idf_translator import translate as translate_equipment
 from .utils.idf_utils import dedupe_idf_string
@@ -59,6 +60,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         self.advanced_window = AdvancedWindowModeling()
         self.advanced_ground = AdvancedGroundCoupling()
         self.advanced_infiltration = AdvancedInfiltration()
+        self.area_validator = AreaValidator()
         self.construction_map = {}
     
     def generate_professional_idf(self, address: str, building_params: Dict, 
@@ -530,10 +532,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             print(f"  ✓ Using user-specified area: {footprint_area:.0f} m²/floor (from {user_specified_area:.0f} m² total)")
         else:
             # Check OSM for area (OSM area is per-floor)
+            area_source = 'default'
             try:
                 osm_area = building_info.get('osm_area_m2')
                 if osm_area and float(osm_area) > 10:
                     footprint_area = float(osm_area)
+                    area_source = 'osm'
                     print(f"  Using OSM area: {footprint_area:.0f} m²/floor")
             except Exception:
                 pass
@@ -544,7 +548,32 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 if total_area is None:
                     total_area = 1000
                 footprint_area = total_area / stories if stories > 0 else 1000
+                area_source = 'default'
                 print(f"  Using default area: {footprint_area:.0f} m²/floor")
+            
+            # Validate area and log warnings for outliers
+            if footprint_area is not None:
+                address = location_data.get('address', 'unknown')
+                building_type_lower = building_type.lower() if building_type else 'office'
+                validated_area, validation_result = self.area_validator.validate_and_log(
+                    footprint_area,
+                    building_type=building_type_lower,
+                    area_source=area_source,
+                    address=address,
+                    stories=stories,
+                    auto_cap=False  # Don't auto-cap, just warn
+                )
+                
+                # Log validation warning if outlier
+                if validation_result['warning_level'] == 'major':
+                    print(f"  ⚠️  WARNING: {validation_result['warning_message']}")
+                    if validation_result.get('recommendation'):
+                        print(f"     Recommendation: {validation_result['recommendation']}")
+                elif validation_result['warning_level'] == 'minor':
+                    print(f"  ℹ️  NOTE: {validation_result['warning_message']}")
+                
+                # Use validated area (currently same, but ready for future auto-capping)
+                footprint_area = validated_area
         
         # Now decide whether to use OSM geometry
         # ONLY use OSM geometry if we're using OSM area (not user-specified)

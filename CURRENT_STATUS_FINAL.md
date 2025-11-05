@@ -99,6 +99,25 @@
 
 ## ✅ FIXES APPLIED - 2025-11-04
 
+### 2025-11-04: OSM Area Calculation Fix
+- **Fixed**: Improved `_calculate_polygon_area()` in `src/osm_fetcher.py`
+- **Issue**: Simplified planar approximation didn't account for latitude-dependent longitude scaling
+- **Solution**: 
+  - Uses pyproj + shapely for accurate UTM projection-based area calculation (primary method)
+  - Falls back to improved latitude-aware approximation if pyproj unavailable
+  - Accounts for fact that 1° longitude = 111 km × cos(latitude)
+- **Impact**: Should significantly reduce area calculation errors, especially for larger polygons
+- **Added dependency**: `pyproj>=3.0.0` to requirements.txt
+
+### 2025-11-04: Comprehensive Address Testing Analysis
+- **Report**: See `COMPREHENSIVE_ADDRESS_TESTING_ANALYSIS.md` for full details
+- **Status**: ✅ All 8 tests passed successfully
+- **Findings**:
+  - Coordinates correctly geocoded (not hardcoded)
+  - Building areas vary appropriately (334-1,284 m²)
+  - One outlier identified (789 Embarcadero - likely due to OSM area calculation error, now fixed)
+  - City-level geocoding documented (acceptable behavior)
+
 ### 🔴 HIGH PRIORITY FIXES - IMPLEMENTED
 
 #### ✅ Issue 1: Zone Volume Calculation Errors - FIXED

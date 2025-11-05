@@ -149,6 +149,13 @@ The IDF Creator uses a **hybrid geocoding approach** for optimal performance and
 
 **⚠️ Important:** The system now **enforces real coordinates only**. If geocoding cannot find real coordinates for an address, the API will return a `400 Bad Request` error with a clear message. No synthetic defaults are used.
 
+**📍 Note on Coordinate Precision:**
+- For addresses in major cities (50+ cities in lookup table), coordinates are **city-level** (city center coordinates)
+- All addresses within the same city will return identical coordinates
+- This is acceptable for most use cases since weather data is typically city-level
+- Example: All San Francisco addresses return 37.7749°N, -122.4194°W (city center)
+- For address-specific coordinates, consider using Google Maps API (see below)
+
 ### Supported Cities (Lookup Table)
 50+ major US cities are supported instantly via lookup table:
 - San Francisco, CA
