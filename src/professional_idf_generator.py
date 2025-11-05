@@ -215,8 +215,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Simulation Control
         idf_content.append(self.generate_simulation_control())
         
-        # System Convergence Limits (improves HVAC convergence)
-        idf_content.append(self.generate_system_convergence_limits())
+        # NOTE: SystemConvergenceLimits object does NOT exist in EnergyPlus 24.2
+        # This was removed because it causes fatal errors. Do not re-add it.
+        # If HVAC convergence issues occur, use proper HVAC system balancing instead.
         
         # Building
         idf_content.append(self.generate_building_section(
@@ -972,19 +973,23 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
 
 """
     
-    def generate_system_convergence_limits(self) -> str:
-        """Generate SystemConvergenceLimits object to improve HVAC convergence.
-        
-        This increases the maximum HVAC iterations from default 20 to 30,
-        which helps complex HVAC systems converge properly.
-        """
-        return """SystemConvergenceLimits,
-  1,                       !- Minimum System TimeStep {minutes}
-  30,                      !- Maximum HVAC Iterations (increased from default 20)
-  2,                       !- Minimum Plant Iterations
-  20;                      !- Maximum Plant Iterations
-
-"""
+    # NOTE: This method is DISABLED because SystemConvergenceLimits does NOT exist in EnergyPlus 24.2
+    # Attempting to use this object causes fatal errors: "SystemConvergenceLimits is not a valid Object Type"
+    # Do not re-enable this method. If HVAC convergence issues occur, use proper HVAC system balancing instead.
+    # 
+    # def generate_system_convergence_limits(self) -> str:
+    #     """Generate SystemConvergenceLimits object to improve HVAC convergence.
+    #     
+    #     This increases the maximum HVAC iterations from default 20 to 30,
+    #     which helps complex HVAC systems converge properly.
+    #     """
+    #     return """SystemConvergenceLimits,
+    #   1,                       !- Minimum System TimeStep {minutes}
+    #   30,                      !- Maximum HVAC Iterations (increased from default 20)
+    #   2,                       !- Minimum Plant Iterations
+    #   20;                      !- Maximum Plant Iterations
+    # 
+    # """
     
     def generate_simulation_control(self) -> str:
         """Generate SimulationControl object."""

@@ -145,27 +145,43 @@ def test_dx_coil_airflow():
 
 
 def test_system_convergence_limits():
-    """Test that SystemConvergenceLimits object is generated"""
+    """Test that SystemConvergenceLimits object is NOT generated (it doesn't exist in EnergyPlus 24.2)"""
     print("\n" + "="*60)
-    print("TEST 4: System Convergence Limits")
+    print("TEST 4: System Convergence Limits (Should NOT be present)")
     print("="*60)
     
     generator = ProfessionalIDFGenerator()
     
-    # Generate convergence limits
-    convergence_limits = generator.generate_system_convergence_limits()
+    # Generate a test IDF to verify SystemConvergenceLimits is NOT in it
+    building_params = {
+        'name': 'Test Building',
+        'stories': 1,
+        'floor_area': 500,
+        'building_type': 'office'
+    }
     
-    # Check for required fields
-    if 'SystemConvergenceLimits' in convergence_limits:
-        if '30' in convergence_limits and 'Maximum HVAC Iterations' in convergence_limits:
-            print("✅ PASS: SystemConvergenceLimits generated with 30 iterations")
-            return True
-        else:
-            print("❌ FAIL: SystemConvergenceLimits missing proper iteration count")
-            return False
-    else:
-        print("❌ FAIL: SystemConvergenceLimits not generated")
+    location_data = {
+        'address': 'Chicago, IL',
+        'latitude': 41.8781,
+        'longitude': -87.6298,
+        'climate_zone': 'ASHRAE_C5',
+        'weather_file': 'USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw'
+    }
+    
+    idf_content = generator.generate_professional_idf(
+        address='Chicago, IL',
+        building_params=building_params,
+        location_data=location_data
+    )
+    
+    # SystemConvergenceLimits should NOT exist - it causes fatal errors in EnergyPlus 24.2
+    if 'SystemConvergenceLimits' in idf_content:
+        print("❌ FAIL: SystemConvergenceLimits found in generated IDF (should not be present)")
+        print("   This will cause fatal errors in EnergyPlus 24.2")
         return False
+    else:
+        print("✅ PASS: SystemConvergenceLimits correctly NOT present in generated IDF")
+        return True
 
 
 def test_full_idf_generation():
@@ -202,7 +218,7 @@ def test_full_idf_generation():
         # Check for key fixes
         checks = {
             'ScheduleTypeLimits with AnyNumber': 'ScheduleTypeLimits' in idf_content and 'AnyNumber' in idf_content,
-            'SystemConvergenceLimits': 'SystemConvergenceLimits' in idf_content,
+            'SystemConvergenceLimits NOT present': 'SystemConvergenceLimits' not in idf_content,  # Should NOT be present
             'Missing day types added': 'For: SummerDesignDay' in idf_content,
         }
         
