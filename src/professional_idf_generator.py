@@ -271,6 +271,18 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         for window in windows:
             idf_content.append(self.format_window_object(window))
         
+        # CRITICAL FIX: Generate schedules BEFORE objects that reference them
+        # EnergyPlus requires schedules to be defined before they're referenced
+        used_space_types = set()
+        for zone in zones:
+            if zone.polygon and zone.polygon.is_valid and zone.area >= 0.1:
+                used_space_types.add(self._determine_space_type(zone.name, building_type))
+        schedules_text = self.generate_schedules(building_type, sorted(used_space_types))
+        
+        # Add schedules to IDF (BEFORE objects that reference them)
+        # CRITICAL: EnergyPlus requires schedules to be defined before they're referenced
+        idf_content.append(schedules_text)
+        
         # Loads (People, Lights, Equipment)
         # Get age-adjusted parameters if year_built is provided AND user opts in
         # Default: Only apply HVAC efficiency adjustments (proven to work)
@@ -418,18 +430,11 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # HVAC Performance Curves
         idf_content.append(self._generate_hvac_performance_curves())
         
-        # Schedules (only for used space types)
-        used_space_types = set()
-        for zone in zones:
-            used_space_types.add(self._determine_space_type(zone.name, building_type))
-        schedules_text = self.generate_schedules(building_type, sorted(used_space_types))
-        
-        # Filter out unused schedules to reduce warnings
-        # Build IDF content so far to check schedule references
-        temp_idf_content = idf_content + [schedules_text]
-        temp_idf_string = '\n'.join(temp_idf_content)
-        schedules_text = self._filter_unused_schedules(schedules_text, temp_idf_string)
-        idf_content.append(schedules_text)
+        # Note: Schedules were already generated and added BEFORE Loads section above
+        # This ensures schedules are defined before objects reference them (EnergyPlus requirement)
+        # Optional: Filter out unused schedules to reduce warnings (now that all objects are added)
+        # For now, keep all schedules to ensure nothing is incorrectly filtered out
+        # The filtering can be re-enabled later if needed, but it's safer to keep all schedules
         
         # Run Period (allow quick one-month run for faster API validation)
         if building_params.get('quick_run_period'):
