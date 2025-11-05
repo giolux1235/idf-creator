@@ -1850,7 +1850,7 @@ InternalMass,
             
             # Lighting schedule with all required day types to eliminate warnings
             if is_lobby:
-            schedules.append(f"""Schedule:Compact,
+                schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
   Through: 12/31,                 !- Field 1
