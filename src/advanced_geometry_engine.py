@@ -757,10 +757,29 @@ class AdvancedGeometryEngine:
         # This ensures EnergyPlus won't warn about inverted floor surfaces
         vertices_3d = fix_vertex_ordering_for_floor(cleaned_coords, z_coord)
         
+        # CRITICAL: Validate that vertices_3d is not empty and has at least 3 vertices
+        if not vertices_3d or len(vertices_3d) < 3:
+            print(f"⚠️  Warning: Zone {zone.name} floor surface has insufficient vertices ({len(vertices_3d) if vertices_3d else 0}), skipping")
+            return None
+        
         # Format vertices as strings for EnergyPlus
+        import math
         vertices = []
         for x, y, z in vertices_3d:
+            # Additional validation: ensure all coordinates are finite numbers
+            if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+                print(f"⚠️  Warning: Zone {zone.name} floor surface has invalid vertex coordinates, skipping")
+                return None
+            # Check for finite numbers (not NaN or infinity)
+            if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
+                print(f"⚠️  Warning: Zone {zone.name} floor surface has non-finite vertex coordinates, skipping")
+                return None
             vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
+        
+        # Final validation: ensure vertices list is not empty
+        if not vertices or len(vertices) < 3:
+            print(f"⚠️  Warning: Zone {zone.name} floor surface has empty vertices list after formatting, skipping")
+            return None
         
         return {
             'type': 'BuildingSurface:Detailed',
@@ -805,10 +824,29 @@ class AdvancedGeometryEngine:
         # This ensures EnergyPlus won't warn about inverted ceiling/roof surfaces
         vertices_3d = fix_vertex_ordering_for_ceiling(cleaned_coords, z_coord)
         
+        # CRITICAL: Validate that vertices_3d is not empty and has at least 3 vertices
+        if not vertices_3d or len(vertices_3d) < 3:
+            print(f"⚠️  Warning: Zone {zone.name} ceiling surface has insufficient vertices ({len(vertices_3d) if vertices_3d else 0}), skipping")
+            return None
+        
         # Format vertices as strings for EnergyPlus
+        import math
         vertices = []
         for x, y, z in vertices_3d:
+            # Additional validation: ensure all coordinates are finite numbers
+            if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+                print(f"⚠️  Warning: Zone {zone.name} ceiling surface has invalid vertex coordinates, skipping")
+                return None
+            # Check for finite numbers (not NaN or infinity)
+            if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
+                print(f"⚠️  Warning: Zone {zone.name} ceiling surface has non-finite vertex coordinates, skipping")
+                return None
             vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
+        
+        # Final validation: ensure vertices list is not empty
+        if not vertices or len(vertices) < 3:
+            print(f"⚠️  Warning: Zone {zone.name} ceiling surface has empty vertices list after formatting, skipping")
+            return None
         
         return {
             'type': 'BuildingSurface:Detailed',

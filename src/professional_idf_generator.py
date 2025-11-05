@@ -266,7 +266,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Surfaces
         surfaces = self.geometry_engine.generate_building_surfaces(zones, footprint)
         for surface in surfaces:
-            idf_content.append(self.format_surface_object(surface))
+            try:
+                formatted_surface = self.format_surface_object(surface)
+                idf_content.append(formatted_surface)
+            except (ValueError, KeyError) as e:
+                print(f"⚠️  Warning: Skipping invalid surface {surface.get('name', 'Unknown')}: {e}")
+                continue
         
         # Windows
         windows = self._generate_windows(zones, footprint, building_type, building_params)
@@ -1159,8 +1164,31 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     
     def format_surface_object(self, surface: Dict) -> str:
         """Format surface object for EnergyPlus."""
+        # CRITICAL: Validate surface has required fields and valid vertices
+        if 'vertices' not in surface or not surface['vertices']:
+            raise ValueError(f"Surface {surface.get('name', 'Unknown')} has no vertices")
+        
+        vertices = surface['vertices']
+        if not isinstance(vertices, list) or len(vertices) < 3:
+            raise ValueError(f"Surface {surface.get('name', 'Unknown')} has invalid vertices (need at least 3, got {len(vertices) if isinstance(vertices, list) else 'non-list'})")
+        
+        # Validate required fields
+        required_fields = ['name', 'surface_type', 'zone', 'outside_boundary_condition', 
+                          'sun_exposure', 'wind_exposure', 'view_factor_to_ground']
+        for field in required_fields:
+            if field not in surface:
+                raise ValueError(f"Surface {surface.get('name', 'Unknown')} missing required field: {field}")
+        
+        # Validate enum values
+        valid_sun_exposure = ['SunExposed', 'NoSun']
+        valid_wind_exposure = ['WindExposed', 'NoWind']
+        if surface.get('sun_exposure') not in valid_sun_exposure:
+            raise ValueError(f"Surface {surface.get('name', 'Unknown')} has invalid sun_exposure: {surface.get('sun_exposure')} (must be one of {valid_sun_exposure})")
+        if surface.get('wind_exposure') not in valid_wind_exposure:
+            raise ValueError(f"Surface {surface.get('name', 'Unknown')} has invalid wind_exposure: {surface.get('wind_exposure')} (must be one of {valid_wind_exposure})")
+        
         # Vertices must be comma-separated, with a single semicolon at the end
-        vertices_str = ',\n  '.join(surface['vertices'])
+        vertices_str = ',\n  '.join(vertices)
         
         # Get construction name with fallback
         constr = self.construction_map.get(surface['construction'], surface['construction'])
@@ -1177,8 +1205,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   {surface['sun_exposure']}, !- Sun Exposure
   {surface['wind_exposure']}, !- Wind Exposure
   {surface['view_factor_to_ground']}, !- View Factor to Ground
-  {len(surface['vertices'])}, !- Number of Vertices
-  {vertices_str};          !- Vertex 1 through {len(surface['vertices'])} X-coordinate, Y-coordinate, Z-coordinate
+  {len(vertices)}, !- Number of Vertices
+  {vertices_str};          !- Vertex 1 through {len(vertices)} X-coordinate, Y-coordinate, Z-coordinate
 
 """
     
