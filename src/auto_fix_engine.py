@@ -319,6 +319,9 @@ class IDFAutoFixer:
         output_objects = """Output:VariableDictionary,
     IDF;                     !- Key Field (generates MDD/RDD files for meter verification)
 
+Output:SQLite,
+    SimpleAndTabular;        !- Option Type
+
 Output:Table:SummaryReports,
     AllSummary;              !- Report 1 Name
 

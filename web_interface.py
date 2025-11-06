@@ -877,6 +877,7 @@ def simulate_energyplus():
                             # Only use CSV results if we got at least site energy
                             if energy_results.get('total_site_energy_kwh'):
                                 # CSV extraction successful
+                                energy_results['extraction_method'] = 'standard'
                                 print(f"✓ Extracted from CSV: {energy_results['total_site_energy_kwh']:.2f} kWh")
                             else:
                                 energy_results = None
@@ -1117,11 +1118,15 @@ def simulate_energyplus():
                                 pass  # If CSV check fails, continue with SQLite results
                         
                         # Only use results if we got at least energy data
-                        if not energy_results.get('total_site_energy_kwh'):
+                        if energy_results.get('total_site_energy_kwh'):
+                            energy_results['extraction_method'] = 'sqlite'
+                            print(f"✓ Extracted from SQLite: {energy_results['total_site_energy_kwh']:.2f} kWh")
+                        else:
                             energy_results = None
                             
                     except Exception as e:
                         # Log error but don't fail completely
+                        print(f"⚠️  SQLite extraction error: {e}")
                         energy_results = None
             
             # Check if simulation ran but produced no results
