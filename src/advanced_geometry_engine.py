@@ -759,9 +759,18 @@ class AdvancedGeometryEngine:
         # This ensures EnergyPlus won't warn about inverted floor surfaces
         vertices_3d = fix_vertex_ordering_for_floor(cleaned_coords, z_coord)
         
+        # CRITICAL: Remove coincident vertices and validate area
+        from .geometry_utils import remove_coincident_vertices, validate_surface_area
+        vertices_3d = remove_coincident_vertices(vertices_3d, tolerance=0.001)
+        
         # CRITICAL: Validate that vertices_3d is not empty and has at least 3 vertices
         if not vertices_3d or len(vertices_3d) < 3:
             print(f"⚠️  Warning: Zone {zone.name} floor surface has insufficient vertices ({len(vertices_3d) if vertices_3d else 0}), skipping")
+            return None
+        
+        # Validate surface has non-zero area
+        if not validate_surface_area(vertices_3d, min_area=0.01):
+            print(f"⚠️  Warning: Zone {zone.name} floor surface has zero area, skipping")
             return None
         
         # Format vertices as strings for EnergyPlus
@@ -826,9 +835,18 @@ class AdvancedGeometryEngine:
         # This ensures EnergyPlus won't warn about inverted ceiling/roof surfaces
         vertices_3d = fix_vertex_ordering_for_ceiling(cleaned_coords, z_coord)
         
+        # CRITICAL: Remove coincident vertices and validate area
+        from .geometry_utils import remove_coincident_vertices, validate_surface_area
+        vertices_3d = remove_coincident_vertices(vertices_3d, tolerance=0.001)
+        
         # CRITICAL: Validate that vertices_3d is not empty and has at least 3 vertices
         if not vertices_3d or len(vertices_3d) < 3:
             print(f"⚠️  Warning: Zone {zone.name} ceiling surface has insufficient vertices ({len(vertices_3d) if vertices_3d else 0}), skipping")
+            return None
+        
+        # Validate surface has non-zero area
+        if not validate_surface_area(vertices_3d, min_area=0.01):
+            print(f"⚠️  Warning: Zone {zone.name} ceiling surface has zero area, skipping")
             return None
         
         # Format vertices as strings for EnergyPlus
@@ -904,10 +922,29 @@ class AdvancedGeometryEngine:
             # Fix vertex ordering to ensure normal points outward from zone
             wall_vertices_3d = fix_vertex_ordering_for_wall(wall_vertices_3d, zone_center_2d)
             
+            # CRITICAL: Remove coincident vertices before validation
+            from .geometry_utils import remove_coincident_vertices, validate_surface_area
+            wall_vertices_3d = remove_coincident_vertices(wall_vertices_3d, tolerance=0.001)
+            
+            # Validate surface has at least 3 vertices and non-zero area
+            if len(wall_vertices_3d) < 3:
+                continue  # Skip walls with < 3 vertices after cleaning
+            
+            if not validate_surface_area(wall_vertices_3d, min_area=0.01):
+                continue  # Skip walls with zero or very small area
+            
             # Format vertices as strings for EnergyPlus
             vertices = []
             for x, y, z in wall_vertices_3d:
+                # Validate coordinates are finite
+                import math
+                if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
+                    break  # Skip this wall if any coordinate is invalid
                 vertices.append(f"{x:.4f},{y:.4f},{z:.4f}")
+            
+            # Final check: ensure we have at least 3 valid vertices
+            if len(vertices) < 3:
+                continue
             
             wall = {
                 'type': 'BuildingSurface:Detailed',

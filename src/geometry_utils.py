@@ -7,6 +7,79 @@ import math
 from typing import List, Tuple, Optional, Dict
 
 
+def remove_coincident_vertices(vertices_3d: List[Tuple[float, float, float]], 
+                               tolerance: float = 0.001) -> List[Tuple[float, float, float]]:
+    """Remove coincident (duplicate) vertices from a list.
+    
+    Args:
+        vertices_3d: List of (x, y, z) tuples
+        tolerance: Minimum distance between vertices to be considered different
+        
+    Returns:
+        List with coincident vertices removed
+    """
+    if len(vertices_3d) < 2:
+        return vertices_3d
+    
+    cleaned = [vertices_3d[0]]
+    for v in vertices_3d[1:]:
+        # Check if this vertex is different from the last one
+        last = cleaned[-1]
+        dist = ((v[0] - last[0])**2 + (v[1] - last[1])**2 + (v[2] - last[2])**2)**0.5
+        if dist > tolerance:
+            cleaned.append(v)
+    
+    # Also check if first and last are coincident (for closed polygons)
+    if len(cleaned) > 1:
+        first = cleaned[0]
+        last = cleaned[-1]
+        dist = ((first[0] - last[0])**2 + (first[1] - last[1])**2 + (first[2] - last[2])**2)**0.5
+        if dist <= tolerance and len(cleaned) > 2:
+            # Remove last vertex if it's coincident with first
+            cleaned = cleaned[:-1]
+    
+    return cleaned
+
+
+def validate_surface_area(vertices_3d: List[Tuple[float, float, float]], 
+                          min_area: float = 0.01) -> bool:
+    """Validate that a surface has sufficient area.
+    
+    Args:
+        vertices_3d: List of (x, y, z) tuples
+        min_area: Minimum required area in m²
+        
+    Returns:
+        True if surface area >= min_area, False otherwise
+    """
+    if len(vertices_3d) < 3:
+        return False
+    
+    # Calculate surface area using cross product method
+    # For a polygon, sum the areas of triangles formed with first vertex
+    area = 0.0
+    v0 = vertices_3d[0]
+    
+    for i in range(1, len(vertices_3d) - 1):
+        v1 = vertices_3d[i]
+        v2 = vertices_3d[i + 1]
+        
+        # Vectors from v0 to v1 and v0 to v2
+        edge1 = (v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2])
+        edge2 = (v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2])
+        
+        # Cross product magnitude = 2 * triangle area
+        cross = (
+            edge1[1] * edge2[2] - edge1[2] * edge2[1],
+            edge1[2] * edge2[0] - edge1[0] * edge2[2],
+            edge1[0] * edge2[1] - edge1[1] * edge2[0]
+        )
+        triangle_area = (cross[0]**2 + cross[1]**2 + cross[2]**2)**0.5 / 2.0
+        area += triangle_area
+    
+    return area >= min_area
+
+
 def calculate_surface_normal(vertices: List[Tuple[float, float, float]]) -> Tuple[float, float, float]:
     """Calculate surface normal from vertices using first three vertices.
     
@@ -354,5 +427,7 @@ def fix_vertex_ordering_for_ceiling(vertices_2d: List[Tuple[float, float]],
             vertices_3d = list(reversed(vertices_3d))
     
     return vertices_3d
+
+
 
 
