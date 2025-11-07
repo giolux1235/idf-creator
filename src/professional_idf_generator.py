@@ -456,6 +456,10 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                     
                 hvac_by_key[norm_key] = component
             
+            # CRITICAL: Validate all AirLoopHVAC components before formatting
+            # This ensures no duplicate node errors in generated IDFs
+            self._validate_airloop_components(hvac_by_key.values())
+            
             # Format all unique components
             for component in hvac_by_key.values():
                 hvac_strings.append(self.format_hvac_object(component))
@@ -870,6 +874,71 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         branch_objects.append(branch)
         
         return branch_objects
+    
+    def _validate_airloop_components(self, components: List[Dict]) -> None:
+        """
+        Validate all AirLoopHVAC components to ensure no duplicate node errors.
+        
+        This is a critical safeguard to prevent the 28 zone duplicate node errors
+        from appearing in newly generated IDF files.
+        
+        Raises:
+            ValueError: If any AirLoopHVAC has duplicate nodes
+        """
+        from .utils.common import normalize_node_name
+        
+        errors = []
+        
+        for component in components:
+            if component.get('type') != 'AirLoopHVAC':
+                continue
+            
+            airloop_name = component.get('name', 'Unknown')
+            supply_outlet_nodes = component.get('supply_side_outlet_node_names', [])
+            demand_inlet_nodes = component.get('demand_side_inlet_node_names', [])
+            
+            # Extract node names
+            if isinstance(supply_outlet_nodes, list):
+                supply_outlet = normalize_node_name(supply_outlet_nodes[0]) if supply_outlet_nodes else None
+            else:
+                supply_outlet = normalize_node_name(str(supply_outlet_nodes)) if supply_outlet_nodes else None
+            
+            if isinstance(demand_inlet_nodes, list):
+                demand_inlet = normalize_node_name(demand_inlet_nodes[0]) if demand_inlet_nodes else None
+            else:
+                demand_inlet = normalize_node_name(str(demand_inlet_nodes)) if demand_inlet_nodes else None
+            
+            # Check for duplicate nodes
+            if supply_outlet and demand_inlet:
+                if supply_outlet.upper() == demand_inlet.upper():
+                    errors.append({
+                        'airloop': airloop_name,
+                        'supply_outlet': supply_outlet,
+                        'demand_inlet': demand_inlet,
+                        'message': f"AirLoopHVAC '{airloop_name}' has duplicate nodes: supply outlet and demand inlet both use '{supply_outlet}'"
+                    })
+                
+                # Check if supply outlet uses wrong pattern (should be SupplyOutlet, not ZoneEquipmentInlet)
+                zone_name = airloop_name.replace('_AirLoop', '').replace('_AIRLOOP', '').replace('_Airloop', '')
+                expected_supply = normalize_node_name(f"{zone_name}_SupplyOutlet")
+                
+                if supply_outlet.upper() != expected_supply.upper():
+                    # Check if it's using ZoneEquipmentInlet (wrong pattern)
+                    if 'ZONEEQUIPMENTINLET' in supply_outlet.upper():
+                        errors.append({
+                            'airloop': airloop_name,
+                            'supply_outlet': supply_outlet,
+                            'expected': expected_supply,
+                            'message': f"AirLoopHVAC '{airloop_name}' uses wrong supply outlet pattern '{supply_outlet}' (should be '{expected_supply}')"
+                        })
+        
+        if errors:
+            error_messages = [e['message'] for e in errors]
+            raise ValueError(
+                f"CRITICAL: Found {len(errors)} AirLoopHVAC duplicate node errors that would cause EnergyPlus simulation failures:\n" +
+                "\n".join(f"  - {msg}" for msg in error_messages) +
+                "\n\nThis should never happen with the current code. Please check advanced_hvac_systems.py"
+            )
     
     def _generate_advanced_hvac_systems(self, zones: List[ZoneGeometry],
                                       building_type: str, climate_zone: str,
