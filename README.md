@@ -242,6 +242,7 @@ energyplus -w weather.epw output/Building.idf
 - HVAC systems use ideal loads (simplified but comprehensive)
 - Consider customizing materials and systems for detailed studies
 - Weather files should match your climate zone
+- Deployment verification: 2025-11-07 small update confirming production pipeline
 
 ## 🤝 Contributing
 
