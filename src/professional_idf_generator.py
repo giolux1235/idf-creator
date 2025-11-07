@@ -38,7 +38,7 @@ from .formatters.hvac_objects import (
     format_branch_list,
     format_ptac,
 )
-from ..utils.common import normalize_node_name
+from .utils.common import normalize_node_name
 
 
 class ProfessionalIDFGenerator(BaseIDFGenerator):

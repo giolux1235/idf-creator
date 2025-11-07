@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
 from .building_age_adjustments import BuildingAgeAdjuster
-from ..utils.common import normalize_node_name
+from .utils.common import normalize_node_name
 
 
 @dataclass
