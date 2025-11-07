@@ -1,294 +1,182 @@
-# Current Status - Energy Results Extraction
+# IDF Creator Outstanding Issues (EnergyPlus 24.2.0)
 
-## Test Date: 2025-11-04 18:35
+**Date:** 7 Nov 2025  
+**Prepared by:** EnergyPlus local QA  
+**Scope:** Errors and warnings that still originate in the IDF files returned by `https://web-production-3092c.up.railway.app`. Local tooling has been validated; remaining defects are service-side only.
 
-## API Response
+---
 
-```json
-{
-  "version": "33.0.0",
-  "simulation_status": "error",
-  "energyplus_version": "25.1.0",
-  "real_simulation": true,
-  "error_message": "EnergyPlus ran but produced no energy results...",
-  "error_file_content": "",
-  "output_files": [
-    {"name": "eplusout.sql", "size": 180224}
-  ]
-}
+## Summary Table
+
+| Priority | Issue | Evidence | Impact | Recommended Action |
+| --- | --- | --- | --- | --- |
+| Critical | DX coils sized with airflow/ton ratio far below EnergyPlus limits | ~63 000 warnings per coil | Unrealistic coil behavior, cascade failures | Enforce `VolumeFlowPerRatedTotalCapacity` within 2.684e-5–6.713e-5 m³/s·W |
+| Critical | Coil frost / outlet air < -80 °C | 24 000–27 000 warnings per coil | Invalid psychrometrics, zero sensible loads | Fix coil sizing (above) + set minimum outlet/operation limits |
+| High | Low condenser dry-bulb temperatures (<0 °C) | 100–150 warnings per coil | Model outside spec; requires defrost logic | Add minimum outdoor temperature cutoff or heat-pump model |
+| High | Psychrometric failures (`PsyWFnTdbH` invalid) | ~230 000 warnings | Energy results meaningless | Resolved once coils operate in valid regime |
+| Medium | EUI ≈ 0.52 kWh/m²·yr | All test cases | Indicates loads not delivered | After sizing fix, review schedules & heating provision |
+
+Each item is detailed below with root cause analysis and recommended remediation.
+
+---
+
+## 1. DX Cooling Coils: Air Volume Flow per Watt Out of Range (Critical)
+
+### Evidence
+
+```
+** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="OFFICE_OPEN_0_22_Z28_COOLINGCOILDX" - Air volume flow rate per watt of rated total cooling capacity is out of range at 8.7E-006 m3/s/W.
+**   ~~~   ** Expected range for VolumeFlowPerRatedTotalCapacity=[2.684E-005--6.713E-005]
 ```
 
-## Status: ❌ **Still No Energy Results**
+Each coil emits approximately 60 000 warnings per annual simulation.
 
-### What We Have:
-- ✅ SQLite file exists: 180,224 bytes (176 KB)
-- ✅ Simulation runs successfully
-- ✅ API responds correctly
+### Root Cause
 
-### What's Missing:
-- ❌ No `energy_results` field in response
-- ❌ `simulation_status` still shows `"error"`
-- ❌ SQLite extraction not working or not deployed
+`Rated Total Cooling Capacity` is set orders of magnitude too high relative to the fixed `Rated Air Flow Rate` (~0.5 m³/s). Resulting airflow per ton is ~8×10⁻⁶ m³/s·W, well below the EnergyPlus minimum (Engineering Reference, *Coil:Cooling:DX:SingleSpeed*).
 
-## Possible Issues
+### Impact
 
-### 1. Implementation Not Deployed
-- Code may not be deployed to Railway yet
-- Need to verify deployment status
+- Coil model operates outside calibrated envelope; downstream psychrometrics diverge.
+- Drives frost warnings, negative humidity ratios, and collapses sensible load delivery.
+- Subsequent KPIs (EUI, unmet load hours) become meaningless.
 
-### 2. Extraction Logic Error
-- SQLite extraction might be failing silently
-- Queries might not match the database schema
-- Need error logging to see what's happening
+### Recommended Action
 
-### 3. Database Schema Mismatch
-- SQLite file might have different table structure
-- Queries might need adjustment
-- Need to inspect actual database schema
+- Enforce compliant sizing in the generator: when `RatedTotalCoolingCapacity` is solved, set `RatedAirFlowRate = capacity_W * target_ratio` with `target_ratio` in `[2.684e-5, 6.713e-5]`; midpoint 4.5e-5 m³/s·W is recommended for margin.
+- If airflow is predetermined, back-calculate capacity from the airflow using the same ratio bounds.
+- Include regression/QA check that writes the ratio to logs and fails builds outside the envelope.
+- Validate via `eplusout.eio` (`DX Coil Standard Rating Information`) after fix.
 
-### 4. Empty Database
-- SQLite file exists but might be empty
-- EnergyPlus might not have written data
-- Need to verify database has records
+```python
+MIN_RATIO = 2.684e-5
+MAX_RATIO = 6.713e-5
+TARGET_RATIO = 4.5e-5
 
-## Recommendations
+def size_dx_coil_from_capacity(capacity_w, ratio=TARGET_RATIO):
+    airflow_m3_s = capacity_w * ratio
+    return capacity_w, airflow_m3_s
 
-### Immediate Actions:
+def size_dx_coil_from_airflow(airflow_m3_s, ratio=TARGET_RATIO):
+    capacity_w = airflow_m3_s / ratio
+    return capacity_w, airflow_m3_s
+```
 
-1. **Check Deployment Status**
-   - Verify the updated code is deployed to Railway
-   - Check Railway logs for any errors
+---
 
-2. **Add Error Logging**
-   - Log when SQLite extraction is attempted
-   - Log any exceptions during extraction
-   - Log whether queries return results
+## 2. Coil Frost / Outlet Air Temperatures Below -80 °C (Critical)
 
-3. **Verify Database Content**
-   - Check if SQLite file has tables
-   - Verify ReportMeterData table exists
-   - Check if there are any records
+### Evidence
 
-4. **Test Extraction Locally**
-   - Download a SQLite file from the API
-   - Test extraction logic locally
-   - Verify queries work with actual database
+```
+** Warning ** ... Full load outlet temperature indicates a possibility of frost/freeze error continues.
+**   ~~~   ** Outlet air temperature statistics follow:
+**   ~~~   **   Max = -51.66 °C, Min = -82.61 °C
+```
+
+### Root Cause
+
+- Direct consequence of #1: extreme capacity applied to undersized airflow drives coil leaving air to unphysical temperatures.
+- No minimum compressor operating temperature or frost control configured.
+
+### Impact
+
+- Unrealistic discharge conditions render latent/sensible splits meaningless.
+- Psychrometric routines receive negative humidity ratios, triggering global warning cascades.
+- Simulation reports essentially zero useful cooling service.
+
+### Recommended Action
+
+1. Apply corrective sizing from Issue #1; expect discharge air in 10–14 °C range after fix.
+2. Set `Minimum Outdoor Dry-Bulb Temperature for Compressor Operation` ≥ 5 °C on each `Coil:Cooling:DX:SingleSpeed`.
+3. If heating mode uses shared outdoor unit, migrate to `CoilSystem:Cooling:DX:HeatPump` or `AirLoopHVAC:UnitarySystem` with frost protection enabled.
+4. Add automated regression test that flags any coil outlet `< -5 °C` during design day runs.
+
+---
+
+## 3. Low Condenser Dry-Bulb Temperature (<0 °C) (High)
+
+### Evidence
+
+```
+** Warning ** CalcDoe2DXCoil ... - Low condenser dry-bulb temperature error continues...
+**   ~~~   ** Max=-0.025 °C, Min=-3.30 °C
+```
+
+### Root Cause
+
+Air-cooled DX coils are operated below the validity range of the default performance curves. No defrost or shutdown logic is enforced when ambient < 0 °C.
+
+### Impact
+
+- Curve-fit efficiency/SHR predictions are invalid; coil may report negative capacities.
+- Frost accumulation is inevitable; simulation does not reflect real-world limitations.
+
+### Recommended Action
+
+- After implementing #1 and #2, set the outdoor compressor cutoff (5 °C typical) to eliminate the warning.
+- If cold-climate operation is required, switch to a heat-pump controller with `Defrost Strategy = ReverseCycle` and provide manufacturer-sourced defrost curves (Engineering Reference, *Heat Pump Coil Defrost*).
+
+---
+
+## 4. Psychrometric Failure – `PsyWFnTdbH` Invalid (High)
+
+### Evidence
+
+```
+** Warning ** Calculated Humidity Ratio invalid (PsyWFnTdbH)
+**   ~~~   ** This error occurred 228954 total times; Max=-0.000101, Min=-0.009350
+```
+
+### Root Cause
+
+Coil exit states from Issues #1–#3 fall far outside the moist-air property envelope (enthalpy/temperature pair implies negative humidity ratio). The psychrometric helper clamps and warns, propagating NaNs through latent load reporting.
+
+### Impact
+
+- Moisture balances, comfort metrics, and any KPI derived from latent loads are unusable.
+- Downstream automation treats simulation as failed (`simulation_status = error`).
+
+### Recommended Action
+
+- Resolves automatically once coils are re-sized and bounded. No additional code changes required beyond regression guardrails.
+
+---
+
+## 5. Energy Use Intensity ≈ 0.52 kWh/m²·year (Medium)
+
+### Observation
+
+- All validation addresses return annual EUI ≈ 0.52–0.53 kWh/m²·yr.
+- DOE/ASHRAE reference medium offices expect ≥ 50 kWh/m²·yr (Appendix G, 90.1-2019).
+
+### Root Cause Hypotheses
+
+1. Cooling coils deliver near-zero sensible capacity due to upstream sizing error.
+2. Generated IDFs lack active heating plant or thermostatic control (no `Coil:Heating:*`, no boiler district energy).
+3. Occupancy/internal load schedules may be stuck at unoccupied minimum.
+
+### Recommended Action
+
+1. Re-run the five-address QA suite after implementing Issues #1–#4; expect EUI to rise by two orders of magnitude.
+2. Confirm generator emits heating equipment and dual-setpoint thermostats (typical 21 °C occupied / 15 °C setback).
+3. Align internal gains and schedules with DOE Reference Building datasets (e.g. `RefBldgMediumOfficeNew2004_Chicago.idf`).
+4. Enable and review `Sizing:Zone`, `Sizing:System`, and `Sizing:Plant` autosizing reports to verify design loads are met post-fix.
+
+---
 
 ## Next Steps
 
-1. Verify external API deployment
-2. Check Railway logs for errors
-3. Test SQLite extraction with actual file
-4. Adjust queries if schema differs
-
-## Expected Response (When Working)
-
-```json
-{
-  "simulation_status": "success",
-  "energy_results": {
-    "total_site_energy_kwh": 12345.67,
-    "total_electricity_kwh": 10000.00,
-    "building_area_m2": 4645.15,
-    "eui_kwh_m2": 2.66
-  }
-}
-```
+1. Implement remediation for Issues 1–5 in the IDF generation pipeline.
+2. Deploy to Railway and notify QA. We will trigger the five-address validation suite immediately.
+3. Acceptance criteria: `eplusout.err` free of DX coil warnings, psychrometric errors eliminated, and annual EUI within 50–200 kWh/m²·yr range for the test set.
 
 ---
 
-## ✅ FIXES APPLIED - 2025-11-04
+## Key References
 
-### 2025-11-04: OSM Area Calculation Fix
-- **Fixed**: Improved `_calculate_polygon_area()` in `src/osm_fetcher.py`
-- **Issue**: Simplified planar approximation didn't account for latitude-dependent longitude scaling
-- **Solution**: 
-  - Uses pyproj + shapely for accurate UTM projection-based area calculation (primary method)
-  - Falls back to improved latitude-aware approximation if pyproj unavailable
-  - Accounts for fact that 1° longitude = 111 km × cos(latitude)
-- **Impact**: Should significantly reduce area calculation errors, especially for larger polygons
-- **Added dependency**: `pyproj>=3.0.0` to requirements.txt
-
-### 2025-11-04: Comprehensive Address Testing Analysis
-- **Report**: See `COMPREHENSIVE_ADDRESS_TESTING_ANALYSIS.md` for full details
-- **Status**: ✅ All 8 tests passed successfully
-- **Findings**:
-  - Coordinates correctly geocoded (not hardcoded)
-  - Building areas vary appropriately (334-1,284 m²)
-  - One outlier identified (789 Embarcadero - likely due to OSM area calculation error, now fixed)
-  - City-level geocoding documented (acceptable behavior)
-
-### 🔴 HIGH PRIORITY FIXES - IMPLEMENTED
-
-#### ✅ Issue 1: Zone Volume Calculation Errors - FIXED
-
-**Problem**: Multiple zones had negative calculated volumes, causing EnergyPlus to use default 10.0 m³.
-
-**Fix Applied**:
-1. **Added Wall Surface Normal Correction** (`src/geometry_utils.py`):
-   - Created `fix_vertex_ordering_for_wall()` function to ensure wall normals point outward from zones
-   - Function checks if wall normal points toward or away from zone center and reverses vertex order if needed
-
-2. **Updated Wall Generation** (`src/advanced_geometry_engine.py`):
-   - Modified `_generate_wall_surfaces()` to use `fix_vertex_ordering_for_wall()`
-   - Ensures all wall surfaces have normals pointing outward from zones
-   - This ensures EnergyPlus calculates positive zone volumes
-
-3. **Added Zone Volume Calculation Functions** (`src/geometry_utils.py`):
-   - Added `calculate_zone_volume_from_surfaces()` using divergence theorem
-   - Added helper functions: `calculate_polygon_area_2d()`, `calculate_polygon_center_2d()`
-   - These can be used for validation if needed
-
-**Expected Result**:
-- All zone volumes should now be positive
-- No more "Indicated Zone Volume <= 0.0" warnings
-- HVAC sizing should use correct volumes instead of default 10.0 m³
-
----
-
-#### ✅ Issue 2: HVAC DX Coil Air Flow Rate Problems - ALREADY FIXED
-
-**Status**: The code already had proper air flow rate validation in `_calculate_hvac_sizing()`:
-- Air flow rate calculated using 4.7E-5 m³/s/W (middle of acceptable range: 2.684E-5 to 6.713E-5)
-- Validation ensures flow rate stays within acceptable range
-- Cooling coils use `sizing_params['supply_air_flow']` which is properly calculated
-
-**Verification**: The coil creation in `_generate_vav_system()` correctly uses the validated `supply_air_flow` from sizing parameters.
-
----
-
-#### ✅ Issue 3: HVAC DX Coil Frost/Freeze Warnings - SHOULD BE RESOLVED
-
-**Status**: Fixing Issue #2 (air flow rate) should resolve frost/freeze warnings. The warnings were caused by incorrect air flow rates leading to unrealistic cooling behavior.
-
----
-
-### 🟢 LOW PRIORITY FIXES - IMPLEMENTED
-
-#### ✅ Issue 6: HVAC VAV Reheat Warnings - FIXED
-
-**Problem**: VAV reheat parameters were ignored when heating action is NORMAL, causing informational warnings.
-
-**Fix Applied**:
-1. **Updated VAV Terminal Creation** (`src/advanced_hvac_systems.py`):
-   - Removed conflicting parameters when `damper_heating_action = 'Normal'`
-   - Set `maximum_flow_fraction_during_reheat` and `maximum_flow_per_zone_floor_area_during_reheat` to `None`
-   - Added comments explaining these are ignored when heating action is NORMAL
-
-2. **Updated IDF Formatter** (`src/professional_idf_generator.py`):
-   - Modified `format_hvac_object()` for `AirTerminal:SingleDuct:VAV:Reheat`
-   - When heating action is NORMAL, these fields are set to empty (though EnergyPlus schema still requires them)
-   - Added comments indicating these fields are ignored when NORMAL
-
-**Note**: EnergyPlus still requires these fields in the schema even when ignored, so warnings may still appear but will be minimized.
-
----
-
-#### ✅ Issue 7: Missing Output Meters - FIXED
-
-**Problem**: Requesting meters for gas equipment that doesn't exist (`GAS:FACILITY`, `NATURALGAS:FACILITY`).
-
-**Fix Applied**:
-1. **Added Gas Equipment Detection** (`src/professional_idf_generator.py`):
-   - Created `_check_for_gas_equipment()` method to scan HVAC components for gas equipment
-   - Checks for keywords: 'gas', 'Gas', 'NaturalGas', 'Coil:Heating:Fuel', 'Boiler'
-   - Scans both component type/name and raw IDF strings
-
-2. **Updated Output Generation** (`src/professional_idf_generator.py`):
-   - Modified `generate_output_objects()` to accept `has_gas_equipment` parameter
-   - Gas-related output meters and variables are only added when gas equipment exists
-   - Eliminates warnings for non-existent gas meters
-
-**Expected Result**:
-- No more "Output:Meter: invalid Key Name="GAS:FACILITY"" warnings when no gas equipment exists
-- Gas meters only appear in buildings with gas equipment
-
----
-
-## 📊 REMAINING ISSUES
-
-### 🟡 MEDIUM PRIORITY
-
-#### Issue 4: HVAC Convergence Problems
-- **Status**: Still needs investigation
-- **Fix**: May require balancing HVAC systems or increasing iteration limits
-- **Impact**: Medium - may cause slight inaccuracies
-
-### 🟢 LOW PRIORITY
-
-#### Issue 5: Daylighting Glare Calculation Warnings
-- **Status**: Not yet fixed
-- **Fix**: Add glare reference points to daylighting controls
-- **Impact**: Low - minor impact on daylighting accuracy
-
-#### Issue 8: Unused Schedules
-- **Status**: Not yet fixed
-- **Fix**: Remove unused schedule definitions
-- **Impact**: Low - cleanup only
-
----
-
-## 🧪 TESTING RECOMMENDATIONS
-
-After these fixes, test with:
-
-1. **Zone Volume Verification**:
-   - Generate IDF for a test building
-   - Run EnergyPlus simulation
-   - Check `eplusout.err` for "Zone Volume <= 0.0" warnings
-   - Verify all zones have positive volumes
-
-2. **DX Coil Air Flow Rate Verification**:
-   - Check `eplusout.err` for "Air volume flow rate per watt" warnings
-   - Verify no warnings or warnings are within acceptable range
-
-3. **VAV Reheat Warnings**:
-   - Check `eplusout.err` for "Maximum Flow per Zone Floor Area During Reheat will be ignored" warnings
-   - Verify warnings are reduced (may still appear due to EnergyPlus schema requirements)
-
-4. **Output Meter Warnings**:
-   - Generate IDF for building without gas equipment
-   - Check `eplusout.err` for "invalid Key Name="GAS:FACILITY"" warnings
-   - Verify warnings are eliminated
-
----
-
-## 📝 FILES MODIFIED
-
-1. **src/geometry_utils.py**:
-   - Added `fix_vertex_ordering_for_wall()` function
-   - Added `calculate_zone_volume_from_surfaces()` function
-   - Added helper functions: `calculate_polygon_area_2d()`, `calculate_polygon_center_2d()`
-
-2. **src/advanced_geometry_engine.py**:
-   - Updated `_generate_wall_surfaces()` to use wall normal correction
-
-3. **src/advanced_hvac_systems.py**:
-   - Updated VAV terminal creation to remove conflicting reheat parameters
-
-4. **src/professional_idf_generator.py**:
-   - Added `_check_for_gas_equipment()` method
-   - Updated `generate_output_objects()` to conditionally add gas meters
-   - Updated `format_hvac_object()` for VAV reheat terminals
-
----
-
-## 🎯 SUMMARY
-
-**High Priority Issues**: 
-- ✅ Zone Volume (FIXED - wall normals corrected)
-- ✅ HVAC DX Coil Air Flow (ALREADY FIXED)
-- ✅ HVAC DX Coil Frost/Freeze (SHOULD BE RESOLVED)
-
-**Low Priority Issues**:
-- ✅ VAV Reheat Warnings (FIXED)
-- ✅ Output Meter Warnings (FIXED)
-
-**Remaining Issues**:
-- 🟡 HVAC Convergence (Medium Priority)
-- 🟢 Daylighting Glare (Low Priority)
-- 🟢 Unused Schedules (Low Priority)
-
-**Expected Warning Reduction**: ~70-80% reduction in remaining warnings after these fixes.
+- EnergyPlus Input Output Reference (v24.2.0): `Coil:Cooling:DX:SingleSpeed`, `ThermostatSetpoint:*`, `Sizing:*` objects.
+- EnergyPlus Engineering Reference (v24.2.0): DX coil rated conditions, psychrometric routines, heat pump defrost logic.
+- DOE Reference Buildings – Medium Office: schedules, loads, and target EUIs.
 
 

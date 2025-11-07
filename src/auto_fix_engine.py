@@ -1511,7 +1511,7 @@ class AutoFixEngine:
         # API configuration - use user's Railway endpoint
         self.api_url = api_url or os.getenv(
             'ENERGYPLUS_API_URL',
-            'https://web-production-3092c.up.railway.app/simulate'
+            'https://web-production-1d1be.up.railway.app/simulate'
         )
         
         # Test API availability if enabled

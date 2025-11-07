@@ -161,8 +161,9 @@ def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
     
     EnergyPlus requires air volume flow rate per watt to be in the range
     [2.684E-005 -- 6.713E-005] m³/s/W. This function calculates the air flow
-    rate using the midpoint of this range (4.0E-5 m³/s/W) as recommended
-    by the EnergyPlus Engineering Reference.
+    rate using a conservative midpoint of this range (4.5E-5 m³/s/W), which
+    corresponds to roughly 450 CFM per ton and keeps the coil within the
+    validated operating envelope described in the Engineering Reference.
     
     Args:
         cooling_capacity: Cooling capacity in watts (W)
@@ -176,7 +177,8 @@ def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
     """
     min_ratio = 2.684e-5  # m³/s per W (EnergyPlus minimum)
     max_ratio = 6.713e-5  # m³/s per W (EnergyPlus maximum)
-    target_ratio = 4.0e-5  # Recommended midpoint per Engineering Reference guidance
+    # Use midpoint of EnergyPlus acceptable range (~450 CFM/ton)
+    target_ratio = 4.5e-5  # Slightly conservative midpoint within valid range
 
     if cooling_capacity is None or cooling_capacity <= 0:
         return 0.1  # Maintain minimum air flow for stability

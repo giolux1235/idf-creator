@@ -181,3 +181,5 @@ The system is now ready to use Microsoft Building Footprints data when available
 **Next Enhancement**: State-level GeoJSON integration (when needed)
 
 
+
+

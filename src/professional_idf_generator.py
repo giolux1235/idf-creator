@@ -1571,7 +1571,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
-  ,                                    !- Availability Manager List Name
+  {component.get('availability_manager_list_name', '')}, !- Availability Manager List Name
   {component.get('design_supply_air_flow_rate', 'Autosize')}, !- Design Supply Air Flow Rate {{m3/s}}
   {component.get('branch_list', '')},  !- Branch List Name
   ,                                    !- Connector List Name
@@ -1754,6 +1754,23 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   {component.get('dx_cooling_coil_system_sensor_node_name', component['name'] + ' Sensor')}, !- DX Cooling Coil System Sensor Node Name
   {component.get('cooling_coil_object_type', 'Coil:Cooling:DX:SingleSpeed')}, !- Cooling Coil Object Type
   {component.get('cooling_coil_name', component['name'] + ' DXCoil')}; !- Cooling Coil Name
+
+"""
+
+        elif comp_type == 'AvailabilityManager:LowTemperatureTurnOff':
+            return f"""AvailabilityManager:LowTemperatureTurnOff,
+  {component['name']},                 !- Name
+  {component.get('sensor_node_name', 'SITE OUTDOOR AIR NODE')}, !- Sensor Node Name
+  {component.get('temperature', 5.0)};               !- Temperature {{C}}
+
+"""
+
+        elif comp_type == 'AvailabilityManagerAssignmentList':
+            return f"""AvailabilityManagerAssignmentList,
+  {component['name']},                 !- Name
+  {component.get('availability_manager_1_object_type', '')}, !- Availability Manager 1 Object Type
+  {component.get('availability_manager_1_name', '')}, !- Availability Manager 1 Name
+  ;                                    !- Availability Manager 1 Priority
 
 """
         

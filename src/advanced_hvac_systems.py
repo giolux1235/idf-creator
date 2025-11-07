@@ -286,21 +286,36 @@ class AdvancedHVACSystems:
         # NOT the zone inlet (ZoneEquipmentInlet), because it's where air ENTERS the demand side
         # Normalize all node names to uppercase for EnergyPlus case-sensitivity requirements
         # FIX #4: Ensure supply and return air flows are balanced to prevent convergence issues
-        supply_air_flow = sizing_params['supply_air_flow']
-        return_air_flow = supply_air_flow * 0.95  # Return flow slightly less for pressurization (5% less)
-        
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zn}_AirLoop",
-            'design_supply_air_flow_rate': supply_air_flow,
+            'design_supply_air_flow_rate': 'Autosize',
             'branch_list': f"{zn}_BranchList",
             'connector_list': f"{zn}_ConnectorList",
+            'availability_manager_list_name': f"{zn}_CoolingAvailabilityManagers",
             'supply_side_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'demand_side_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
             'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_TerminalInlet")],  # ✅ FIXED: Must be ZoneSplitter outlet (TerminalInlet), not zone inlet!
             'supply_side_outlet_node_names': [normalize_node_name(f"{zn}_SupplyOutlet")]  # ✅ FIXED: Separate supply outlet node
         }
         components.append(air_loop)
+
+        # Availability manager to lock out compressor operation at low outdoor temperatures
+        low_temp_manager = {
+            'type': 'AvailabilityManager:LowTemperatureTurnOff',
+            'name': f"{zn}_LowTempLockout",
+            'sensor_node_name': 'SITE OUTDOOR AIR NODE',
+            'temperature': 5.0
+        }
+        components.append(low_temp_manager)
+
+        availability_list = {
+            'type': 'AvailabilityManagerAssignmentList',
+            'name': f"{zn}_CoolingAvailabilityManagers",
+            'availability_manager_1_object_type': 'AvailabilityManager:LowTemperatureTurnOff',
+            'availability_manager_1_name': f"{zn}_LowTempLockout"
+        }
+        components.append(availability_list)
         
         # Supply Fan
         # CRITICAL FIX: Fan outlet must match AirLoopHVAC supply_side_outlet_node_names (SupplyOutlet)
@@ -311,7 +326,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
-            'maximum_flow_rate': sizing_params['supply_air_flow'],
+            'maximum_flow_rate': 'Autosize',
             'fan_power_minimum_flow_fraction': 0.3,
             'fan_power_coefficient_1': 0.0013,
             'fan_power_coefficient_2': 0.1470,
@@ -329,7 +344,7 @@ class AdvancedHVACSystems:
                 'name': f"{zn}_HeatingCoil",
                 'air_inlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),  # Match cooling coil outlet
                 'air_outlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match fan inlet
-                'nominal_capacity': sizing_params['heating_load'],
+                'nominal_capacity': 'Autosize',
                 'efficiency': hvac_template.efficiency.get('heating_efficiency', 0.80),  # Gas efficiency
                 'temperature_setpoint_node_name': normalize_node_name(f"{zn}_HeatC-FanNode")
             }
@@ -340,7 +355,7 @@ class AdvancedHVACSystems:
                 'name': f"{zn}_HeatingCoil",
                 'air_inlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),  # Match cooling coil outlet
                 'air_outlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match fan inlet
-                'nominal_capacity': sizing_params['heating_load'],
+                'nominal_capacity': 'Autosize',
                 'efficiency': hvac_template.efficiency.get('heating_cop', 3.5),  # COP for heat pump
                 'temperature_setpoint_node_name': normalize_node_name(f"{zn}_HeatC-FanNode")
             }
@@ -420,20 +435,14 @@ class AdvancedHVACSystems:
         
         # Cooling Coil
         # Enforce DX sizing guidance and low ambient cut-off from Engineering Reference
-        cooling_capacity = sizing_params['cooling_load']
-        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
-
-        # Update sizing parameters so downstream components stay in sync
-        sizing_params['supply_air_flow'] = air_flow
-        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
-            'gross_rated_total_cooling_capacity': cooling_capacity,
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': air_flow,  # Use validated air flow
+            'rated_air_flow_rate': 'Autosize',
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -459,7 +468,7 @@ class AdvancedHVACSystems:
             'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match Zone Equipment Inlet
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'air_terminal_name': f"{zn}_VAVTerminal",
-            'nominal_supply_air_flow_rate': sizing_params['supply_air_flow']
+            'nominal_supply_air_flow_rate': 'Autosize'
         }
         components.append(zone_equipment)
         
@@ -478,8 +487,8 @@ class AdvancedHVACSystems:
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_fraction_before_reheat': 0.2,
             'reheat_coil_name': f"{zn}_ReheatCoil",
-            'maximum_air_flow_rate': sizing_params['supply_air_flow'],  # Set explicit value to avoid sizing
-            'maximum_hot_water_or_steam_flow_rate': sizing_params['heating_load'] / 1000,
+            'maximum_air_flow_rate': 'Autosize',
+            'maximum_hot_water_or_steam_flow_rate': 'Autosize',
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
             'damper_air_outlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),
@@ -494,7 +503,7 @@ class AdvancedHVACSystems:
             'name': f"{zn}_ReheatCoil",
             'air_inlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),  # Match terminal damper outlet
             'air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match ADU outlet (ZoneEquipmentInlet)
-            'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
+            'nominal_capacity': 'Autosize',
             'efficiency': 1.0  # Electric coils are 100% efficient
         }
         components.append(reheat_coil)
@@ -553,9 +562,9 @@ class AdvancedHVACSystems:
             'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_RTUInlet",
             'air_outlet_node_name': f"{zone_name}_RTUOutlet",
-            'cooling_supply_air_flow_rate': sizing_params['supply_air_flow'],
-            'heating_supply_air_flow_rate': sizing_params['supply_air_flow'],
-            'no_load_supply_air_flow_rate': sizing_params['supply_air_flow'] * 0.3,
+            'cooling_supply_air_flow_rate': 'Autosize',
+            'heating_supply_air_flow_rate': 'Autosize',
+            'no_load_supply_air_flow_rate': '',
             'cooling_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'heating_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'no_load_outdoor_air_flow_rate': sizing_params['ventilation_rate'] * 0.3,
@@ -579,25 +588,21 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_RTUFanOutlet",
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 500,  # Pa
-            'maximum_flow_rate': sizing_params['supply_air_flow']
+            'maximum_flow_rate': 'Autosize'
         }
         components.append(fan)
         
         # Cooling Coil
-        cooling_capacity = sizing_params['cooling_load']
-        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
-        sizing_params['supply_air_flow'] = air_flow
-        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_RTUCoolingCoil",
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': cooling_capacity,
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': air_flow,  # Use validated air flow
+            'rated_air_flow_rate': 'Autosize',
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -614,8 +619,8 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_RTUHeatingOutlet",
             'availability_schedule_name': 'Always On',
             'gas_burner_efficiency': hvac_template.efficiency['heating_efficiency'],
-            'nominal_capacity': sizing_params['heating_load'],
-            'parasitic_electric_load': sizing_params['heating_load'] * 0.01  # 1% parasitic
+            'nominal_capacity': 'Autosize',
+            'parasitic_electric_load': 0.0
         }
         components.append(heating_coil)
         
@@ -647,9 +652,9 @@ class AdvancedHVACSystems:
             'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_PTACReturn",  # Return air from zone to PTAC (feeds OA mixer)
             'air_outlet_node_name': f"{zone_name}_PTACZoneSupplyNode",  # Final supply air to zone (from heating coil)
-            'cooling_supply_air_flow_rate': sizing_params['supply_air_flow'],
-            'heating_supply_air_flow_rate': sizing_params['supply_air_flow'],
-            'no_load_supply_air_flow_rate': sizing_params['supply_air_flow'] * 0.3,
+            'cooling_supply_air_flow_rate': 'Autosize',
+            'heating_supply_air_flow_rate': 'Autosize',
+            'no_load_supply_air_flow_rate': '',
             'cooling_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'heating_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'no_load_outdoor_air_flow_rate': sizing_params['ventilation_rate'] * 0.3,
@@ -673,25 +678,21 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",  # To cooling coil
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 400,  # Pa
-            'maximum_flow_rate': sizing_params['supply_air_flow']
+            'maximum_flow_rate': 'Autosize'
         }
         components.append(fan)
         
         # Cooling Coil
-        cooling_capacity = sizing_params['cooling_load']
-        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
-        sizing_params['supply_air_flow'] = air_flow
-
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_PTACCoolingCoil",
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': cooling_capacity,
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': air_flow,
+            'rated_air_flow_rate': 'Autosize',
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)
@@ -704,7 +705,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_PTACZoneSupplyNode",  # Final outlet to zone
             'availability_schedule_name': 'Always On',
             'efficiency': hvac_template.efficiency['heating_cop'],
-            'nominal_capacity': sizing_params['heating_load']
+            'nominal_capacity': 'Autosize'
         }
         components.append(heating_coil)
         
@@ -721,7 +722,7 @@ class AdvancedHVACSystems:
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zone_name}_HeatPumpLoop",
-            'design_supply_air_flow_rate': sizing_params['supply_air_flow'],
+            'design_supply_air_flow_rate': 'Autosize',
             'branch_list': f"{zone_name}_HeatPumpBranchList",
             'connector_list': f"{zone_name}_HeatPumpConnectorList",
             'supply_side_inlet_node_name': f"{zone_name}_HeatPumpSupplyInlet",
@@ -738,10 +739,10 @@ class AdvancedHVACSystems:
             'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_HeatPumpCoilInlet",
             'air_outlet_node_name': f"{zone_name}_HeatPumpCoilOutlet",
-            'rated_total_heating_capacity': sizing_params['heating_load'],
+            'rated_total_heating_capacity': 'Autosize',
             'rated_sensible_heat_ratio': 0.8,
             'rated_cop': hvac_template.efficiency['heating_cop'],
-            'rated_air_flow_rate': sizing_params['supply_air_flow'],
+            'rated_air_flow_rate': 'Autosize',
             'condenser_air_inlet_node_name': f"{zone_name}_HeatPumpCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -760,7 +761,7 @@ class AdvancedHVACSystems:
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zone_name}_ChilledWaterLoop",
-            'design_supply_air_flow_rate': sizing_params['supply_air_flow'],
+            'design_supply_air_flow_rate': 'Autosize',
             'branch_list': f"{zone_name}_ChilledWaterBranchList",
             'connector_list': f"{zone_name}_ChilledWaterConnectorList",
             'supply_side_inlet_node_name': f"{zone_name}_ChilledWaterSupplyInlet",
@@ -778,8 +779,8 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_ChilledWaterHeatingOutlet",
             'water_inlet_node_name': f"{zone_name}_ChilledWaterHeatingWaterInlet",
             'water_outlet_node_name': f"{zone_name}_ChilledWaterHeatingWaterOutlet",
-            'heating_design_capacity': sizing_params['heating_load'],
-            'water_flow_rate': sizing_params['heating_load'] / 1000,  # L/s
+            'heating_design_capacity': 'Autosize',
+            'water_flow_rate': 'Autosize',
             'performance_input_method': 'NominalCapacity'
         }
         components.append(heating_coil)
@@ -791,8 +792,8 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_ChilledWaterCoolingOutlet",
             'water_inlet_node_name': f"{zone_name}_ChilledWaterCoolingWaterInlet",
             'water_outlet_node_name': f"{zone_name}_ChilledWaterCoolingWaterOutlet",
-            'design_water_flow_rate': sizing_params['cooling_load'] / 1000,  # L/s
-            'design_air_flow_rate': sizing_params['supply_air_flow'],
+            'design_water_flow_rate': 'Autosize',
+            'design_air_flow_rate': 'Autosize',
             'design_inlet_water_temperature': 7.0,  # °C
             'design_inlet_air_temperature': 24.0,  # °C
             'design_outlet_air_temperature': 12.0,  # °C
