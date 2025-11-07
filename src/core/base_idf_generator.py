@@ -116,6 +116,30 @@ class BaseIDFGenerator:
         """
         return node_name.upper() if node_name else node_name
 
+    def generate_outdoor_air_node(self, node_name: str = "SITE OUTDOOR AIR NODE") -> str:
+        """
+        Generate an OutdoorAir:Node object so global outdoor air references
+        (e.g. availability managers) have a valid sensor node.
+        """
+        return f"""OutdoorAir:Node,
+  {node_name};                !- Name
+
+"""
+
+    def generate_outdoor_air_node_list(
+        self,
+        list_name: str = "Outdoor Air Node List",
+        node_name: str = "SITE OUTDOOR AIR NODE"
+    ) -> str:
+        """
+        Generate an OutdoorAir:NodeList object referencing the shared outdoor node.
+        """
+        return f"""OutdoorAir:NodeList,
+  {list_name},                !- Name
+  {node_name};                !- Node Name 1
+
+"""
+
     # ------------------------------------------------------------------
     # Shared sizing period helpers
     # ------------------------------------------------------------------
