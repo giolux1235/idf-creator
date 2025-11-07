@@ -3,7 +3,8 @@ Base class for IDF generators.
 Provides common functionality shared by IDFGenerator and ProfessionalIDFGenerator.
 """
 from datetime import datetime
-from typing import Set, Optional
+from typing import Set, Optional, Dict
+import math
 
 
 class BaseIDFGenerator:
@@ -114,4 +115,86 @@ class BaseIDFGenerator:
             Uppercase node name
         """
         return node_name.upper() if node_name else node_name
+
+    # ------------------------------------------------------------------
+    # Shared sizing period helpers
+    # ------------------------------------------------------------------
+    def _default_design_day_parameters(self, climate_zone: Optional[str]) -> Dict[str, float]:
+        """
+        Provide conservative default design day parameters when weather file
+        metadata is unavailable.
+
+        The values are coarse but fall inside ASHRAE recommendations for each
+        climate zone category. They ensure EnergyPlus sizing runs complete
+        instead of terminating when design conditions are missing.
+        """
+        zone_key = None
+        if climate_zone:
+            for char in str(climate_zone):
+                if char.isdigit():
+                    zone_key = char
+                    break
+        zone_defaults = {
+            '1': {'heating_dry_bulb': 18.0, 'heating_wet_bulb': 16.0,
+                  'heating_wind_speed': 3.0, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 33.0, 'cooling_wet_bulb': 25.5,
+                  'cooling_daily_range': 6.0, 'cooling_wind_speed': 3.0,
+                  'cooling_wind_direction': 180.0},
+            '2': {'heating_dry_bulb': 12.0, 'heating_wet_bulb': 10.0,
+                  'heating_wind_speed': 3.5, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 35.0, 'cooling_wet_bulb': 24.0,
+                  'cooling_daily_range': 8.0, 'cooling_wind_speed': 3.5,
+                  'cooling_wind_direction': 200.0},
+            '3': {'heating_dry_bulb': 4.0, 'heating_wet_bulb': 2.0,
+                  'heating_wind_speed': 4.0, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 34.0, 'cooling_wet_bulb': 23.5,
+                  'cooling_daily_range': 10.0, 'cooling_wind_speed': 4.0,
+                  'cooling_wind_direction': 210.0},
+            '4': {'heating_dry_bulb': -4.0, 'heating_wet_bulb': -6.0,
+                  'heating_wind_speed': 4.5, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 32.0, 'cooling_wet_bulb': 22.0,
+                  'cooling_daily_range': 11.0, 'cooling_wind_speed': 4.5,
+                  'cooling_wind_direction': 220.0},
+            '5': {'heating_dry_bulb': -12.0, 'heating_wet_bulb': -14.0,
+                  'heating_wind_speed': 5.0, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 30.0, 'cooling_wet_bulb': 20.0,
+                  'cooling_daily_range': 12.0, 'cooling_wind_speed': 5.0,
+                  'cooling_wind_direction': 230.0},
+            '6': {'heating_dry_bulb': -18.0, 'heating_wet_bulb': -20.0,
+                  'heating_wind_speed': 5.5, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 28.0, 'cooling_wet_bulb': 18.0,
+                  'cooling_daily_range': 13.0, 'cooling_wind_speed': 5.5,
+                  'cooling_wind_direction': 240.0},
+            '7': {'heating_dry_bulb': -26.0, 'heating_wet_bulb': -28.0,
+                  'heating_wind_speed': 6.0, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 26.0, 'cooling_wet_bulb': 16.0,
+                  'cooling_daily_range': 14.0, 'cooling_wind_speed': 6.0,
+                  'cooling_wind_direction': 250.0},
+            '8': {'heating_dry_bulb': -34.0, 'heating_wet_bulb': -36.0,
+                  'heating_wind_speed': 6.5, 'heating_wind_direction': 0.0,
+                  'cooling_dry_bulb': 24.0, 'cooling_wet_bulb': 14.0,
+                  'cooling_daily_range': 15.0, 'cooling_wind_speed': 6.5,
+                  'cooling_wind_direction': 260.0},
+        }
+
+        defaults = zone_defaults.get(zone_key, zone_defaults['4'])
+
+        # Return a copy to prevent accidental mutation
+        return dict(defaults)
+
+    def _estimate_barometric_pressure(self, elevation_m: Optional[float]) -> float:
+        """
+        Estimate barometric pressure (Pa) from elevation using the ICAO standard
+        atmosphere equation. Falls back to sea-level pressure when elevation is
+        missing.
+        """
+        if elevation_m is None:
+            return 101325.0
+        try:
+            elevation = float(elevation_m)
+        except (TypeError, ValueError):
+            return 101325.0
+
+        # Exponential drop in pressure with altitude (scale height ~8434.5 m)
+        return 101325.0 * math.exp(-elevation / 8434.5)
 
