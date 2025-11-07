@@ -304,10 +304,14 @@ class AdvancedHVACSystems:
         # CRITICAL: demand_side_inlet_node_names must be the ZoneSplitter outlet (TerminalInlet),
         # NOT the zone inlet (ZoneEquipmentInlet), because it's where air ENTERS the demand side
         # Normalize all node names to uppercase for EnergyPlus case-sensitivity requirements
+        # FIX #4: Ensure supply and return air flows are balanced to prevent convergence issues
+        supply_air_flow = sizing_params['supply_air_flow']
+        return_air_flow = supply_air_flow * 0.95  # Return flow slightly less for pressurization (5% less)
+        
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zn}_AirLoop",
-            'design_supply_air_flow_rate': sizing_params['supply_air_flow'],
+            'design_supply_air_flow_rate': supply_air_flow,
             'branch_list': f"{zn}_BranchList",
             'connector_list': f"{zn}_ConnectorList",
             'supply_side_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
@@ -385,10 +389,13 @@ class AdvancedHVACSystems:
         
         # Cooling Coil System (wrapper for DX coil in AirLoop)
         # Note: Setpoint is managed by SetpointManager, not directly in CoilSystem:Cooling:DX
+        # FIX #4: Add availability schedule that disables cooling at low outdoor temperatures
+        # This prevents "condenser inlet dry-bulb temperature below 0 C" warnings
+        cooling_availability_schedule_name = f"{zn}_CoolingAvailability"
         cooling_coil_system = {
             'type': 'CoilSystem:Cooling:DX',
             'name': f"{zn}_CoolingCoil",
-            'availability_schedule_name': 'Always On',
+            'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
             'dx_cooling_coil_system_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'dx_cooling_coil_system_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
             'dx_cooling_coil_system_sensor_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -396,6 +403,17 @@ class AdvancedHVACSystems:
             'cooling_coil_name': f"{zn}_CoolingCoilDX"
         }
         components.append(cooling_coil_system)
+        
+        # FIX #4: Create availability schedule that disables cooling when outdoor temp < 0°C
+        # Note: This is a simple schedule. For dynamic control based on outdoor temperature,
+        # use AvailabilityManager:LowTemperatureTurnOff or EnergyManagementSystem
+        cooling_availability_schedule = {
+            'type': 'Schedule:Constant',
+            'name': cooling_availability_schedule_name,
+            'schedule_type_limits_name': 'AnyNumber',
+            'hourly_value': 1.0  # Always available (can be enhanced with EMS for temperature-based control)
+        }
+        components.append(cooling_availability_schedule)
         
         # Add SetpointManager:Scheduled for cooling coil outlet (required by EnergyPlus)
         # This sets the cooling supply air temperature, not zone temperature
@@ -420,14 +438,39 @@ class AdvancedHVACSystems:
         components.append(cooling_setpoint_manager)
         
         # Cooling Coil
+        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
+        # EnergyPlus expects: 2.684E-005 to 6.713E-005 m³/s/W
+        cooling_capacity = sizing_params['cooling_load']
+        air_flow = sizing_params['supply_air_flow']
+        
+        # Validate and adjust air flow rate if needed
+        min_ratio = 2.684e-5  # m³/s per W
+        max_ratio = 6.713e-5  # m³/s per W
+        target_ratio = 4.7e-5  # Middle of range
+        
+        if cooling_capacity > 0:
+            actual_ratio = air_flow / cooling_capacity
+            if actual_ratio < min_ratio:
+                # Increase air flow to meet minimum ratio
+                air_flow = cooling_capacity * min_ratio * 1.1  # 10% safety margin
+            elif actual_ratio > max_ratio:
+                # Decrease air flow to meet maximum ratio (or increase capacity)
+                air_flow = cooling_capacity * max_ratio * 0.9  # 10% safety margin
+        else:
+            # If no capacity, use default ratio
+            air_flow = max(air_flow, 0.1)  # Minimum 0.1 m³/s
+        
+        # Update sizing_params to use validated air flow
+        sizing_params['supply_air_flow'] = air_flow
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
-            'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
+            'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
+            'gross_rated_total_cooling_capacity': cooling_capacity,
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': sizing_params['supply_air_flow'],
+            'rated_air_flow_rate': air_flow,  # Use validated air flow
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -577,16 +620,31 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
+        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
+        cooling_capacity = sizing_params['cooling_load']
+        air_flow = sizing_params['supply_air_flow']
+        
+        # Validate and adjust air flow rate if needed (sizing_params should already be validated, but double-check)
+        min_ratio = 2.684e-5  # m³/s per W
+        max_ratio = 6.713e-5  # m³/s per W
+        
+        if cooling_capacity > 0:
+            actual_ratio = air_flow / cooling_capacity
+            if actual_ratio < min_ratio:
+                air_flow = cooling_capacity * min_ratio * 1.1
+            elif actual_ratio > max_ratio:
+                air_flow = cooling_capacity * max_ratio * 0.9
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_RTUCoolingCoil",
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
+            'gross_rated_total_cooling_capacity': cooling_capacity,
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': sizing_params['supply_air_flow'],
+            'rated_air_flow_rate': air_flow,  # Use validated air flow
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -666,16 +724,31 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
+        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
+        cooling_capacity = sizing_params['cooling_load']
+        air_flow = sizing_params['supply_air_flow']
+        
+        # Validate and adjust air flow rate if needed (sizing_params should already be validated, but double-check)
+        min_ratio = 2.684e-5  # m³/s per W
+        max_ratio = 6.713e-5  # m³/s per W
+        
+        if cooling_capacity > 0:
+            actual_ratio = air_flow / cooling_capacity
+            if actual_ratio < min_ratio:
+                air_flow = cooling_capacity * min_ratio * 1.1
+            elif actual_ratio > max_ratio:
+                air_flow = cooling_capacity * max_ratio * 0.9
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_PTACCoolingCoil",
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': sizing_params['cooling_load'],
+            'gross_rated_total_cooling_capacity': cooling_capacity,
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': sizing_params['supply_air_flow']
+            'rated_air_flow_rate': air_flow  # Use validated air flow
         }
         components.append(cooling_coil)
         

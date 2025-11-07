@@ -302,12 +302,42 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Use only valid zones
         zones = valid_zones
         
-        # Zones
-        for zone in zones:
-            idf_content.append(self.generate_zone_object(zone))
-        
-        # Surfaces
+        # Surfaces (generate first to calculate actual floor areas)
         surfaces = self.geometry_engine.generate_building_surfaces(zones, footprint)
+        
+        # Calculate floor surface areas for each zone
+        zone_floor_areas = {}
+        for surface in surfaces:
+            if surface.get('surface_type', '').lower() == 'floor':
+                zone_name = surface.get('zone', '')
+                if zone_name:
+                    # Calculate area from vertices
+                    vertices = surface.get('vertices', [])
+                    if vertices and len(vertices) >= 3:
+                        try:
+                            # Parse vertices and calculate 2D area
+                            from shapely.geometry import Polygon
+                            coords_2d = []
+                            for v in vertices:
+                                if isinstance(v, str):
+                                    parts = v.split(',')
+                                    if len(parts) >= 2:
+                                        coords_2d.append((float(parts[0]), float(parts[1])))
+                                elif isinstance(v, (list, tuple)) and len(v) >= 2:
+                                    coords_2d.append((float(v[0]), float(v[1])))
+                            if len(coords_2d) >= 3:
+                                poly = Polygon(coords_2d)
+                                if poly.is_valid:
+                                    zone_floor_areas[zone_name] = poly.area
+                        except Exception:
+                            pass  # Fall back to zone.area if calculation fails
+        
+        # Zones (use calculated floor areas if available)
+        for zone in zones:
+            floor_area = zone_floor_areas.get(zone.name)
+            idf_content.append(self.generate_zone_object(zone, floor_surface_area=floor_area))
+        
+        # Surfaces (already generated above, now format them)
         for surface in surfaces:
             try:
                 formatted_surface = self.format_surface_object(surface)
@@ -1395,17 +1425,29 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         
         return site_location + ground_temps
     
-    def generate_zone_object(self, zone: ZoneGeometry) -> str:
+    def generate_zone_object(self, zone: ZoneGeometry, floor_surface_area: Optional[float] = None) -> str:
         """Generate Zone object.
         
         CRITICAL FIX: Explicitly set Floor Area to match zone.area from ZoneGeometry.
         This ensures EnergyPlus uses the correct area for EUI calculations instead of
         autocalculating from BuildingSurface:Detailed floor surfaces, which can have
         rounding errors or gaps.
+        
+        FIX #1: If floor_surface_area is provided, use it to ensure Zone floor area
+        matches the sum of Space floor areas (or actual floor surface areas) within 1% tolerance.
+        This prevents "Zone Floor Area differ more than 5%" warnings.
         """
-        # Use zone.area if available, otherwise let EnergyPlus autocalculate
+        # Use floor_surface_area if provided (from actual floor surfaces), otherwise use zone.area
+        # This ensures Zone floor area matches the sum of floor surface areas
+        if floor_surface_area is not None and floor_surface_area > 0:
+            floor_area = floor_surface_area
+        elif hasattr(zone, 'area') and zone.area and zone.area > 0:
+            floor_area = zone.area
+        else:
+            floor_area = None
+        
         # Round to 2 decimal places for EnergyPlus compatibility
-        floor_area_str = f"{zone.area:.2f}" if hasattr(zone, 'area') and zone.area and zone.area > 0 else "autocalculate"
+        floor_area_str = f"{floor_area:.2f}" if floor_area else "autocalculate"
         
         return f"""Zone,
   {zone.name},             !- Name
