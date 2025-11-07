@@ -20,8 +20,8 @@ class IDFGenerator(BaseIDFGenerator):
         """Generate SimulationControl object."""
         return f"""SimulationControl,
   Yes,                     !- Do Zone Sizing Calculation
-  Yes,                     !- Do System Sizing Calculation
-  Yes,                     !- Do Plant Sizing Calculation
+  No,                      !- Do System Sizing Calculation
+  No,                      !- Do Plant Sizing Calculation
   Yes,                     !- Run Simulation for Sizing Periods
   Yes,                     !- Run Simulation for Weather File Run Periods
   No,                      !- Do HVAC Sizing Simulation for Sizing Periods

@@ -475,6 +475,15 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             # This ensures no duplicate node errors in generated IDFs
             self._validate_airloop_components(hvac_by_key.values())
             
+            # Generate Sizing:System objects for each air loop
+            airloop_names = sorted({
+                component.get('name')
+                for component in hvac_by_key.values()
+                if component.get('type') == 'AirLoopHVAC' and component.get('name')
+            })
+            for airloop_name in airloop_names:
+                idf_content.append(self.generate_system_sizing_object(airloop_name))
+            
             # Format all unique components
             for component in hvac_by_key.values():
                 hvac_strings.append(self.format_hvac_object(component))
@@ -1302,7 +1311,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         return """SimulationControl,
   Yes,                     !- Do Zone Sizing Calculation
   Yes,                     !- Do System Sizing Calculation
-  Yes,                     !- Do Plant Sizing Calculation
+  No,                      !- Do Plant Sizing Calculation
   Yes,                     !- Run Simulation for Sizing Periods
   Yes,                     !- Run Simulation for Weather File Run Periods
   No,                      !- Do HVAC Sizing Simulation for Sizing Periods
@@ -2128,6 +2137,14 @@ InternalMass,
   NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
   autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {{C}}
   autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {{C}}
+
+"""
+    
+    def generate_system_sizing_object(self, airloop_name: str) -> str:
+        """Generate a minimal Sizing:System object for an air loop."""
+        return f"""Sizing:System,
+  {airloop_name},           !- AirLoop Name
+  Sensible;                 !- Type of Load to Size On
 
 """
     
