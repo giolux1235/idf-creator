@@ -74,7 +74,7 @@ def test_non_compliant_idf():
 Building,NonCompliant Building;
 
 SimulationControl,
-  No,
+  Yes,
   Yes;
 
 Lights,

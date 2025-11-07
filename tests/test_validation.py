@@ -57,7 +57,7 @@ def test_invalid_idf():
 Building,Simple Building;
 
 SimulationControl,
-  No,
+  Yes,
   Yes;
 
 Timestep,4;
@@ -81,7 +81,7 @@ def test_basic_structure():
 Building,Simple Building;
 
 SimulationControl,
-  No,
+  Yes,
   Yes;
 
 Timestep,4;

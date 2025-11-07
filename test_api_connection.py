@@ -69,9 +69,9 @@ Building,
   6;                         !- Minimum Number of Warmup Days
 
 SimulationControl,
-  No,                        !- Do Zone Sizing Calculation
-  No,                        !- Do System Sizing Calculation
-  No,                        !- Do Plant Sizing Calculation
+  Yes,                       !- Do Zone Sizing Calculation
+  Yes,                       !- Do System Sizing Calculation
+  Yes,                       !- Do Plant Sizing Calculation
   Yes,                       !- Run Simulation for Sizing Periods
   No;                        !- Run Simulation for Weather File Run Periods
 
@@ -187,9 +187,9 @@ Building,
   6;                         !- Minimum Number of Warmup Days
 
 SimulationControl,
-  No,                        !- Do Zone Sizing Calculation
-  No,                        !- Do System Sizing Calculation
-  No,                        !- Do Plant Sizing Calculation
+  Yes,                       !- Do Zone Sizing Calculation
+  Yes,                       !- Do System Sizing Calculation
+  Yes,                       !- Do Plant Sizing Calculation
   Yes,                       !- Run Simulation for Sizing Periods
   No;                        !- Run Simulation for Weather File Run Periods
 

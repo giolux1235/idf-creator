@@ -482,7 +482,7 @@ Building,
   Simple Building;        !- Name
 
 SimulationControl,
-  No,                      !- Do Zone Sizing Calculation
+  Yes,                     !- Do Zone Sizing Calculation
   Yes,                     !- Run Simulation for Weather File Run Periods
 
 RunPeriod,

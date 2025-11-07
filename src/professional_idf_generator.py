@@ -1298,10 +1298,10 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     def generate_simulation_control(self) -> str:
         """Generate SimulationControl object."""
         return """SimulationControl,
-  No,                      !- Do Zone Sizing Calculation
-  No,                      !- Do System Sizing Calculation
-  No,                      !- Do Plant Sizing Calculation
-  No,                      !- Run Simulation for Sizing Periods
+  Yes,                     !- Do Zone Sizing Calculation
+  Yes,                     !- Do System Sizing Calculation
+  Yes,                     !- Do Plant Sizing Calculation
+  Yes,                     !- Run Simulation for Sizing Periods
   Yes,                     !- Run Simulation for Weather File Run Periods
   No,                      !- Do HVAC Sizing Simulation for Sizing Periods
   1;                       !- Maximum Number of HVAC Sizing Simulation Passes

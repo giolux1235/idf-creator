@@ -15,10 +15,10 @@ minimal_idf = """Version,
   25.1;                    !- Version Identifier
 
 SimulationControl,
-  No,                      !- Do Zone Sizing Calculation
-  No,                      !- Do System Sizing Calculation
-  No,                      !- Do Plant Sizing Calculation
-  No,                      !- Run Simulation for Sizing Periods
+  Yes,                     !- Do Zone Sizing Calculation
+  Yes,                     !- Do System Sizing Calculation
+  Yes,                     !- Do Plant Sizing Calculation
+  Yes,                     !- Run Simulation for Sizing Periods
   Yes,                     !- Run Simulation for Weather File Run Periods
   No,                      !- Do HVAC Sizing Simulation for Sizing Periods
   1;                       !- Maximum Number of HVAC Sizing Simulation Passes
@@ -300,6 +300,7 @@ response = requests.post(
 
 print(f"\nStatus: {response.status_code}")
 print(f"Response:\n{json.dumps(response.json(), indent=2)}")
+
 
 
 

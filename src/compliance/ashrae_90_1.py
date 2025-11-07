@@ -335,7 +335,7 @@ if __name__ == "__main__":
     test_idf = """Version,9.2;
 Building,Test Building;
 SimulationControl,
-  No,Yes;
+  Yes,Yes;
 
 Lights,
   Office_Lighting,

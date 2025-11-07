@@ -35,10 +35,10 @@ GlobalGeometryRules,
   Relative;
 
 SimulationControl,
-  No,
-  No,
-  No,
-  No,
+  Yes,
+  Yes,
+  Yes,
+  Yes,
   Yes;
 
 RunPeriod,
@@ -303,6 +303,7 @@ Output:Meter,
 
 if __name__ == '__main__':
     test_minimal_idf_with_weather()
+
 
 
 

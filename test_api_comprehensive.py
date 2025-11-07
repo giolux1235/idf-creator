@@ -116,10 +116,10 @@ Building,
   6;
 
 SimulationControl,
-  No,
-  No,
-  No,
-  No,
+  Yes,
+  Yes,
+  Yes,
+  Yes,
   Yes;
 
 RunPeriod,
