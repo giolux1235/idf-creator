@@ -45,8 +45,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     """Professional-grade IDF generator with advanced features"""
     
     def __init__(self):
-        """Initialize professional IDF generator with EnergyPlus version 25.1."""
-        super().__init__(version="25.1")
+        """Initialize professional IDF generator with EnergyPlus version 24.2."""
+        super().__init__(version="24.2")
         
         # Initialize professional modules
         self.geometry_engine = AdvancedGeometryEngine()

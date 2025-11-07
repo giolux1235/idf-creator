@@ -391,13 +391,14 @@ def fix_vertex_ordering_for_ceiling(vertices_2d: List[Tuple[float, float]],
     
     For EnergyPlus with CounterClockWise vertex entry direction:
     - Ceiling vertices should be ordered so normal points upward when viewed from outside
+    - Tilt angle should be near 0° (not 180°)
     
     Args:
         vertices_2d: List of (x, y) tuples
         z_coord: Z coordinate for all vertices
         
     Returns:
-        List of (x, y, z) tuples with correct ordering
+        List of (x, y, z) tuples with correct ordering (tilt ~0°)
     """
     if len(vertices_2d) < 3:
         return [(v[0], v[1], z_coord) for v in vertices_2d]
@@ -405,26 +406,26 @@ def fix_vertex_ordering_for_ceiling(vertices_2d: List[Tuple[float, float]],
     # Convert to 3D vertices
     vertices_3d = [(v[0], v[1], z_coord) for v in vertices_2d]
     
-    # Calculate current normal
+    # Calculate current normal and tilt
     normal = calculate_surface_normal(vertices_3d)
     tilt = calculate_tilt_angle(normal)
     
-    # Ceiling should have tilt ~0° (normal pointing upward)
-    # If normal points downward (tilt > 90°), reverse vertex order
+    # CRITICAL FIX: Ceiling should have tilt ~0° (normal pointing upward, z-component positive)
+    # If tilt is > 90°, the normal is pointing downward (tilt = 180° means upside down)
+    # We need to reverse the vertex order to flip the normal
     if tilt > 90.0:
         vertices_3d = list(reversed(vertices_3d))
         normal = calculate_surface_normal(vertices_3d)
         tilt = calculate_tilt_angle(normal)
     
-    # Verify tilt is near 0° (allow 5° tolerance)
-    if abs(tilt) > 5.0:
-        # If still not correct, try reversing again
+    # Final verification: ensure tilt is near 0° (within 10° tolerance)
+    # If still not correct, the polygon might be non-planar or have other issues
+    # But we've done our best to fix it
+    if abs(tilt) > 10.0 and abs(tilt - 180.0) < 10.0:
+        # Still upside down, try one more reversal
         vertices_3d = list(reversed(vertices_3d))
         normal = calculate_surface_normal(vertices_3d)
         tilt = calculate_tilt_angle(normal)
-        # If reverse made it worse, reverse back
-        if abs(tilt) > abs(180.0 - tilt):
-            vertices_3d = list(reversed(vertices_3d))
     
     return vertices_3d
 

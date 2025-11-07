@@ -297,8 +297,10 @@ class AdvancedHVACSystems:
         is_cold_climate = cz_num in ['5', '6', '7', '8']
         
         # Air Loop
-        # CRITICAL: supply_side_outlet_node_names must match SupplyPath supply_air_path_inlet_node_name
-        # This connects the supply side of AirLoopHVAC to the demand side (zones)
+        # CRITICAL FIX: Use separate nodes for Supply Side Outlet and Demand Side Inlet
+        # Supply Side Outlet: {zn}_SupplyOutlet (NEW - connects supply side to demand side)
+        # Demand Side Inlet: {zn}_ZoneEquipmentInlet (connects demand side from zones)
+        # These MUST be different nodes to avoid EnergyPlus duplicate node errors
         # Normalize all node names to uppercase for EnergyPlus case-sensitivity requirements
         air_loop = {
             'type': 'AirLoopHVAC',
@@ -308,18 +310,18 @@ class AdvancedHVACSystems:
             'connector_list': f"{zn}_ConnectorList",
             'supply_side_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'demand_side_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
-            'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")],  # SupplyPath inlet
-            'supply_side_outlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")]  # Must match SupplyPath inlet!
+            'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")],  # Demand side inlet (from zones)
+            'supply_side_outlet_node_names': [normalize_node_name(f"{zn}_SupplyOutlet")]  # ✅ FIXED: Separate supply outlet node
         }
         components.append(air_loop)
         
         # Supply Fan
-        # CRITICAL: Fan outlet must match AirLoopHVAC supply_side_outlet_node_names
+        # CRITICAL FIX: Fan outlet must match AirLoopHVAC supply_side_outlet_node_names (SupplyOutlet)
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
             'air_inlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match branch inlet
-            'air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # Must match AirLoopHVAC supply outlet!
+            'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow'],
@@ -506,10 +508,11 @@ class AdvancedHVACSystems:
         components.append(return_path)
         
         # Supply Path and Splitter (connects AirLoop to zones)
+        # CRITICAL FIX: SupplyPath inlet must match AirLoopHVAC supply_side_outlet_node_names (SupplyOutlet)
         supply_path = {
             'type': 'AirLoopHVAC:SupplyPath',
             'name': f"{zn}",
-            'supply_air_path_inlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),
+            'supply_air_path_inlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Match AirLoopHVAC supply outlet
             'component_1_type': 'AirLoopHVAC:ZoneSplitter',
             'component_1_name': f"{zn}_SupplySplitter"
         }
@@ -518,7 +521,7 @@ class AdvancedHVACSystems:
         zone_splitter = {
             'type': 'AirLoopHVAC:ZoneSplitter',
             'name': f"{zn}_SupplySplitter",
-            'inlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),
+            'inlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Match SupplyPath inlet
             'outlet_1_node_name': normalize_node_name(f"{zn}_TerminalInlet")
         }
         components.append(zone_splitter)
@@ -862,9 +865,9 @@ class AdvancedHVACSystems:
         # Setpoint Manager - Use advanced outdoor air reset for VAV systems (energy efficient)
         if hvac_type == 'VAV':
             # Use outdoor air reset for VAV systems (standard efficiency practice)
-            # Node name should match the actual supply air node in VAV system
-            # For VAV, the setpoint node should be the supply air outlet node
-            # Use the fan outlet node which is ZoneEquipmentInlet (matches AirLoopHVAC supply outlet)
+            # Node name should match the actual supply air outlet node in VAV system
+            # For VAV, the setpoint node should be the supply air outlet node (SupplyOutlet)
+            # ✅ FIXED: Use SupplyOutlet (fan outlet) instead of ZoneEquipmentInlet
             setpoint_manager = {
                 'type': 'SetpointManager:OutdoorAirReset',
                 'name': f"{zone_name}_SetpointManager",
@@ -873,7 +876,7 @@ class AdvancedHVACSystems:
                 'outdoor_low_temperature': 15.6,  # °C
                 'setpoint_at_outdoor_high_temperature': 24.0,  # °C - cooler when warm outside
                 'outdoor_high_temperature': 23.3,  # °C
-                'setpoint_node_or_nodelist_name': normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")  # Match VAV system node (fan outlet)
+                'setpoint_node_or_nodelist_name': normalize_node_name(f"{zone_name}_SupplyOutlet")  # ✅ FIXED: Match VAV system supply outlet (fan outlet)
             }
         elif control_template['setpoint_manager'] == 'SetpointManager:OutdoorAirReset':
             setpoint_manager = {

@@ -9,12 +9,12 @@ from typing import Set, Optional
 class BaseIDFGenerator:
     """Base class for IDF generators with common functionality."""
     
-    def __init__(self, version: str = "25.1"):
+    def __init__(self, version: str = "24.2"):
         """
         Initialize base IDF generator.
         
         Args:
-            version: EnergyPlus version string
+            version: EnergyPlus version string (default: 24.2 to match EnergyPlus 24.2.0)
         """
         self.version = version
         self.unique_names: Set[str] = set()

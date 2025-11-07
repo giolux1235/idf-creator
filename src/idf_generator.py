@@ -9,8 +9,8 @@ class IDFGenerator(BaseIDFGenerator):
     """Generates complete EnergyPlus IDF files from minimal inputs."""
     
     def __init__(self):
-        """Initialize IDF generator with EnergyPlus version 25.1."""
-        super().__init__(version="25.1")
+        """Initialize IDF generator with EnergyPlus version 24.2."""
+        super().__init__(version="24.2")
     
     def generate_header(self) -> str:
         """Generate IDF file header."""
