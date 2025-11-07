@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
 from .building_age_adjustments import BuildingAgeAdjuster
+from ..utils.common import normalize_node_name
 
 
 @dataclass
@@ -298,16 +299,17 @@ class AdvancedHVACSystems:
         # Air Loop
         # CRITICAL: supply_side_outlet_node_names must match SupplyPath supply_air_path_inlet_node_name
         # This connects the supply side of AirLoopHVAC to the demand side (zones)
+        # Normalize all node names to uppercase for EnergyPlus case-sensitivity requirements
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zn}_AirLoop",
             'design_supply_air_flow_rate': sizing_params['supply_air_flow'],
             'branch_list': f"{zn}_BranchList",
             'connector_list': f"{zn}_ConnectorList",
-            'supply_side_inlet_node_name': f"{zn}_SupplyInlet",
-            'demand_side_outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
-            'demand_side_inlet_node_names': [f"{zn}_ZoneEquipmentInlet"],  # SupplyPath inlet
-            'supply_side_outlet_node_names': [f"{zn}_ZoneEquipmentInlet"]  # Must match SupplyPath inlet!
+            'supply_side_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
+            'demand_side_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
+            'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")],  # SupplyPath inlet
+            'supply_side_outlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")]  # Must match SupplyPath inlet!
         }
         components.append(air_loop)
         
@@ -316,8 +318,8 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
-            'air_inlet_node_name': f"{zn}_HeatC-FanNode",  # Match branch inlet
-            'air_outlet_node_name': f"{zn}_ZoneEquipmentInlet",  # Must match AirLoopHVAC supply outlet!
+            'air_inlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match branch inlet
+            'air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow'],
@@ -336,22 +338,22 @@ class AdvancedHVACSystems:
             heating_coil = {
                 'type': 'Coil:Heating:Fuel',
                 'name': f"{zn}_HeatingCoil",
-                'air_inlet_node_name': f"{zn}_CoolC-HeatCNode",  # Match cooling coil outlet
-                'air_outlet_node_name': f"{zn}_HeatC-FanNode",  # Match fan inlet
+                'air_inlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),  # Match cooling coil outlet
+                'air_outlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match fan inlet
                 'nominal_capacity': sizing_params['heating_load'],
                 'efficiency': hvac_template.efficiency.get('heating_efficiency', 0.80),  # Gas efficiency
-                'temperature_setpoint_node_name': f"{zn}_HeatC-FanNode"
+                'temperature_setpoint_node_name': normalize_node_name(f"{zn}_HeatC-FanNode")
             }
         else:
             # Heat pump for moderate climates (COP = 3.5)
             heating_coil = {
                 'type': 'Coil:Heating:Electric',
                 'name': f"{zn}_HeatingCoil",
-                'air_inlet_node_name': f"{zn}_CoolC-HeatCNode",  # Match cooling coil outlet
-                'air_outlet_node_name': f"{zn}_HeatC-FanNode",  # Match fan inlet
+                'air_inlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),  # Match cooling coil outlet
+                'air_outlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match fan inlet
                 'nominal_capacity': sizing_params['heating_load'],
                 'efficiency': hvac_template.efficiency.get('heating_cop', 3.5),  # COP for heat pump
-                'temperature_setpoint_node_name': f"{zn}_HeatC-FanNode"
+                'temperature_setpoint_node_name': normalize_node_name(f"{zn}_HeatC-FanNode")
             }
         components.append(heating_coil)
         
@@ -373,7 +375,7 @@ class AdvancedHVACSystems:
             'name': f"{zn}_HeatingSetpointManager",
             'control_variable': 'Temperature',
             'schedule_name': f"{zn}_HeatingSupplyAirTemp",
-            'setpoint_node_or_nodelist_name': f"{zn}_HeatC-FanNode"  # Heating coil outlet node
+            'setpoint_node_or_nodelist_name': normalize_node_name(f"{zn}_HeatC-FanNode")  # Heating coil outlet node
         }
         components.append(heating_setpoint_manager)
         
@@ -383,9 +385,9 @@ class AdvancedHVACSystems:
             'type': 'CoilSystem:Cooling:DX',
             'name': f"{zn}_CoolingCoil",
             'availability_schedule_name': 'Always On',
-            'dx_cooling_coil_system_inlet_node_name': f"{zn}_SupplyInlet",
-            'dx_cooling_coil_system_outlet_node_name': f"{zn}_CoolC-HeatCNode",
-            'dx_cooling_coil_system_sensor_node_name': f"{zn}_CoolC-HeatCNode",
+            'dx_cooling_coil_system_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
+            'dx_cooling_coil_system_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
+            'dx_cooling_coil_system_sensor_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
             'cooling_coil_object_type': 'Coil:Cooling:DX:SingleSpeed',
             'cooling_coil_name': f"{zn}_CoolingCoilDX"
         }
@@ -409,7 +411,7 @@ class AdvancedHVACSystems:
             'name': f"{zn}_CoolingSetpointManager",
             'control_variable': 'Temperature',
             'schedule_name': f"{zn}_CoolingSupplyAirTemp",
-            'setpoint_node_or_nodelist_name': f"{zn}_CoolC-HeatCNode"
+            'setpoint_node_or_nodelist_name': normalize_node_name(f"{zn}_CoolC-HeatCNode")
         }
         components.append(cooling_setpoint_manager)
         
@@ -423,8 +425,8 @@ class AdvancedHVACSystems:
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': sizing_params['supply_air_flow'],
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
-            'air_inlet_node_name': f"{zn}_SupplyInlet",
-            'air_outlet_node_name': f"{zn}_CoolC-HeatCNode",
+            'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
+            'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
             'total_cooling_capacity_function_of_temperature_curve_name': 'Cool-Cap-fT',
             'total_cooling_capacity_function_of_flow_fraction_curve_name': 'ConstantCubic',
             'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
@@ -441,7 +443,7 @@ class AdvancedHVACSystems:
         zone_equipment = {
             'type': 'ZoneHVAC:AirDistributionUnit',
             'name': f"{zn}_ADU",
-            'air_distribution_unit_outlet_node_name': f"{zn}_ADUOutlet",
+            'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet"),
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'air_terminal_name': f"{zn}_VAVTerminal",
             'nominal_supply_air_flow_rate': sizing_params['supply_air_flow']
@@ -467,9 +469,9 @@ class AdvancedHVACSystems:
             'maximum_hot_water_or_steam_flow_rate': sizing_params['heating_load'] / 1000,
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
-            'damper_air_outlet_node_name': f"{zn}_TerminalOutlet",
-            'air_inlet_node_name': f"{zn}_TerminalInlet",
-            'reheat_coil_air_outlet_node_name': f"{zn}_ADUOutlet"  # Must match ADU outlet
+            'damper_air_outlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),
+            'air_inlet_node_name': normalize_node_name(f"{zn}_TerminalInlet"),
+            'reheat_coil_air_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet")  # Must match ADU outlet
         }
         components.append(vav_terminal)
         
@@ -477,8 +479,8 @@ class AdvancedHVACSystems:
         reheat_coil = {
             'type': 'Coil:Heating:Electric',
             'name': f"{zn}_ReheatCoil",
-            'air_inlet_node_name': f"{zn}_TerminalOutlet",  # Match terminal damper outlet
-            'air_outlet_node_name': f"{zn}_ADUOutlet",  # Must match ADU outlet
+            'air_inlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),  # Match terminal damper outlet
+            'air_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet"),  # Must match ADU outlet
             'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
             'efficiency': 1.0  # Electric coils are 100% efficient
         }
@@ -488,8 +490,8 @@ class AdvancedHVACSystems:
         zone_mixer = {
             'type': 'AirLoopHVAC:ZoneMixer',
             'name': f"{zn}_ReturnAirMixer",
-            'outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
-            'inlet_1_node_name': f"{zn}_ReturnAir"
+            'outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
+            'inlet_1_node_name': normalize_node_name(f"{zn}_ReturnAir")
         }
         components.append(zone_mixer)
         
@@ -497,7 +499,7 @@ class AdvancedHVACSystems:
         return_path = {
             'type': 'AirLoopHVAC:ReturnPath',
             'name': f"{zn}_ReturnAirPath",
-            'outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
+            'outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
             'component_1_type': 'AirLoopHVAC:ZoneMixer',
             'component_1_name': f"{zn}_ReturnAirMixer"
         }
@@ -507,7 +509,7 @@ class AdvancedHVACSystems:
         supply_path = {
             'type': 'AirLoopHVAC:SupplyPath',
             'name': f"{zn}",
-            'supply_air_path_inlet_node_name': f"{zn}_ZoneEquipmentInlet",
+            'supply_air_path_inlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),
             'component_1_type': 'AirLoopHVAC:ZoneSplitter',
             'component_1_name': f"{zn}_SupplySplitter"
         }
@@ -516,8 +518,8 @@ class AdvancedHVACSystems:
         zone_splitter = {
             'type': 'AirLoopHVAC:ZoneSplitter',
             'name': f"{zn}_SupplySplitter",
-            'inlet_node_name': f"{zn}_ZoneEquipmentInlet",
-            'outlet_1_node_name': f"{zn}_TerminalInlet"
+            'inlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),
+            'outlet_1_node_name': normalize_node_name(f"{zn}_TerminalInlet")
         }
         components.append(zone_splitter)
         
@@ -871,7 +873,7 @@ class AdvancedHVACSystems:
                 'outdoor_low_temperature': 15.6,  # °C
                 'setpoint_at_outdoor_high_temperature': 24.0,  # °C - cooler when warm outside
                 'outdoor_high_temperature': 23.3,  # °C
-                'setpoint_node_or_nodelist_name': f"{zone_name}_ZoneEquipmentInlet"  # Match VAV system node (fan outlet)
+                'setpoint_node_or_nodelist_name': normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")  # Match VAV system node (fan outlet)
             }
         elif control_template['setpoint_manager'] == 'SetpointManager:OutdoorAirReset':
             setpoint_manager = {

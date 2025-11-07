@@ -38,6 +38,7 @@ from .formatters.hvac_objects import (
     format_branch_list,
     format_ptac,
 )
+from ..utils.common import normalize_node_name
 
 
 class ProfessionalIDFGenerator(BaseIDFGenerator):
@@ -788,6 +789,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     
     def _generate_airloop_branches(self, zone_name: str, zone_hvac_components: List[Dict]) -> List[Dict]:
         """Generate BranchList and Branch objects for AirLoopHVAC"""
+        from ..utils.common import normalize_node_name
+        
         branch_objects = []
         
         # Find the AirLoopHVAC component
@@ -799,6 +802,16 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         
         if not airloop:
             return branch_objects
+        
+        # CRITICAL: Extract the actual supply outlet node from AirLoopHVAC to ensure consistency
+        # The Branch Fan outlet MUST match the AirLoopHVAC supply_side_outlet_node_names
+        supply_outlet_nodes = airloop.get('supply_side_outlet_node_names', [])
+        if isinstance(supply_outlet_nodes, list) and len(supply_outlet_nodes) > 0:
+            # Use the actual node name from AirLoopHVAC (ensure it's normalized)
+            fan_outlet_node = normalize_node_name(supply_outlet_nodes[0])
+        else:
+            # Fallback: use the expected node name and normalize it
+            fan_outlet_node = normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")
         
         # BranchList object
         branch_list = {
@@ -820,20 +833,38 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 heating_coil_type = comp.get('type', 'Coil:Heating:Electric')
                 break
         
+        # Also extract node names from Fan component to ensure exact matching
+        fan_inlet_node = None
+        for comp in zone_hvac_components:
+            if comp.get('type') == 'Fan:VariableVolume' and comp.get('name') == fan_name:
+                fan_inlet_node_raw = comp.get('air_inlet_node_name')
+                if fan_inlet_node_raw:
+                    fan_inlet_node = normalize_node_name(fan_inlet_node_raw) if fan_inlet_node_raw else None
+                # Verify outlet matches (should already match, but double-check)
+                fan_outlet_from_component = comp.get('air_outlet_node_name')
+                if fan_outlet_from_component:
+                    fan_outlet_node = normalize_node_name(fan_outlet_from_component)
+                break
+        
+        # Use normalized node names for all Branch components to match EnergyPlus case-sensitivity requirements
         # Branch object connecting all components in order
         # Correct order: Cooling Coil → Heating Coil → Fan (coils before fan, per EnergyPlus examples)
         # Node chaining: Component N outlet = Component N+1 inlet
+        # CRITICAL: All node names must match exactly with the component definitions (case-sensitive)
         branch = {
             'type': 'Branch',
             'name': f"{zone_name}_MainBranch",
             'pressure_drop_curve': '',
             'components': [
                 {'type': 'CoilSystem:Cooling:DX', 'name': cooling_coil_name,
-                 'inlet': f"{zone_name}_SupplyInlet", 'outlet': f"{zone_name}_CoolC-HeatCNode"},
+                 'inlet': normalize_node_name(f"{zone_name}_SupplyInlet"), 
+                 'outlet': normalize_node_name(f"{zone_name}_CoolC-HeatCNode")},
                 {'type': heating_coil_type, 'name': heating_coil_name,
-                 'inlet': f"{zone_name}_CoolC-HeatCNode", 'outlet': f"{zone_name}_HeatC-FanNode"},
+                 'inlet': normalize_node_name(f"{zone_name}_CoolC-HeatCNode"), 
+                 'outlet': normalize_node_name(f"{zone_name}_HeatC-FanNode")},
                 {'type': 'Fan:VariableVolume', 'name': fan_name,
-                 'inlet': f"{zone_name}_HeatC-FanNode", 'outlet': f"{zone_name}_ZoneEquipmentInlet"}
+                 'inlet': fan_inlet_node if fan_inlet_node else normalize_node_name(f"{zone_name}_HeatC-FanNode"), 
+                 'outlet': normalize_node_name(fan_outlet_node) if fan_outlet_node else normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")}  # Use exact node from AirLoopHVAC/Fan (normalized)
             ]
         }
         branch_objects.append(branch)

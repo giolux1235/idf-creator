@@ -131,3 +131,26 @@ def set_nested_value(data: Dict[str, Any], key_path: str, value: Any) -> None:
     
     current[keys[-1]] = value
 
+
+def normalize_node_name(node_name: str) -> str:
+    """
+    Normalize node name to uppercase for EnergyPlus compatibility.
+    
+    EnergyPlus is case-sensitive for node names, and requires exact matching
+    throughout the IDF file. Normalizing to uppercase ensures consistency and
+    prevents case sensitivity mismatches that cause HVAC connection errors.
+    
+    Args:
+        node_name: Node name to normalize (e.g., "lobby_0_z1_ZoneEquipmentInlet")
+        
+    Returns:
+        Uppercase node name (e.g., "LOBBY_0_Z1_ZONEEQUIPMENTINLET")
+        
+    Examples:
+        >>> normalize_node_name("lobby_0_z1_ZoneEquipmentInlet")
+        'LOBBY_0_Z1_ZONEEQUIPMENTINLET'
+        >>> normalize_node_name("LOBBY_0_Z1_SUPPLYEQUIPMENTOUTLETNODE")
+        'LOBBY_0_Z1_SUPPLYEQUIPMENTOUTLETNODE'
+    """
+    return node_name.upper() if node_name else node_name
+
