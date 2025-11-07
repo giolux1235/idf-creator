@@ -804,13 +804,14 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         
         # CRITICAL: Extract the actual supply outlet node from AirLoopHVAC to ensure consistency
         # The Branch Fan outlet MUST match the AirLoopHVAC supply_side_outlet_node_names
+        # CRITICAL FIX: Supply outlet must be SupplyOutlet, NOT ZoneEquipmentInlet (which is for demand inlet)
         supply_outlet_nodes = airloop.get('supply_side_outlet_node_names', [])
         if isinstance(supply_outlet_nodes, list) and len(supply_outlet_nodes) > 0:
             # Use the actual node name from AirLoopHVAC (ensure it's normalized)
             fan_outlet_node = normalize_node_name(supply_outlet_nodes[0])
         else:
-            # Fallback: use the expected node name and normalize it
-            fan_outlet_node = normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")
+            # Fallback: use SupplyOutlet (NOT ZoneEquipmentInlet - that's for demand side!)
+            fan_outlet_node = normalize_node_name(f"{zone_name}_SupplyOutlet")
         
         # BranchList object
         branch_list = {
@@ -863,7 +864,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                  'outlet': normalize_node_name(f"{zone_name}_HeatC-FanNode")},
                 {'type': 'Fan:VariableVolume', 'name': fan_name,
                  'inlet': fan_inlet_node if fan_inlet_node else normalize_node_name(f"{zone_name}_HeatC-FanNode"), 
-                 'outlet': normalize_node_name(fan_outlet_node) if fan_outlet_node else normalize_node_name(f"{zone_name}_ZoneEquipmentInlet")}  # Use exact node from AirLoopHVAC/Fan (normalized)
+                 'outlet': normalize_node_name(fan_outlet_node) if fan_outlet_node else normalize_node_name(f"{zone_name}_SupplyOutlet")}  # ✅ FIXED: Use SupplyOutlet (NOT ZoneEquipmentInlet - that's for demand side!)
             ]
         }
         branch_objects.append(branch)
@@ -1455,6 +1456,21 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             else:
                 # Already a string or other type, convert to string
                 supply_outlet_value = str(supply_outlet_nodes).strip() if supply_outlet_nodes else f"{component['name']}SupplyOutlet"
+            
+            # CRITICAL VALIDATION: Ensure supply outlet and demand inlet are different nodes
+            # This prevents EnergyPlus duplicate node errors
+            if supply_outlet_value and demand_inlet_value:
+                if supply_outlet_value.upper() == demand_inlet_value.upper():
+                    # This is a critical error - log warning and fix by using SupplyOutlet
+                    import warnings
+                    warnings.warn(
+                        f"AirLoopHVAC '{component['name']}': Supply outlet and demand inlet cannot be the same node "
+                        f"('{supply_outlet_value}'). Using '{component['name']}_SupplyOutlet' for supply outlet.",
+                        UserWarning
+                    )
+                    # Extract zone name from component name (e.g., "LOBBY_0_Z1_AirLoop" -> "LOBBY_0_Z1")
+                    zone_name = component['name'].replace('_AirLoop', '').replace('_AIRLOOP', '')
+                    supply_outlet_value = f"{zone_name}_SupplyOutlet"
             
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
