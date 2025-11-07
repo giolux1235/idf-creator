@@ -531,32 +531,7 @@ Schedule:Compact,
   0.0;                        !- Sky Clearness
 """
 
-        weather_file_days = """SizingPeriod:WeatherFileDays,
-  Winter Sizing Weather File Day,  !- Name
-  1,                          !- Begin Month
-  21,                         !- Begin Day of Month
-  1,                          !- End Month
-  21,                         !- End Day of Month
-  ,                           !- Day of Week for Start Day
-  Yes,                        !- Use Weather File Daylight Saving Period
-  No,                         !- Apply Weekend Holiday Rule
-  Yes,                        !- Use Weather File Rain Indicators
-  Yes;                        !- Use Weather File Snow Indicators
-
-SizingPeriod:WeatherFileDays,
-  Summer Sizing Weather File Day,  !- Name
-  7,                          !- Begin Month
-  21,                         !- Begin Day of Month
-  7,                          !- End Month
-  21,                         !- End Day of Month
-  ,                           !- Day of Week for Start Day
-  Yes,                        !- Use Weather File Daylight Saving Period
-  No,                         !- Apply Weekend Holiday Rule
-  Yes,                        !- Use Weather File Rain Indicators
-  No;                         !- Use Weather File Snow Indicators
-"""
-
-        return "\n".join([heating_dd.strip("\n"), "", cooling_dd.strip("\n"), "", weather_file_days.strip("\n"), ""]) + "\n"
+        return "\n".join([heating_dd.strip("\n"), "", cooling_dd.strip("\n"), ""]) + "\n"
 
     def generate_weather_file_object(self, weather_file: str) -> str:
         """Generate EPW weather file reference."""
