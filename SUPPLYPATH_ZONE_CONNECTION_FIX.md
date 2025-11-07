@@ -78,3 +78,7 @@ To verify the fix:
 - Each zone should have a unique SupplyPath (even if zone names are duplicated, the unique suffix in component names ensures uniqueness)
 - EnergyPlus uses the SupplyPath name to link zones to AirLoopHVAC supply paths
 
+## Related Fix
+
+**IMPORTANT**: This fix must be combined with the AirLoopHVAC demand side inlet fix (see `AIRLOOP_DEMAND_INLET_FIX.md`). The `demand_side_inlet_node_names` must be set to the ZoneSplitter outlet (`TerminalInlet`), not the zone inlet (`ZoneEquipmentInlet`), for EnergyPlus to properly trace the connection.
+

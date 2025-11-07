@@ -298,9 +298,11 @@ class AdvancedHVACSystems:
         
         # Air Loop
         # CRITICAL FIX: Use separate nodes for Supply Side Outlet and Demand Side Inlet
-        # Supply Side Outlet: {zn}_SupplyOutlet (NEW - connects supply side to demand side)
-        # Demand Side Inlet: {zn}_ZoneEquipmentInlet (connects demand side from zones)
+        # Supply Side Outlet: {zn}_SupplyOutlet (connects supply side to demand side via SupplyPath)
+        # Demand Side Inlet: {zn}_TerminalInlet (where air enters demand side from ZoneSplitter outlet)
         # These MUST be different nodes to avoid EnergyPlus duplicate node errors
+        # CRITICAL: demand_side_inlet_node_names must be the ZoneSplitter outlet (TerminalInlet),
+        # NOT the zone inlet (ZoneEquipmentInlet), because it's where air ENTERS the demand side
         # Normalize all node names to uppercase for EnergyPlus case-sensitivity requirements
         air_loop = {
             'type': 'AirLoopHVAC',
@@ -310,7 +312,7 @@ class AdvancedHVACSystems:
             'connector_list': f"{zn}_ConnectorList",
             'supply_side_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'demand_side_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentOutletNode"),
-            'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_ZoneEquipmentInlet")],  # Demand side inlet (from zones)
+            'demand_side_inlet_node_names': [normalize_node_name(f"{zn}_TerminalInlet")],  # ✅ FIXED: Must be ZoneSplitter outlet (TerminalInlet), not zone inlet!
             'supply_side_outlet_node_names': [normalize_node_name(f"{zn}_SupplyOutlet")]  # ✅ FIXED: Separate supply outlet node
         }
         components.append(air_loop)
