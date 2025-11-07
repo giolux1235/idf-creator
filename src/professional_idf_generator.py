@@ -1431,8 +1431,31 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             #        Demand Side Outlet Node Name, Demand Side Inlet Node Names, Supply Side Outlet Node Names
             demand_inlet_nodes = component.get('demand_side_inlet_node_names', [])
             supply_outlet_nodes = component.get('supply_side_outlet_node_names', [])
-            demand_inlet_value = demand_inlet_nodes[0] if isinstance(demand_inlet_nodes, list) and len(demand_inlet_nodes) > 0 else (component.get('demand_side_inlet_node_names', '') or '')
-            supply_outlet_value = supply_outlet_nodes[0] if isinstance(supply_outlet_nodes, list) and len(supply_outlet_nodes) > 0 else (component.get('supply_side_outlet_node_names', '') or f"{component['name']}SupplyOutlet")
+            
+            # Extract node names as strings, handling both list and string formats
+            # Remove duplicates if present in lists and ensure proper string conversion
+            if isinstance(demand_inlet_nodes, list):
+                if len(demand_inlet_nodes) > 0:
+                    # Remove duplicates and take first node, ensure it's a string
+                    unique_nodes = list(dict.fromkeys(demand_inlet_nodes))  # Preserves order, removes duplicates
+                    demand_inlet_value = str(unique_nodes[0]).strip()
+                else:
+                    demand_inlet_value = ''
+            else:
+                # Already a string or other type, convert to string
+                demand_inlet_value = str(demand_inlet_nodes).strip() if demand_inlet_nodes else ''
+            
+            if isinstance(supply_outlet_nodes, list):
+                if len(supply_outlet_nodes) > 0:
+                    # Remove duplicates and take first node, ensure it's a string
+                    unique_nodes = list(dict.fromkeys(supply_outlet_nodes))  # Preserves order, removes duplicates
+                    supply_outlet_value = str(unique_nodes[0]).strip()
+                else:
+                    supply_outlet_value = f"{component['name']}SupplyOutlet"
+            else:
+                # Already a string or other type, convert to string
+                supply_outlet_value = str(supply_outlet_nodes).strip() if supply_outlet_nodes else f"{component['name']}SupplyOutlet"
+            
             return f"""AirLoopHVAC,
   {component['name']},                 !- Name
   ,                                    !- Controller List Name
