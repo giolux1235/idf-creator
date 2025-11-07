@@ -43,9 +43,11 @@ class IDFCreator:
         # Use professional generator if requested
         if professional:
             self.idf_generator = ProfessionalIDFGenerator()
+            self.standard_idf_generator = IDFGenerator()
             print("🏗️ Using PROFESSIONAL mode with advanced features!")
         else:
             self.idf_generator = IDFGenerator()
+            self.standard_idf_generator = None
             print("📝 Using STANDARD mode")
         
         self.enhanced = enhanced
@@ -224,12 +226,27 @@ class IDFCreator:
         # Generate IDF
         print("\n⚙️  Generating IDF file...")
         if self.professional:
-            idf_content = self.idf_generator.generate_professional_idf(
-                address,
-                params['building'],
-                data['location'],
-                documents
-            )
+            try:
+                idf_content = self.idf_generator.generate_professional_idf(
+                    address,
+                    params['building'],
+                    data['location'],
+                    documents
+                )
+            except Exception as professional_error:
+                import traceback
+                error_trace = traceback.format_exc()
+                print("⚠️ Professional IDF generation failed, falling back to standard generator.")
+                print(f"   Reason: {professional_error}")
+                print(f"   Traceback:\n{error_trace}")
+                if not self.standard_idf_generator:
+                    self.standard_idf_generator = IDFGenerator()
+                idf_content = self.standard_idf_generator.generate_complete_idf(
+                    data['location'],
+                    params['building'],
+                    params['zone'],
+                    self.config
+                )
         else:
             idf_content = self.idf_generator.generate_complete_idf(
                 data['location'],

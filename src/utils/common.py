@@ -181,13 +181,16 @@ def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
     target_ratio = 4.5e-5  # Slightly conservative midpoint within valid range
 
     if cooling_capacity is None or cooling_capacity <= 0:
-        return 0.1  # Maintain minimum air flow for stability
+        # Maintain a small positive airflow to avoid divide-by-zero, but keep it
+        # within EnergyPlus guidance by assuming a 1 kW conservative coil.
+        simulated_capacity = 1000.0
+        return simulated_capacity * target_ratio
 
     air_flow = cooling_capacity * target_ratio
 
-    # Enforce EnergyPlus bounds
-    air_flow = max(air_flow, cooling_capacity * min_ratio)
-    air_flow = min(air_flow, cooling_capacity * max_ratio)
+    # Enforce EnergyPlus bounds explicitly
+    min_flow = cooling_capacity * min_ratio
+    max_flow = cooling_capacity * max_ratio
 
-    return max(air_flow, 0.1)
+    return max(min_flow, min(air_flow, max_flow))
 

@@ -14,10 +14,11 @@ def test_dx_sizing():
     max_ratio = 6.713e-5
     
     test_cases = [
-        (10000, "Small zone"),      # 10 kW
-        (35000, "Medium zone"),     # 35 kW
-        (100000, "Large zone"),     # 100 kW
-        (500000, "Very large"),     # 500 kW
+        (1000, "Very small zone"),   # 1 kW
+        (10000, "Small zone"),       # 10 kW
+        (35000, "Medium zone"),      # 35 kW
+        (100000, "Large zone"),      # 100 kW
+        (500000, "Very large"),      # 500 kW
     ]
     
     print("Testing DX Coil Sizing Function")
@@ -52,7 +53,7 @@ def test_dx_sizing():
     else:
         print("❌ Some tests failed. Check sizing function.")
     
-    return all_passed
+    assert all_passed, "One or more DX coil sizing ratios fell outside the EnergyPlus limits."
 
 if __name__ == "__main__":
     success = test_dx_sizing()
