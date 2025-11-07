@@ -39,6 +39,7 @@ from .formatters.hvac_objects import (
     format_ptac,
 )
 from .utils.common import normalize_node_name
+from pathlib import Path
 
 
 class ProfessionalIDFGenerator(BaseIDFGenerator):
@@ -261,6 +262,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Site Location: Always required by EnergyPlus (needed for solar calculations, time zone, etc.)
         # Even when weather file is provided, Site:Location is required
         idf_content.append(self.generate_site_location(location_data))
+        idf_content.append(self.generate_design_day_objects(location_data))
         
         # Materials
         idf_content.append(self.material_library.generate_material_objects(materials_used))
@@ -2906,3 +2908,212 @@ Output:Meter,
                 windows.append(window)
 
         return windows
+
+    def _sanitize_location_label(self, location_label: Optional[str]) -> str:
+        """Sanitize location label to remove special characters and limit length."""
+        if not location_label:
+            location_label = 'Site'
+        # Remove commas, semicolons, and newlines
+        sanitized_label = location_label.replace(',', '_').replace(';', '_').replace('\n', ' ').replace('\r', ' ')
+        # Normalize whitespace
+        sanitized_label = ' '.join(sanitized_label.split())
+        # Limit length to reasonable size
+        if len(sanitized_label) > 100:
+            sanitized_label = sanitized_label[:100]
+        return sanitized_label
+
+    def _resolve_weather_file_path(self, weather_file: Optional[str]) -> Optional[str]:
+        """Attempt to locate the EPW file locally for design day extraction."""
+        if not weather_file:
+            return None
+
+        weather_path = Path(weather_file)
+        candidates = []
+        if weather_path.is_absolute():
+            candidates.append(weather_path)
+        else:
+            cwd = Path(os.getcwd())
+            candidates.append(cwd / weather_path)
+            candidates.append(cwd / weather_path.name)
+
+        search_roots = [
+            Path(os.getcwd()),
+            Path(os.getcwd()) / 'artifacts',
+            Path(os.getcwd()) / 'artifacts' / 'desktop_files',
+            Path(os.getcwd()) / 'artifacts' / 'desktop_files' / 'weather',
+            Path(os.getcwd()) / 'artifacts' / 'desktop_files' / 'weather' / 'artifacts' / 'desktop_files' / 'weather',
+            Path(os.getcwd()) / 'data',
+            Path(os.getcwd()) / 'data' / 'weather'
+        ]
+        for root in search_roots:
+            candidates.append(root / weather_path.name)
+
+        for candidate in candidates:
+            try:
+                if candidate and candidate.exists():
+                    return str(candidate.resolve())
+            except OSError:
+                continue
+        return None
+
+    def _parse_epw_design_conditions(self, weather_file_path: str,
+                                     climate_zone: Optional[str]) -> Optional[Dict[str, float]]:
+        """Parse the DESIGN CONDITIONS line from an EPW file."""
+        try:
+            with open(weather_file_path, 'r', encoding='utf-8', errors='ignore') as epw:
+                for line in epw:
+                    if line.startswith('DESIGN CONDITIONS'):
+                        tokens = [token.strip() for token in line.split(',')]
+                        break
+                else:
+                    return None
+        except (OSError, FileNotFoundError):
+            return None
+
+        try:
+            heating_idx = tokens.index('Heating')
+            cooling_idx = tokens.index('Cooling')
+        except ValueError:
+            return None
+
+        extremes_idx = tokens.index('Extremes') if 'Extremes' in tokens else len(tokens)
+        heating_vals = tokens[heating_idx + 1:cooling_idx]
+        cooling_vals = tokens[cooling_idx + 1:extremes_idx]
+
+        defaults = self._default_design_day_parameters(climate_zone)
+
+        def safe(seq: List[str], idx: int, default: float) -> float:
+            try:
+                value = float(seq[idx])
+                if math.isnan(value) or math.isinf(value):
+                    return default
+                return value
+            except (IndexError, ValueError, TypeError):
+                return default
+
+        data = defaults.copy()
+        data['heating_dry_bulb'] = safe(heating_vals, 1, defaults['heating_dry_bulb'])
+        data['heating_wet_bulb'] = safe(heating_vals, 3, defaults['heating_wet_bulb'])
+        data['heating_wind_speed'] = safe(heating_vals, -2, defaults['heating_wind_speed'])
+        data['heating_wind_direction'] = safe(heating_vals, -1, defaults['heating_wind_direction'])
+        data['cooling_daily_range'] = safe(cooling_vals, 1, defaults['cooling_daily_range'])
+        data['cooling_dry_bulb'] = safe(cooling_vals, 2, defaults['cooling_dry_bulb'])
+        data['cooling_wet_bulb'] = safe(cooling_vals, 3, defaults['cooling_wet_bulb'])
+        data['cooling_wind_speed'] = safe(cooling_vals, 14, defaults['cooling_wind_speed'])
+        data['cooling_wind_direction'] = safe(cooling_vals, 15, defaults['cooling_wind_direction'])
+
+        data['cooling_wet_bulb'] = min(data['cooling_wet_bulb'], data['cooling_dry_bulb'] - 0.1)
+        data['heating_wet_bulb'] = min(data['heating_wet_bulb'], data['heating_dry_bulb'] - 0.1)
+        return data
+
+    def generate_design_day_objects(self, location_data: Dict) -> str:
+        """Generate design day objects from EPW metadata or climate defaults."""
+        climate_zone = location_data.get('climate_zone')
+        weather_file = location_data.get('weather_file') or location_data.get('weather_file_name')
+        epw_path = self._resolve_weather_file_path(weather_file) if weather_file else None
+
+        if epw_path:
+            design_params = self._parse_epw_design_conditions(epw_path, climate_zone) or \
+                            self._default_design_day_parameters(climate_zone)
+        else:
+            design_params = self._default_design_day_parameters(climate_zone)
+
+        elevation = location_data.get('elevation') or location_data.get('altitude')
+        baro = self._estimate_barometric_pressure(elevation)
+
+        location_name = self._sanitize_location_label(
+            location_data.get('address') or
+            location_data.get('weather_city_name') or
+            location_data.get('city')
+        )
+
+        heating_name = f"{location_name} Heating 99.6% Condns DB"
+        cooling_name = f"{location_name} Cooling 1% Condns DB/DP"
+
+        heating_dd = f"""SizingPeriod:DesignDay,
+  {heating_name},         !- Name
+  1,                       !- Month
+  21,                      !- Day of Month
+  HeatingDesignDay,        !- Day Type
+  {design_params['heating_dry_bulb']:.1f},  !- Maximum Dry-Bulb Temperature {{C}}
+  0.0,                     !- Daily Dry-Bulb Temperature Range {{deltaC}}
+  ,                        !- Dry-Bulb Temperature Range Modifier Type
+  ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+  WetBulb,                 !- Humidity Condition Type
+  {design_params['heating_wet_bulb']:.1f},  !- Wetbulb or DewPoint at Maximum Dry-Bulb {{C}}
+  ,                        !- Humidity Condition Day Schedule Name
+  ,                        !- Humidity Ratio at Maximum Dry-Bulb {{kgWater/kgDryAir}}
+  ,                        !- Enthalpy at Maximum Dry-Bulb {{J/kg}}
+  0.0,                     !- Daily Wet-Bulb Temperature Range {{deltaC}}
+  {baro:.0f},              !- Barometric Pressure {{Pa}}
+  {design_params['heating_wind_speed']:.1f}, !- Wind Speed {{m/s}}
+  {design_params['heating_wind_direction']:.0f}, !- Wind Direction {{deg}}
+  No,                      !- Rain Indicator
+  No,                      !- Snow Indicator
+  No,                      !- Daylight Saving Time Indicator
+  ASHRAEClearSky,          !- Solar Model Indicator
+  ,                        !- Beam Solar Day Schedule Name
+  ,                        !- Diffuse Solar Day Schedule Name
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
+  0.0;                     !- Sky Clearness
+
+"""
+
+        cooling_dd = f"""SizingPeriod:DesignDay,
+  {cooling_name},         !- Name
+  7,                       !- Month
+  21,                      !- Day of Month
+  CoolingDesignDay,        !- Day Type
+  {design_params['cooling_dry_bulb']:.1f},  !- Maximum Dry-Bulb Temperature {{C}}
+  {design_params['cooling_daily_range']:.1f}, !- Daily Dry-Bulb Temperature Range {{deltaC}}
+  ,                        !- Dry-Bulb Temperature Range Modifier Type
+  ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+  WetBulb,                 !- Humidity Condition Type
+  {design_params['cooling_wet_bulb']:.1f},  !- Wetbulb or DewPoint at Maximum Dry-Bulb {{C}}
+  ,                        !- Humidity Condition Day Schedule Name
+  ,                        !- Humidity Ratio at Maximum Dry-Bulb {{kgWater/kgDryAir}}
+  ,                        !- Enthalpy at Maximum Dry-Bulb {{J/kg}}
+  0.0,                     !- Daily Wet-Bulb Temperature Range {{deltaC}}
+  {baro:.0f},              !- Barometric Pressure {{Pa}}
+  {design_params['cooling_wind_speed']:.1f}, !- Wind Speed {{m/s}}
+  {design_params['cooling_wind_direction']:.0f}, !- Wind Direction {{deg}}
+  No,                      !- Rain Indicator
+  No,                      !- Snow Indicator
+  No,                      !- Daylight Saving Time Indicator
+  ASHRAEClearSky,          !- Solar Model Indicator
+  ,                        !- Beam Solar Day Schedule Name
+  ,                        !- Diffuse Solar Day Schedule Name
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
+  0.0;                     !- Sky Clearness
+
+"""
+
+        weather_file_days = """SizingPeriod:WeatherFileDays,
+  Winter Sizing Weather File Day,  !- Name
+  1,                       !- Begin Month
+  21,                      !- Begin Day of Month
+  1,                       !- End Month
+  21,                      !- End Day of Month
+  ,                        !- Day of Week for Start Day
+  Yes,                     !- Use Weather File Daylight Saving Period
+  No,                      !- Apply Weekend Holiday Rule
+  Yes,                     !- Use Weather File Rain Indicators
+  Yes;                     !- Use Weather File Snow Indicators
+
+SizingPeriod:WeatherFileDays,
+  Summer Sizing Weather File Day,  !- Name
+  7,                       !- Begin Month
+  21,                      !- Begin Day of Month
+  7,                       !- End Month
+  21,                      !- End Day of Month
+  ,                        !- Day of Week for Start Day
+  Yes,                     !- Use Weather File Daylight Saving Period
+  No,                      !- Apply Weekend Holiday Rule
+  Yes,                     !- Use Weather File Rain Indicators
+  No;                      !- Use Weather File Snow Indicators
+
+"""
+
+        return heating_dd + cooling_dd + weather_file_days

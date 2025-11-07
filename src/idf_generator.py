@@ -454,7 +454,113 @@ Schedule:Compact,
   Relative;               !- Coordinate System
 
 """
-    
+
+    def _sanitize_location_name(self, location: Dict) -> str:
+        """Create a sanitized location label for design-day naming."""
+        name = location.get('address') or location.get('weather_city_name') or location.get('city') or 'Site'
+        name = str(name).replace(',', '_').replace(';', '_').replace('\n', ' ').replace('\r', ' ')
+        name = ' '.join(name.split())
+        return name[:100] if len(name) > 100 else name
+
+    def generate_design_day_objects(self, location: Dict, config: Dict) -> str:
+        """Generate fallback design days and weather-file sizing periods."""
+        climate_zone = (config or {}).get('climate_zone') or location.get('climate_zone')
+        params = self._default_design_day_parameters(climate_zone)
+        elevation = location.get('elevation') or location.get('altitude')
+        baro = self._estimate_barometric_pressure(elevation)
+        location_name = self._sanitize_location_name(location)
+
+        heating_name = f"{location_name} Heating 99.6% Condns DB"
+        cooling_name = f"{location_name} Cooling 1% Condns DB/DP"
+
+        heating_dd = f"""SizingPeriod:DesignDay,
+  {heating_name},         !- Name
+  1,                       !- Month
+  21,                      !- Day of Month
+  HeatingDesignDay,        !- Day Type
+  {params['heating_dry_bulb']:.1f},  !- Maximum Dry-Bulb Temperature {{C}}
+  0.0,                     !- Daily Dry-Bulb Temperature Range {{deltaC}}
+  ,                        !- Dry-Bulb Temperature Range Modifier Type
+  ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+  WetBulb,                 !- Humidity Condition Type
+  {params['heating_wet_bulb']:.1f},  !- Wetbulb or DewPoint at Maximum Dry-Bulb {{C}}
+  ,                        !- Humidity Condition Day Schedule Name
+  ,                        !- Humidity Ratio at Maximum Dry-Bulb {{kgWater/kgDryAir}}
+  ,                        !- Enthalpy at Maximum Dry-Bulb {{J/kg}}
+  0.0,                     !- Daily Wet-Bulb Temperature Range {{deltaC}}
+  {baro:.0f},              !- Barometric Pressure {{Pa}}
+  {params['heating_wind_speed']:.1f}, !- Wind Speed {{m/s}}
+  {params['heating_wind_direction']:.0f}, !- Wind Direction {{deg}}
+  No,                      !- Rain Indicator
+  No,                      !- Snow Indicator
+  No,                      !- Daylight Saving Time Indicator
+  ASHRAEClearSky,          !- Solar Model Indicator
+  ,                        !- Beam Solar Day Schedule Name
+  ,                        !- Diffuse Solar Day Schedule Name
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
+  0.0;                     !- Sky Clearness
+
+"""
+
+        cooling_dd = f"""SizingPeriod:DesignDay,
+  {cooling_name},         !- Name
+  7,                       !- Month
+  21,                      !- Day of Month
+  CoolingDesignDay,        !- Day Type
+  {params['cooling_dry_bulb']:.1f},  !- Maximum Dry-Bulb Temperature {{C}}
+  {params['cooling_daily_range']:.1f}, !- Daily Dry-Bulb Temperature Range {{deltaC}}
+  ,                        !- Dry-Bulb Temperature Range Modifier Type
+  ,                        !- Dry-Bulb Temperature Range Modifier Day Schedule Name
+  WetBulb,                 !- Humidity Condition Type
+  {params['cooling_wet_bulb']:.1f},  !- Wetbulb or DewPoint at Maximum Dry-Bulb {{C}}
+  ,                        !- Humidity Condition Day Schedule Name
+  ,                        !- Humidity Ratio at Maximum Dry-Bulb {{kgWater/kgDryAir}}
+  ,                        !- Enthalpy at Maximum Dry-Bulb {{J/kg}}
+  0.0,                     !- Daily Wet-Bulb Temperature Range {{deltaC}}
+  {baro:.0f},              !- Barometric Pressure {{Pa}}
+  {params['cooling_wind_speed']:.1f}, !- Wind Speed {{m/s}}
+  {params['cooling_wind_direction']:.0f}, !- Wind Direction {{deg}}
+  No,                      !- Rain Indicator
+  No,                      !- Snow Indicator
+  No,                      !- Daylight Saving Time Indicator
+  ASHRAEClearSky,          !- Solar Model Indicator
+  ,                        !- Beam Solar Day Schedule Name
+  ,                        !- Diffuse Solar Day Schedule Name
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Beam Irradiance (taub)
+  0.0,                     !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud)
+  0.0;                     !- Sky Clearness
+
+"""
+
+        weather_file_days = """SizingPeriod:WeatherFileDays,
+  Winter Sizing Weather File Day,  !- Name
+  1,                       !- Begin Month
+  21,                      !- Begin Day of Month
+  1,                       !- End Month
+  21,                      !- End Day of Month
+  ,                        !- Day of Week for Start Day
+  Yes,                     !- Use Weather File Daylight Saving Period
+  No,                      !- Apply Weekend Holiday Rule
+  Yes,                     !- Use Weather File Rain Indicators
+  Yes;                     !- Use Weather File Snow Indicators
+
+SizingPeriod:WeatherFileDays,
+  Summer Sizing Weather File Day,  !- Name
+  7,                       !- Begin Month
+  21,                      !- Begin Day of Month
+  7,                       !- End Month
+  21,                      !- End Day of Month
+  ,                        !- Day of Week for Start Day
+  Yes,                     !- Use Weather File Daylight Saving Period
+  No,                      !- Apply Weekend Holiday Rule
+  Yes,                     !- Use Weather File Rain Indicators
+  No;                      !- Use Weather File Snow Indicators
+
+"""
+
+        return heating_dd + cooling_dd + weather_file_days
+
     def generate_weather_file_object(self, weather_file: str) -> str:
         """Generate EPW weather file reference."""
         return f"""Site:GroundTemperature:BuildingSurface,
@@ -532,7 +638,8 @@ Output:Meter,
         idf_content.append(self.generate_simulation_control(config.get('simulation', {})))
         idf_content.append("Timestep,4;\n\n")
         idf_content.append(self.generate_run_period("1/1", "12/31"))
-        
+        idf_content.append(self.generate_design_day_objects(location, config))
+ 
         # Building and location
         idf_content.append(self.generate_building_section(
             building_params.get('name', 'Simple Building')

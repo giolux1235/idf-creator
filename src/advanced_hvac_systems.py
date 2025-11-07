@@ -261,7 +261,14 @@ class AdvancedHVACSystems:
         """Generate VAV system components"""
         components = []
         zn = f"{zone_name}{unique_suffix}" if unique_suffix else zone_name
-        
+ 
+        # Determine design cooling capacity and airflow to enforce EnergyPlus DX coil limits
+        cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
+        design_cooling_capacity = max(cooling_load * 1.15, 12000.0)
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
+        sizing_params['design_cooling_capacity'] = design_cooling_capacity
+        sizing_params['rated_cooling_air_flow'] = rated_air_flow
+
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
         # Moderate climates (CZ 1-4) can use heat pump
@@ -326,7 +333,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
-            'maximum_flow_rate': 'Autosize',
+            'maximum_flow_rate': round(rated_air_flow * 1.05, 4),
             'fan_power_minimum_flow_fraction': 0.3,
             'fan_power_coefficient_1': 0.0013,
             'fan_power_coefficient_2': 0.1470,
@@ -439,10 +446,10 @@ class AdvancedHVACSystems:
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
-            'gross_rated_total_cooling_capacity': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': round(rated_air_flow, 4),
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -468,7 +475,7 @@ class AdvancedHVACSystems:
             'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match Zone Equipment Inlet
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'air_terminal_name': f"{zn}_VAVTerminal",
-            'nominal_supply_air_flow_rate': 'Autosize'
+            'nominal_supply_air_flow_rate': round(rated_air_flow, 4)
         }
         components.append(zone_equipment)
         
@@ -487,7 +494,7 @@ class AdvancedHVACSystems:
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_fraction_before_reheat': 0.2,
             'reheat_coil_name': f"{zn}_ReheatCoil",
-            'maximum_air_flow_rate': 'Autosize',
+            'maximum_air_flow_rate': round(rated_air_flow, 4),
             'maximum_hot_water_or_steam_flow_rate': 'Autosize',
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
@@ -554,7 +561,11 @@ class AdvancedHVACSystems:
                            hvac_template: HVACSystem) -> List[Dict]:
         """Generate RTU system components"""
         components = []
-        
+
+        cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
+        design_cooling_capacity = max(cooling_load * 1.15, 9000.0)
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
+
         # Packaged Terminal Air Conditioner
         ptac = {
             'type': 'ZoneHVAC:PackagedTerminalAirConditioner',
@@ -562,8 +573,8 @@ class AdvancedHVACSystems:
             'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_RTUInlet",
             'air_outlet_node_name': f"{zone_name}_RTUOutlet",
-            'cooling_supply_air_flow_rate': 'Autosize',
-            'heating_supply_air_flow_rate': 'Autosize',
+            'cooling_supply_air_flow_rate': round(rated_air_flow, 4),
+            'heating_supply_air_flow_rate': round(rated_air_flow, 4),
             'no_load_supply_air_flow_rate': '',
             'cooling_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'heating_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
@@ -588,7 +599,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_RTUFanOutlet",
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 500,  # Pa
-            'maximum_flow_rate': 'Autosize'
+            'maximum_flow_rate': round(rated_air_flow, 4)
         }
         components.append(fan)
         
@@ -599,10 +610,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': round(rated_air_flow, 4),
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -641,7 +652,11 @@ class AdvancedHVACSystems:
                             hvac_template: HVACSystem) -> List[Dict]:
         """Generate PTAC system components"""
         components = []
-        
+
+        cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
+        design_cooling_capacity = max(cooling_load * 1.15, 7000.0)
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
+ 
         # Packaged Terminal Air Conditioner
         # For BlowThrough mode: OA Mixer → Fan → Cooling Coil → Heating Coil
         # The PTAC inlet connects to OA mixer return air stream
@@ -652,8 +667,8 @@ class AdvancedHVACSystems:
             'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_PTACReturn",  # Return air from zone to PTAC (feeds OA mixer)
             'air_outlet_node_name': f"{zone_name}_PTACZoneSupplyNode",  # Final supply air to zone (from heating coil)
-            'cooling_supply_air_flow_rate': 'Autosize',
-            'heating_supply_air_flow_rate': 'Autosize',
+            'cooling_supply_air_flow_rate': round(rated_air_flow, 4),
+            'heating_supply_air_flow_rate': round(rated_air_flow, 4),
             'no_load_supply_air_flow_rate': '',
             'cooling_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
             'heating_outdoor_air_flow_rate': sizing_params['ventilation_rate'],
@@ -678,7 +693,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",  # To cooling coil
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 400,  # Pa
-            'maximum_flow_rate': 'Autosize'
+            'maximum_flow_rate': round(rated_air_flow, 4)
         }
         components.append(fan)
         
@@ -689,10 +704,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': round(rated_air_flow, 4),
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)
