@@ -788,7 +788,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     
     def _generate_airloop_branches(self, zone_name: str, zone_hvac_components: List[Dict]) -> List[Dict]:
         """Generate BranchList and Branch objects for AirLoopHVAC"""
-        from ..utils.common import normalize_node_name
+        # normalize_node_name is already imported at the top of the file
         
         branch_objects = []
         
