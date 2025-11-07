@@ -197,20 +197,31 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                     print(f"⚠️  Warning: Total zone area ({total_zone_area:.2f} m²) differs from requested area ({requested_total_area:.2f} m²) by {area_difference_pct:.1f}%")
                     print(f"   This may cause EUI calculation discrepancies. Consider adjusting footprint or zone generation.")
                     
-                    # Optionally scale zones to match requested area (conservative approach)
-                    # Only scale if significantly under (to avoid over-sizing)
+                    # Scale zones to match requested area if significantly under
+                    # Allow scaling up to requested area (with reasonable limit to avoid extreme scaling)
                     if total_zone_area < requested_total_area * 0.9 and area_difference_pct > 15:
-                        scale_factor = min(1.1, requested_total_area / total_zone_area)  # Max 10% scale up
-                        if scale_factor > 1.01:  # Only scale if meaningful
+                        # Calculate scale factor to reach requested area, but cap at 1.5x to avoid extreme scaling
+                        scale_factor = min(1.5, requested_total_area / total_zone_area)
+                        if scale_factor > 1.01:  # Only scale if meaningful (>1% increase)
                             print(f"   Scaling zones by {scale_factor:.3f} to better match requested area")
-                            for zone in zones:
-                                if hasattr(zone, 'area') and zone.area:
-                                    zone.area = zone.area * scale_factor
-                                    # Also scale polygon if available
-                                    if hasattr(zone, 'polygon') and zone.polygon:
-                                        zone.polygon = scale(zone.polygon, xfact=scale_factor, yfact=scale_factor, origin='center')
-                            total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
-                            print(f"   Scaled total zone area: {total_zone_area:.2f} m²")
+                            try:
+                                from shapely.affinity import scale
+                                for zone in zones:
+                                    if hasattr(zone, 'area') and zone.area:
+                                        zone.area = zone.area * scale_factor
+                                        # Also scale polygon if available
+                                        if hasattr(zone, 'polygon') and zone.polygon:
+                                            # Get polygon center for scaling
+                                            centroid = zone.polygon.centroid
+                                            zone.polygon = scale(zone.polygon, xfact=scale_factor, yfact=scale_factor, origin=(centroid.x, centroid.y))
+                                total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
+                                print(f"   ✓ Scaled total zone area: {total_zone_area:.2f} m² (target: {requested_total_area:.2f} m²)")
+                                # Recalculate difference after scaling
+                                area_difference_pct = abs(total_zone_area - requested_total_area) / requested_total_area * 100
+                                if area_difference_pct > 10:
+                                    print(f"   ⚠️  Still {area_difference_pct:.1f}% difference after scaling. Footprint may need adjustment.")
+                            except Exception as e:
+                                print(f"   ⚠️  Could not scale zones: {e}")
                 elif area_difference_pct <= 10:
                     print(f"✓ Total zone area ({total_zone_area:.2f} m²) matches requested area ({requested_total_area:.2f} m²) within {area_difference_pct:.1f}% tolerance")
         
@@ -822,7 +833,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 {'type': heating_coil_type, 'name': heating_coil_name,
                  'inlet': f"{zone_name}_CoolC-HeatCNode", 'outlet': f"{zone_name}_HeatC-FanNode"},
                 {'type': 'Fan:VariableVolume', 'name': fan_name,
-                 'inlet': f"{zone_name}_HeatC-FanNode", 'outlet': f"{zone_name}_SupplyEquipmentOutletNode"}
+                 'inlet': f"{zone_name}_HeatC-FanNode", 'outlet': f"{zone_name}_ZoneEquipmentInlet"}
             ]
         }
         branch_objects.append(branch)
@@ -1768,13 +1779,35 @@ Curve:Quadratic,
         if age_adjusted_params and age_adjusted_params.get('lighting_lpd'):
             lighting_power_density = age_adjusted_params['lighting_lpd']
         else:
-            lighting_power_density = space_template['lighting_power_density']
+            lighting_power_density = space_template.get('lighting_power_density', 10.8)  # Default to ASHRAE 90.1 standard
+        
+        # CRITICAL FIX: Ensure minimum lighting power density based on space type
+        # ASHRAE 90.1-2019 standards: Office spaces 10.8 W/m², Lobbies 8.1-10.8 W/m², Conference 12.9 W/m², Storage/Mechanical 5.4 W/m²
+        space_type_lower = space_type.lower()
+        if 'conference' in space_type_lower or 'meeting' in space_type_lower:
+            min_lpd = 12.9  # ASHRAE 90.1-2019 for conference rooms
+        elif 'office' in space_type_lower:
+            min_lpd = 10.8  # ASHRAE 90.1-2019 for office spaces
+        elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
+            min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
+        elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
+            min_lpd = 5.4  # ASHRAE 90.1-2019 for storage/mechanical
+        else:
+            min_lpd = 8.1  # Default minimum for other commercial spaces (lobby standard)
+        
+        # Ensure lighting power density meets minimum standards
+        if lighting_power_density < min_lpd:
+            lighting_power_density = min_lpd
         
         # Apply LEED bonus (reduces LPD for more efficient lighting)
+        # But ensure it doesn't go below minimum
         if leed_bonuses:
             lighting_efficiency_bonus = leed_bonuses.get('lighting_efficiency_bonus', 1.0)
             # More efficient lighting = lower power density
             lighting_power_density = lighting_power_density / lighting_efficiency_bonus
+            # Re-apply minimum after LEED adjustment
+            if lighting_power_density < min_lpd:
+                lighting_power_density = min_lpd
         
         total_lighting = zone.area * lighting_power_density
         
@@ -1809,13 +1842,31 @@ Curve:Quadratic,
         if age_adjusted_params and age_adjusted_params.get('equipment_epd'):
             equipment_power_density = age_adjusted_params['equipment_epd']
         else:
-            equipment_power_density = space_template['equipment_power_density']
+            equipment_power_density = space_template.get('equipment_power_density', 8.1)  # Default to ASHRAE 90.1 standard
+        
+        # CRITICAL FIX: Ensure minimum equipment power density based on space type
+        # ASHRAE 90.1-2019 typical values: Office spaces 5-10 W/m²
+        space_type_lower = space_type.lower()
+        if 'office' in space_type_lower or 'conference' in space_type_lower:
+            min_epd = 5.0  # Minimum for office spaces
+        elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
+            min_epd = 0.0  # Storage/mechanical can have minimal equipment
+        else:
+            min_epd = 3.0  # Default minimum for other commercial spaces
+        
+        # Ensure equipment power density meets minimum standards (if not storage/mechanical)
+        if equipment_power_density < min_epd and min_epd > 0:
+            equipment_power_density = min_epd
         
         # Apply LEED bonus (reduces EPD for more efficient equipment)
+        # But ensure it doesn't go below minimum (for non-storage spaces)
         if leed_bonuses:
             equipment_efficiency_bonus = leed_bonuses.get('equipment_efficiency_bonus', 1.0)
             # More efficient equipment = lower power density
             equipment_power_density = equipment_power_density / equipment_efficiency_bonus
+            # Re-apply minimum after LEED adjustment (for non-storage spaces)
+            if equipment_power_density < min_epd and min_epd > 0:
+                equipment_power_density = min_epd
         
         # Convert space_type to uppercase for schedule names to match EnergyPlus naming conventions
         space_type_upper = space_type.upper().replace('-', '_')
