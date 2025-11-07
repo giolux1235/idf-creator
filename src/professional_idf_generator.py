@@ -204,17 +204,14 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                         # Calculate scale factor to reach requested area, but cap at 1.5x to avoid extreme scaling
                         scale_factor = min(1.5, requested_total_area / total_zone_area)
                         if scale_factor > 1.01:  # Only scale if meaningful (>1% increase)
-                            print(f"   Scaling zones by {scale_factor:.3f} to better match requested area")
+                            print(f"   Scaling zone areas by {scale_factor:.3f} to better match requested area")
                             try:
-                                from shapely.affinity import scale
+                                # IMPORTANT: Only scale zone.area, NOT the polygon geometry
+                                # The polygon is used for surface generation and must remain geometrically consistent
+                                # EnergyPlus will use the explicit Floor Area field from zone.area, not polygon.area
                                 for zone in zones:
-                                    if hasattr(zone, 'area') and zone.area:
+                                    if hasattr(zone, 'area') and zone.area and zone.area > 0:
                                         zone.area = zone.area * scale_factor
-                                        # Also scale polygon if available
-                                        if hasattr(zone, 'polygon') and zone.polygon:
-                                            # Get polygon center for scaling
-                                            centroid = zone.polygon.centroid
-                                            zone.polygon = scale(zone.polygon, xfact=scale_factor, yfact=scale_factor, origin=(centroid.x, centroid.y))
                                 total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
                                 print(f"   ✓ Scaled total zone area: {total_zone_area:.2f} m² (target: {requested_total_area:.2f} m²)")
                                 # Recalculate difference after scaling
@@ -223,6 +220,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                                     print(f"   ⚠️  Still {area_difference_pct:.1f}% difference after scaling. Footprint may need adjustment.")
                             except Exception as e:
                                 print(f"   ⚠️  Could not scale zones: {e}")
+                                import traceback
+                                print(f"   Traceback: {traceback.format_exc()}")
                 elif area_difference_pct <= 10:
                     print(f"✓ Total zone area ({total_zone_area:.2f} m²) matches requested area ({requested_total_area:.2f} m²) within {area_difference_pct:.1f}% tolerance")
         

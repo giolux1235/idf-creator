@@ -390,10 +390,15 @@ def api_generate_idf():
             'message': 'Geocoding failed: Could not find real coordinates for the provided address. Please provide a valid address with city and state information.'
         }), 400
     except Exception as e:
+        import traceback
+        error_traceback = traceback.format_exc()
+        print(f"❌ Error in /api/generate endpoint: {str(e)}")
+        print(f"Traceback:\n{error_traceback}")
         return jsonify({
             'success': False,
             'error': str(e),
-            'type': type(e).__name__
+            'type': type(e).__name__,
+            'traceback': error_traceback if app.debug else None
         }), 500
 
 @app.route('/generate', methods=['POST'])
@@ -567,11 +572,16 @@ def generate_idf():
             'message': f'Geocoding failed: {str(e)}. Please provide a valid address with city and state information.'
         }), 400
     except Exception as e:
+        import traceback
+        error_traceback = traceback.format_exc()
+        print(f"❌ Error in /generate endpoint: {str(e)}")
+        print(f"Traceback:\n{error_traceback}")
         return jsonify({
             'success': False,
             'error': str(e),
             'type': type(e).__name__,
-            'message': f'Error generating IDF: {str(e)}'
+            'message': f'Error generating IDF: {str(e)}',
+            'traceback': error_traceback if app.debug else None
         }), 500
 
 @app.route('/download/<filename>')
