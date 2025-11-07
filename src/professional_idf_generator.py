@@ -2141,10 +2141,46 @@ InternalMass,
 """
     
     def generate_system_sizing_object(self, airloop_name: str) -> str:
-        """Generate a minimal Sizing:System object for an air loop."""
+        """Generate a fully populated Sizing:System object for an air loop."""
         return f"""Sizing:System,
   {airloop_name},           !- AirLoop Name
-  Sensible;                 !- Type of Load to Size On
+  Sensible,                 !- Type of Load to Size On
+  Autosize,                 !- Design Outdoor Air Flow Rate {{m3/s}}
+  Autosize,                 !- Central Heating Maximum System Air Flow Ratio
+  7.0,                      !- Preheat Design Temperature {{C}}
+  0.0080,                   !- Preheat Design Humidity Ratio {{kgWater/kgDryAir}}
+  12.8,                     !- Precool Design Temperature {{C}}
+  0.0080,                   !- Precool Design Humidity Ratio {{kgWater/kgDryAir}}
+  12.8,                     !- Central Cooling Design Supply Air Temperature {{C}}
+  40.0,                     !- Central Heating Design Supply Air Temperature {{C}}
+  NonCoincident,            !- Type of Zone Sum to Use
+  No,                       !- 100% Outdoor Air in Cooling
+  No,                       !- 100% Outdoor Air in Heating
+  0.0080,                   !- Central Cooling Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
+  0.0080,                   !- Central Heating Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
+  DesignDay,                !- Cooling Supply Air Flow Rate Method
+  ,                         !- Cooling Supply Air Flow Rate {{m3/s}}
+  ,                         !- Cooling Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
+  ,                         !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+  ,                         !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}}
+  DesignDay,                !- Heating Supply Air Flow Rate Method
+  ,                         !- Heating Supply Air Flow Rate {{m3/s}}
+  ,                         !- Heating Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
+  ,                         !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+  ,                         !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+  ,                         !- Heating Supply Air Flow Rate Per Unit Heating Capacity {{m3/s-W}}
+  ZoneSum,                  !- System Outdoor Air Method
+  1.0,                      !- Zone Maximum Outdoor Air Fraction
+  CoolingDesignCapacity,    !- Cooling Design Capacity Method
+  Autosize,                 !- Cooling Design Capacity {{W}}
+  ,                         !- Cooling Design Capacity Per Floor Area {{W/m2}}
+  ,                         !- Fraction of Autosized Cooling Design Capacity
+  HeatingDesignCapacity,    !- Heating Design Capacity Method
+  Autosize,                 !- Heating Design Capacity {{W}}
+  ,                         !- Heating Design Capacity Per Floor Area {{W/m2}}
+  ,                         !- Fraction of Autosized Heating Design Capacity
+  OnOff,                    !- Central Cooling Capacity Control Method
+  Autosize;                 !- Occupant Diversity
 
 """
     
