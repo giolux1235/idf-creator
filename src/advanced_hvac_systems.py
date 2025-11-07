@@ -442,10 +442,12 @@ class AdvancedHVACSystems:
         # This prevents heating and cooling from fighting (both trying to maintain 24°C)
         
         # Zone Equipment
+        # CRITICAL FIX: ADU Outlet must match Zone Equipment Inlet node name
+        # This connects the supply side to the zone equipment inlet
         zone_equipment = {
             'type': 'ZoneHVAC:AirDistributionUnit',
             'name': f"{zn}_ADU",
-            'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet"),
+            'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match Zone Equipment Inlet
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'air_terminal_name': f"{zn}_VAVTerminal",
             'nominal_supply_air_flow_rate': sizing_params['supply_air_flow']
@@ -473,7 +475,7 @@ class AdvancedHVACSystems:
             'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
             'damper_air_outlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),
             'air_inlet_node_name': normalize_node_name(f"{zn}_TerminalInlet"),
-            'reheat_coil_air_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet")  # Must match ADU outlet
+            'reheat_coil_air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet")  # ✅ FIXED: Must match ADU outlet (ZoneEquipmentInlet)
         }
         components.append(vav_terminal)
         
@@ -482,7 +484,7 @@ class AdvancedHVACSystems:
             'type': 'Coil:Heating:Electric',
             'name': f"{zn}_ReheatCoil",
             'air_inlet_node_name': normalize_node_name(f"{zn}_TerminalOutlet"),  # Match terminal damper outlet
-            'air_outlet_node_name': normalize_node_name(f"{zn}_ADUOutlet"),  # Must match ADU outlet
+            'air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match ADU outlet (ZoneEquipmentInlet)
             'nominal_capacity': sizing_params['heating_load'] * 0.3,  # 30% of total heating
             'efficiency': 1.0  # Electric coils are 100% efficient
         }

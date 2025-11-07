@@ -1045,10 +1045,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                     hvac_components.append(eq_list)
                     
                     # Create NodeList for zone inlet (contains ADU outlet)
+                    # CRITICAL FIX: NodeList must contain ZoneEquipmentInlet (not ADUOutlet)
+                    # This must match the ADU outlet node name for proper connection
                     inlet_node_list = {
                         'type': 'NodeList',
                         'name': f"{zone.name} Inlet Nodes",
-                        'nodes': [f"{zone.name}{unique_suffix}_ADUOutlet"]
+                        'nodes': [normalize_node_name(f"{zone.name}{unique_suffix}_ZoneEquipmentInlet")]  # ✅ FIXED: Must match ADU outlet (ZoneEquipmentInlet)
                     }
                     hvac_components.append(inlet_node_list)
                     
