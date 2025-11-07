@@ -184,46 +184,29 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         if not zones:
             print(f"⚠️  Warning: No zones generated. Footprint area: {footprint.polygon.area:.2f} m²")
         
-        # CRITICAL FIX: Validate total zone area matches requested area
-        # This ensures EUI calculations use the correct building area
+        # CRITICAL FIX: Validate total zone area matches requested area (±1%)
         if zones:
-            total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
             requested_total_area = user_floor_area if user_floor_area else estimated_params.get('floor_area', 0)
-            
-            if requested_total_area > 0:
-                area_difference_pct = abs(total_zone_area - requested_total_area) / requested_total_area * 100
-                
-                # If area difference is > 10%, warn and potentially scale zones
-                if area_difference_pct > 10:
-                    print(f"⚠️  Warning: Total zone area ({total_zone_area:.2f} m²) differs from requested area ({requested_total_area:.2f} m²) by {area_difference_pct:.1f}%")
-                    print(f"   This may cause EUI calculation discrepancies. Consider adjusting footprint or zone generation.")
-                    
-                    # Scale zones to match requested area if significantly under
-                    # Allow scaling up to requested area (with reasonable limit to avoid extreme scaling)
-                    if total_zone_area < requested_total_area * 0.9 and area_difference_pct > 15:
-                        # Calculate scale factor to reach requested area, but cap at 1.5x to avoid extreme scaling
-                        scale_factor = min(1.5, requested_total_area / total_zone_area)
-                        if scale_factor > 1.01:  # Only scale if meaningful (>1% increase)
-                            print(f"   Scaling zone areas by {scale_factor:.3f} to better match requested area")
-                            try:
-                                # IMPORTANT: Only scale zone.area, NOT the polygon geometry
-                                # The polygon is used for surface generation and must remain geometrically consistent
-                                # EnergyPlus will use the explicit Floor Area field from zone.area, not polygon.area
-                                for zone in zones:
-                                    if hasattr(zone, 'area') and zone.area and zone.area > 0:
-                                        zone.area = zone.area * scale_factor
-                                total_zone_area = sum(zone.area for zone in zones if hasattr(zone, 'area') and zone.area)
-                                print(f"   ✓ Scaled total zone area: {total_zone_area:.2f} m² (target: {requested_total_area:.2f} m²)")
-                                # Recalculate difference after scaling
-                                area_difference_pct = abs(total_zone_area - requested_total_area) / requested_total_area * 100
-                                if area_difference_pct > 10:
-                                    print(f"   ⚠️  Still {area_difference_pct:.1f}% difference after scaling. Footprint may need adjustment.")
-                            except Exception as e:
-                                print(f"   ⚠️  Could not scale zones: {e}")
-                                import traceback
-                                print(f"   Traceback: {traceback.format_exc()}")
-                elif area_difference_pct <= 10:
-                    print(f"✓ Total zone area ({total_zone_area:.2f} m²) matches requested area ({requested_total_area:.2f} m²) within {area_difference_pct:.1f}% tolerance")
+
+            if requested_total_area and requested_total_area > 0:
+                footprint, zones, area_metrics = self.geometry_engine.match_layout_to_total_area(
+                    footprint,
+                    zones,
+                    requested_total_area,
+                    tolerance=0.01
+                )
+
+                total_zone_area = area_metrics['post_scale_total_area']
+                scale_factor = area_metrics.get('scale_factor', 1.0)
+                difference_pct = area_metrics.get('difference_pct', 0.0)
+
+                if abs(scale_factor - 1.0) > 0.001:
+                    print(f"   ⟳ Scaled footprint and zones by {scale_factor:.3f} to honour requested area")
+
+                if difference_pct <= 1.0:
+                    print(f"✓ Total zone area ({total_zone_area:.2f} m²) matches requested area ({requested_total_area:.2f} m²) within {difference_pct:.2f}% tolerance")
+                else:
+                    print(f"⚠️  Warning: Total zone area ({total_zone_area:.2f} m²) differs from requested area ({requested_total_area:.2f} m²) by {difference_pct:.2f}% even after scaling")
         
         # Generate professional materials and constructions (with LEED envelope improvements if applicable)
         climate_zone = location_data.get('climate_zone', '3A')

@@ -6,6 +6,7 @@ Connects catalog equipment to HVAC systems with proper node connections
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 from .equipment_catalog.schema import EquipmentSpec
+from .utils.common import calculate_dx_supply_air_flow
 
 
 @dataclass
@@ -62,44 +63,28 @@ class HVACPlumbing:
         
         # Add coil object with proper node connections
         if equipment_spec.equipment_type == 'DX_COIL':
-            # Validate and fix air flow rate to ensure it's within acceptable range
-            # EnergyPlus expects air volume flow rate per watt in range [2.684E-005--6.713E-005] m³/s/W
+            # Use EnergyPlus-compliant sizing for DX coils
             cooling_capacity = equipment_spec.rated_capacity_w or 35000.0
-            airflow = equipment_spec.rated_airflow_m3s or 1.2
-            
-            min_flow_per_watt = 2.684e-5  # m³/s per W
-            max_flow_per_watt = 6.713e-5  # m³/s per W
-            target_flow_per_watt = 4.7e-5  # Middle of range
-            
-            if cooling_capacity > 0:
-                actual_flow_per_watt = airflow / cooling_capacity
-                if actual_flow_per_watt < min_flow_per_watt:
-                    # Increase to meet minimum
-                    airflow = cooling_capacity * min_flow_per_watt
-                elif actual_flow_per_watt > max_flow_per_watt:
-                    # Decrease to meet maximum
-                    airflow = cooling_capacity * max_flow_per_watt
-                # If airflow is None or 0, calculate from capacity
-                if not airflow or airflow <= 0:
-                    airflow = cooling_capacity * target_flow_per_watt
-            else:
-                # If no capacity, use default airflow
-                airflow = airflow or 1.2
+            # Use calculated airflow from capacity to ensure valid ratio
+            airflow = calculate_dx_supply_air_flow(cooling_capacity)
             
             coil_obj = {
                 'type': 'Coil:Cooling:DX:SingleSpeed',
                 'name': coil_name,
                 'availability_schedule_name': 'Always On',
-                'air_inlet_node_name': inlet_node,
-                'air_outlet_node_name': outlet_node,
                 'gross_rated_total_cooling_capacity': cooling_capacity,
                 'gross_rated_sensible_heat_ratio': 0.75,
                 'gross_rated_cooling_cop': equipment_spec.rated_cop,
                 'rated_air_flow_rate': airflow,
-                'condenser_air_inlet_node_name': self.generate_unique_node_name(f"{coil_name}_CondenserInlet"),
-                'condenser_type': 'AirCooled',
-                'evaporator_fan_power_included_in_rated_cop': True,
-                'condenser_fan_power_ratio': 0.2
+                'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
+                'air_inlet_node_name': inlet_node,
+                'air_outlet_node_name': outlet_node,
+                'total_cooling_capacity_function_of_temperature_curve_name': 'Cool-Cap-fT',
+                'total_cooling_capacity_function_of_flow_fraction_curve_name': 'ConstantCubic',
+                'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
+                'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
+                'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR',
+                'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
             }
             components.append(coil_obj)
         

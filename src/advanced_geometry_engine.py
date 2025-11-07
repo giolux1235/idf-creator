@@ -9,6 +9,7 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from shapely.geometry import Polygon, Point
 from shapely.ops import unary_union
+from shapely.affinity import scale as shapely_scale
 import numpy as np
 
 
@@ -158,6 +159,35 @@ class AdvancedGeometryEngine:
             base_polygon, building_type, template, total_area
         )
         
+        # Target floor area per story (total_area represents full building area)
+        target_floor_area = None
+        if total_area and total_area > 0:
+            effective_stories = stories if stories and stories > 0 else 1
+            target_floor_area = total_area / effective_stories
+
+        # Scale footprint to match requested floor area (within 1%)
+        if target_floor_area and footprint and footprint.area > 0:
+            current_area = footprint.area
+            if current_area > 0:
+                area_diff_pct = abs(current_area - target_floor_area) / target_floor_area
+                if area_diff_pct > 0.01:
+                    try:
+                        scale_factor = math.sqrt(target_floor_area / current_area)
+                        origin = footprint.centroid
+                        scaled_footprint = shapely_scale(footprint, xfact=scale_factor, yfact=scale_factor, origin=origin)
+                        # Ensure scaled polygon is valid
+                        if scaled_footprint.is_valid:
+                            footprint = scaled_footprint
+                        else:
+                            # Try to fix invalid polygon
+                            fixed = scaled_footprint.buffer(0)
+                            if fixed.is_valid:
+                                footprint = fixed
+                            # If still invalid, keep original footprint
+                    except Exception as e:
+                        print(f"⚠️  Warning: Could not scale footprint to target area: {e}")
+                        # Keep original footprint if scaling fails
+
         # Final safety check: if footprint is invalid, use base polygon
         if footprint is None or footprint.area < 1:
             footprint = base_polygon
@@ -479,6 +509,103 @@ class AdvancedGeometryEngine:
         zones = self._calculate_zone_adjacencies(zones)
         
         return zones
+
+    def match_layout_to_total_area(self, footprint: BuildingFootprint, zones: List[ZoneGeometry],
+                                   target_total_area: float, tolerance: float = 0.01) -> Tuple[BuildingFootprint, List[ZoneGeometry], Dict[str, float]]:
+        """Uniformly scale footprint and zones so total zone area matches requested building area."""
+
+        metrics = {
+            'pre_scale_total_area': 0.0,
+            'post_scale_total_area': 0.0,
+            'scale_factor': 1.0,
+            'difference_pct': 0.0
+        }
+
+        if not zones or target_total_area is None or target_total_area <= 0:
+            return footprint, zones, metrics
+
+        current_total = sum(zone.polygon.area for zone in zones if getattr(zone, 'polygon', None))
+        metrics['pre_scale_total_area'] = current_total
+
+        if current_total <= 0:
+            metrics['difference_pct'] = 100.0
+            return footprint, zones, metrics
+
+        difference_fraction = abs(current_total - target_total_area) / target_total_area
+        metrics['difference_pct'] = difference_fraction * 100.0
+
+        # Update post-scale metric even if we do not scale
+        metrics['post_scale_total_area'] = current_total
+
+        if difference_fraction <= tolerance:
+            # Ensure stored zone areas/perimeters align with polygons
+            for zone in zones:
+                if getattr(zone, 'polygon', None):
+                    zone.area = zone.polygon.area
+                    zone.perimeter = zone.polygon.length
+            return footprint, zones, metrics
+
+        scale_factor = math.sqrt(target_total_area / current_total)
+        metrics['scale_factor'] = scale_factor
+
+        # Determine scaling origin - use footprint centroid if available, otherwise use (0,0)
+        origin = (0.0, 0.0)
+        if footprint and hasattr(footprint, 'polygon') and footprint.polygon is not None:
+            try:
+                origin = (footprint.polygon.centroid.x, footprint.polygon.centroid.y)
+            except (AttributeError, Exception):
+                origin = (0.0, 0.0)
+
+        # Scale footprint and associated geometries
+        if footprint and hasattr(footprint, 'polygon') and footprint.polygon is not None:
+            try:
+                footprint.polygon = shapely_scale(footprint.polygon, xfact=scale_factor, yfact=scale_factor, origin=origin)
+                # Ensure polygon remains valid after scaling
+                if not footprint.polygon.is_valid:
+                    footprint.polygon = footprint.polygon.buffer(0)
+            except Exception as e:
+                print(f"⚠️  Warning: Could not scale footprint: {e}")
+            
+            # Scale courtyards if present
+            if hasattr(footprint, 'courtyards') and footprint.courtyards:
+                try:
+                    footprint.courtyards = [
+                        shapely_scale(c, xfact=scale_factor, yfact=scale_factor, origin=origin)
+                        for c in footprint.courtyards if c is not None
+                    ]
+                except Exception as e:
+                    print(f"⚠️  Warning: Could not scale courtyards: {e}")
+            
+            # Scale wings if present
+            if hasattr(footprint, 'wings') and footprint.wings:
+                try:
+                    footprint.wings = [
+                        shapely_scale(w, xfact=scale_factor, yfact=scale_factor, origin=origin)
+                        for w in footprint.wings if w is not None
+                    ]
+                except Exception as e:
+                    print(f"⚠️  Warning: Could not scale wings: {e}")
+
+        # Scale all zone polygons
+        for zone in zones:
+            zone_polygon = getattr(zone, 'polygon', None)
+            if zone_polygon is not None:
+                try:
+                    scaled_polygon = shapely_scale(zone_polygon, xfact=scale_factor, yfact=scale_factor, origin=origin)
+                    # Ensure polygon remains valid after scaling
+                    if not scaled_polygon.is_valid:
+                        scaled_polygon = scaled_polygon.buffer(0)
+                    zone.polygon = scaled_polygon
+                    zone.area = scaled_polygon.area
+                    zone.perimeter = scaled_polygon.length
+                except Exception as e:
+                    print(f"⚠️  Warning: Could not scale zone {getattr(zone, 'name', 'unknown')}: {e}")
+
+        new_total = sum(zone.polygon.area for zone in zones if getattr(zone, 'polygon', None))
+        metrics['post_scale_total_area'] = new_total
+        metrics['difference_pct'] = abs(new_total - target_total_area) / target_total_area * 100.0 if target_total_area else 0.0
+
+        return footprint, zones, metrics
     
     def _generate_floor_zones(self, floor_polygon: Polygon, floor_level: int,
                             building_type: str, template: Dict, total_area: float) -> List[ZoneGeometry]:

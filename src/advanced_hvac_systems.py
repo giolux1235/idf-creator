@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
 from .building_age_adjustments import BuildingAgeAdjuster
-from .utils.common import normalize_node_name
+from .utils.common import normalize_node_name, calculate_dx_supply_air_flow
 
 
 @dataclass
@@ -241,30 +241,11 @@ class AdvancedHVACSystems:
         cooling_load = zone_area * cooling_load_density * multipliers['cooling']
         heating_load = zone_area * heating_load_density * multipliers['heating']
         
-        # Air flow rates - CRITICAL FIX for DX coil warnings
-        # EnergyPlus expects air volume flow rate per watt in range [2.684E-005--6.713E-005] m³/s/W
-        # Minimum: 2.684E-005 m³/s/W
-        # Maximum: 6.713E-005 m³/s/W
-        # Use middle of range: ~4.7E-5 m³/s/W for proper coil sizing
-        air_flow_per_watt = 4.7e-5  # m³/s per watt (middle of acceptable range)
-        supply_air_flow = cooling_load * air_flow_per_watt  # m³/s
-        
-        # Validate and fix air flow rate to ensure it's within acceptable range
-        if cooling_load > 0:
-            actual_flow_per_watt = supply_air_flow / cooling_load
-            if actual_flow_per_watt < 2.684e-5:
-                # Increase to meet minimum
-                supply_air_flow = cooling_load * 2.684e-5
-            elif actual_flow_per_watt > 6.713e-5:
-                # Decrease to meet maximum
-                supply_air_flow = cooling_load * 6.713e-5
-        
-        # Ensure minimum airflow (0.1 m³/s) for small zones
-        if supply_air_flow < 0.1:
-            supply_air_flow = 0.1
+        # Air flow rates - enforce DX coil guidance (EnergyPlus Engineering Reference)
+        supply_air_flow = calculate_dx_supply_air_flow(cooling_load)
         
         # Ventilation rate: 0.5 L/s-m² = 0.0005 m³/s-m²
-        ventilation_rate = zone_area * 0.0005  # m³/s
+        ventilation_rate = (zone_area or 0.0) * 0.0005  # m³/s
         
         return {
             'cooling_load': cooling_load,
@@ -438,29 +419,11 @@ class AdvancedHVACSystems:
         components.append(cooling_setpoint_manager)
         
         # Cooling Coil
-        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
-        # EnergyPlus expects: 2.684E-005 to 6.713E-005 m³/s/W
+        # Enforce DX sizing guidance and low ambient cut-off from Engineering Reference
         cooling_capacity = sizing_params['cooling_load']
-        air_flow = sizing_params['supply_air_flow']
-        
-        # Validate and adjust air flow rate if needed
-        min_ratio = 2.684e-5  # m³/s per W
-        max_ratio = 6.713e-5  # m³/s per W
-        target_ratio = 4.7e-5  # Middle of range
-        
-        if cooling_capacity > 0:
-            actual_ratio = air_flow / cooling_capacity
-            if actual_ratio < min_ratio:
-                # Increase air flow to meet minimum ratio
-                air_flow = cooling_capacity * min_ratio * 1.1  # 10% safety margin
-            elif actual_ratio > max_ratio:
-                # Decrease air flow to meet maximum ratio (or increase capacity)
-                air_flow = cooling_capacity * max_ratio * 0.9  # 10% safety margin
-        else:
-            # If no capacity, use default ratio
-            air_flow = max(air_flow, 0.1)  # Minimum 0.1 m³/s
-        
-        # Update sizing_params to use validated air flow
+        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
+
+        # Update sizing parameters so downstream components stay in sync
         sizing_params['supply_air_flow'] = air_flow
         
         cooling_coil = {
@@ -478,7 +441,8 @@ class AdvancedHVACSystems:
             'total_cooling_capacity_function_of_flow_fraction_curve_name': 'ConstantCubic',
             'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
             'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
-            'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR'
+            'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR',
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)
         
@@ -620,20 +584,9 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
-        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
         cooling_capacity = sizing_params['cooling_load']
-        air_flow = sizing_params['supply_air_flow']
-        
-        # Validate and adjust air flow rate if needed (sizing_params should already be validated, but double-check)
-        min_ratio = 2.684e-5  # m³/s per W
-        max_ratio = 6.713e-5  # m³/s per W
-        
-        if cooling_capacity > 0:
-            actual_ratio = air_flow / cooling_capacity
-            if actual_ratio < min_ratio:
-                air_flow = cooling_capacity * min_ratio * 1.1
-            elif actual_ratio > max_ratio:
-                air_flow = cooling_capacity * max_ratio * 0.9
+        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
+        sizing_params['supply_air_flow'] = air_flow
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
@@ -648,7 +601,8 @@ class AdvancedHVACSystems:
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
-            'condenser_fan_power_ratio': 0.2
+            'condenser_fan_power_ratio': 0.2,
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)
         
@@ -724,21 +678,10 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
-        # FIX #2: Ensure air flow rate to capacity ratio is within acceptable range
         cooling_capacity = sizing_params['cooling_load']
-        air_flow = sizing_params['supply_air_flow']
-        
-        # Validate and adjust air flow rate if needed (sizing_params should already be validated, but double-check)
-        min_ratio = 2.684e-5  # m³/s per W
-        max_ratio = 6.713e-5  # m³/s per W
-        
-        if cooling_capacity > 0:
-            actual_ratio = air_flow / cooling_capacity
-            if actual_ratio < min_ratio:
-                air_flow = cooling_capacity * min_ratio * 1.1
-            elif actual_ratio > max_ratio:
-                air_flow = cooling_capacity * max_ratio * 0.9
-        
+        air_flow = calculate_dx_supply_air_flow(cooling_capacity)
+        sizing_params['supply_air_flow'] = air_flow
+
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_PTACCoolingCoil",
@@ -748,7 +691,8 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': cooling_capacity,
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': air_flow  # Use validated air flow
+            'rated_air_flow_rate': air_flow,
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)
         

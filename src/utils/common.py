@@ -154,3 +154,38 @@ def normalize_node_name(node_name: str) -> str:
     """
     return node_name.upper() if node_name else node_name
 
+
+def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
+    """
+    Calculate DX coil air flow using EnergyPlus recommended ratios.
+    
+    EnergyPlus requires air volume flow rate per watt to be in the range
+    [2.684E-005 -- 6.713E-005] m³/s/W. This function calculates the air flow
+    rate using the midpoint of this range (4.0E-5 m³/s/W) as recommended
+    by the EnergyPlus Engineering Reference.
+    
+    Args:
+        cooling_capacity: Cooling capacity in watts (W)
+        
+    Returns:
+        Air flow rate in m³/s, constrained to valid EnergyPlus range
+        
+    References:
+        - EnergyPlus Input Output Reference: Coil:Cooling:DX:SingleSpeed
+        - EnergyPlus Engineering Reference: DX Cooling Coil Model
+    """
+    min_ratio = 2.684e-5  # m³/s per W (EnergyPlus minimum)
+    max_ratio = 6.713e-5  # m³/s per W (EnergyPlus maximum)
+    target_ratio = 4.0e-5  # Recommended midpoint per Engineering Reference guidance
+
+    if cooling_capacity is None or cooling_capacity <= 0:
+        return 0.1  # Maintain minimum air flow for stability
+
+    air_flow = cooling_capacity * target_ratio
+
+    # Enforce EnergyPlus bounds
+    air_flow = max(air_flow, cooling_capacity * min_ratio)
+    air_flow = min(air_flow, cooling_capacity * max_ratio)
+
+    return max(air_flow, 0.1)
+

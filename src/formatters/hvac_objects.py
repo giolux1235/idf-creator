@@ -95,7 +95,11 @@ def format_coil_cooling_dx_single_speed(component: dict) -> str:
     eir_flow_curve = component.get('energy_input_ratio_function_of_flow_fraction_curve_name', 'ConstantCubic')
     plf_curve = component.get('part_load_fraction_correlation_curve_name', 'Cool-PLF-fPLR')
     
-    # Return basic coil (no optional fields for now to avoid field order issues)
+    # Get optional minimum outdoor temperature field (for low-ambient cut-off)
+    min_outdoor_temp = component.get('minimum_outdoor_dry_bulb_temperature_for_compressor_operation')
+    # Format as blank if None or empty, otherwise use the value
+    min_outdoor_temp_str = f"{min_outdoor_temp:.1f}" if min_outdoor_temp is not None and min_outdoor_temp != '' else ''
+    
     return f"""Coil:Cooling:DX:SingleSpeed,
   {component['name']},
   {component['availability_schedule_name']},
@@ -111,7 +115,8 @@ def format_coil_cooling_dx_single_speed(component: dict) -> str:
   {flow_curve},
   {eir_temp_curve},
   {eir_flow_curve},
-  {plf_curve};
+  {plf_curve},
+  {min_outdoor_temp_str};
 """
 
 def format_branch_list(component: dict) -> str:

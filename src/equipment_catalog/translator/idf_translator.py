@@ -1,6 +1,7 @@
 """Translate normalized equipment specs into EnergyPlus IDF object strings."""
 
 from typing import List
+from ...utils.common import calculate_dx_supply_air_flow
 from ..schema import EquipmentSpec, CurveSpec
 
 
@@ -46,28 +47,12 @@ def translate_dx_coil(spec: EquipmentSpec, name_suffix: str = "") -> List[str]:
     cap = spec.rated_capacity_w or 35000.0
     shrs = 0.75
     cop = spec.rated_cop or 3.0
-    airflow = spec.rated_airflow_m3s or 1.2
+    # Use EnergyPlus-compliant sizing - calculate from capacity to ensure valid ratio
+    airflow = calculate_dx_supply_air_flow(cap)
     
-    # Validate and fix air flow rate to ensure it's within acceptable range
-    # EnergyPlus expects air volume flow rate per watt in range [2.684E-005--6.713E-005] m³/s/W
-    min_flow_per_watt = 2.684e-5  # m³/s per W
-    max_flow_per_watt = 6.713e-5  # m³/s per W
-    target_flow_per_watt = 4.7e-5  # Middle of range
-    
-    if cap > 0:
-        actual_flow_per_watt = airflow / cap
-        if actual_flow_per_watt < min_flow_per_watt:
-            # Increase to meet minimum
-            airflow = cap * min_flow_per_watt
-        elif actual_flow_per_watt > max_flow_per_watt:
-            # Decrease to meet maximum
-            airflow = cap * max_flow_per_watt
-        # If airflow is None or 0, calculate from capacity
-        if not airflow or airflow <= 0:
-            airflow = cap * target_flow_per_watt
-    else:
-        # If no capacity, use default airflow
-        airflow = airflow or 1.2
+    # Note: This simplified format uses positional fields. The minimum outdoor temperature
+    # field would be added after part_load_fraction_correlation_curve_name if needed.
+    # For now, using the simplified format but with correct sizing.
     out.append(f"""Coil:Cooling:DX:SingleSpeed,
   {spec.name}{name_suffix},
   Always On,
@@ -80,7 +65,8 @@ def translate_dx_coil(spec: EquipmentSpec, name_suffix: str = "") -> List[str]:
   {eir_curve_name},
   ,
   {plf_curve_name},
-  , , , ;
+  , , , ,
+  5.0;
 """)
     return out
 
