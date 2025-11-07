@@ -511,9 +511,11 @@ class AdvancedHVACSystems:
         
         # Supply Path and Splitter (connects AirLoop to zones)
         # CRITICAL FIX: SupplyPath inlet must match AirLoopHVAC supply_side_outlet_node_names (SupplyOutlet)
+        # CRITICAL FIX: SupplyPath name must match zone_name (without suffix) for EnergyPlus to link zone to SupplyPath
+        # EnergyPlus uses SupplyPath name to match with zone name in ZoneHVAC:EquipmentConnections
         supply_path = {
             'type': 'AirLoopHVAC:SupplyPath',
-            'name': f"{zn}",
+            'name': zone_name,  # ✅ FIXED: Must match zone.name (without suffix) for EnergyPlus zone connection
             'supply_air_path_inlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Match AirLoopHVAC supply outlet
             'component_1_type': 'AirLoopHVAC:ZoneSplitter',
             'component_1_name': f"{zn}_SupplySplitter"
