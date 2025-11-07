@@ -296,6 +296,8 @@ class AdvancedHVACSystems:
         is_cold_climate = cz_num in ['5', '6', '7', '8']
         
         # Air Loop
+        # CRITICAL: supply_side_outlet_node_names must match SupplyPath supply_air_path_inlet_node_name
+        # This connects the supply side of AirLoopHVAC to the demand side (zones)
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zn}_AirLoop",
@@ -305,16 +307,17 @@ class AdvancedHVACSystems:
             'supply_side_inlet_node_name': f"{zn}_SupplyInlet",
             'demand_side_outlet_node_name': f"{zn}_ZoneEquipmentOutletNode",
             'demand_side_inlet_node_names': [f"{zn}_ZoneEquipmentInlet"],  # SupplyPath inlet
-            'supply_side_outlet_node_names': [f"{zn}_SupplyEquipmentOutletNode"]  # Supply outlet
+            'supply_side_outlet_node_names': [f"{zn}_ZoneEquipmentInlet"]  # Must match SupplyPath inlet!
         }
         components.append(air_loop)
         
         # Supply Fan
+        # CRITICAL: Fan outlet must match AirLoopHVAC supply_side_outlet_node_names
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
             'air_inlet_node_name': f"{zn}_HeatC-FanNode",  # Match branch inlet
-            'air_outlet_node_name': f"{zn}_SupplyEquipmentOutletNode",  # Match branch outlet
+            'air_outlet_node_name': f"{zn}_ZoneEquipmentInlet",  # Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': sizing_params['supply_air_flow'],
@@ -859,7 +862,7 @@ class AdvancedHVACSystems:
             # Use outdoor air reset for VAV systems (standard efficiency practice)
             # Node name should match the actual supply air node in VAV system
             # For VAV, the setpoint node should be the supply air outlet node
-            # Use the fan outlet node which is the supply equipment outlet
+            # Use the fan outlet node which is ZoneEquipmentInlet (matches AirLoopHVAC supply outlet)
             setpoint_manager = {
                 'type': 'SetpointManager:OutdoorAirReset',
                 'name': f"{zone_name}_SetpointManager",
@@ -868,7 +871,7 @@ class AdvancedHVACSystems:
                 'outdoor_low_temperature': 15.6,  # °C
                 'setpoint_at_outdoor_high_temperature': 24.0,  # °C - cooler when warm outside
                 'outdoor_high_temperature': 23.3,  # °C
-                'setpoint_node_or_nodelist_name': f"{zone_name}_SupplyEquipmentOutletNode"  # Match VAV system node
+                'setpoint_node_or_nodelist_name': f"{zone_name}_ZoneEquipmentInlet"  # Match VAV system node (fan outlet)
             }
         elif control_template['setpoint_manager'] == 'SetpointManager:OutdoorAirReset':
             setpoint_manager = {

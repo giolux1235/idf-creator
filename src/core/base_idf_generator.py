@@ -100,4 +100,18 @@ class BaseIDFGenerator:
         if comment:
             return f"  {value},{self._format_comment(comment)}"
         return f"  {value},"
+    
+    def normalize_node_name(self, node_name: str) -> str:
+        """
+        Normalize node name to uppercase for EnergyPlus compatibility.
+        EnergyPlus is case-sensitive for node names, so we normalize to uppercase
+        to ensure consistency across all node references.
+        
+        Args:
+            node_name: Node name to normalize
+            
+        Returns:
+            Uppercase node name
+        """
+        return node_name.upper() if node_name else node_name
 
