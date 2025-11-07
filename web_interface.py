@@ -333,16 +333,23 @@ def api_generate_idf():
         building_type = user_params_request.get('building_type') or data.get('building_type') or idf_params.get('building_type') or 'Building'
         
         # Ensure numeric values are valid (not None and > 0)
-        if stories is None or stories <= 0:
-            stories = 1
-        if floor_area is None or floor_area <= 0:
-            floor_area = 500  # Default 500 m²
+        story_provided = stories is not None and stories > 0
+        floor_area_provided = floor_area is not None and floor_area > 0
+
+        # Normalize invalid values to None so downstream logic can fall back to real data
+        if not story_provided:
+            stories = None
+        if not floor_area_provided:
+            floor_area = None
         
-        user_params = {
-            'stories': stories,
-            'floor_area': floor_area,
-            'building_type': building_type
-        }
+        user_params = {}
+        if building_type:
+            user_params['building_type'] = building_type
+        if story_provided:
+            user_params['stories'] = stories
+        if floor_area_provided:
+            user_params['floor_area'] = floor_area
+            user_params['floor_area_source'] = 'user'
         
         # Also check for floor_area_per_story_m2
         if user_params_request.get('floor_area_per_story_m2') or data.get('floor_area_per_story_m2'):

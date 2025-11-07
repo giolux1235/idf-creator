@@ -133,6 +133,12 @@ class IDFCreator:
         # Get floor area - FIX: Check user-specified floor_area_per_story FIRST
         floor_area = building_params.get('floor_area')
         
+        # Track whether user explicitly locked the floor area
+        user_forced_area = bool(building_params.get('force_area'))
+
+        # Detect explicit floor area source so we can preserve true user overrides
+        floor_area_source = building_params.get('floor_area_source')
+
         # FIX: If user specified floor_area_per_story_m2, use that instead of OSM
         floor_area_per_story = building_params.get('floor_area_per_story_m2')
         if floor_area_per_story is not None and floor_area is None:
@@ -141,22 +147,43 @@ class IDFCreator:
                 stories = 3
             floor_area = floor_area_per_story * max(1, int(stories))
             print(f"✓ Using user-specified floor area: {floor_area_per_story:.0f} m²/floor × {stories} floors = {floor_area:.0f} m²")
+            floor_area_source = floor_area_source or 'user'
         
-        # If still no floor area, check OSM (only if user didn't specify)
-        if floor_area is None:
-            osm_area = loc_building.get('osm_area_m2')
+        # Determine effective stories for calculations (fallback to 1 if unknown)
+        effective_stories = max(1, int(stories)) if stories and stories > 0 else 1
+
+        # Collect location-derived footprint areas (per floor) from multiple sources
+        location_footprint_area = None
+        location_sources = ['microsoft_area_m2', 'primary_area_m2', 'google_area_m2', 'osm_area_m2']
+        for key in location_sources:
+            value = loc_building.get(key)
             try:
-                if osm_area and float(osm_area) > 10:
-                    floor_area = float(osm_area) * max(1, int(stories))
+                if value and float(value) > 10:
+                    location_footprint_area = float(value)
+                    break
             except Exception:
-                pass
+                continue
         
-        # If still no floor area, check city data
+        # Apply location footprint if available and user did not explicitly force an override
+        if location_footprint_area is not None and not user_forced_area and floor_area_source != 'user':
+            total_area_from_location = location_footprint_area * effective_stories
+            # Only log when this overrides a previous default or fills a gap
+            if floor_area is None or abs(total_area_from_location - (floor_area or 0)) > 0.1:
+                print(f"✓ Using location footprint: {location_footprint_area:.1f} m²/floor × {effective_stories} floors = {total_area_from_location:.0f} m²")
+            floor_area = total_area_from_location
+            floor_area_source = 'location'
+            if not stories:
+                stories = effective_stories
+        
+        # If still no floor area, check city data explicitly (legacy fallback)
         if floor_area is None:
             city_area = loc_building.get('city_area_m2')
             try:
                 if city_area and float(city_area) > 10:
-                    floor_area = float(city_area) * max(1, int(stories))
+                    floor_area = float(city_area) * effective_stories
+                    floor_area_source = 'city'
+                    if not stories:
+                        stories = effective_stories
             except Exception:
                 pass
         
@@ -169,6 +196,7 @@ class IDFCreator:
             if strict:
                 raise ValueError("strict_real_data is enabled: missing 'floor_area' and no OSM/city/document area available")
             floor_area = building_params.get('floor_area_per_story_m2', 500) * stories
+            floor_area_source = floor_area_source or 'default'
         
         # Estimate building dimensions
         dimensions = self.building_estimator.estimate_building_dimensions(floor_area)
@@ -186,7 +214,8 @@ class IDFCreator:
             **building_params,
             **dimensions,
             'floor_area': floor_area,
-            'total_area': floor_area  # Alias for professional IDF
+            'total_area': floor_area,  # Alias for professional IDF
+            'floor_area_source': floor_area_source or building_params.get('floor_area_source')
         }
         
         return {
