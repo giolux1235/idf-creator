@@ -100,6 +100,8 @@ class IDFGenerator(BaseIDFGenerator):
         # Use address as location name, fallback to 'Custom Location'
         address = location.get('address', '')
         location_name = address if address else 'Custom Location'
+        location_name = location_name.replace(',', ' -').replace(';', '').replace('\n', ' ').replace('\r', ' ')
+        location_name = ' '.join(location_name.split())
         
         return f"""Site:Location,
   {location_name},         !- Name

@@ -1391,13 +1391,12 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 time_zone = round(longitude / 15.0, 1)
         
         # Use address as location name, fallback to city or 'Site'
-        # Sanitize name to remove special characters that might break IDF parsing
         address = location_data.get('address', '')
         city_name = location_data.get('weather_city_name') or location_data.get('city')
         location_name = address if address else (city_name if city_name else 'Site')
         
-        # Sanitize location name: remove commas, semicolons, and newlines
-        location_name = location_name.replace(',', '_').replace(';', '_').replace('\n', ' ').replace('\r', ' ')
+        # Sanitize location name: remove commas and other characters that break IDF parsing
+        location_name = location_name.replace(',', ' -').replace(';', '').replace('\n', ' ').replace('\r', ' ')
         location_name = ' '.join(location_name.split())  # Normalize whitespace
         # Limit length to reasonable size
         if len(location_name) > 100:
