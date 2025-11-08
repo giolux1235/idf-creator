@@ -69,7 +69,7 @@ class HVACPlumbing:
                 'name': coil_name,
                 'availability_schedule_name': 'Always On',
                 'gross_rated_total_cooling_capacity': 'Autosize',
-                'gross_rated_sensible_heat_ratio': 0.75,
+                'gross_rated_sensible_heat_ratio': 'Autosize',
                 'gross_rated_cooling_cop': equipment_spec.rated_cop,
                 'rated_air_flow_rate': 'Autosize',
                 'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,

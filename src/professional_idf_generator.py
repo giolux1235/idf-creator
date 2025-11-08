@@ -1393,14 +1393,18 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Use address as location name, fallback to city or 'Site'
         address = location_data.get('address', '')
         city_name = location_data.get('weather_city_name') or location_data.get('city')
-        location_name = address if address else (city_name if city_name else 'Site')
+        raw_location_name = address if address else (city_name if city_name else 'Site')
         
-        # Sanitize location name: remove commas and other characters that break IDF parsing
-        location_name = location_name.replace(',', ' -').replace(';', '').replace('\n', ' ').replace('\r', ' ')
-        location_name = ' '.join(location_name.split())  # Normalize whitespace
-        # Limit length to reasonable size
-        if len(location_name) > 100:
-            location_name = location_name[:100]
+        # Sanitize location name: normalize whitespace and strip problematic punctuation
+        location_name = str(raw_location_name).replace('"', "'").replace('\n', ' ').replace('\r', ' ')
+        location_name = location_name.replace(';', '')
+        location_name = ' '.join(location_name.split())
+        if ',' in location_name:
+            location_name = location_name.replace(',', ' -')
+        if any(delim in str(raw_location_name) for delim in [',', ';']):
+            location_name = f"\"{location_name}\""
+        if len(location_name) > 102:
+            location_name = location_name[:102]
         
         site_location = f"""Site:Location,
   {location_name}, !- Name

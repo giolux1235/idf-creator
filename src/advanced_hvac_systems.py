@@ -452,7 +452,7 @@ class AdvancedHVACSystems:
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
             'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 0.75,
+            'gross_rated_sensible_heat_ratio': 'Autosize',
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': 'Autosize',
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
@@ -616,7 +616,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
             'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 0.75,
+            'gross_rated_sensible_heat_ratio': 'Autosize',
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': 'Autosize',
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
@@ -710,7 +710,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
             'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 0.75,
+            'gross_rated_sensible_heat_ratio': 'Autosize',
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': 'Autosize',
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0

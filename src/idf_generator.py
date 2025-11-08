@@ -98,11 +98,17 @@ class IDFGenerator(BaseIDFGenerator):
             else:
                 time_zone = round(longitude / 15.0, 1)
         
-        # Use address as location name, fallback to 'Custom Location'
+        # Use address as location name, fallback to city or 'Custom Location'
         address = location.get('address', '')
-        location_name = address if address else 'Custom Location'
-        location_name = location_name.replace(',', ' -').replace(';', '').replace('\n', ' ').replace('\r', ' ')
+        fallback_city = location.get('weather_city_name') or location.get('city')
+        raw_location_name = address if address else (fallback_city if fallback_city else 'Custom Location')
+        location_name = str(raw_location_name).replace('"', "'").replace('\n', ' ').replace('\r', ' ')
+        location_name = location_name.replace(';', '')
         location_name = ' '.join(location_name.split())
+        if ',' in location_name:
+            location_name = location_name.replace(',', ' -')
+        if any(delim in str(raw_location_name) for delim in [',', ';']):
+            location_name = f"\"{location_name}\""
         
         return f"""Site:Location,
   {location_name},         !- Name
@@ -212,6 +218,29 @@ Construction,
         y_min = -width / 2.0
         y_max = width / 2.0
         
+        def add_vectors(*vectors: tuple) -> tuple:
+            x = sum(vec[0] for vec in vectors)
+            y = sum(vec[1] for vec in vectors)
+            z = sum(vec[2] for vec in vectors)
+            return (x, y, z)
+        
+        def scale_vector(vector: tuple, scalar: float) -> tuple:
+            return (vector[0] * scalar, vector[1] * scalar, vector[2] * scalar)
+        
+        def format_vertices(vertices: List[tuple]) -> str:
+            lines = []
+            for idx, (vx, vy, vz) in enumerate(vertices):
+                suffix = ";" if idx == len(vertices) - 1 else ","
+                lines.append(f"  {vx:.4f},{vy:.4f},{vz:.4f}{suffix}")
+            return "\n".join(lines)
+        
+        def rectangle_vertices(origin: tuple, vertical_dir: tuple, horizontal_dir: tuple) -> List[tuple]:
+            v1 = origin
+            v2 = add_vectors(origin, vertical_dir)
+            v3 = add_vectors(origin, vertical_dir, horizontal_dir)
+            v4 = add_vectors(origin, horizontal_dir)
+            return [v1, v2, v3, v4]
+        
         for story in range(1, stories + 1):
             zone_name = f"{building_params.get('name', 'Building')}_Zone_{story}"
             z_base = (story - 1) * height_per_story
@@ -255,14 +284,41 @@ Construction,
   {x_max:.4f},{y_max:.4f},{z_top:.4f}; !- Vertex 4
 """)
             
-            wall_definitions = [
-                ("North", (x_min, y_max), (x_max, y_max), length),
-                ("South", (x_max, y_min), (x_min, y_min), length),
-                ("East", (x_max, y_max), (x_max, y_min), width),
-                ("West", (x_min, y_min), (x_min, y_max), width),
+            wall_configs = [
+                {
+                    "name": "North",
+                    "origin": (x_max, y_max, z_top),
+                    "horizontal_dir": (x_min - x_max, 0.0, 0.0),
+                    "width": length,
+                },
+                {
+                    "name": "South",
+                    "origin": (x_min, y_min, z_top),
+                    "horizontal_dir": (x_max - x_min, 0.0, 0.0),
+                    "width": length,
+                },
+                {
+                    "name": "East",
+                    "origin": (x_max, y_min, z_top),
+                    "horizontal_dir": (0.0, y_max - y_min, 0.0),
+                    "width": width,
+                },
+                {
+                    "name": "West",
+                    "origin": (x_min, y_max, z_top),
+                    "horizontal_dir": (0.0, y_min - y_max, 0.0),
+                    "width": width,
+                },
             ]
             
-            for wall_name, (wx1, wy1), (wx2, wy2), wall_width in wall_definitions:
+            for wall in wall_configs:
+                wall_name = wall["name"]
+                horizontal_dir = wall["horizontal_dir"]
+                wall_width = wall["width"]
+                vertical_dir = (0.0, 0.0, z_base - z_top)
+                wall_vertices = rectangle_vertices(wall["origin"], vertical_dir, horizontal_dir)
+                wall_vertex_lines = format_vertices(wall_vertices)
+                
                 wall_area = wall_width * height_per_story
                 window_area = max(wall_area * wwr, 0.0)
                 
@@ -278,10 +334,7 @@ Construction,
   WindExposed,             !- Wind Exposure
   AutoCalculate,           !- View Factor to Ground
   4,                       !- Number of Vertices
-  {wx1:.4f},{wy1:.4f},{z_base:.4f}, !- Vertex 1
-  {wx1:.4f},{wy1:.4f},{z_top:.4f}, !- Vertex 2
-  {wx2:.4f},{wy2:.4f},{z_top:.4f}, !- Vertex 3
-  {wx2:.4f},{wy2:.4f},{z_base:.4f}; !- Vertex 4
+{wall_vertex_lines}
 """)
                 
                 if window_area <= 0 or wall_width <= 0:
@@ -301,65 +354,38 @@ Construction,
                 
                 window_width = min(max_window_width, max(0.5, math.sqrt(target_area)))
                 window_height = target_area / window_width
-                
                 window_height = min(window_height, max_window_height)
                 window_width = min(window_width, max_window_width)
                 
                 horizontal_offset = (wall_width - window_width) / 2.0
-                vertical_offset = (height_per_story - window_height) / 2.0
                 
-                win_z_bottom = z_base + max(vertical_offset, 0.1)
-                win_z_top = min(win_z_bottom + window_height, z_top - 0.05)
+                available_height = max(height_per_story - window_height, 0.0)
+                win_z_top = min(z_top - max(available_height / 2.0, 0.05), z_top - 0.05)
+                win_z_bottom = win_z_top - window_height
+                min_bottom = z_base + 0.05
+                if win_z_bottom < min_bottom:
+                    win_z_bottom = min_bottom
+                    win_z_top = min(win_z_bottom + window_height, z_top - 0.05)
                 
-                window_vertices: List[tuple] = []
+                top_offset = z_top - win_z_top
+                horizontal_unit = scale_vector(horizontal_dir, 1.0 / wall_width if wall_width else 0.0)
+                vertical_unit = (0.0, 0.0, -1.0)
                 
-                if wall_name == "North":
-                    win_y = wy1
-                    win_x_left = min(wx1, wx2) + horizontal_offset
-                    win_x_right = max(wx1, wx2) - horizontal_offset
-                    window_vertices = [
-                        (win_x_left, win_y, win_z_bottom),
-                        (win_x_left, win_y, win_z_top),
-                        (win_x_right, win_y, win_z_top),
-                        (win_x_right, win_y, win_z_bottom),
-                    ]
-                elif wall_name == "South":
-                    win_y = wy1
-                    win_x_left = min(wx1, wx2) + horizontal_offset
-                    win_x_right = max(wx1, wx2) - horizontal_offset
-                    window_vertices = [
-                        (win_x_right, win_y, win_z_bottom),
-                        (win_x_right, win_y, win_z_top),
-                        (win_x_left, win_y, win_z_top),
-                        (win_x_left, win_y, win_z_bottom),
-                    ]
-                elif wall_name == "East":
-                    win_x = wx1
-                    win_y_bottom = min(wy1, wy2) + horizontal_offset
-                    win_y_top = max(wy1, wy2) - horizontal_offset
-                    window_vertices = [
-                        (win_x, win_y_top, win_z_bottom),
-                        (win_x, win_y_top, win_z_top),
-                        (win_x, win_y_bottom, win_z_top),
-                        (win_x, win_y_bottom, win_z_bottom),
-                    ]
-                else:  # West
-                    win_x = wx1
-                    win_y_bottom = min(wy1, wy2) + horizontal_offset
-                    win_y_top = max(wy1, wy2) - horizontal_offset
-                    window_vertices = [
-                        (win_x, win_y_bottom, win_z_bottom),
-                        (win_x, win_y_bottom, win_z_top),
-                        (win_x, win_y_top, win_z_top),
-                        (win_x, win_y_top, win_z_bottom),
-                    ]
+                top_left = add_vectors(
+                    wall["origin"],
+                    scale_vector(horizontal_unit, horizontal_offset),
+                    scale_vector(vertical_unit, top_offset),
+                )
+                bottom_left = add_vectors(top_left, scale_vector(vertical_unit, window_height))
+                top_right = add_vectors(top_left, scale_vector(horizontal_unit, window_width))
+                bottom_right = add_vectors(bottom_left, scale_vector(horizontal_unit, window_width))
                 
-                if len(window_vertices) == 4:
-                    vertex_lines = "\n".join(
-                        f"  {vx:.4f},{vy:.4f},{vz:.4f}," if index < 3 else f"  {vx:.4f},{vy:.4f},{vz:.4f};"
-                        for index, (vx, vy, vz) in enumerate(window_vertices)
-                    )
-                    surfaces.append(f"""FenestrationSurface:Detailed,
+                window_vertices = [top_left, bottom_left, bottom_right, top_right]
+                vertex_lines = "\n".join(
+                    f"  {vx:.4f},{vy:.4f},{vz:.4f}," if index < 3 else f"  {vx:.4f},{vy:.4f},{vz:.4f};"
+                    for index, (vx, vy, vz) in enumerate(window_vertices)
+                )
+                surfaces.append(f"""FenestrationSurface:Detailed,
   {zone_name}_Window_{wall_name}, !- Name
   Window,                  !- Surface Type
   Building_Window,         !- Construction Name
@@ -430,13 +456,27 @@ Construction,
 
 """
     
+    def _zone_node_names(self, zone_name: str) -> Dict[str, str]:
+        """Return the canonical node names for a given zone."""
+        supply_inlet = f"{zone_name} Supply Inlet Node"
+        exhaust = f"{zone_name} Exhaust Node"
+        zone_air = f"{zone_name} Zone Air Node"
+        zone_return = f"{zone_name} Return Node"
+        return {
+            "supply_inlet": supply_inlet,
+            "exhaust": exhaust,
+            "zone_air": zone_air,
+            "return": zone_return,
+        }
+    
     def generate_hvac_objects(self, zone_params: Dict, zone_name: str) -> str:
         """Generate HVAC ideal loads system."""
+        nodes = self._zone_node_names(zone_name)
         return f"""ZoneHVAC:IdealLoadsAirSystem,
   {zone_name}_HVAC,        !- Name
   Always On,               !- Availability Schedule Name
-  {zone_name} Supply Node, !- Zone Supply Air Node Name
-  {zone_name} Exhaust Node,!- Zone Exhaust Air Node Name
+  {nodes["supply_inlet"]}, !- Zone Supply Air Node Name
+  {nodes["exhaust"]},      !- Zone Exhaust Air Node Name
   50,                      !- Maximum Heating Supply Air Temperature
   13,                      !- Minimum Cooling Supply Air Temperature
   0.015,                   !- Maximum Heating Supply Air Humidity Ratio
@@ -467,13 +507,14 @@ Construction,
 
     def generate_zone_equipment_connections(self, zone_name: str) -> str:
         """Generate ZoneHVAC:EquipmentConnections for each zone."""
+        nodes = self._zone_node_names(zone_name)
         return f"""ZoneHVAC:EquipmentConnections,
   {zone_name},               !- Zone Name
   {zone_name}_EquipmentList, !- Zone Conditioning Equipment List Name
-  {zone_name} Supply Node,   !- Zone Air Inlet Node or NodeList Name
-  {zone_name} Exhaust Node,  !- Zone Air Exhaust Node or NodeList Name
-  {zone_name} Supply Node,   !- Zone Air Node Name
-  {zone_name} Return Node,   !- Zone Return Air Node Name
+  {nodes["supply_inlet"]},   !- Zone Air Inlet Node or NodeList Name
+  {nodes["exhaust"]},        !- Zone Air Exhaust Node or NodeList Name
+  {nodes["zone_air"]},       !- Zone Air Node Name
+  {nodes["return"]},         !- Zone Return Air Node Name
   ;                          !- Zone Return Air Node or NodeList Name
 
 """

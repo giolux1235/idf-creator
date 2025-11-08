@@ -19,8 +19,8 @@ class BaseIDFGenerator:
         """
         self.version = version
         self.unique_names: Set[str] = set()
-        self._outdoor_air_node_emitted = False
         self._outdoor_air_nodelist_emitted = False
+        self._outdoor_air_nodes: Set[str] = set()
     
     def _generate_unique_name(self, base_name: str) -> str:
         """
@@ -47,8 +47,8 @@ class BaseIDFGenerator:
     def reset_unique_names(self) -> None:
         """Reset the unique names set (useful for generating multiple IDFs)."""
         self.unique_names.clear()
-        self._outdoor_air_node_emitted = False
         self._outdoor_air_nodelist_emitted = False
+        self._outdoor_air_nodes.clear()
     
     def generate_header(self, generator_name: str = "IDF Creator") -> str:
         """
@@ -125,13 +125,14 @@ class BaseIDFGenerator:
         Generate an OutdoorAir:Node object so global outdoor air references
         (e.g. availability managers) have a valid sensor node.
         """
-        key = f"OUTDOORAIR:NODE::{node_name.upper()}"
-        if key in self.unique_names or self._outdoor_air_node_emitted:
+        normalized_name = self.normalize_node_name(node_name)
+        key = f"OUTDOORAIR:NODE::{normalized_name}"
+        if key in self.unique_names:
             return ""
         self.unique_names.add(key)
-        self._outdoor_air_node_emitted = True
+        self._outdoor_air_nodes.add(normalized_name)
         return f"""OutdoorAir:Node,
-  {node_name};                !- Name
+  {normalized_name};                !- Name
 
 """
 
@@ -148,9 +149,18 @@ class BaseIDFGenerator:
             return ""
         self.unique_names.add(key)
         self._outdoor_air_nodelist_emitted = True
+        if not self._outdoor_air_nodes:
+            self._outdoor_air_nodes.add(self.normalize_node_name(node_name))
+        node_lines = []
+        sorted_nodes = sorted(self._outdoor_air_nodes)
+        for idx, current_node in enumerate(sorted_nodes, start=1):
+            suffix = ";" if idx == len(sorted_nodes) else ","
+            comment = " !- Node Name 1" if idx == 1 else ""
+            node_lines.append(f"  {current_node}{suffix}{comment}")
+        node_entries = "\n".join(node_lines)
         return f"""OutdoorAir:NodeList,
   {list_name},                !- Name
-  {node_name};                !- Node Name 1
+{node_entries}
 
 """
 
