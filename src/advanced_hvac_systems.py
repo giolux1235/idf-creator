@@ -446,10 +446,10 @@ class AdvancedHVACSystems:
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 4),
+            'rated_air_flow_rate': 'Autosize',
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -610,10 +610,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 4),
+            'rated_air_flow_rate': 'Autosize',
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -704,10 +704,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',
             'gross_rated_sensible_heat_ratio': 0.75,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 4),
+            'rated_air_flow_rate': 'Autosize',
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
         }
         components.append(cooling_coil)

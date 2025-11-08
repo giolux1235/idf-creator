@@ -125,8 +125,10 @@ class BaseIDFGenerator:
         Generate an OutdoorAir:Node object so global outdoor air references
         (e.g. availability managers) have a valid sensor node.
         """
-        if self._outdoor_air_node_emitted:
+        key = f"OUTDOORAIR:NODE::{node_name.upper()}"
+        if key in self.unique_names or self._outdoor_air_node_emitted:
             return ""
+        self.unique_names.add(key)
         self._outdoor_air_node_emitted = True
         return f"""OutdoorAir:Node,
   {node_name};                !- Name
@@ -141,8 +143,10 @@ class BaseIDFGenerator:
         """
         Generate an OutdoorAir:NodeList object referencing the shared outdoor node.
         """
-        if self._outdoor_air_nodelist_emitted:
+        key = f"OUTDOORAIR:NODELIST::{list_name.upper()}"
+        if key in self.unique_names or self._outdoor_air_nodelist_emitted:
             return ""
+        self.unique_names.add(key)
         self._outdoor_air_nodelist_emitted = True
         return f"""OutdoorAir:NodeList,
   {list_name},                !- Name

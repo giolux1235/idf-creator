@@ -64,18 +64,14 @@ class HVACPlumbing:
         # Add coil object with proper node connections
         if equipment_spec.equipment_type == 'DX_COIL':
             # Use EnergyPlus-compliant sizing for DX coils
-            cooling_capacity = equipment_spec.rated_capacity_w or 35000.0
-            # Use calculated airflow from capacity to ensure valid ratio
-            airflow = calculate_dx_supply_air_flow(cooling_capacity)
-            
             coil_obj = {
                 'type': 'Coil:Cooling:DX:SingleSpeed',
                 'name': coil_name,
                 'availability_schedule_name': 'Always On',
-                'gross_rated_total_cooling_capacity': cooling_capacity,
+                'gross_rated_total_cooling_capacity': 'Autosize',
                 'gross_rated_sensible_heat_ratio': 0.75,
                 'gross_rated_cooling_cop': equipment_spec.rated_cop,
-                'rated_air_flow_rate': airflow,
+                'rated_air_flow_rate': 'Autosize',
                 'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
                 'air_inlet_node_name': inlet_node,
                 'air_outlet_node_name': outlet_node,
