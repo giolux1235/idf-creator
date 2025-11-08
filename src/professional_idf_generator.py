@@ -69,6 +69,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
     def generate_professional_idf(self, address: str, building_params: Dict, 
                                 location_data: Dict, documents: List[str] = None) -> str:
         """Generate professional-grade IDF with advanced features"""
+
+        # Reset per-generation state (unique names, outdoor air node flags, etc.)
+        self.reset_unique_names()
         
         # Determine building type
         building_type_raw = self._determine_building_type(building_params, documents)

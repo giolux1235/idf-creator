@@ -19,6 +19,8 @@ class BaseIDFGenerator:
         """
         self.version = version
         self.unique_names: Set[str] = set()
+        self._outdoor_air_node_emitted = False
+        self._outdoor_air_nodelist_emitted = False
     
     def _generate_unique_name(self, base_name: str) -> str:
         """
@@ -45,6 +47,8 @@ class BaseIDFGenerator:
     def reset_unique_names(self) -> None:
         """Reset the unique names set (useful for generating multiple IDFs)."""
         self.unique_names.clear()
+        self._outdoor_air_node_emitted = False
+        self._outdoor_air_nodelist_emitted = False
     
     def generate_header(self, generator_name: str = "IDF Creator") -> str:
         """
@@ -121,6 +125,9 @@ class BaseIDFGenerator:
         Generate an OutdoorAir:Node object so global outdoor air references
         (e.g. availability managers) have a valid sensor node.
         """
+        if self._outdoor_air_node_emitted:
+            return ""
+        self._outdoor_air_node_emitted = True
         return f"""OutdoorAir:Node,
   {node_name};                !- Name
 
@@ -134,6 +141,9 @@ class BaseIDFGenerator:
         """
         Generate an OutdoorAir:NodeList object referencing the shared outdoor node.
         """
+        if self._outdoor_air_nodelist_emitted:
+            return ""
+        self._outdoor_air_nodelist_emitted = True
         return f"""OutdoorAir:NodeList,
   {list_name},                !- Name
   {node_name};                !- Node Name 1

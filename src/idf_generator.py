@@ -600,6 +600,7 @@ Output:Meter,
         Returns:
             Complete IDF file as string
         """
+        self.reset_unique_names()
         idf_content = []
         
         # Header
