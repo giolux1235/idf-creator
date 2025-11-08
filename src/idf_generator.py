@@ -476,7 +476,7 @@ Construction,
   {zone_name}_HVAC,        !- Name
   Always On,               !- Availability Schedule Name
   {nodes["supply_inlet"]}, !- Zone Supply Air Node Name
-  {nodes["exhaust"]},      !- Zone Exhaust Air Node Name
+  ,                        !- Zone Exhaust Air Node Name
   50,                      !- Maximum Heating Supply Air Temperature
   13,                      !- Minimum Cooling Supply Air Temperature
   0.015,                   !- Maximum Heating Supply Air Humidity Ratio
@@ -512,9 +512,9 @@ Construction,
   {zone_name},               !- Zone Name
   {zone_name}_EquipmentList, !- Zone Conditioning Equipment List Name
   {nodes["supply_inlet"]},   !- Zone Air Inlet Node or NodeList Name
-  {nodes["exhaust"]},        !- Zone Air Exhaust Node or NodeList Name
+  ,                          !- Zone Air Exhaust Node or NodeList Name
   {nodes["zone_air"]},       !- Zone Air Node Name
-  {nodes["return"]},         !- Zone Return Air Node Name
+  ,                          !- Zone Return Air Node Name
   ;                          !- Zone Return Air Node or NodeList Name
 
 """
