@@ -265,8 +265,6 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Site Location: Always required by EnergyPlus (needed for solar calculations, time zone, etc.)
         # Even when weather file is provided, Site:Location is required
         idf_content.append(self.generate_site_location(location_data))
-        idf_content.append(self.generate_outdoor_air_node())
-        idf_content.append(self.generate_outdoor_air_node_list())
         idf_content.append(self.generate_design_day_objects(location_data))
         
         # Materials
@@ -1776,7 +1774,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         elif comp_type == 'AvailabilityManager:LowTemperatureTurnOff':
             return f"""AvailabilityManager:LowTemperatureTurnOff,
   {component['name']},                 !- Name
-  {component.get('sensor_node_name', 'SITE OUTDOOR AIR NODE')}, !- Sensor Node Name
+  {component['sensor_node_name']}, !- Sensor Node Name
   {component.get('temperature', 5.0)};               !- Temperature {{C}}
 
 """

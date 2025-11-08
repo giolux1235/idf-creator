@@ -618,8 +618,6 @@ Output:Meter,
             building_params.get('name', 'Simple Building')
         ))
         idf_content.append(self.generate_site_location(location))
-        idf_content.append(self.generate_outdoor_air_node())
-        idf_content.append(self.generate_outdoor_air_node_list())
         idf_content.append(self.generate_global_geometry_rules())
         
         # Materials and constructions

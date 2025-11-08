@@ -308,10 +308,15 @@ class AdvancedHVACSystems:
         components.append(air_loop)
 
         # Availability manager to lock out compressor operation at low outdoor temperatures
+        outdoor_sensor_node = normalize_node_name(f"{zn}_OUTDOOR_AIR_NODE")
+        components.append({
+            'type': 'IDF_STRING',
+            'raw': self.generate_outdoor_air_node(outdoor_sensor_node)
+        })
         low_temp_manager = {
             'type': 'AvailabilityManager:LowTemperatureTurnOff',
             'name': f"{zn}_LowTempLockout",
-            'sensor_node_name': 'SITE OUTDOOR AIR NODE',
+            'sensor_node_name': outdoor_sensor_node,
             'temperature': 5.0
         }
         components.append(low_temp_manager)
