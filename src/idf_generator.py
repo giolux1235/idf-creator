@@ -173,20 +173,26 @@ Construction,
         zones = []
         stories = building_params.get('stories', 3)
         building_name = building_params.get('name', 'Building')
+        length = building_params.get('length', 25.0)
+        width = building_params.get('width', 20.0)
+        floor_area = building_params.get('floor_area', length * width * max(stories, 1))
+        height_per_story = building_params.get('height_per_story', 3.0)
+        north_axis = building_params.get('north_axis', 0.0)
+        zone_area = floor_area / max(stories, 1)
         
         for story in range(1, stories + 1):
             zone_name = f"{building_name}_Zone_{story}"
             zones.append(f"""Zone,
   {zone_name},             !- Name
-  {building_params.get('zone_area', 500):.2f},           !- Direction of Relative North
+  {north_axis:.2f},        !- Direction of Relative North
   0,                       !- X Origin
   0,                       !- Y Origin
-  {(story - 1) * 3:.2f},                       !- Z Origin
+  {(story - 1) * height_per_story:.2f}, !- Z Origin
   1,                       !- Type
   1,                       !- Multiplier
-  {building_params.get('zone_area', 500) / 2.7:.2f},           !- Ceiling Height
-  {building_params.get('zone_area', 500) * 2.7:.2f},           !- Volume
-  autocalculate,           !- Floor Area
+  {height_per_story:.2f},  !- Ceiling Height
+  {zone_area * height_per_story:.2f}, !- Volume
+  {zone_area:.2f},         !- Floor Area
   ;                        !- Zone Inside Convection Algorithm
 """)
         
@@ -196,10 +202,14 @@ Construction,
         """Generate Surface objects for building envelope."""
         surfaces = []
         stories = building_params.get('stories', 3)
-        length = building_params.get('length', 25)
-        width = building_params.get('width', 20)
-        height_per_story = building_params.get('height_per_story', 3)
+        length = building_params.get('length', 25.0)
+        width = building_params.get('width', 20.0)
+        height_per_story = building_params.get('height_per_story', 3.0)
         wwr = building_params.get('window_to_wall_ratio', 0.4)
+        x_min = -length / 2.0
+        x_max = length / 2.0
+        y_min = -width / 2.0
+        y_max = width / 2.0
         
         for story in range(1, stories + 1):
             zone_name = f"{building_params.get('name', 'Building')}_Zone_{story}"
@@ -219,10 +229,10 @@ Construction,
   NoWind,                  !- Wind Exposure
   AutoCalculate,           !- View Factor to Ground
   4,                       !- Number of Vertices
-  {length/2:.4f},0,{z_base:.4f}, !- Vertex 1
-  -{length/2:.4f},0,{z_base:.4f}, !- Vertex 2
-  -{length/2:.4f},{width:.4f},{z_base:.4f}, !- Vertex 3
-  {length/2:.4f},{width:.4f},{z_base:.4f}; !- Vertex 4
+  {x_max:.4f},{y_min:.4f},{z_base:.4f}, !- Vertex 1
+  {x_min:.4f},{y_min:.4f},{z_base:.4f}, !- Vertex 2
+  {x_min:.4f},{y_max:.4f},{z_base:.4f}, !- Vertex 3
+  {x_max:.4f},{y_max:.4f},{z_base:.4f}; !- Vertex 4
 """)
             
             # Ceiling
@@ -238,23 +248,22 @@ Construction,
   WindExposed,             !- Wind Exposure
   AutoCalculate,           !- View Factor to Ground
   4,                       !- Number of Vertices
-  -{length/2:.4f},{width:.4f},{z_top:.4f}, !- Vertex 1
-  -{length/2:.4f},0,{z_top:.4f}, !- Vertex 2
-  {length/2:.4f},0,{z_top:.4f}, !- Vertex 3
-  {length/2:.4f},{width:.4f},{z_top:.4f}; !- Vertex 4
+  {x_min:.4f},{y_max:.4f},{z_top:.4f}, !- Vertex 1
+  {x_min:.4f},{y_min:.4f},{z_top:.4f}, !- Vertex 2
+  {x_max:.4f},{y_min:.4f},{z_top:.4f}, !- Vertex 3
+  {x_max:.4f},{y_max:.4f},{z_top:.4f}; !- Vertex 4
 """)
             
-            # Four walls
-            walls = [
-                ("North", 0, 0, 0, width),
-                ("South", length, 0, length, width),
-                ("East", length, 0, 0, 0),
-                ("West", 0, width, length, width)
+            wall_definitions = [
+                ("North", (x_min, y_max), (x_max, y_max), length),
+                ("South", (x_max, y_min), (x_min, y_min), length),
+                ("East", (x_max, y_max), (x_max, y_min), width),
+                ("West", (x_min, y_min), (x_min, y_max), width),
             ]
             
-            for wall_name, x1, y1, x2, y2 in walls:
-                wall_area = abs((x2-x1) + (y2-y1)) * height_per_story
-                window_area = wall_area * wwr
+            for wall_name, (wx1, wy1), (wx2, wy2), wall_width in wall_definitions:
+                wall_area = wall_width * height_per_story
+                window_area = max(wall_area * wwr, 0.0)
                 
                 surfaces.append(f"""BuildingSurface:Detailed,
   {zone_name}_Wall_{wall_name}, !- Name
@@ -268,20 +277,29 @@ Construction,
   WindExposed,             !- Wind Exposure
   AutoCalculate,           !- View Factor to Ground
   4,                       !- Number of Vertices
-  {x1:.4f},{y1:.4f},{z_base:.4f}, !- Vertex 1
-  {x1:.4f},{y1:.4f},{z_top:.4f}, !- Vertex 2
-  {x2:.4f},{y2:.4f},{z_top:.4f}, !- Vertex 3
-  {x2:.4f},{y2:.4f},{z_base:.4f}; !- Vertex 4
+  {wx1:.4f},{wy1:.4f},{z_base:.4f}, !- Vertex 1
+  {wx1:.4f},{wy1:.4f},{z_top:.4f}, !- Vertex 2
+  {wx2:.4f},{wy2:.4f},{z_top:.4f}, !- Vertex 3
+  {wx2:.4f},{wy2:.4f},{z_base:.4f}; !- Vertex 4
 """)
                 
-                # Add window
-                if window_area > 0:
-                    window_name = f"{zone_name}_Window_{wall_name}"
-                    win_z_bottom = z_base + height_per_story * 0.2
-                    win_z_top = z_base + height_per_story * 0.8
-                    
+                if window_area <= 0:
+                    continue
+                
+                usable_wall_height = height_per_story * 0.7
+                window_width = wall_width * 0.7
+                window_height = min(window_area / max(window_width, 0.1), usable_wall_height)
+                vertical_margin = max((height_per_story - window_height) / 2.0, 0.5)
+                win_z_bottom = z_base + vertical_margin
+                win_z_top = min(win_z_bottom + window_height, z_top - 0.1)
+                inset = wall_width * 0.15
+                
+                if wall_name in ("North", "South"):
+                    win_x_min = wx1 + inset if wall_name == "North" else wx2 + inset
+                    win_x_max = wx2 - inset if wall_name == "North" else wx1 - inset
+                    win_y = wy1
                     surfaces.append(f"""FenestrationSurface:Detailed,
-  {window_name},           !- Name
+  {zone_name}_Window_{wall_name}, !- Name
   Window,                  !- Surface Type
   Building_Window,         !- Construction Name
   {zone_name}_Wall_{wall_name}, !- Building Surface Name
@@ -290,10 +308,29 @@ Construction,
   ,                        !- Frame and Divider Name
   1.0000,                  !- Multiplier
   4,                       !- Number of Vertices
-  {x1:.4f},{y1:.4f},{win_z_bottom:.4f}, !- Vertex 1
-  {x1:.4f},{y1:.4f},{win_z_top:.4f}, !- Vertex 2
-  {x2:.4f},{y2:.4f},{win_z_top:.4f}, !- Vertex 3
-  {x2:.4f},{y2:.4f},{win_z_bottom:.4f}; !- Vertex 4
+  {win_x_min:.4f},{win_y:.4f},{win_z_bottom:.4f}, !- Vertex 1
+  {win_x_min:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 2
+  {win_x_max:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 3
+  {win_x_max:.4f},{win_y:.4f},{win_z_bottom:.4f}; !- Vertex 4
+""")
+                else:
+                    win_y_min = wy1 + inset if wall_name == "East" else wy2 + inset
+                    win_y_max = wy2 - inset if wall_name == "East" else wy1 - inset
+                    win_x = wx1
+                    surfaces.append(f"""FenestrationSurface:Detailed,
+  {zone_name}_Window_{wall_name}, !- Name
+  Window,                  !- Surface Type
+  Building_Window,         !- Construction Name
+  {zone_name}_Wall_{wall_name}, !- Building Surface Name
+  ,                        !- Outside Boundary Condition Object
+  AutoCalculate,           !- View Factor to Ground
+  ,                        !- Frame and Divider Name
+  1.0000,                  !- Multiplier
+  4,                       !- Number of Vertices
+  {win_x:.4f},{win_y_min:.4f},{win_z_bottom:.4f}, !- Vertex 1
+  {win_x:.4f},{win_y_min:.4f},{win_z_top:.4f}, !- Vertex 2
+  {win_x:.4f},{win_y_max:.4f},{win_z_top:.4f}, !- Vertex 3
+  {win_x:.4f},{win_y_max:.4f},{win_z_bottom:.4f}; !- Vertex 4
 """)
         
         return surfaces
@@ -316,14 +353,15 @@ Construction,
     
     def generate_lighting_objects(self, zone_params: Dict, zone_name: str) -> str:
         """Generate Lights objects."""
+        total_lighting_watts = zone_params.get('lighting_power', 0.0)
         return f"""Lights,
   {zone_name}_Lights,      !- Name
   {zone_name},             !- Zone or ZoneList Name
   Lighting Schedule,       !- Schedule Name
-  Watts/Area,              !- Design Level Calculation Method
-  ,                        !- Lighting Level
+  LightingLevel,           !- Design Level Calculation Method
+  {total_lighting_watts:.1f},   !- Lighting Level {{W}}
   ,                        !- Watts per Zone Floor Area
-  {zone_params.get('lighting_power', 5000):.1f},         !- Watts per Person
+  ,                        !- Watts per Person
   ,                        !- Return Air Fraction
   ,                        !- Fraction Radiant
   0.7,                     !- Fraction Visible
@@ -334,13 +372,17 @@ Construction,
     
     def generate_equipment_objects(self, zone_params: Dict, zone_name: str) -> str:
         """Generate ElectricEquipment objects."""
+        zone_area = max(zone_params.get('zone_area', 1.0), 1.0)
+        equipment_density = 0.0
+        if zone_area > 0.0:
+            equipment_density = zone_params.get('equipment_power', 0.0) / zone_area
         return f"""ElectricEquipment,
   {zone_name}_Equipment,   !- Name
   {zone_name},             !- Zone or ZoneList Name
   Equipment Schedule,      !- Schedule Name
   Watts/Area,              !- Design Level Calculation Method
   ,                        !- Design Level
-  ,                        !- Watts per Zone Floor Area
+  {equipment_density:.4f}, !- Watts per Zone Floor Area
   ,                        !- Watts per Person
   0.1,                     !- Fraction Latent
   0.2,                     !- Fraction Radiant
@@ -369,6 +411,64 @@ Construction,
   ,                        !- Heating Outdoor Air Flow Rate
   ,                        !- Cooling Outdoor Air Flow Rate
   ;                        !- Outdoor Air Inlet Node Name
+
+"""
+
+    def generate_zone_equipment_list(self, zone_name: str) -> str:
+        """Generate ZoneHVAC equipment list linking the ideal loads system."""
+        return f"""ZoneHVAC:EquipmentList,
+  {zone_name}_EquipmentList,  !- Name
+  SequentialLoad,            !- Load Distribution Scheme
+  ZoneHVAC:IdealLoadsAirSystem, !- Zone Equipment 1 Object Type
+  {zone_name}_HVAC,          !- Zone Equipment 1 Name
+  1,                         !- Zone Equipment 1 Cooling Sequence
+  1;                         !- Zone Equipment 1 Heating Sequence
+
+"""
+
+    def generate_zone_equipment_connections(self, zone_name: str) -> str:
+        """Generate ZoneHVAC:EquipmentConnections for each zone."""
+        return f"""ZoneHVAC:EquipmentConnections,
+  {zone_name},               !- Zone Name
+  {zone_name}_EquipmentList, !- Zone Conditioning Equipment List Name
+  {zone_name} Supply Node,   !- Zone Air Inlet Node or NodeList Name
+  {zone_name} Exhaust Node,  !- Zone Air Exhaust Node or NodeList Name
+  {zone_name} Supply Node,   !- Zone Air Node Name
+  {zone_name} Return Node,   !- Zone Return Air Node Name
+  ;                          !- Zone Return Air Node or NodeList Name
+
+"""
+
+    def generate_zone_sizing_object(self, zone_name: str, zone_params: Dict) -> str:
+        """Generate Sizing:Zone object so zones can autosize."""
+        return f"""Sizing:Zone,
+  {zone_name},               !- Zone or ZoneList Name
+  SupplyAirTemperature,      !- Zone Cooling Design Supply Air Temperature Input Method
+  12.8,                      !- Zone Cooling Design Supply Air Temperature {{C}}
+  ,                          !- Zone Cooling Design Supply Air Temperature Difference {{deltaC}}
+  SupplyAirTemperature,      !- Zone Heating Design Supply Air Temperature Input Method
+  40.0,                      !- Zone Heating Design Supply Air Temperature {{C}}
+  ,                          !- Zone Heating Design Supply Air Temperature Difference {{deltaC}}
+  0.0085,                    !- Zone Cooling Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
+  0.0080,                    !- Zone Heating Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
+  ,                          !- Design Specification Outdoor Air Object Name
+  1.0,                       !- Zone Heating Sizing Factor
+  1.0,                       !- Zone Cooling Sizing Factor
+  DesignDay,                 !- Cooling Design Air Flow Method
+  ,                          !- Cooling Design Air Flow Rate {{m3/s}}
+  ,                          !- Cooling Minimum Air Flow per Zone Floor Area {{m3/s-m2}}
+  0.0,                       !- Cooling Minimum Air Flow {{m3/s}}
+  ,                          !- Cooling Minimum Air Flow Fraction
+  DesignDay,                 !- Heating Design Air Flow Method
+  ,                          !- Heating Design Air Flow Rate {{m3/s}}
+  ,                          !- Heating Maximum Air Flow per Zone Floor Area {{m3/s-m2}}
+  ,                          !- Heating Maximum Air Flow {{m3/s}}
+  ,                          !- Heating Maximum Air Flow Fraction
+  ,                          !- Design Specification Zone Air Distribution Object Name
+  No,                        !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,          !- Dedicated Outdoor Air System Control Strategy
+  13.0,                      !- Dedicated Outdoor Air Low Setpoint Temperature for Design {{C}}
+  40.0;                      !- Dedicated Outdoor Air High Setpoint Temperature for Design {{C}}
 
 """
     
@@ -409,7 +509,19 @@ Schedule:Compact,
   0,                       !- Field 8
   For: Weekends,           !- Field 9
   Until: 24:00,            !- Field 10
-  0;                       !- Field 11
+  0,                       !- Field 11
+  For: SummerDesignDay,    !- Field 12
+  Until: 24:00,            !- Field 13
+  1,                       !- Field 14
+  For: WinterDesignDay,    !- Field 15
+  Until: 24:00,            !- Field 16
+  1,                       !- Field 17
+  For: CustomDay1,         !- Field 18
+  Until: 24:00,            !- Field 19
+  1,                       !- Field 20
+  For: CustomDay2,         !- Field 21
+  Until: 24:00,            !- Field 22
+  1;                       !- Field 23
 
 Schedule:Compact,
   Lighting Schedule,       !- Name
@@ -436,7 +548,19 @@ Schedule:Compact,
   0.1,                     !- Field 8
   For: Weekends,           !- Field 9
   Until: 24:00,            !- Field 10
-  0.1;                     !- Field 11
+  0.1,                     !- Field 11
+  For: SummerDesignDay,    !- Field 12
+  Until: 24:00,            !- Field 13
+  1,                       !- Field 14
+  For: WinterDesignDay,    !- Field 15
+  Until: 24:00,            !- Field 16
+  1,                       !- Field 17
+  For: CustomDay1,         !- Field 18
+  Until: 24:00,            !- Field 19
+  1,                       !- Field 20
+  For: CustomDay2,         !- Field 21
+  Until: 24:00,            !- Field 22
+  1;                       !- Field 23
 
 Schedule:Compact,
   Activity Schedule,       !- Name
@@ -582,10 +706,6 @@ Output:Meter,
   Electricity:Facility,                    !- Key Name
   RunPeriod;                               !- Reporting Frequency
 
-Output:Meter,
-  NaturalGas:Facility,                     !- Key Name
-  RunPeriod;                               !- Reporting Frequency
-
 """
     
     def generate_complete_idf(self, location: Dict, building_params: Dict, 
@@ -643,6 +763,9 @@ Output:Meter,
             idf_content.append(self.generate_lighting_objects(zone_params, zone_name))
             idf_content.append(self.generate_equipment_objects(zone_params, zone_name))
             idf_content.append(self.generate_hvac_objects(zone_params, zone_name))
+            idf_content.append(self.generate_zone_equipment_list(zone_name))
+            idf_content.append(self.generate_zone_equipment_connections(zone_name))
+            idf_content.append(self.generate_zone_sizing_object(zone_name, zone_params))
         
         # Schedules
         idf_content.append(self.generate_schedules())
