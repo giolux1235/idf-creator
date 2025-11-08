@@ -302,102 +302,63 @@ Construction,
                 window_width = min(max_window_width, max(0.5, math.sqrt(target_area)))
                 window_height = target_area / window_width
                 
-                if window_height > max_window_height:
-                    window_height = max_window_height
-                    window_width = target_area / window_height if window_height > 0 else max_window_width
+                window_height = min(window_height, max_window_height)
+                window_width = min(window_width, max_window_width)
                 
-                if window_width > max_window_width:
-                    window_width = max_window_width
-                    window_height = target_area / window_width if window_width > 0 else max_window_height
-                
-                window_width = max(min(window_width, max_window_width), 0.5)
-                window_height = max(min(window_height, max_window_height), 0.5)
-                
-                min_horizontal_margin = min(max(wall_width * 0.1, 0.2), wall_width / 2.0 - 0.05)
-                if min_horizontal_margin < 0:
-                    min_horizontal_margin = 0.0
-                max_allowed_width = wall_width - 2 * min_horizontal_margin
-                window_width = min(window_width, max_allowed_width)
-                if window_width <= 0:
-                    continue
                 horizontal_offset = (wall_width - window_width) / 2.0
-                
-                window_height = min(window_height, height_per_story - 0.4)
-                min_vertical_margin = min(max(height_per_story * 0.1, 0.2), height_per_story / 2.0 - 0.05)
-                if min_vertical_margin < 0:
-                    min_vertical_margin = 0.0
-                max_allowed_height = height_per_story - 2 * min_vertical_margin
-                window_height = min(window_height, max_allowed_height)
-                if window_height <= 0:
-                    continue
                 vertical_offset = (height_per_story - window_height) / 2.0
                 
-                win_z_bottom = z_base + vertical_offset
+                win_z_bottom = z_base + max(vertical_offset, 0.1)
                 win_z_top = min(win_z_bottom + window_height, z_top - 0.05)
                 
-                if wall_name in ("North", "South"):
-                    wall_x_min = min(wx1, wx2)
-                    wall_x_max = max(wx1, wx2)
-                    win_x_left = wall_x_min + horizontal_offset
-                    win_x_right = wall_x_max - horizontal_offset
-                    win_y = wy1  # constant for north/south walls
-                    
-                    if wall_name == "North":
-                        surfaces.append(f"""FenestrationSurface:Detailed,
-  {zone_name}_Window_{wall_name}, !- Name
-  Window,                  !- Surface Type
-  Building_Window,         !- Construction Name
-  {zone_name}_Wall_{wall_name}, !- Building Surface Name
-  ,                        !- Outside Boundary Condition Object
-  AutoCalculate,           !- View Factor to Ground
-  ,                        !- Frame and Divider Name
-  1.0000,                  !- Multiplier
-  4,                       !- Number of Vertices
-  {win_x_left:.4f},{win_y:.4f},{win_z_bottom:.4f}, !- Vertex 1
-  {win_x_left:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 2
-  {win_x_right:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 3
-  {win_x_right:.4f},{win_y:.4f},{win_z_bottom:.4f}; !- Vertex 4
-""")
-                    else:  # South wall follows base orientation (start from positive X)
-                        surfaces.append(f"""FenestrationSurface:Detailed,
-  {zone_name}_Window_{wall_name}, !- Name
-  Window,                  !- Surface Type
-  Building_Window,         !- Construction Name
-  {zone_name}_Wall_{wall_name}, !- Building Surface Name
-  ,                        !- Outside Boundary Condition Object
-  AutoCalculate,           !- View Factor to Ground
-  ,                        !- Frame and Divider Name
-  1.0000,                  !- Multiplier
-  4,                       !- Number of Vertices
-  {win_x_right:.4f},{win_y:.4f},{win_z_bottom:.4f}, !- Vertex 1
-  {win_x_right:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 2
-  {win_x_left:.4f},{win_y:.4f},{win_z_top:.4f}, !- Vertex 3
-  {win_x_left:.4f},{win_y:.4f},{win_z_bottom:.4f}; !- Vertex 4
-""")
-                else:
-                    wall_y_min = min(wy1, wy2)
-                    wall_y_max = max(wy1, wy2)
-                    win_y_bottom = wall_y_min + horizontal_offset
-                    win_y_top = wall_y_max - horizontal_offset
-                    win_x = wx1  # constant for east/west walls
-                    
-                    if wall_name == "East":
-                        surfaces.append(f"""FenestrationSurface:Detailed,
-  {zone_name}_Window_{wall_name}, !- Name
-  Window,                  !- Surface Type
-  Building_Window,         !- Construction Name
-  {zone_name}_Wall_{wall_name}, !- Building Surface Name
-  ,                        !- Outside Boundary Condition Object
-  AutoCalculate,           !- View Factor to Ground
-  ,                        !- Frame and Divider Name
-  1.0000,                  !- Multiplier
-  4,                       !- Number of Vertices
-  {win_x:.4f},{win_y_top:.4f},{win_z_bottom:.4f}, !- Vertex 1
-  {win_x:.4f},{win_y_top:.4f},{win_z_top:.4f}, !- Vertex 2
-  {win_x:.4f},{win_y_bottom:.4f},{win_z_top:.4f}, !- Vertex 3
-  {win_x:.4f},{win_y_bottom:.4f},{win_z_bottom:.4f}; !- Vertex 4
-""")
-                    else:  # West wall orientation starts at lower Y
+                window_vertices: List[tuple] = []
+                
+                if wall_name == "North":
+                    win_y = wy1
+                    win_x_left = min(wx1, wx2) + horizontal_offset
+                    win_x_right = max(wx1, wx2) - horizontal_offset
+                    window_vertices = [
+                        (win_x_left, win_y, win_z_bottom),
+                        (win_x_left, win_y, win_z_top),
+                        (win_x_right, win_y, win_z_top),
+                        (win_x_right, win_y, win_z_bottom),
+                    ]
+                elif wall_name == "South":
+                    win_y = wy1
+                    win_x_left = min(wx1, wx2) + horizontal_offset
+                    win_x_right = max(wx1, wx2) - horizontal_offset
+                    window_vertices = [
+                        (win_x_right, win_y, win_z_bottom),
+                        (win_x_right, win_y, win_z_top),
+                        (win_x_left, win_y, win_z_top),
+                        (win_x_left, win_y, win_z_bottom),
+                    ]
+                elif wall_name == "East":
+                    win_x = wx1
+                    win_y_bottom = min(wy1, wy2) + horizontal_offset
+                    win_y_top = max(wy1, wy2) - horizontal_offset
+                    window_vertices = [
+                        (win_x, win_y_top, win_z_bottom),
+                        (win_x, win_y_top, win_z_top),
+                        (win_x, win_y_bottom, win_z_top),
+                        (win_x, win_y_bottom, win_z_bottom),
+                    ]
+                else:  # West
+                    win_x = wx1
+                    win_y_bottom = min(wy1, wy2) + horizontal_offset
+                    win_y_top = max(wy1, wy2) - horizontal_offset
+                    window_vertices = [
+                        (win_x, win_y_bottom, win_z_bottom),
+                        (win_x, win_y_bottom, win_z_top),
+                        (win_x, win_y_top, win_z_top),
+                        (win_x, win_y_top, win_z_bottom),
+                    ]
+                
+                if len(window_vertices) == 4:
+                    vertex_lines = "\n".join(
+                        f"  {vx:.4f},{vy:.4f},{vz:.4f}," if index < 3 else f"  {vx:.4f},{vy:.4f},{vz:.4f};"
+                        for index, (vx, vy, vz) in enumerate(window_vertices)
+                    )
                     surfaces.append(f"""FenestrationSurface:Detailed,
   {zone_name}_Window_{wall_name}, !- Name
   Window,                  !- Surface Type
@@ -408,10 +369,7 @@ Construction,
   ,                        !- Frame and Divider Name
   1.0000,                  !- Multiplier
   4,                       !- Number of Vertices
-  {win_x:.4f},{win_y_bottom:.4f},{win_z_bottom:.4f}, !- Vertex 1
-  {win_x:.4f},{win_y_bottom:.4f},{win_z_top:.4f}, !- Vertex 2
-  {win_x:.4f},{win_y_top:.4f},{win_z_top:.4f}, !- Vertex 3
-  {win_x:.4f},{win_y_top:.4f},{win_z_bottom:.4f}; !- Vertex 4
+{vertex_lines}
 """)
         
         return surfaces
