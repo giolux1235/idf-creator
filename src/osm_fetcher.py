@@ -52,38 +52,46 @@ class OSMFetcher:
             if not elements:
                 return None
             
-            # Get the closest building
-            building = elements[0]
+            best_building = None
+            best_distance = float('inf')
             
-            # Extract nodes for footprint
-            if 'geometry' in building:
+            for building in elements:
+                if 'geometry' not in building:
+                    continue
                 nodes = building['geometry']
+                if not nodes:
+                    continue
                 footprint = [(node['lat'], node['lon']) for node in nodes]
-            else:
-                footprint = None
-            
-            # Extract building properties
-            properties = {
-                'building': building.get('tags', {}).get('building', 'unknown'),
-                'building:levels': building.get('tags', {}).get('building:levels'),
-                'height': building.get('tags', {}).get('height'),
-                'roof:material': building.get('tags', {}).get('roof:material'),
-                'roof:shape': building.get('tags', {}).get('roof:shape'),
-                'addr:street': building.get('tags', {}).get('addr:street'),
-                'addr:housenumber': building.get('tags', {}).get('addr:housenumber')
-            }
-            
-            # Calculate area if we have footprint
-            area_estimate = None
-            if footprint and len(footprint) >= 3:
+                if len(footprint) < 3:
+                    continue
+                
+                # Centroid distance to prefer the polygon closest to the requested coordinates
+                centroid_lat = sum(node['lat'] for node in nodes) / len(nodes)
+                centroid_lon = sum(node['lon'] for node in nodes) / len(nodes)
+                distance = math.hypot(centroid_lat - latitude, centroid_lon - longitude)
+                
                 area_estimate = self._calculate_polygon_area(footprint)
+                
+                properties = {
+                    'building': building.get('tags', {}).get('building', 'unknown'),
+                    'building:levels': building.get('tags', {}).get('building:levels'),
+                    'height': building.get('tags', {}).get('height'),
+                    'roof:material': building.get('tags', {}).get('roof:material'),
+                    'roof:shape': building.get('tags', {}).get('roof:shape'),
+                    'addr:street': building.get('tags', {}).get('addr:street'),
+                    'addr:housenumber': building.get('tags', {}).get('addr:housenumber')
+                }
+                
+                if distance < best_distance:
+                    best_distance = distance
+                    best_building = {
+                        'footprint': footprint,
+                        'area_estimate_m2': area_estimate,
+                        'properties': properties,
+                        'tags': building.get('tags', {})
+                    }
             
-            return {
-                'footprint': footprint,
-                'area_estimate_m2': area_estimate,
-                'properties': properties,
-                'tags': building.get('tags', {})
-            }
+            return best_building
         
         except Exception as e:
             print(f"Error fetching OSM data: {e}")

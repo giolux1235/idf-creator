@@ -6,6 +6,7 @@ Real HVAC systems instead of simple ideal loads
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
+import re
 from .building_age_adjustments import BuildingAgeAdjuster
 from .utils.common import normalize_node_name, calculate_dx_supply_air_flow
 
@@ -26,11 +27,13 @@ class HVACSystem:
 class AdvancedHVACSystems:
     """Manages advanced HVAC system generation"""
     
-    def __init__(self):
+    def __init__(self, node_generator=None):
         self.hvac_templates = self._load_hvac_templates()
         self.equipment_templates = self._load_equipment_templates()
         self.control_templates = self._load_control_templates()
         self.age_adjuster = BuildingAgeAdjuster()
+        # Optional helper that can create shared OutdoorAir nodes (from BaseIDFGenerator)
+        self.node_generator = node_generator
     
     def _load_hvac_templates(self) -> Dict[str, HVACSystem]:
         """Load HVAC system templates"""
@@ -173,7 +176,10 @@ class AdvancedHVACSystems:
             hvac_template = replace(hvac_template, efficiency=adjusted_efficiency)
         
         # Size equipment based on zone area and building type
-        sizing_params = self._calculate_hvac_sizing(building_type, zone_area, climate_zone)
+        raw_usage = zone_name.lower()
+        usage = re.sub(r'_z\d+$', '', raw_usage)
+        usage = re.sub(r'(_\d+)+$', '', usage)
+        sizing_params = self._calculate_hvac_sizing(building_type, zone_area, climate_zone, usage)
         
         # Generate system components
         components = []
@@ -197,33 +203,63 @@ class AdvancedHVACSystems:
 
         return components
     
-    def _calculate_hvac_sizing(self, building_type: str, zone_area: float, 
-                             climate_zone: str) -> Dict:
-        """Calculate HVAC sizing parameters"""
-        
-        # Base cooling load (W/m²)
-        cooling_load_density = {
-            'office': 100,  # W/m²
-            'residential': 60,
-            'retail': 120,
-            'healthcare': 150,
-            'education': 80,
-            'industrial': 50,
-            'hospitality': 100
-        }.get(building_type, 100)
-        
-        # Base heating load (W/m²)
-        heating_load_density = {
-            'office': 80,
-            'residential': 100,
-            'retail': 90,
-            'healthcare': 120,
-            'education': 70,
-            'industrial': 60,
-            'hospitality': 90
-        }.get(building_type, 80)
-        
-        # Adjust for climate zone
+    def _generate_outdoor_air_node(self, node_name: str = "SITE OUTDOOR AIR NODE") -> str:
+        """
+        Generate an OutdoorAir:Node definition, delegating to the parent IDF generator
+        when available so we inherit its name de-duplication logic.
+        """
+        helper = getattr(self.node_generator, 'generate_outdoor_air_node', None)
+        if callable(helper):
+            return helper(node_name)
+        return f"""OutdoorAir:Node,
+  {node_name};                !- Name
+
+"""
+
+    def _calculate_hvac_sizing(self, building_type: str, zone_area: float,
+                               climate_zone: str, zone_usage: Optional[str] = None) -> Dict:
+        """Calculate HVAC sizing parameters based on DOE reference building data."""
+
+        bt = (building_type or "office").lower()
+
+        cooling_load_density_lookup = {
+            'office': 110.0,
+            'residential': 80.0,
+            'retail': 160.0,
+            'healthcare': 190.0,
+            'education': 120.0,
+            'industrial': 140.0,
+            'hospitality': 150.0
+        }
+
+        heating_load_density_lookup = {
+            'office': 90.0,
+            'residential': 120.0,
+            'retail': 110.0,
+            'healthcare': 140.0,
+            'education': 100.0,
+            'industrial': 110.0,
+            'hospitality': 120.0
+        }
+
+        cooling_load_density = cooling_load_density_lookup.get(bt, 220.0)
+        heating_load_density = heating_load_density_lookup.get(bt, 160.0)
+
+        usage = (zone_usage or '').lower()
+        sensible_heat_ratio = 0.70
+        usage_overrides = {
+            'break_room': {'cooling': 55.0, 'heating': 60.0, 'shr': 0.60},
+            'mechanical': {'cooling': 45.0, 'heating': 90.0, 'shr': 0.65},
+            'storage': {'cooling': 35.0, 'heating': 60.0, 'shr': 0.68},
+            'corridor': {'cooling': 30.0, 'heating': 50.0, 'shr': 0.75}
+        }
+        for key, data in usage_overrides.items():
+            if key in usage:
+                cooling_load_density = data['cooling']
+                heating_load_density = data['heating']
+                sensible_heat_ratio = data['shr']
+                break
+
         climate_multipliers = {
             '1': {'cooling': 1.2, 'heating': 0.3},
             '2': {'cooling': 1.1, 'heating': 0.4},
@@ -234,25 +270,30 @@ class AdvancedHVACSystems:
             '7': {'cooling': 0.6, 'heating': 1.4},
             '8': {'cooling': 0.5, 'heating': 1.6}
         }
-        
-        cz = climate_zone[0] if climate_zone else '3'
+
+        cz = (climate_zone or "3")[0]
         multipliers = climate_multipliers.get(cz, {'cooling': 1.0, 'heating': 1.0})
-        
+
         cooling_load = zone_area * cooling_load_density * multipliers['cooling']
         heating_load = zone_area * heating_load_density * multipliers['heating']
-        
-        # Air flow rates - enforce DX coil guidance (EnergyPlus Engineering Reference)
-        supply_air_flow = calculate_dx_supply_air_flow(cooling_load)
-        
-        # Ventilation rate: 0.5 L/s-m² = 0.0005 m³/s-m²
-        ventilation_rate = (zone_area or 0.0) * 0.0005  # m³/s
-        
+
+        design_cooling_capacity = max(cooling_load * 1.10, 2500.0)
+        supply_air_flow = calculate_dx_supply_air_flow(
+            design_cooling_capacity,
+            sensible_heat_ratio=sensible_heat_ratio
+        )
+
+        ventilation_rate = (zone_area or 0.0) * 0.0005
+
         return {
             'cooling_load': cooling_load,
             'heating_load': heating_load,
             'supply_air_flow': supply_air_flow,
             'ventilation_rate': ventilation_rate,
-            'zone_area': zone_area
+            'zone_area': zone_area,
+            'design_cooling_capacity': design_cooling_capacity,
+            'sensible_heat_ratio': sensible_heat_ratio,
+            'zone_usage': usage
         }
     
     def _generate_vav_system(self, zone_name: str, sizing_params: Dict, 
@@ -263,12 +304,30 @@ class AdvancedHVACSystems:
         zn = f"{zone_name}{unique_suffix}" if unique_suffix else zone_name
  
         # Determine design cooling capacity and airflow to enforce EnergyPlus DX coil limits
-        cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
-        design_cooling_capacity = max(cooling_load * 1.15, 12000.0)
-        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
-        sizing_params['design_cooling_capacity'] = design_cooling_capacity
+        design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
+        zone_shr = sizing_params.get('sensible_heat_ratio', 0.68)
+        zone_usage = sizing_params.get('zone_usage', '') or ''
+        rated_air_flow = calculate_dx_supply_air_flow(
+            design_cooling_capacity,
+            sensible_heat_ratio=zone_shr
+        )
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
-
+        # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
+        min_flow_required = design_cooling_capacity * 2.684e-5  # m³/s needed to satisfy EnergyPlus minimum volume/ton guidance
+        required_fraction = min_flow_required / max(rated_air_flow, 0.001)
+        base_min_fraction = 0.6
+        usage_fraction_overrides = {
+            'break_room': 0.5,
+            'mechanical': 0.5,
+            'storage': 0.4,
+            'corridor': 0.4
+        }
+        for key, fraction in usage_fraction_overrides.items():
+            if key in zone_usage:
+                base_min_fraction = fraction
+                break
+        min_flow_fraction = min(0.9, max(base_min_fraction, required_fraction))
+        
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
         # Moderate climates (CZ 1-4) can use heat pump
@@ -311,7 +370,7 @@ class AdvancedHVACSystems:
         outdoor_sensor_node = normalize_node_name(f"{zn}_OUTDOOR_AIR_NODE")
         components.append({
             'type': 'IDF_STRING',
-            'raw': self.generate_outdoor_air_node(outdoor_sensor_node)
+            'raw': self._generate_outdoor_air_node(outdoor_sensor_node)
         })
         low_temp_manager = {
             'type': 'AvailabilityManager:LowTemperatureTurnOff',
@@ -451,10 +510,10 @@ class AdvancedHVACSystems:
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
-            'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_sensible_heat_ratio': round(max(min(zone_shr, 0.85), 0.60), 3),
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': round(rated_air_flow, 5),
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -463,7 +522,7 @@ class AdvancedHVACSystems:
             'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
             'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
             'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR',
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
         }
         components.append(cooling_coil)
         
@@ -480,7 +539,7 @@ class AdvancedHVACSystems:
             'air_distribution_unit_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # ✅ FIXED: Must match Zone Equipment Inlet
             'air_terminal_object_type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'air_terminal_name': f"{zn}_VAVTerminal",
-            'nominal_supply_air_flow_rate': round(rated_air_flow, 4)
+            'nominal_supply_air_flow_rate': 'Autosize'
         }
         components.append(zone_equipment)
         
@@ -499,7 +558,7 @@ class AdvancedHVACSystems:
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_fraction_before_reheat': 0.2,
             'reheat_coil_name': f"{zn}_ReheatCoil",
-            'maximum_air_flow_rate': round(rated_air_flow, 4),
+            'maximum_air_flow_rate': 'Autosize',
             'maximum_hot_water_or_steam_flow_rate': 'Autosize',
             'minimum_hot_water_or_steam_flow_rate': 0.0,
             'convergence_tolerance': 0.0001,  # Tighter tolerance (0.0001) improves convergence
@@ -615,15 +674,15 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': round(rated_air_flow, 5),
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
             'condenser_fan_power_ratio': 0.2,
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
         }
         components.append(cooling_coil)
         
@@ -709,11 +768,11 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': 'Autosize',
-            'gross_rated_sensible_heat_ratio': 'Autosize',
+            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
+            'rated_air_flow_rate': round(rated_air_flow, 5),
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
         }
         components.append(cooling_coil)
         

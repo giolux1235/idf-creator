@@ -155,7 +155,9 @@ def normalize_node_name(node_name: str) -> str:
     return node_name.upper() if node_name else node_name
 
 
-def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
+def calculate_dx_supply_air_flow(cooling_capacity: float,
+                                 sensible_heat_ratio: float = 0.68,
+                                 supply_delta_t: float = 8.0) -> float:
     """
     Calculate DX coil air flow using EnergyPlus recommended ratios.
     
@@ -175,22 +177,24 @@ def calculate_dx_supply_air_flow(cooling_capacity: float) -> float:
         - EnergyPlus Input Output Reference: Coil:Cooling:DX:SingleSpeed
         - EnergyPlus Engineering Reference: DX Cooling Coil Model
     """
-    min_ratio = 2.684e-5  # m³/s per W (EnergyPlus minimum)
-    max_ratio = 6.713e-5  # m³/s per W (EnergyPlus maximum)
-    # Use midpoint of EnergyPlus acceptable range (~450 CFM/ton)
-    target_ratio = 4.5e-5  # Slightly conservative midpoint within valid range
+    min_ratio = 4.027e-5  # m³/s per W (EnergyPlus 24.2 minimum guidance)
+    max_ratio = 6.041e-5  # Slightly conservative cap below absolute maximum
+    target_ratio = 5.0e-5  # Midpoint within the recommended range
 
     if cooling_capacity is None or cooling_capacity <= 0:
-        # Maintain a small positive airflow to avoid divide-by-zero, but keep it
-        # within EnergyPlus guidance by assuming a 1 kW conservative coil.
         simulated_capacity = 1000.0
         return simulated_capacity * target_ratio
 
-    air_flow = cooling_capacity * target_ratio
+    air_density = 1.2  # kg/m³
+    cp_air = 1006.0    # J/(kg·K)
+    sensible_capacity = max(cooling_capacity * sensible_heat_ratio, 0.0)
+    flow_from_sensible = sensible_capacity / (air_density * cp_air * max(supply_delta_t, 1.0))
 
-    # Enforce EnergyPlus bounds explicitly
-    min_flow = cooling_capacity * min_ratio
-    max_flow = cooling_capacity * max_ratio
+    ratio_floor = cooling_capacity * min_ratio
+    ratio_mid = cooling_capacity * target_ratio
+    ratio_cap = cooling_capacity * max_ratio
 
-    return max(min_flow, min(air_flow, max_flow))
+    flow = max(flow_from_sensible, ratio_floor, ratio_mid)
+    flow = min(flow, ratio_cap)
+    return flow
 

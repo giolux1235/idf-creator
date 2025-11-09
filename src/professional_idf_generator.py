@@ -53,7 +53,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         self.geometry_engine = AdvancedGeometryEngine()
         self.material_library = ProfessionalMaterialLibrary()
         self.building_types = MultiBuildingTypes()
-        self.hvac_systems = AdvancedHVACSystems()
+        self.hvac_systems = AdvancedHVACSystems(node_generator=self)
         self.hvac_plumbing = HVACPlumbing()
         self.advanced_controls = AdvancedHVACControls()
         self.shading_daylighting = ShadingDaylightingEngine()
@@ -1087,9 +1087,10 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                         'name': f"{zone.name}{unique_suffix} Connections",
                         'zone_name': zone.name,
                         'zone_equipment_list_name': eq_list['name'],
-                        'zone_air_inlet_node_name': inlet_node_list['name'],  # Use NodeList with ADU outlet
-                        'zone_exhaust_node_or_nodelist_name': '',  # No exhaust node for VAV
-                        'zone_return_air_node_name': f"{zone.name}{unique_suffix}_ReturnAir"  # Return air to ZoneMixer
+                        'zone_air_inlet_node_name': inlet_node_list['name'],
+                        'zone_exhaust_node_or_nodelist_name': '',
+                        'zone_air_node_name': normalize_node_name(f"{zone.name} Air Node"),
+                        'zone_return_air_node_name': normalize_node_name(f"{zone.name}{unique_suffix}_ReturnAir")
                     }
                     hvac_components.append(eq_connections)
                     
@@ -1711,16 +1712,16 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             zone_name = component.get('zone_name', 'Unknown')
             eq_list_name = component.get('zone_equipment_list_name', '')
             supply_node = component.get('zone_air_inlet_node_name', f"{zone_name} Supply Node")
-            exhaust_node = component.get('zone_exhaust_node_or_nodelist_name', '')  # Empty if not provided
-            return_air_node = component.get('zone_return_air_node_name', '')  # Return air if provided
+            exhaust_node = component.get('zone_exhaust_node_or_nodelist_name', '')
+            zone_air_node = component.get('zone_air_node_name', f"{zone_name} Air Node")
+            return_air_node = component.get('zone_return_air_node_name', '')
             return f"""ZoneHVAC:EquipmentConnections,
   {zone_name},                 !- Zone Name
   {eq_list_name},              !- Zone Conditioning Equipment List Name
   {supply_node},               !- Zone Air Inlet Node or NodeList Name
   {exhaust_node},              !- Zone Air Exhaust Node or NodeList Name
-  {zone_name} Air Node,        !- Zone Air Node Name
-  {return_air_node},           !- Zone Return Air Node or NodeList Name
-  ;
+  {zone_air_node},             !- Zone Air Node Name
+  {return_air_node};           !- Zone Return Air Node or NodeList Name
 
 """
         

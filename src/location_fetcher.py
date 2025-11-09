@@ -142,13 +142,19 @@ class LocationFetcher:
             print(f"⚠️  Warning: Empty address provided for geocoding")
             return None
         
-        # STEP 1: Extract city and state from address
-        city_state = self.extract_city_state(address)
+        address_stripped = address.strip()
+        city_state = self.extract_city_state(address_stripped)
+        address_is_city_only = (
+            city_state is not None
+            and not any(char.isdigit() for char in address_stripped)
+            and address_stripped.split(',')[0].strip().lower() == city_state.split(',')[0].strip().lower()
+        )
         
-        # STEP 2: Check city lookup table FIRST (fast, reliable)
-        if city_state and city_state in self.CITY_LOOKUP:
+        # STEP 1: If the caller explicitly asked for a city-level coordinate (no street detail),
+        # honour the lookup table – otherwise defer to precise geocoding first.
+        if address_is_city_only and city_state in self.CITY_LOOKUP:
             city_data = self.CITY_LOOKUP[city_state]
-            print(f"✅ Found city in lookup table: {city_state} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
+            print(f"✅ City-level geocoding: {city_state} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
             return {
                 'latitude': city_data['latitude'],
                 'longitude': city_data['longitude'],
@@ -157,35 +163,7 @@ class LocationFetcher:
                 'elevation': city_data['elevation']
             }
         
-        # STEP 3: Try keyword detection as backup (for addresses like "147 Sutter St, SF, CA")
-        address_lower = address.lower()
-        keyword_cities = {
-            'chicago': 'Chicago, IL',
-            'san francisco': 'San Francisco, CA',
-            'sf,': 'San Francisco, CA',
-            'sf ': 'San Francisco, CA',
-            'new york': 'New York, NY',
-            'nyc': 'New York, NY',
-            'manhattan': 'New York, NY',
-            'los angeles': 'Los Angeles, CA',
-            'la,': 'Los Angeles, CA',
-            'la ': 'Los Angeles, CA',
-        }
-        
-        for keyword, city_key in keyword_cities.items():
-            if keyword in address_lower:
-                if city_key in self.CITY_LOOKUP:
-                    city_data = self.CITY_LOOKUP[city_key]
-                    print(f"✅ Detected city from keywords: {city_key} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
-                    return {
-                        'latitude': city_data['latitude'],
-                        'longitude': city_data['longitude'],
-                        'time_zone': city_data['time_zone'],
-                        'altitude': city_data['elevation'],
-                        'elevation': city_data['elevation']
-                    }
-        
-        # STEP 4: Try Google Maps API (if API key is available)
+        # STEP 2: Try Google Maps API (if API key available)
         if self.google_api_key:
             try:
                 print(f"🗺️  Trying Google Maps API geocoding...")
@@ -198,7 +176,7 @@ class LocationFetcher:
             except Exception as e:
                 print(f"⚠️  Google Maps API error: {e}")
         
-        # STEP 5: Try Nominatim geocoding API (free fallback)
+        # STEP 3: Try Nominatim geocoding API (free fallback)
         try:
             # Respect rate limit (1 request per second)
             self._respect_rate_limit()
@@ -250,8 +228,6 @@ class LocationFetcher:
                     )
                 
                 # Additional validation: Check if coordinates look reasonable for US addresses
-                # US addresses should have negative longitude (west of prime meridian)
-                # and latitude between ~25-50 for continental US
                 if ', US' in address or ', USA' in address or any(state in address for state in [' IL', ' NY', ' CA', ' TX', ' FL', ' IL,', ' NY,', ' CA,', ' TX,', ' FL,']):
                     if coords['longitude'] > 0:
                         print(f"❌ Error: US address '{address}' geocoded to positive longitude ({coords['longitude']:.4f}), which is invalid for US addresses")
@@ -262,7 +238,6 @@ class LocationFetcher:
                         )
                     if coords['latitude'] < 20 or coords['latitude'] > 55:
                         print(f"⚠️  Warning: US address '{address}' geocoded to latitude {coords['latitude']:.4f}, which seems unusual")
-                        # Don't raise error for this, just warn - could be Alaska or Hawaii
                 
                 # Calculate timezone and elevation from coordinates
                 time_zone = self.get_time_zone(coords['latitude'], coords['longitude'])
@@ -371,15 +346,31 @@ class LocationFetcher:
             # Try city/state extraction again (maybe with different pattern)
             city_state = self.extract_city_state(address)
             if city_state and city_state in self.CITY_LOOKUP:
-                city_data = self.CITY_LOOKUP[city_state]
-                print(f"✅ Fallback found city in lookup table: {city_state}")
-                return {
-                    'latitude': city_data['latitude'],
-                    'longitude': city_data['longitude'],
-                    'time_zone': city_data['time_zone'],
-                    'altitude': city_data['elevation'],
-                    'elevation': city_data['elevation']
+                street_segment = address.split(',')[0].strip() if address else ''
+                street_lower = street_segment.lower()
+                city_name_lower = city_state.split(',')[0].strip().lower()
+                state_lower = city_state.split(',')[1].strip().lower() if ',' in city_state else ''
+                has_house_number = bool(re.search(r'\d', street_segment))
+
+                city_only_aliases = {
+                    city_name_lower,
+                    city_state.lower(),
+                    f"{city_name_lower} {state_lower}".strip(),
+                    f"{city_name_lower}, {state_lower}".strip()
                 }
+
+                looks_like_city_level = (not has_house_number) and street_lower in city_only_aliases
+
+                if looks_like_city_level:
+                    city_data = self.CITY_LOOKUP[city_state]
+                    print(f"✅ Fallback found city in lookup table: {city_state} → {city_data['latitude']:.4f}°N, {city_data['longitude']:.4f}°W")
+                    return {
+                        'latitude': city_data['latitude'],
+                        'longitude': city_data['longitude'],
+                        'time_zone': city_data['time_zone'],
+                        'altitude': city_data['elevation'],
+                        'elevation': city_data['elevation']
+                    }
             
             # Try keyword detection one more time
             address_lower = address.lower()

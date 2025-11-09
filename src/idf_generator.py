@@ -226,6 +226,15 @@ Construction,
         
         def scale_vector(vector: tuple, scalar: float) -> tuple:
             return (vector[0] * scalar, vector[1] * scalar, vector[2] * scalar)
+
+        def vector_length(vector: tuple) -> float:
+            return math.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
+
+        def normalize_vector(vector: tuple) -> tuple:
+            length = vector_length(vector)
+            if length == 0:
+                return (0.0, 0.0, 0.0)
+            return (vector[0] / length, vector[1] / length, vector[2] / length)
         
         def format_vertices(vertices: List[tuple]) -> str:
             lines = []
@@ -371,15 +380,35 @@ Construction,
                 horizontal_unit = scale_vector(horizontal_dir, 1.0 / wall_width if wall_width else 0.0)
                 vertical_unit = (0.0, 0.0, -1.0)
                 
+                wall_vertices = rectangle_vertices(wall["origin"], vertical_dir, horizontal_dir)
+                v1, v2, _, v4 = wall_vertices
+                vertical_vector = (v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2])
+                horizontal_vector = (v4[0] - v1[0], v4[1] - v1[1], v4[2] - v1[2])
+                wall_height = vector_length(vertical_vector)
+                wall_width_vector_length = vector_length(horizontal_vector)
+                if wall_height <= 0 or wall_width_vector_length <= 0:
+                    continue
+
+                u_vert = normalize_vector(vertical_vector)
+                u_horiz = normalize_vector(horizontal_vector)
+
+                top_offset_distance = max(0.0, z_top - win_z_top)
+                bottom_offset_distance = max(0.0, z_top - win_z_bottom)
+                horizontal_offset_distance = horizontal_offset
+
                 top_left = add_vectors(
-                    wall["origin"],
-                    scale_vector(horizontal_unit, horizontal_offset),
-                    scale_vector(vertical_unit, top_offset),
+                    v1,
+                    scale_vector(u_horiz, horizontal_offset_distance),
+                    scale_vector(u_vert, top_offset_distance)
                 )
-                bottom_left = add_vectors(top_left, scale_vector(vertical_unit, window_height))
-                top_right = add_vectors(top_left, scale_vector(horizontal_unit, window_width))
-                bottom_right = add_vectors(bottom_left, scale_vector(horizontal_unit, window_width))
-                
+                bottom_left = add_vectors(
+                    v1,
+                    scale_vector(u_horiz, horizontal_offset_distance),
+                    scale_vector(u_vert, bottom_offset_distance)
+                )
+                top_right = add_vectors(top_left, scale_vector(u_horiz, window_width))
+                bottom_right = add_vectors(bottom_left, scale_vector(u_horiz, window_width))
+
                 window_vertices = [top_left, bottom_left, bottom_right, top_right]
                 vertex_lines = "\n".join(
                     f"  {vx:.4f},{vy:.4f},{vz:.4f}," if index < 3 else f"  {vx:.4f},{vy:.4f},{vz:.4f};"
@@ -458,10 +487,10 @@ Construction,
     
     def _zone_node_names(self, zone_name: str) -> Dict[str, str]:
         """Return the canonical node names for a given zone."""
-        supply_inlet = f"{zone_name} Supply Inlet Node"
-        exhaust = f"{zone_name} Exhaust Node"
+        supply_inlet = f"{zone_name} Supply Node"
+        exhaust = ""  # Ideal loads does not require a separate exhaust node
         zone_air = f"{zone_name} Zone Air Node"
-        zone_return = f"{zone_name} Return Node"
+        zone_return = ""
         return {
             "supply_inlet": supply_inlet,
             "exhaust": exhaust,
