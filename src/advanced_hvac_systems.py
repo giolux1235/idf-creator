@@ -223,23 +223,23 @@ class AdvancedHVACSystems:
         bt = (building_type or "office").lower()
 
         cooling_load_density_lookup = {
-            'office': 110.0,
-            'residential': 80.0,
-            'retail': 160.0,
-            'healthcare': 190.0,
-            'education': 120.0,
-            'industrial': 140.0,
-            'hospitality': 150.0
+            'office': 260.0,
+            'residential': 130.0,
+            'retail': 310.0,
+            'healthcare': 340.0,
+            'education': 220.0,
+            'industrial': 280.0,
+            'hospitality': 290.0
         }
 
         heating_load_density_lookup = {
-            'office': 90.0,
-            'residential': 120.0,
-            'retail': 110.0,
-            'healthcare': 140.0,
-            'education': 100.0,
-            'industrial': 110.0,
-            'hospitality': 120.0
+            'office': 180.0,
+            'residential': 150.0,
+            'retail': 170.0,
+            'healthcare': 210.0,
+            'education': 160.0,
+            'industrial': 190.0,
+            'hospitality': 190.0
         }
 
         cooling_load_density = cooling_load_density_lookup.get(bt, 220.0)
@@ -248,10 +248,11 @@ class AdvancedHVACSystems:
         usage = (zone_usage or '').lower()
         sensible_heat_ratio = 0.70
         usage_overrides = {
-            'break_room': {'cooling': 55.0, 'heating': 60.0, 'shr': 0.60},
-            'mechanical': {'cooling': 45.0, 'heating': 90.0, 'shr': 0.65},
-            'storage': {'cooling': 35.0, 'heating': 60.0, 'shr': 0.68},
-            'corridor': {'cooling': 30.0, 'heating': 50.0, 'shr': 0.75}
+            'break_room': {'cooling': 300.0, 'heating': 190.0, 'shr': 0.62},
+            'mechanical': {'cooling': 240.0, 'heating': 210.0, 'shr': 0.65},
+            'storage': {'cooling': 140.0, 'heating': 120.0, 'shr': 0.70},
+            'corridor': {'cooling': 130.0, 'heating': 110.0, 'shr': 0.75},
+            'lobby': {'cooling': 280.0, 'heating': 170.0, 'shr': 0.68}
         }
         for key, data in usage_overrides.items():
             if key in usage:
@@ -283,7 +284,7 @@ class AdvancedHVACSystems:
             sensible_heat_ratio=sensible_heat_ratio
         )
 
-        ventilation_rate = (zone_area or 0.0) * 0.0005
+        ventilation_rate = (zone_area or 0.0) * 0.0012
 
         return {
             'cooling_load': cooling_load,
@@ -393,17 +394,22 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
+            'availability_schedule_name': 'Always On',
             'air_inlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match branch inlet
             'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
             'fan_pressure_rise': 600,  # Pa
             'maximum_flow_rate': round(rated_air_flow * 1.05, 4),
+            'fan_power_minimum_flow_rate_input_method': 'Fraction',
             'fan_power_minimum_flow_fraction': 0.3,
+            'motor_efficiency': 0.9,
+            'motor_in_airstream_fraction': 1.0,
             'fan_power_coefficient_1': 0.0013,
             'fan_power_coefficient_2': 0.1470,
             'fan_power_coefficient_3': 0.9506,
             'fan_power_coefficient_4': -0.0998,
-            'fan_power_coefficient_5': 0.0
+            'fan_power_coefficient_5': 0.0,
+            'end_use_subcategory': 'HVAC Fans'
         }
         components.append(fan)
         
@@ -659,11 +665,15 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:ConstantVolume',
             'name': f"{zone_name}_RTUFan",
+            'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_RTUFanInlet",
             'air_outlet_node_name': f"{zone_name}_RTUFanOutlet",
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 500,  # Pa
-            'maximum_flow_rate': round(rated_air_flow, 4)
+            'maximum_flow_rate': round(rated_air_flow, 4),
+            'motor_efficiency': 0.9,
+            'motor_in_airstream_fraction': 1.0,
+            'end_use_subcategory': 'HVAC Fans'
         }
         components.append(fan)
         
@@ -753,11 +763,15 @@ class AdvancedHVACSystems:
         fan = {
             'type': 'Fan:ConstantVolume',
             'name': f"{zone_name}_PTACFan",
+            'availability_schedule_name': 'Always On',
             'air_inlet_node_name': f"{zone_name}_PTACMixedAir",  # From OA mixer
             'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",  # To cooling coil
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 400,  # Pa
-            'maximum_flow_rate': round(rated_air_flow, 4)
+            'maximum_flow_rate': round(rated_air_flow, 4),
+            'motor_efficiency': 0.9,
+            'motor_in_airstream_fraction': 1.0,
+            'end_use_subcategory': 'HVAC Fans'
         }
         components.append(fan)
         

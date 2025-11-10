@@ -290,6 +290,14 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         # Use only valid zones
         zones = valid_zones
         
+        if not zones:
+            fallback_zones = self._generate_fallback_zones(footprint, building_params)
+            if fallback_zones:
+                zones = fallback_zones
+                print(f"✅ Fallback zone layout created with {len(zones)} zone(s) totaling {sum(z.area for z in zones):.2f} m²")
+            else:
+                print("⚠️  Critical: Unable to generate fallback zones; proceeding with empty geometry")
+        
         # Surfaces (generate first to calculate actual floor areas)
         surfaces = self.geometry_engine.generate_building_surfaces(zones, footprint)
         
@@ -615,7 +623,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             building_type_lower = building_type.lower() if building_type else 'office'
             
             # Gather all available area sources (in priority order)
-            area_sources = {}
+            area_sources: Dict[str, float] = {}
             
             # Source 1: Microsoft Building Footprints (highest priority for US locations - most accurate)
             try:
@@ -2756,6 +2764,10 @@ Output:Variable,
   RunPeriod;              !- Reporting Frequency
 
 Output:Meter,
+  Electricity:Facility,                  !- Key Name
+  RunPeriod;                             !- Reporting Frequency
+
+Output:Meter,
   Electricity:Building,                    !- Key Name
   RunPeriod;                               !- Reporting Frequency
 
@@ -3141,3 +3153,59 @@ Output:Meter,
 """
 
         return "\n".join([heating_dd.strip("\n"), "", cooling_dd.strip("\n"), ""]) + "\n"
+
+    def _generate_fallback_zones(self, footprint: BuildingFootprint, building_params: Dict) -> List[ZoneGeometry]:
+        """Create a simple zone layout when advanced geometry fails."""
+        fallback_zones: List[ZoneGeometry] = []
+        try:
+            target_area = building_params.get('floor_area') or building_params.get('total_area')
+            if not target_area and footprint and footprint.polygon:
+                target_area = footprint.polygon.area
+            if not target_area or target_area <= 0:
+                target_area = 500.0
+
+            if footprint and footprint.polygon and footprint.polygon.is_valid and footprint.polygon.area >= 1.0:
+                base_polygon = footprint.polygon.buffer(0)
+            else:
+                aspect_ratio = 1.5
+                width = math.sqrt(target_area / aspect_ratio)
+                length = width * aspect_ratio
+                base_polygon = Polygon([(0.0, 0.0), (length, 0.0), (length, width), (0.0, width)])
+
+            if not base_polygon.is_valid or base_polygon.area < 1.0:
+                base_polygon = base_polygon.convex_hull
+
+            stories = building_params.get('stories') or building_params.get('num_floors')
+            if not stories and footprint:
+                stories = footprint.stories
+            stories = max(int(stories or 1), 1)
+
+            floor_height = building_params.get('floor_to_floor_height')
+            if not floor_height and footprint and footprint.stories:
+                floor_height = max(footprint.height / max(footprint.stories, 1), 3.0)
+            floor_height = float(floor_height or 3.0)
+
+            base_name = building_params.get('name', 'Fallback').replace(' ', '_')
+
+            if footprint:
+                footprint.polygon = base_polygon
+                footprint.stories = stories
+                footprint.height = stories * floor_height
+
+            for level in range(stories):
+                zone_poly = base_polygon.buffer(0)
+                zone_name = f"{base_name}_Zone_{level + 1}"
+                fallback_zones.append(ZoneGeometry(
+                    name=zone_name,
+                    polygon=zone_poly,
+                    floor_level=level,
+                    height=floor_height,
+                    area=zone_poly.area,
+                    perimeter=zone_poly.length
+                ))
+
+            print(f"⚠️  Warning: Advanced geometry produced no zones; generated {len(fallback_zones)} fallback zone(s) using footprint area {base_polygon.area:.2f} m²")
+        except Exception as exc:
+            print(f"❌ Fallback zone creation failed: {exc}")
+
+        return fallback_zones

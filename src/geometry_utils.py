@@ -159,6 +159,24 @@ def calculate_polygon_area_2d(vertices_2d: List[Tuple[float, float]]) -> float:
     return abs(area) / 2.0
 
 
+def calculate_polygon_signed_area_2d(vertices_2d: List[Tuple[float, float]]) -> float:
+    """Calculate signed area of a 2D polygon.
+
+    Positive value indicates counter-clockwise ordering, negative indicates clockwise.
+    """
+    if len(vertices_2d) < 3:
+        return 0.0
+
+    area = 0.0
+    n = len(vertices_2d)
+    for i in range(n):
+        x1, y1 = vertices_2d[i]
+        x2, y2 = vertices_2d[(i + 1) % n]
+        area += x1 * y2 - x2 * y1
+
+    return area / 2.0
+
+
 def calculate_polygon_center_2d(vertices_2d: List[Tuple[float, float]]) -> Tuple[float, float]:
     """Calculate center point of 2D polygon.
     
@@ -403,30 +421,20 @@ def fix_vertex_ordering_for_ceiling(vertices_2d: List[Tuple[float, float]],
     if len(vertices_2d) < 3:
         return [(v[0], v[1], z_coord) for v in vertices_2d]
     
-    # Convert to 3D vertices
+    signed_area = calculate_polygon_signed_area_2d(vertices_2d)
+    if signed_area < 0.0:
+        vertices_2d = list(reversed(vertices_2d))
+
     vertices_3d = [(v[0], v[1], z_coord) for v in vertices_2d]
-    
-    # Calculate current normal and tilt
-    normal = calculate_surface_normal(vertices_3d)
-    tilt = calculate_tilt_angle(normal)
-    
-    # CRITICAL FIX: Ceiling should have tilt ~0° (normal pointing upward, z-component positive)
-    # If tilt is > 90°, the normal is pointing downward (tilt = 180° means upside down)
-    # We need to reverse the vertex order to flip the normal
-    if tilt > 90.0:
-        vertices_3d = list(reversed(vertices_3d))
-        normal = calculate_surface_normal(vertices_3d)
-        tilt = calculate_tilt_angle(normal)
-    
-    # Final verification: ensure tilt is near 0° (within 10° tolerance)
-    # If still not correct, the polygon might be non-planar or have other issues
-    # But we've done our best to fix it
-    if abs(tilt) > 10.0 and abs(tilt - 180.0) < 10.0:
-        # Still upside down, try one more reversal
-        vertices_3d = list(reversed(vertices_3d))
-        normal = calculate_surface_normal(vertices_3d)
-        tilt = calculate_tilt_angle(normal)
-    
+
+    if vertices_3d:
+        start_index = min(
+            range(len(vertices_3d)),
+            key=lambda i: (-vertices_3d[i][1], vertices_3d[i][0])
+        )
+        if start_index != 0:
+            vertices_3d = vertices_3d[start_index:] + vertices_3d[:start_index]
+
     return vertices_3d
 
 

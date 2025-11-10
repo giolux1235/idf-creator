@@ -275,6 +275,17 @@ Construction,
 """)
             
             # Ceiling
+            ceiling_vertices = [
+                (x_min, y_max, z_top),  # upper left
+                (x_max, y_max, z_top),  # upper right
+                (x_max, y_min, z_top),  # lower right
+                (x_min, y_min, z_top),  # lower left
+            ]
+            ceiling_lines = "\n".join(
+                f"  {vx:.4f},{vy:.4f},{vz:.4f}," if idx < 3 else f"  {vx:.4f},{vy:.4f},{vz:.4f};"
+                for idx, (vx, vy, vz) in enumerate(ceiling_vertices)
+            )
+
             surfaces.append(f"""BuildingSurface:Detailed,
   {zone_name}_Ceiling,     !- Name
   Roof,                    !- Surface Type
@@ -287,10 +298,7 @@ Construction,
   WindExposed,             !- Wind Exposure
   AutoCalculate,           !- View Factor to Ground
   4,                       !- Number of Vertices
-  {x_min:.4f},{y_max:.4f},{z_top:.4f}, !- Vertex 1
-  {x_min:.4f},{y_min:.4f},{z_top:.4f}, !- Vertex 2
-  {x_max:.4f},{y_min:.4f},{z_top:.4f}, !- Vertex 3
-  {x_max:.4f},{y_max:.4f},{z_top:.4f}; !- Vertex 4
+{ceiling_lines}
 """)
             
             wall_configs = [
@@ -448,6 +456,11 @@ Construction,
     def generate_lighting_objects(self, zone_params: Dict, zone_name: str) -> str:
         """Generate Lights objects."""
         total_lighting_watts = zone_params.get('lighting_power', 0.0)
+        zone_area = zone_params.get('zone_area', 0.0)
+        if zone_area and zone_area > 0:
+            min_lighting_watts = 8.0 * zone_area
+            if total_lighting_watts < min_lighting_watts:
+                total_lighting_watts = min_lighting_watts
         return f"""Lights,
   {zone_name}_Lights,      !- Name
   {zone_name},             !- Zone or ZoneList Name

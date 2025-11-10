@@ -329,6 +329,11 @@ def api_generate_idf():
         # Merge parameters: user_params from request > direct parameters > parsed from description
         # Apply safe defaults for all numeric parameters
         stories = user_params_request.get('stories') or data.get('stories') or idf_params.get('stories')
+        floor_area_confirmed = bool(
+            user_params_request.get('floor_area_confirmed')
+            or data.get('floor_area_confirmed')
+            or idf_params.get('floor_area_confirmed')
+        )
         floor_area = user_params_request.get('floor_area') or data.get('floor_area') or idf_params.get('floor_area')
         building_type = user_params_request.get('building_type') or data.get('building_type') or idf_params.get('building_type') or 'Building'
         
@@ -341,15 +346,21 @@ def api_generate_idf():
             stories = None
         if not floor_area_provided:
             floor_area = None
+        elif not floor_area_confirmed:
+            print(f"⚠️  Ignoring unconfirmed floor area override ({floor_area} m²). Real footprint data will be used instead.")
+            floor_area = None
+            floor_area_provided = False
         
         user_params = {}
         if building_type:
             user_params['building_type'] = building_type
         if story_provided:
             user_params['stories'] = stories
-        if floor_area_provided:
+        if floor_area_provided and floor_area_confirmed:
             user_params['floor_area'] = floor_area
-            user_params['floor_area_source'] = 'user'
+            user_params['floor_area_source'] = 'user_confirmed'
+        elif floor_area_provided and not floor_area_confirmed:
+            user_params['floor_area_override_rejected'] = True
         
         # Also check for floor_area_per_story_m2
         if user_params_request.get('floor_area_per_story_m2') or data.get('floor_area_per_story_m2'):
