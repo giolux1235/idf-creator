@@ -157,18 +157,18 @@ def normalize_node_name(node_name: str) -> str:
 
 def calculate_dx_supply_air_flow(cooling_capacity: float,
                                  sensible_heat_ratio: float = 0.68,
-                                 supply_delta_t: float = 8.0) -> float:
+                                 supply_delta_t: float = 11.0) -> float:
     """
     Calculate DX coil air flow using EnergyPlus recommended ratios.
     
     EnergyPlus requires air volume flow rate per watt to be in the range
-    [2.684E-005 -- 6.713E-005] m³/s/W. This function calculates the air flow
-    rate using a conservative midpoint of this range (4.5E-5 m³/s/W), which
-    corresponds to roughly 450 CFM per ton and keeps the coil within the
-    validated operating envelope described in the Engineering Reference.
+    [2.684E-005 -- 6.713E-005] m³/s/W. This function ensures airflow meets
+    minimum requirements even if EnergyPlus autosizes capacity upward.
     
     Args:
         cooling_capacity: Cooling capacity in watts (W)
+        sensible_heat_ratio: Sensible heat ratio (0.0-1.0)
+        supply_delta_t: Supply air temperature drop (°C), default 11.0
         
     Returns:
         Air flow rate in m³/s, constrained to valid EnergyPlus range
@@ -177,24 +177,37 @@ def calculate_dx_supply_air_flow(cooling_capacity: float,
         - EnergyPlus Input Output Reference: Coil:Cooling:DX:SingleSpeed
         - EnergyPlus Engineering Reference: DX Cooling Coil Model
     """
-    min_ratio = 4.027e-5  # m³/s per W (EnergyPlus 24.2 minimum guidance)
-    max_ratio = 6.041e-5  # Slightly conservative cap below absolute maximum
-    target_ratio = 5.0e-5  # Midpoint within the recommended range
+    # EnergyPlus validated range: 2.684E-005 to 6.713E-005 m³/s/W
+    # Use conservative minimum to account for autosizing increasing capacity
+    min_ratio = 4.5e-5  # m³/s per W (above minimum to provide buffer)
+    max_ratio = 6.0e-5  # Conservative cap below absolute maximum
+    target_ratio = 5.2e-5  # Slightly above midpoint for safety margin
 
     if cooling_capacity is None or cooling_capacity <= 0:
         simulated_capacity = 1000.0
         return simulated_capacity * target_ratio
 
+    # Calculate airflow from sensible load (ensures adequate cooling)
     air_density = 1.2  # kg/m³
     cp_air = 1006.0    # J/(kg·K)
     sensible_capacity = max(cooling_capacity * sensible_heat_ratio, 0.0)
     flow_from_sensible = sensible_capacity / (air_density * cp_air * max(supply_delta_t, 1.0))
 
+    # Calculate airflow from ratio requirements
     ratio_floor = cooling_capacity * min_ratio
-    ratio_mid = cooling_capacity * target_ratio
+    ratio_target = cooling_capacity * target_ratio
     ratio_cap = cooling_capacity * max_ratio
 
-    flow = max(flow_from_sensible, ratio_floor, ratio_mid)
+    # Use maximum of sensible-based flow and ratio-based flow to ensure both requirements met
+    flow = max(flow_from_sensible, ratio_floor, ratio_target)
     flow = min(flow, ratio_cap)
+    
+    # Final safety check: ensure minimum ratio is always met
+    if cooling_capacity > 0:
+        actual_ratio = flow / cooling_capacity
+        if actual_ratio < 2.684e-5:
+            # Force minimum ratio if somehow below threshold
+            flow = cooling_capacity * 2.684e-5
+    
     return flow
 

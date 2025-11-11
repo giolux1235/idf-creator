@@ -32,6 +32,8 @@ class AdvancedHVACSystems:
         self.equipment_templates = self._load_equipment_templates()
         self.control_templates = self._load_control_templates()
         self.age_adjuster = BuildingAgeAdjuster()
+        # Ensure we only inject the shared VAV minimum flow schedule once per building
+        self._vav_min_flow_schedule_added = False
         # Optional helper that can create shared OutdoorAir nodes (from BaseIDFGenerator)
         self.node_generator = node_generator
     
@@ -183,6 +185,7 @@ class AdvancedHVACSystems:
         
         # Generate system components
         components = []
+        self._ensure_vav_min_flow_schedule(components)
         
         if hvac_template.system_type == 'VAV':
             components.extend(self._generate_vav_system(zone_name, sizing_params, hvac_template, unique_suffix, climate_zone))
@@ -223,23 +226,23 @@ class AdvancedHVACSystems:
         bt = (building_type or "office").lower()
 
         cooling_load_density_lookup = {
-            'office': 260.0,
-            'residential': 130.0,
-            'retail': 310.0,
-            'healthcare': 340.0,
-            'education': 220.0,
-            'industrial': 280.0,
-            'hospitality': 290.0
+            'office': 70.0,
+            'residential': 55.0,
+            'retail': 110.0,
+            'healthcare': 140.0,
+            'education': 65.0,
+            'industrial': 120.0,
+            'hospitality': 100.0
         }
 
         heating_load_density_lookup = {
-            'office': 180.0,
-            'residential': 150.0,
-            'retail': 170.0,
-            'healthcare': 210.0,
-            'education': 160.0,
-            'industrial': 190.0,
-            'hospitality': 190.0
+            'office': 45.0,
+            'residential': 45.0,
+            'retail': 55.0,
+            'healthcare': 80.0,
+            'education': 45.0,
+            'industrial': 65.0,
+            'hospitality': 55.0
         }
 
         cooling_load_density = cooling_load_density_lookup.get(bt, 220.0)
@@ -248,11 +251,11 @@ class AdvancedHVACSystems:
         usage = (zone_usage or '').lower()
         sensible_heat_ratio = 0.70
         usage_overrides = {
-            'break_room': {'cooling': 300.0, 'heating': 190.0, 'shr': 0.62},
-            'mechanical': {'cooling': 240.0, 'heating': 210.0, 'shr': 0.65},
-            'storage': {'cooling': 140.0, 'heating': 120.0, 'shr': 0.70},
-            'corridor': {'cooling': 130.0, 'heating': 110.0, 'shr': 0.75},
-            'lobby': {'cooling': 280.0, 'heating': 170.0, 'shr': 0.68}
+            'break_room': {'cooling': 110.0, 'heating': 75.0, 'shr': 0.60},
+            'mechanical': {'cooling': 95.0, 'heating': 85.0, 'shr': 0.65},
+            'storage': {'cooling': 55.0, 'heating': 40.0, 'shr': 0.72},
+            'corridor': {'cooling': 45.0, 'heating': 35.0, 'shr': 0.78},
+            'lobby': {'cooling': 90.0, 'heating': 60.0, 'shr': 0.68}
         }
         for key, data in usage_overrides.items():
             if key in usage:
@@ -262,14 +265,14 @@ class AdvancedHVACSystems:
                 break
 
         climate_multipliers = {
-            '1': {'cooling': 1.2, 'heating': 0.3},
-            '2': {'cooling': 1.1, 'heating': 0.4},
-            '3': {'cooling': 1.0, 'heating': 0.6},
-            '4': {'cooling': 0.9, 'heating': 0.8},
-            '5': {'cooling': 0.8, 'heating': 1.0},
-            '6': {'cooling': 0.7, 'heating': 1.2},
-            '7': {'cooling': 0.6, 'heating': 1.4},
-            '8': {'cooling': 0.5, 'heating': 1.6}
+            '1': {'cooling': 1.1, 'heating': 0.4},
+            '2': {'cooling': 1.05, 'heating': 0.5},
+            '3': {'cooling': 1.0, 'heating': 0.65},
+            '4': {'cooling': 0.95, 'heating': 0.85},
+            '5': {'cooling': 0.9, 'heating': 1.0},
+            '6': {'cooling': 0.85, 'heating': 1.2},
+            '7': {'cooling': 0.8, 'heating': 1.35},
+            '8': {'cooling': 0.75, 'heating': 1.55}
         }
 
         cz = (climate_zone or "3")[0]
@@ -278,13 +281,27 @@ class AdvancedHVACSystems:
         cooling_load = zone_area * cooling_load_density * multipliers['cooling']
         heating_load = zone_area * heating_load_density * multipliers['heating']
 
-        design_cooling_capacity = max(cooling_load * 1.10, 2500.0)
+        # Scale down loads for very small zones to prevent oversized HVAC
+        # Small buildings have less heat loss/gain per unit area due to reduced surface-to-volume ratio
+        if zone_area < 50.0:
+            # Very small zones: reduce loads by 30%
+            cooling_load *= 0.7
+            heating_load *= 0.7
+        elif zone_area < 200.0:
+            # Small zones: reduce loads by 15%
+            cooling_load *= 0.85
+            heating_load *= 0.85
+
+        # Add buffer for EnergyPlus autosizing (may increase capacity by 20-30%)
+        # But reduce minimum capacity for small zones
+        min_capacity = 2000.0 if zone_area < 100.0 else 2500.0
+        design_cooling_capacity = max(cooling_load * 1.25, min_capacity)
         supply_air_flow = calculate_dx_supply_air_flow(
             design_cooling_capacity,
             sensible_heat_ratio=sensible_heat_ratio
         )
 
-        ventilation_rate = (zone_area or 0.0) * 0.0012
+        ventilation_rate = (zone_area or 0.0) * 0.0008
 
         return {
             'cooling_load': cooling_load,
@@ -314,20 +331,21 @@ class AdvancedHVACSystems:
         )
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
-        min_flow_required = design_cooling_capacity * 2.684e-5  # m³/s needed to satisfy EnergyPlus minimum volume/ton guidance
+        safety_margin = 1.35  # Account for EnergyPlus autosizing increasing capacity beyond our estimate
+        min_flow_required = design_cooling_capacity * 2.684e-5 * safety_margin  # m³/s needed to satisfy EnergyPlus minimum volume/ton guidance
         required_fraction = min_flow_required / max(rated_air_flow, 0.001)
-        base_min_fraction = 0.6
+        base_min_fraction = 0.65
         usage_fraction_overrides = {
-            'break_room': 0.5,
-            'mechanical': 0.5,
-            'storage': 0.4,
-            'corridor': 0.4
+            'break_room': 0.7,
+            'mechanical': 0.7,
+            'storage': 0.6,
+            'corridor': 0.65
         }
         for key, fraction in usage_fraction_overrides.items():
             if key in zone_usage:
                 base_min_fraction = fraction
                 break
-        min_flow_fraction = min(0.9, max(base_min_fraction, required_fraction))
+        min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))
         
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
@@ -356,7 +374,7 @@ class AdvancedHVACSystems:
         air_loop = {
             'type': 'AirLoopHVAC',
             'name': f"{zn}_AirLoop",
-            'design_supply_air_flow_rate': 'Autosize',
+            'design_supply_air_flow_rate': 'Autosize',  # Let EnergyPlus size based on zone requirements
             'branch_list': f"{zn}_BranchList",
             'connector_list': f"{zn}_ConnectorList",
             'availability_manager_list_name': f"{zn}_CoolingAvailabilityManagers",
@@ -398,8 +416,9 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match branch inlet
             'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
-            'fan_pressure_rise': 600,  # Pa
-            'maximum_flow_rate': round(rated_air_flow * 1.05, 4),
+            # Reduce fan pressure for smaller zones to lower energy consumption
+            'fan_pressure_rise': 400 if sizing_params.get('zone_area', 0) < 200.0 else 600,  # Pa
+            'maximum_flow_rate': 'Autosize',  # Allow EnergyPlus to size based on system requirements
             'fan_power_minimum_flow_rate_input_method': 'Fraction',
             'fan_power_minimum_flow_fraction': 0.3,
             'motor_efficiency': 0.9,
@@ -516,10 +535,10 @@ class AdvancedHVACSystems:
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
             'availability_schedule_name': cooling_availability_schedule_name,  # Use temperature-based schedule
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on zone loads
             'gross_rated_sensible_heat_ratio': round(max(min(zone_shr, 0.85), 0.60), 3),
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 5),
+            'rated_air_flow_rate': 'Autosize',  # Let EnergyPlus size to maintain proper airflow ratio
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -562,7 +581,7 @@ class AdvancedHVACSystems:
             # Set to empty (,) to minimize warnings, though EnergyPlus may still warn
             'maximum_flow_fraction_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
-            'maximum_flow_fraction_before_reheat': 0.2,
+            'maximum_flow_fraction_before_reheat': round(min_flow_fraction, 3),
             'reheat_coil_name': f"{zn}_ReheatCoil",
             'maximum_air_flow_rate': 'Autosize',
             'maximum_hot_water_or_steam_flow_rate': 'Autosize',
@@ -670,7 +689,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_RTUFanOutlet",
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 500,  # Pa
-            'maximum_flow_rate': round(rated_air_flow, 4),
+            'maximum_flow_rate': 'Autosize',
             'motor_efficiency': 0.9,
             'motor_in_airstream_fraction': 1.0,
             'end_use_subcategory': 'HVAC Fans'
@@ -687,7 +706,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 5),
+            'rated_air_flow_rate': 'Autosize',
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -768,7 +787,7 @@ class AdvancedHVACSystems:
             'air_outlet_node_name': f"{zone_name}_PTACFanOutlet",  # To cooling coil
             'fan_total_efficiency': 0.6,
             'fan_pressure_rise': 400,  # Pa
-            'maximum_flow_rate': round(rated_air_flow, 4),
+            'maximum_flow_rate': 'Autosize',
             'motor_efficiency': 0.9,
             'motor_in_airstream_fraction': 1.0,
             'end_use_subcategory': 'HVAC Fans'
@@ -785,7 +804,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': round(rated_air_flow, 5),
+            'rated_air_flow_rate': 'Autosize',
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
         }
         components.append(cooling_coil)
@@ -1018,3 +1037,28 @@ class AdvancedHVACSystems:
         controls.append(setpoint_manager)
         
         return controls
+
+    def _ensure_vav_min_flow_schedule(self, components: List[Dict]) -> None:
+        """Append a default VAV minimum flow schedule once so post-processing can reference it."""
+        if self._vav_min_flow_schedule_added:
+            return
+
+        schedule_raw = """Schedule:Compact,
+  VAV Minimum Flow Fraction Schedule,
+  Fraction,
+  Through: 12/31,
+  For: SummerDesignDay,
+  Until: 24:00, 0.70,
+  For: WinterDesignDay,
+  Until: 24:00, 0.35,
+  For: AllOtherDays,
+  Until: 24:00, 0.25;
+
+"""
+
+        components.append({
+            'type': 'IDF_STRING',
+            'name': 'VAV Minimum Flow Fraction Schedule',
+            'raw': schedule_raw
+        })
+        self._vav_min_flow_schedule_added = True

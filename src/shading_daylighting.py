@@ -194,8 +194,15 @@ Schedule:Compact,
             # Ensure margin is not larger than zone size
             zone_width = max_x - min_x
             zone_height = max_y - min_y
+            # Very small zones do not gain from daylighting controls and frequently fail spacing checks.
+            if zone_width < 0.8 or zone_height < 0.8:
+                return ""
             actual_margin_x = min(margin, zone_width / 4.0)  # Use 25% of width as max margin
             actual_margin_y = min(margin, zone_height / 4.0)  # Use 25% of height as max margin
+            # Maintain a minimum clearance of 0.30m from glazing planes when possible
+            min_clearance = 0.30
+            actual_margin_x = max(min_clearance, min(actual_margin_x, max(zone_width / 2.0 - 0.05, min_clearance)))
+            actual_margin_y = max(min_clearance, min(actual_margin_y, max(zone_height / 2.0 - 0.05, min_clearance)))
             
             # Calculate reference point within bounds with margin
             ref_x = max(min_x + actual_margin_x, min(max_x - actual_margin_x, centroid.x))

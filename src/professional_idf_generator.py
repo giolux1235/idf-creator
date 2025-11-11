@@ -342,8 +342,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 print(f"⚠️  Warning: Skipping invalid surface {surface.get('name', 'Unknown')}: {e}")
                 continue
         
-        # Windows
-        windows = self._generate_windows(zones, footprint, building_type, building_params)
+        # Windows (pass surfaces to match window vertices to wall vertices)
+        windows = self._generate_windows(zones, footprint, building_type, building_params, surfaces)
         for window in windows:
             idf_content.append(self.format_window_object(window))
         
@@ -2173,17 +2173,17 @@ InternalMass,
   No,                       !- 100% Outdoor Air in Heating
   0.0080,                   !- Central Cooling Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
   0.0080,                   !- Central Heating Design Supply Air Humidity Ratio {{kgWater/kgDryAir}}
-  DesignDay,                !- Cooling Supply Air Flow Rate Method
+  FlowPerCoolingCapacity,   !- Cooling Supply Air Flow Rate Method
   ,                         !- Cooling Supply Air Flow Rate {{m3/s}}
   ,                         !- Cooling Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
   ,                         !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
-  ,                         !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}}
+  5.0e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}}
   DesignDay,                !- Heating Supply Air Flow Rate Method
   ,                         !- Heating Supply Air Flow Rate {{m3/s}}
   ,                         !- Heating Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
   ,                         !- Heating Fraction of Autosized Heating Supply Air Flow Rate
   ,                         !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
-  ,                         !- Heating Supply Air Flow Rate Per Unit Heating Capacity {{m3/s-W}}
+  4.0e-5,                   !- Heating Supply Air Flow Rate Per Unit Heating Capacity {{m3/s-W}}
   ZoneSum,                  !- System Outdoor Air Method
   1.0,                      !- Zone Maximum Outdoor Air Fraction
   CoolingDesignCapacity,    !- Cooling Design Capacity Method
@@ -2199,7 +2199,12 @@ InternalMass,
 
 """
     
-    def _add_missing_day_types(self, schedule_values: str, default_value: float = 0.0) -> str:
+    def _add_missing_day_types(self,
+                               schedule_values: str,
+                               default_value: float = 0.0,
+                               summer_value: Optional[float] = None,
+                               winter_value: Optional[float] = None,
+                               custom_value: Optional[float] = None) -> str:
         """Add missing day types to schedule if Through=12/31 is used.
         
         EnergyPlus requires SummerDesignDay, WinterDesignDay, CustomDay1, and CustomDay2
@@ -2237,8 +2242,17 @@ InternalMass,
             # Already complete with explicit day types, but ensure semicolon
             return schedule_values + ';'
         
-        # Add missing day types (only if not using AllDays and not already present)
-        missing_day_types = f', For: SummerDesignDay, Until: 24:00, {default_value}, For: WinterDesignDay, Until: 24:00, {default_value}, For: CustomDay1, Until: 24:00, {default_value}, For: CustomDay2, Until: 24:00, {default_value}'
+        # Determine fallback values
+        summer_value = default_value if summer_value is None else summer_value
+        winter_value = default_value if winter_value is None else winter_value
+        custom_value = default_value if custom_value is None else custom_value
+        
+        missing_day_types = (
+            f', For: SummerDesignDay, Until: 24:00, {summer_value},'
+            f' For: WinterDesignDay, Until: 24:00, {winter_value},'
+            f' For: CustomDay1, Until: 24:00, {custom_value},'
+            f' For: CustomDay2, Until: 24:00, {custom_value}'
+        )
         
         schedule_values = schedule_values + missing_day_types + ';'
         
@@ -2364,7 +2378,7 @@ InternalMass,
             space_type_upper = space_type.upper().replace('-', '_')
             
             # Determine if this is an office/work space (higher occupancy) vs. other
-            is_office_space = any(x in space_type.lower() for x in ['office', 'conference', 'classroom'])
+            is_office_space = any(x in space_type.lower() for x in ['office', 'classroom', 'workspace']) and 'conference' not in space_type.lower()
             is_lobby = 'lobby' in space_type.lower()
             is_break_room = 'break' in space_type.lower()
             is_mechanical = 'mechanical' in space_type.lower()
@@ -2374,7 +2388,7 @@ InternalMass,
             if is_lobby:
                 # Lobby: 6am-8am: 0.5, 8am-6pm: 1.0, 6pm-12am: 0.0 (matches user document exactly)
                 occupancy_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.0, Until: 08:00, 0.5, Until: 18:00, 1.0, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
-                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0, summer_value=1.0, winter_value=0.8, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2383,7 +2397,7 @@ InternalMass,
             elif is_office_space:
                 # Office spaces: 6am-8am: 0.8, 8am-6pm: 1.0, 6pm-12am: 0.0 (matches user document exactly)
                 occupancy_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.0, Until: 08:00, 0.8, Until: 18:00, 1.0, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
-                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0, summer_value=1.0, winter_value=0.8, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2392,7 +2406,7 @@ InternalMass,
             elif 'conference' in space_type.lower():
                 # Conference: 8am-5pm: 0.5, otherwise 0.0 (matches user document exactly)
                 occupancy_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.0, Until: 17:00, 0.5, Until: 24:00, 0.0, For: Weekends, Until: 24:00, 0.0, For: Holidays, Until: 24:00, 0.0'
-                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0, summer_value=0.5, winter_value=0.4, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2401,7 +2415,7 @@ InternalMass,
             elif is_mechanical:
                 # Mechanical: 10% occupancy (maintenance staff) (matches user document exactly)
                 occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
-                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0, summer_value=0.1, winter_value=0.1, custom_value=0.1)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2412,10 +2426,12 @@ InternalMass,
                 if is_break_room:
                     # Break room: default occupancy (ensure schedule is created)
                     occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.2'
+                    design_day_fraction = 0.2
                 else:
                     # Other spaces (storage, etc.) - lower occupancy year-round
-                    occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.2'
-                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0)
+                    occupancy_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
+                    design_day_fraction = 0.1
+                occupancy_values = self._add_missing_day_types(occupancy_values, default_value=0.0, summer_value=design_day_fraction, winter_value=design_day_fraction, custom_value=design_day_fraction)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_OCCUPANCY,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2445,7 +2461,7 @@ InternalMass,
             # Lighting schedule with all required day types to eliminate warnings
             if is_lobby:
                 lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.9, Until: 18:00, 1.0, Until: 24:00, 0.3, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.05, summer_value=1.0, winter_value=0.8, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2453,7 +2469,7 @@ InternalMass,
 """)
             elif 'conference' in space_type.lower():
                 lighting_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.1, Until: 17:00, 0.9, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.05, summer_value=0.9, winter_value=0.7, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2461,15 +2477,15 @@ InternalMass,
 """)
             elif is_break_room:
                 lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.8, Until: 18:00, 0.9, Until: 24:00, 0.2, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.2, summer_value=0.8, winter_value=0.6, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
   {lighting_values}
 """)
             elif is_mechanical:
-                lighting_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.5'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.3'
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.3, summer_value=0.3, winter_value=0.3, custom_value=0.3)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2477,7 +2493,7 @@ InternalMass,
 """)
             elif is_office_space:
                 lighting_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.05, Until: 08:00, 0.9, Until: 18:00, 0.95, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.05, summer_value=0.9, winter_value=0.7, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2485,7 +2501,7 @@ InternalMass,
 """)
             else:
                 lighting_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
-                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.0)
+                lighting_values = self._add_missing_day_types(lighting_values, default_value=0.05, summer_value=0.9, winter_value=0.7, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_LIGHTING,   !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2495,7 +2511,7 @@ InternalMass,
             # Equipment schedule with all required day types to eliminate warnings
             if is_lobby:
                 equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.1, Until: 08:00, 0.5, Until: 18:00, 0.7, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.1, summer_value=1.0, winter_value=0.7, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2503,7 +2519,7 @@ InternalMass,
 """)
             elif 'conference' in space_type.lower():
                 equipment_values = 'Through: 12/31, For: Weekdays, Until: 08:00, 0.1, Until: 17:00, 0.8, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.05, For: Holidays, Until: 24:00, 0.05'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.1, summer_value=0.8, winter_value=0.6, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2511,7 +2527,7 @@ InternalMass,
 """)
             elif is_break_room:
                 equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.2, Until: 08:00, 0.6, Until: 18:00, 0.7, Until: 24:00, 0.3, For: Weekends, Until: 24:00, 0.2, For: Holidays, Until: 24:00, 0.1'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.2, summer_value=0.8, winter_value=0.6, custom_value=0.4)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2519,7 +2535,7 @@ InternalMass,
 """)
             elif is_mechanical:
                 equipment_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.3'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.3, summer_value=0.7, winter_value=0.7, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2527,7 +2543,7 @@ InternalMass,
 """)
             elif is_office_space:
                 equipment_values = 'Through: 12/31, For: Weekdays, Until: 06:00, 0.1, Until: 08:00, 0.7, Until: 18:00, 0.8, Until: 24:00, 0.1, For: Weekends, Until: 24:00, 0.1, For: Holidays, Until: 24:00, 0.05'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.1, summer_value=0.9, winter_value=0.7, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2535,7 +2551,7 @@ InternalMass,
 """)
             else:
                 equipment_values = 'Through: 12/31, For: AllDays, Until: 24:00, 0.1'
-                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.0)
+                equipment_values = self._add_missing_day_types(equipment_values, default_value=0.1, summer_value=0.9, winter_value=0.7, custom_value=0.5)
                 schedules.append(f"""Schedule:Compact,
   {space_type_upper}_EQUIPMENT,  !- Name
   AnyNumber,                      !- Schedule Type Limits Name
@@ -2865,7 +2881,7 @@ Output:Meter,
         best = min(cardinals.items(), key=lambda kv: abs(kv[1]-angle))
         return best[0]
 
-    def _generate_windows(self, zones: List[ZoneGeometry], footprint: BuildingFootprint, building_type: str, building_params: Dict) -> List[Dict]:
+    def _generate_windows(self, zones: List[ZoneGeometry], footprint: BuildingFootprint, building_type: str, building_params: Dict, surfaces: List[Dict] = None) -> List[Dict]:
         """Generate windows for zones, targeting building-type Window-to-Wall Ratio (WWR).
 
         Strategy:
@@ -2873,6 +2889,7 @@ Output:Meter,
         - Target window area = WWR * wall area (per building type default)
         - Use a centered ribbon window sized to meet target area, with limits
         - Maintain margins from floor/ceiling and wall edges
+        - CRITICAL: Match window vertex ordering to parent wall vertex ordering
         """
         windows = []
         
@@ -2880,6 +2897,13 @@ Output:Meter,
         if not zones:
             print("⚠️  Warning: No zones found for window generation")
             return windows
+
+        # Build a map of wall surfaces by name for quick lookup
+        wall_surfaces_by_name = {}
+        if surfaces:
+            for surface in surfaces:
+                if surface.get('surface_type', '').lower() == 'wall':
+                    wall_surfaces_by_name[surface.get('name', '')] = surface
 
         # Determine orientation-specific WWRs (with overrides)
         base_oriented = self._get_default_oriented_wwr(building_type)
@@ -2945,18 +2969,94 @@ Output:Meter,
                 bx = center_x + ux * half_w
                 by = center_y + uy * half_w
 
-                # Create initial window vertices matching the wall's initial vertex pattern
-                # This matches the pattern used in _generate_wall_surfaces before fix_vertex_ordering_for_wall
-                window_vertices_3d = [
-                    (ax, ay, win_z_bottom),  # Bottom-left
-                    (bx, by, win_z_bottom),  # Bottom-right
-                    (bx, by, win_z_top),     # Top-right
-                    (ax, ay, win_z_top)      # Top-left
-                ]
+                # CRITICAL FIX: Get the actual wall vertices to match window ordering
+                wall_name = f"{zone.name}_Wall_{i+1}"
+                wall_surface = wall_surfaces_by_name.get(wall_name)
                 
-                # Fix vertex ordering to match wall orientation (same logic as walls)
-                # This ensures window normal points outward (same direction as wall normal)
-                window_vertices_3d = fix_vertex_ordering_for_wall(window_vertices_3d, zone_center_2d)
+                if wall_surface and wall_surface.get('vertices'):
+                    # Parse wall vertices to determine correct ordering
+                    wall_vertices_str = wall_surface.get('vertices', [])
+                    if len(wall_vertices_str) >= 4:
+                        try:
+                            # Parse wall vertices
+                            wall_verts = []
+                            for v_str in wall_vertices_str[:4]:  # Use first 4 vertices
+                                parts = v_str.split(',')
+                                if len(parts) >= 3:
+                                    wall_verts.append((float(parts[0]), float(parts[1]), float(parts[2])))
+                            
+                            if len(wall_verts) == 4:
+                                # Determine wall's bottom edge direction from first two vertices
+                                wall_bottom_start = wall_verts[0]
+                                wall_bottom_end = wall_verts[1]
+                                
+                                # Check if wall vertices go from (x1,y1) to (x2,y2) or reversed
+                                wall_dx = wall_bottom_end[0] - wall_bottom_start[0]
+                                wall_dy = wall_bottom_end[1] - wall_bottom_start[1]
+                                
+                                # Compare with segment direction
+                                seg_dx = x2 - x1
+                                seg_dy = y2 - y1
+                                
+                                # Dot product: if positive, same direction; if negative, reversed
+                                dot = wall_dx * seg_dx + wall_dy * seg_dy
+                                
+                                # Create window vertices matching wall's vertex pattern
+                                if dot >= 0:
+                                    # Wall goes same direction as segment: (x1,y1) -> (x2,y2)
+                                    window_vertices_3d = [
+                                        (ax, ay, win_z_bottom),  # Bottom-left (matches wall's first vertex pattern)
+                                        (bx, by, win_z_bottom),  # Bottom-right
+                                        (bx, by, win_z_top),     # Top-right
+                                        (ax, ay, win_z_top)      # Top-left
+                                    ]
+                                else:
+                                    # Wall is reversed: use (bx,by) first to match wall's reversed pattern
+                                    window_vertices_3d = [
+                                        (bx, by, win_z_bottom),  # Bottom-right (matches reversed wall)
+                                        (ax, ay, win_z_bottom),  # Bottom-left
+                                        (ax, ay, win_z_top),     # Top-left
+                                        (bx, by, win_z_top)      # Top-right
+                                    ]
+                                
+                                # Verify window normal matches wall normal direction
+                                from .geometry_utils import calculate_surface_normal
+                                wall_normal = calculate_surface_normal(wall_verts)
+                                window_normal = calculate_surface_normal(window_vertices_3d)
+                                
+                                # If normals point in opposite directions, reverse window vertices
+                                dot_normal = (wall_normal[0] * window_normal[0] + 
+                                            wall_normal[1] * window_normal[1] + 
+                                            wall_normal[2] * window_normal[2])
+                                if dot_normal < 0:
+                                    window_vertices_3d = list(reversed(window_vertices_3d))
+                        except (ValueError, IndexError, TypeError):
+                            # Fallback to original logic if parsing fails
+                            window_vertices_3d = [
+                                (ax, ay, win_z_bottom),
+                                (bx, by, win_z_bottom),
+                                (bx, by, win_z_top),
+                                (ax, ay, win_z_top)
+                            ]
+                            window_vertices_3d = fix_vertex_ordering_for_wall(window_vertices_3d, zone_center_2d)
+                    else:
+                        # Fallback if wall doesn't have enough vertices
+                        window_vertices_3d = [
+                            (ax, ay, win_z_bottom),
+                            (bx, by, win_z_bottom),
+                            (bx, by, win_z_top),
+                            (ax, ay, win_z_top)
+                        ]
+                        window_vertices_3d = fix_vertex_ordering_for_wall(window_vertices_3d, zone_center_2d)
+                else:
+                    # Fallback: use original logic if wall surface not found
+                    window_vertices_3d = [
+                        (ax, ay, win_z_bottom),
+                        (bx, by, win_z_bottom),
+                        (bx, by, win_z_top),
+                        (ax, ay, win_z_top)
+                    ]
+                    window_vertices_3d = fix_vertex_ordering_for_wall(window_vertices_3d, zone_center_2d)
                 
                 # Format vertices as strings for EnergyPlus
                 window_vertices = []
@@ -2966,7 +3066,7 @@ Output:Meter,
                 window = {
                     'name': f"{zone.name}_Window_{i+1}",
                     'construction': 'Window_Double_Clear',
-                    'building_surface_name': f"{zone.name}_Wall_{i+1}",
+                    'building_surface_name': wall_name,
                     'vertices': window_vertices
                 }
                 windows.append(window)
