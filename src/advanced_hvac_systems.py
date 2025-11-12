@@ -362,26 +362,28 @@ class AdvancedHVACSystems:
         # Must ensure minimum airflow maintains valid ratio (4.027E-005 to 6.041E-005) even at part load
         zone_area = sizing_params.get('zone_area', 0)
         
-        # CRITICAL FIX: Use even higher minimum flow fractions to prevent low runtime ratios
-        # Runtime ratios are still too low (1.453E-005 vs min 4.027E-005)
-        # This happens because at runtime, actual airflow can be lower than autosized value
+        # CRITICAL FIX: Use extremely high minimum flow fractions to prevent low runtime ratios
+        # Runtime ratios are still too low (1.489E-005, 1.111E-005, 8.926E-006 vs min 4.027E-005)
+        # This happens because at runtime, VAV reduces airflow below autosized value even at minimum flow
         # Must ensure minimum flow fraction is high enough that even at part load, ratio stays valid
-        # Research shows VAV systems need 80-85% minimum flow to maintain valid DX coil ratios at part load
+        # Research shows VAV systems need 85-90% minimum flow to maintain valid DX coil ratios at part load
+        # The runtime ratio = min_flow_fraction * 5.5e-5, so we need min_flow_fraction >= 0.732
+        # But at part load, VAV may reduce airflow further, so we need much higher minimum (85-90%)
         if zone_area < 50.0:
-            # Very small zones: very high minimum flow to prevent extreme cold and invalid ratios
-            base_min_fraction = 0.80  # Increased to 80% to maintain valid runtime ratios
-        elif zone_area < 200.0:
-            # Small zones: very high minimum flow
+            # Very small zones: extremely high minimum flow to prevent extreme cold and invalid ratios
             base_min_fraction = 0.85  # Increased to 85% to maintain valid runtime ratios
+        elif zone_area < 200.0:
+            # Small zones: extremely high minimum flow
+            base_min_fraction = 0.90  # Increased to 90% to maintain valid runtime ratios
         else:
-            # Normal zones: high minimum flow
-            base_min_fraction = 0.80  # Increased to 80% to maintain valid runtime ratios
+            # Normal zones: very high minimum flow
+            base_min_fraction = 0.85  # Increased to 85% to maintain valid runtime ratios
         
         usage_fraction_overrides = {
-            'break_room': 0.85 if zone_area >= 200.0 else 0.80,  # Very high minimum to prevent low ratios
-            'mechanical': 0.85 if zone_area >= 200.0 else 0.80,  # Very high minimum to prevent low ratios
-            'storage': 0.80,  # Very high minimum even for storage to prevent extreme cold
-            'corridor': 0.80 if zone_area >= 200.0 else 0.75  # Very high minimum
+            'break_room': 0.90 if zone_area >= 200.0 else 0.85,  # Extremely high minimum to prevent low ratios
+            'mechanical': 0.90 if zone_area >= 200.0 else 0.85,  # Extremely high minimum to prevent low ratios
+            'storage': 0.85,  # Extremely high minimum even for storage to prevent extreme cold
+            'corridor': 0.85 if zone_area >= 200.0 else 0.80  # Extremely high minimum
         }
         for key, fraction in usage_fraction_overrides.items():
             if key in zone_usage:

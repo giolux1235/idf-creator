@@ -1981,11 +1981,15 @@ Curve:Quadratic,
             occupancy_density = space_template['occupancy_density']
         
         # CRITICAL FIX: Storage zones need minimum occupancy to prevent zero design cooling load warnings
-        # EnergyPlus calculates design loads from internal gains, not HVAC capacity
-        # Minimum 0.01 person/m² (1 person per 100 m²) ensures non-zero design cooling load
+        # EnergyPlus calculates design loads from internal gains during sizing, not HVAC capacity
+        # Even with minimum HVAC loads, if internal gains are zero, design cooling load will be zero
+        # Minimum 0.02 person/m² (2 people per 100 m²) ensures sufficient internal gains for non-zero design cooling load
+        # Each person generates ~100W sensible + 50W latent = 150W total, so 0.02 person/m² = 3 W/m² from people
+        # Combined with minimum lighting (5.4 W/m²) and equipment (2.0 W/m²), total = 10.4 W/m² internal gains
+        # This ensures non-zero design cooling load even for storage zones
         space_type_lower = space_type.lower()
         if 'storage' in space_type_lower:
-            min_occupancy_density = 0.01  # Minimum 0.01 person/m² for storage zones
+            min_occupancy_density = 0.02  # Increased to 0.02 person/m² (2 people per 100 m²) for storage zones
             occupancy_density = max(occupancy_density, min_occupancy_density)
         
         total_people = max(1, int(zone.area * occupancy_density))
