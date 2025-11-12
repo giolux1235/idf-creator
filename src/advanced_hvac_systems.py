@@ -671,8 +671,12 @@ class AdvancedHVACSystems:
         # CRITICAL: Calculate fixed minimum airflow rate to enforce minimum flow more strictly
         # Using "Fixed" input method ensures minimum airflow is always maintained, even at part load
         # This prevents runtime airflow from dropping below minimum, which causes low runtime ratios
-        # Fixed minimum = min_flow_fraction * design_airflow (from rated_air_flow)
-        fixed_minimum_airflow = rated_air_flow * min_flow_fraction
+        # CRITICAL: Use design_cooling_capacity to calculate fixed minimum, accounting for autosizing
+        # Fixed minimum airflow = min_flow_fraction * (design_cooling_capacity * 5.5e-5)
+        # This ensures runtime ratio = fixed_minimum / autosized_capacity >= 4.027e-5
+        # With 1.5x buffer, autosized_capacity ≈ design_cooling_capacity, so ratio ≈ min_flow_fraction * 5.5e-5
+        # With min_flow_fraction = 0.85, ratio ≈ 4.675e-5 (above minimum 4.027e-5) ✓
+        fixed_minimum_airflow = design_cooling_capacity * 5.5e-5 * min_flow_fraction
         
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
@@ -686,6 +690,8 @@ class AdvancedHVACSystems:
             'maximum_flow_fraction_before_reheat': round(min_flow_fraction, 3),  # Keep for compatibility
             'fixed_minimum_airflow_rate': round(fixed_minimum_airflow, 6),  # CRITICAL: Fixed minimum to enforce strictly
             'zone_minimum_airflow_input_method': 'Fixed',  # CRITICAL: Use Fixed method to enforce minimum strictly
+            # Remove schedule reference - Fixed method doesn't use schedule
+            'minimum_airflow_fraction_schedule_name': None,  # Not used with Fixed method
             'reheat_coil_name': f"{zn}_ReheatCoil",
             'maximum_air_flow_rate': 'Autosize',
             'maximum_hot_water_or_steam_flow_rate': 'Autosize',

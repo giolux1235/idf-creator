@@ -1700,10 +1700,21 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             zone_min_flow_method = component.get('zone_minimum_airflow_input_method', 'Constant')
             fixed_min_airflow = component.get('fixed_minimum_airflow_rate')
             
+            # CRITICAL: Check if Fixed method is requested and fixed_minimum_airflow_rate is provided
+            zone_min_flow_method = component.get('zone_minimum_airflow_input_method', 'Constant')
+            fixed_min_airflow = component.get('fixed_minimum_airflow_rate')
+            min_flow_schedule = component.get('minimum_airflow_fraction_schedule_name')
+            
             if zone_min_flow_method == 'Fixed' and fixed_min_airflow is not None:
+                # Use Fixed method - set fraction and schedule to blank, use fixed airflow
                 min_flow_fraction_str = ","
                 fixed_min_airflow_str = f"{fixed_min_airflow:.6f}"
                 min_flow_schedule_str = ","
+            elif zone_min_flow_method == 'Scheduled' and min_flow_schedule:
+                # Use Scheduled method
+                min_flow_fraction_str = ","
+                fixed_min_airflow_str = ","
+                min_flow_schedule_str = min_flow_schedule
             else:
                 # Fallback to Constant method
                 min_flow_fraction_str = f"{component.get('maximum_flow_fraction_before_reheat', 0.2)}"
