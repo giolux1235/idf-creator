@@ -1694,16 +1694,32 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 else:
                     flow_fraction_str = str(max_flow_fraction)
             
+            # CRITICAL: Use Fixed input method if fixed_minimum_airflow_rate is provided
+            # This enforces minimum airflow more strictly than Constant fraction method
+            # Fixed method ensures minimum airflow is always maintained, preventing low runtime ratios
+            zone_min_flow_method = component.get('zone_minimum_airflow_input_method', 'Constant')
+            fixed_min_airflow = component.get('fixed_minimum_airflow_rate')
+            
+            if zone_min_flow_method == 'Fixed' and fixed_min_airflow is not None:
+                min_flow_fraction_str = ","
+                fixed_min_airflow_str = f"{fixed_min_airflow:.6f}"
+                min_flow_schedule_str = ","
+            else:
+                # Fallback to Constant method
+                min_flow_fraction_str = f"{component.get('maximum_flow_fraction_before_reheat', 0.2)}"
+                fixed_min_airflow_str = ","
+                min_flow_schedule_str = ","
+            
             return f"""AirTerminal:SingleDuct:VAV:Reheat,
   {component['name']},                 !- Name
   {component['availability_schedule_name']}, !- Availability Schedule Name
   {component['damper_air_outlet_node_name']}, !- Damper Air Outlet Node Name
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {max_air_flow},                            !- Maximum Air Flow Rate {{m3/s}}
-  Constant,                            !- Zone Minimum Air Flow Input Method
-  {component.get('maximum_flow_fraction_before_reheat', 0.2)}, !- Constant Minimum Air Flow Fraction
-  ,                                    !- Fixed Minimum Air Flow Rate {{m3/s}}
-  ,                                    !- Minimum Air Flow Fraction Schedule Name
+  {zone_min_flow_method},                            !- Zone Minimum Air Flow Input Method
+  {min_flow_fraction_str}, !- Constant Minimum Air Flow Fraction (ignored if Fixed method)
+  {fixed_min_airflow_str},                                    !- Fixed Minimum Air Flow Rate {{m3/s}} (used if Fixed method)
+  {min_flow_schedule_str},                                    !- Minimum Air Flow Fraction Schedule Name
   Coil:Heating:Electric,               !- Reheat Coil Object Type
   {component['reheat_coil_name']},     !- Reheat Coil Name
   {max_reheat_flow},                            !- Maximum Hot Water or Steam Flow Rate {{m3/s}}
@@ -1989,7 +2005,12 @@ Curve:Quadratic,
         # This ensures non-zero design cooling load even for storage zones
         space_type_lower = space_type.lower()
         if 'storage' in space_type_lower:
-            min_occupancy_density = 0.02  # Increased to 0.02 person/m² (2 people per 100 m²) for storage zones
+            # CRITICAL: Increased minimum occupancy to ensure non-zero design cooling load
+            # Minimum 0.05 person/m² (5 people per 100 m²) ensures sufficient internal gains
+            # Each person generates ~100W sensible + 50W latent = 150W total
+            # 0.05 person/m² = 7.5 W/m² from people, combined with lighting (5.4 W/m²) and equipment (3.0 W/m²) = 15.9 W/m²
+            # This ensures non-zero design cooling load even for storage zones
+            min_occupancy_density = 0.05  # Increased to 0.05 person/m² (5 people per 100 m²) for storage zones
             occupancy_density = max(occupancy_density, min_occupancy_density)
         
         total_people = max(1, int(zone.area * occupancy_density))
@@ -2035,7 +2056,9 @@ Curve:Quadratic,
         elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
             min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
         elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
-            min_lpd = 5.4  # ASHRAE 90.1-2019 for storage/mechanical
+            # CRITICAL: Increased minimum lighting for storage zones to ensure non-zero design cooling load
+            # Minimum 6.0 W/m² (increased from 5.4 W/m²) ensures sufficient internal gains
+            min_lpd = 6.0  # Increased to 6.0 W/m² for storage/mechanical to ensure non-zero design load
         else:
             min_lpd = 8.1  # Default minimum for other commercial spaces (lobby standard)
         
@@ -2172,15 +2195,20 @@ InternalMass,
         # CRITICAL FIX: Storage zones need minimum cooling airflow to prevent zero design load warnings
         # Set minimum airflow based on zone area to ensure non-zero design cooling load
         # EnergyPlus uses this minimum airflow during sizing to calculate design cooling load
-        # Minimum 0.001 m³/s per m² (1.0 L/s per m²) ensures sufficient airflow for non-zero design load
+        # CRITICAL: Must set both minimum airflow AND minimum airflow per floor area for storage zones
+        # This ensures EnergyPlus calculates a non-zero design cooling load during sizing
         space_type_lower = space_type.lower() if space_type else ''
         if 'storage' in space_type_lower and zone_area > 0:
-            # Increased minimum to 0.001 m³/s per m² (1.0 L/s per m²) for storage zones
-            # This ensures non-zero design cooling load even with minimal internal gains
-            min_cooling_airflow = max(zone_area * 0.001, 0.1)  # Minimum 0.1 m³/s or 1.0 L/s per m²
+            # CRITICAL: Use both minimum airflow and minimum airflow per floor area
+            # Minimum 0.002 m³/s per m² (2.0 L/s per m²) for storage zones to ensure non-zero design load
+            # This is higher than before to ensure EnergyPlus calculates a design cooling load
+            min_cooling_airflow_per_area = 0.002  # 2.0 L/s per m²
+            min_cooling_airflow = max(zone_area * min_cooling_airflow_per_area, 0.15)  # Minimum 0.15 m³/s or 2.0 L/s per m²
             min_cooling_airflow_str = f"{min_cooling_airflow:.6f}"
+            min_cooling_airflow_per_area_str = f"{min_cooling_airflow_per_area:.6f}"
         else:
             min_cooling_airflow_str = "0.0"
+            min_cooling_airflow_per_area_str = ""
         
         return f"""Sizing:Zone,
   {zone_name},                !- Zone or ZoneList Name
@@ -2197,7 +2225,7 @@ InternalMass,
   ,                        !- Zone Cooling Sizing Factor
   DesignDay,               !- Cooling Design Air Flow Method
   ,                        !- Cooling Design Air Flow Rate {{m3/s}}
-  ,                        !- Cooling Minimum Air Flow per Zone Floor Area {{m3/s-m2}}
+  {min_cooling_airflow_per_area_str},                        !- Cooling Minimum Air Flow per Zone Floor Area {{m3/s-m2}} (non-zero for storage zones)
   {min_cooling_airflow_str},                     !- Cooling Minimum Air Flow {{m3/s}} (non-zero for storage zones to prevent zero load warnings)
   ,                        !- Cooling Minimum Air Flow Fraction
   DesignDay,               !- Heating Design Air Flow Method

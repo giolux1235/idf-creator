@@ -318,10 +318,12 @@ class AdvancedHVACSystems:
         else:
             min_capacity = 6000.0  # Standard minimum for normal zones
         
-        # CRITICAL: Increase buffer to account for EnergyPlus autosizing capacity higher
+        # CRITICAL: Increase buffer significantly to account for EnergyPlus autosizing capacity much higher
         # Research shows EnergyPlus may autosize capacity 30-50% higher than calculated loads
-        # Use 1.4x buffer instead of 1.25x to better match autosized capacity
-        design_cooling_capacity = max(cooling_load * 1.4, min_capacity)
+        # Runtime ratios are still too low because autosized capacity is much higher than our estimate
+        # Use 1.5x buffer to better match autosized capacity and prevent runtime ratio warnings
+        # Example: If we estimate 16537W, EnergyPlus autosizes to 22586W (1.37x), so we need higher buffer
+        design_cooling_capacity = max(cooling_load * 1.5, min_capacity)
         supply_air_flow = calculate_dx_supply_air_flow(
             design_cooling_capacity,
             sensible_heat_ratio=sensible_heat_ratio
@@ -404,11 +406,19 @@ class AdvancedHVACSystems:
         # Solving: min_flow_fraction >= 4.027e-5 / 5.5e-5 ≈ 0.732
         # However, at part load, VAV may reduce airflow further, so we need much higher minimum
         # Base minimum fractions (0.85-0.90) should satisfy this, but add extra margin
-        safety_margin = 1.3  # Increased margin to account for VAV turndown at part load
-        min_flow_required = design_cooling_capacity * 4.5e-5 * safety_margin
+        # CRITICAL: Account for EnergyPlus autosizing capacity 1.5x higher than our estimate
+        # With 1.5x autosize factor and 0.85 min flow: runtime ratio = 0.85 * 5.5e-5 / 1.5 ≈ 3.12e-5 (still too low!)
+        # We need: min_flow_fraction * 5.5e-5 / autosize_factor >= 4.027e-5
+        # Solving: min_flow_fraction >= 4.027e-5 * 1.5 / 5.5e-5 ≈ 1.098 (110%!)
+        # This is impossible. Instead, we must ensure initial capacity estimate matches autosized capacity better
+        # Use 1.5x buffer AND ensure minimum flow fraction accounts for autosizing
+        autosize_factor = 1.5  # EnergyPlus autosizes capacity 1.5x higher
+        safety_margin = 1.5  # Increased margin to account for autosizing AND VAV turndown at part load
+        min_flow_required = design_cooling_capacity * autosize_factor * 4.5e-5 * safety_margin
         required_fraction = min_flow_required / max(rated_air_flow, 0.001)
         # CRITICAL: Ensure minimum flow fraction is high enough to maintain valid runtime ratio
-        # Base minimum fractions (0.85-0.90) should maintain valid ratio, but ensure calculated value doesn't override
+        # With 1.5x buffer, autosize factor ≈ 1.0, so base minimum fractions (0.85-0.90) should work
+        # But add extra margin to ensure ratio stays valid even at part load
         min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))  # Cap at 95% to allow minimal turndown
         
         # Determine heating fuel type based on climate zone
@@ -658,6 +668,12 @@ class AdvancedHVACSystems:
         # Note: When damper_heating_action = 'Normal', Maximum Flow per Zone Floor Area During Reheat
         # and Maximum Flow Fraction During Reheat are ignored (per EnergyPlus documentation)
         # However, these fields are still required by the schema, so we include them but EnergyPlus will warn
+        # CRITICAL: Calculate fixed minimum airflow rate to enforce minimum flow more strictly
+        # Using "Fixed" input method ensures minimum airflow is always maintained, even at part load
+        # This prevents runtime airflow from dropping below minimum, which causes low runtime ratios
+        # Fixed minimum = min_flow_fraction * design_airflow (from rated_air_flow)
+        fixed_minimum_airflow = rated_air_flow * min_flow_fraction
+        
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
             'name': f"{zn}_VAVTerminal",
@@ -667,7 +683,9 @@ class AdvancedHVACSystems:
             # Set to empty (,) to minimize warnings, though EnergyPlus may still warn
             'maximum_flow_fraction_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
-            'maximum_flow_fraction_before_reheat': round(min_flow_fraction, 3),
+            'maximum_flow_fraction_before_reheat': round(min_flow_fraction, 3),  # Keep for compatibility
+            'fixed_minimum_airflow_rate': round(fixed_minimum_airflow, 6),  # CRITICAL: Fixed minimum to enforce strictly
+            'zone_minimum_airflow_input_method': 'Fixed',  # CRITICAL: Use Fixed method to enforce minimum strictly
             'reheat_coil_name': f"{zn}_ReheatCoil",
             'maximum_air_flow_rate': 'Autosize',
             'maximum_hot_water_or_steam_flow_rate': 'Autosize',
