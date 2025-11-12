@@ -2195,7 +2195,7 @@ InternalMass,
   ,                         !- Heating Design Capacity Per Floor Area {{W/m2}}
   ,                         !- Fraction of Autosized Heating Design Capacity
   OnOff,                    !- Central Cooling Capacity Control Method
-  Autosize;                 !- Occupant Diversity
+  1.0;                      !- Occupant Diversity (1.0 = 100% of occupants present at design, per ASHRAE 90.1)
 
 """
     
