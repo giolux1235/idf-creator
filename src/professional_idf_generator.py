@@ -2177,7 +2177,7 @@ InternalMass,
   ,                         !- Cooling Supply Air Flow Rate {{m3/s}}
   ,                         !- Cooling Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
   ,                         !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
-  4.5e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (midpoint of valid range 2.684e-5 to 6.713e-5)
+  5.0e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (slightly above midpoint to ensure adequate airflow)
   DesignDay,                !- Heating Supply Air Flow Rate Method
   ,                         !- Heating Supply Air Flow Rate {{m3/s}}
   ,                         !- Heating Supply Air Flow Rate Per Floor Area {{m3/s-m2}}

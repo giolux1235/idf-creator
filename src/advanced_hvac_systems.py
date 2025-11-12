@@ -292,15 +292,25 @@ class AdvancedHVACSystems:
             cooling_load *= 0.85
             heating_load *= 0.85
 
+        # CRITICAL: Ensure storage zones have minimum cooling load to prevent zero-load warnings
+        # Storage zones may have zero occupancy/equipment, but still need basic HVAC capability
+        if 'storage' in usage:
+            min_storage_cooling_load = max(zone_area * 20.0, 1000.0)  # Minimum 20 W/m² or 1000W total
+            cooling_load = max(cooling_load, min_storage_cooling_load)
+
         # Add buffer for EnergyPlus autosizing (may increase capacity by 20-30%)
-        # CRITICAL: Set minimum capacity to ensure valid airflow ratio during EnergyPlus sizing checks
-        # EnergyPlus checks ratio using initial estimates before autosizing
-        # With Sizing:System FlowPerCoolingCapacity = 4.5e-5, we need minimum capacity such that:
-        # airflow (from system sizing) / min_capacity <= 6.041e-5 (max ratio)
-        # For very small zones, system airflow might be ~0.3 m³/s (ventilation + minimum flow)
-        # min_capacity >= 0.3 / 6.041e-5 = 4967W, but use 6000W for safety margin
-        # This ensures EnergyPlus sizing checks pass even for smallest zones
-        min_capacity = 6000.0  # High enough to prevent ratio warnings during sizing phase
+        # CRITICAL: Set zone-area-based minimum capacity to ensure valid airflow ratio
+        # Smaller zones need lower minimum capacity to prevent airflow-to-capacity mismatches
+        # Very small zones (< 50 m²): 4000W minimum
+        # Small zones (50-200 m²): 5000W minimum  
+        # Normal zones (> 200 m²): 6000W minimum
+        if zone_area < 50.0:
+            min_capacity = 4000.0  # Lower minimum for very small zones
+        elif zone_area < 200.0:
+            min_capacity = 5000.0  # Medium minimum for small zones
+        else:
+            min_capacity = 6000.0  # Standard minimum for normal zones
+        
         design_cooling_capacity = max(cooling_load * 1.25, min_capacity)
         supply_air_flow = calculate_dx_supply_air_flow(
             design_cooling_capacity,
@@ -333,25 +343,39 @@ class AdvancedHVACSystems:
         zone_usage = sizing_params.get('zone_usage', '') or ''
         
         # Calculate airflow for reference, but let EnergyPlus autosize both capacity and airflow
-        # The Sizing:System FlowPerCoolingCapacity (3.5e-5) will ensure proper ratio
+        # The Sizing:System FlowPerCoolingCapacity (5.0e-5) will ensure proper ratio
         rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
-        safety_margin = 1.35  # Account for EnergyPlus autosizing increasing capacity beyond our estimate
-        min_flow_required = design_cooling_capacity * 2.684e-5 * safety_margin  # m³/s needed to satisfy EnergyPlus minimum volume/ton guidance
-        required_fraction = min_flow_required / max(rated_air_flow, 0.001)
-        base_min_fraction = 0.65
+        # CRITICAL: Reduce minimum flow fractions for small zones to prevent airflow-to-capacity mismatches
+        # Small zones need lower minimum flows to keep airflow proportional to capacity
+        zone_area = sizing_params.get('zone_area', 0)
+        if zone_area < 50.0:
+            # Very small zones: lower minimum flow to prevent excessive airflow
+            base_min_fraction = 0.50
+        elif zone_area < 200.0:
+            # Small zones: moderate minimum flow
+            base_min_fraction = 0.55
+        else:
+            # Normal zones: standard minimum flow
+            base_min_fraction = 0.65
+        
         usage_fraction_overrides = {
-            'break_room': 0.7,
-            'mechanical': 0.7,
-            'storage': 0.6,
-            'corridor': 0.65
+            'break_room': 0.65 if zone_area >= 200.0 else 0.55,
+            'mechanical': 0.65 if zone_area >= 200.0 else 0.55,
+            'storage': 0.50,  # Lower for storage (minimal loads)
+            'corridor': 0.55 if zone_area >= 200.0 else 0.50
         }
         for key, fraction in usage_fraction_overrides.items():
             if key in zone_usage:
                 base_min_fraction = fraction
                 break
-        min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))
+        
+        # Calculate required fraction based on EnergyPlus minimum ratio, but don't force it too high
+        safety_margin = 1.2  # Reduced from 1.35 to prevent excessive airflow
+        min_flow_required = design_cooling_capacity * 2.684e-5 * safety_margin
+        required_fraction = min_flow_required / max(rated_air_flow, 0.001)
+        min_flow_fraction = min(0.90, max(base_min_fraction, required_fraction))  # Cap at 90% instead of 95%
         
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
@@ -546,8 +570,8 @@ class AdvancedHVACSystems:
         
         # Cooling Coil
         # CRITICAL: Let EnergyPlus autosize both capacity and airflow to maintain proper ratio
-        # The Sizing:System FlowPerCoolingCapacity (4.5e-5) ensures proper ratio during autosizing
-        # Minimum capacity (6000W) ensures valid ratio even for smallest zones
+        # The Sizing:System FlowPerCoolingCapacity (5.0e-5) ensures proper ratio during autosizing
+        # Zone-area-based minimum capacity ensures valid ratio (4000W-6000W depending on zone size)
         # Note: "Sizing" warnings may appear during sizing phase but don't affect final simulation results
         # EnergyPlus will autosize both correctly and maintain valid ratio in final design
         cooling_coil = {
