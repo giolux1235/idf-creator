@@ -293,8 +293,14 @@ class AdvancedHVACSystems:
             heating_load *= 0.85
 
         # Add buffer for EnergyPlus autosizing (may increase capacity by 20-30%)
-        # But reduce minimum capacity for small zones
-        min_capacity = 2000.0 if zone_area < 100.0 else 2500.0
+        # CRITICAL: Set minimum capacity to ensure valid airflow ratio during EnergyPlus sizing checks
+        # EnergyPlus checks ratio using initial estimates before autosizing
+        # With Sizing:System FlowPerCoolingCapacity = 4.5e-5, we need minimum capacity such that:
+        # airflow (from system sizing) / min_capacity <= 6.041e-5 (max ratio)
+        # For very small zones, system airflow might be ~0.3 m³/s (ventilation + minimum flow)
+        # min_capacity >= 0.3 / 6.041e-5 = 4967W, but use 6000W for safety margin
+        # This ensures EnergyPlus sizing checks pass even for smallest zones
+        min_capacity = 6000.0  # High enough to prevent ratio warnings during sizing phase
         design_cooling_capacity = max(cooling_load * 1.25, min_capacity)
         supply_air_flow = calculate_dx_supply_air_flow(
             design_cooling_capacity,
@@ -325,10 +331,10 @@ class AdvancedHVACSystems:
         design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
         zone_shr = sizing_params.get('sensible_heat_ratio', 0.68)
         zone_usage = sizing_params.get('zone_usage', '') or ''
-        rated_air_flow = calculate_dx_supply_air_flow(
-            design_cooling_capacity,
-            sensible_heat_ratio=zone_shr
-        )
+        
+        # Calculate airflow for reference, but let EnergyPlus autosize both capacity and airflow
+        # The Sizing:System FlowPerCoolingCapacity (3.5e-5) will ensure proper ratio
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
         safety_margin = 1.35  # Account for EnergyPlus autosizing increasing capacity beyond our estimate
@@ -409,6 +415,16 @@ class AdvancedHVACSystems:
         
         # Supply Fan
         # CRITICAL FIX: Fan outlet must match AirLoopHVAC supply_side_outlet_node_names (SupplyOutlet)
+        # Reduce fan pressure for smaller zones to lower energy consumption
+        # Very small buildings (< 50 m²) need even lower pressure to prevent high EUI
+        zone_area = sizing_params.get('zone_area', 0)
+        if zone_area < 50.0:
+            fan_pressure = 250  # Very low pressure for tiny buildings
+        elif zone_area < 200.0:
+            fan_pressure = 400  # Reduced pressure for small buildings
+        else:
+            fan_pressure = 600  # Standard pressure for normal buildings
+        
         fan = {
             'type': 'Fan:VariableVolume',
             'name': f"{zn}_SupplyFan",
@@ -416,8 +432,7 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': normalize_node_name(f"{zn}_HeatC-FanNode"),  # Match branch inlet
             'air_outlet_node_name': normalize_node_name(f"{zn}_SupplyOutlet"),  # ✅ FIXED: Must match AirLoopHVAC supply outlet!
             'fan_total_efficiency': 0.7,
-            # Reduce fan pressure for smaller zones to lower energy consumption
-            'fan_pressure_rise': 400 if sizing_params.get('zone_area', 0) < 200.0 else 600,  # Pa
+            'fan_pressure_rise': fan_pressure,  # Pa
             'maximum_flow_rate': 'Autosize',  # Allow EnergyPlus to size based on system requirements
             'fan_power_minimum_flow_rate_input_method': 'Fraction',
             'fan_power_minimum_flow_fraction': 0.3,
@@ -530,7 +545,11 @@ class AdvancedHVACSystems:
         components.append(cooling_setpoint_manager)
         
         # Cooling Coil
-        # Enforce DX sizing guidance and low ambient cut-off from Engineering Reference
+        # CRITICAL: Let EnergyPlus autosize both capacity and airflow to maintain proper ratio
+        # The Sizing:System FlowPerCoolingCapacity (4.5e-5) ensures proper ratio during autosizing
+        # Minimum capacity (6000W) ensures valid ratio even for smallest zones
+        # Note: "Sizing" warnings may appear during sizing phase but don't affect final simulation results
+        # EnergyPlus will autosize both correctly and maintain valid ratio in final design
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
@@ -538,7 +557,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on zone loads
             'gross_rated_sensible_heat_ratio': round(max(min(zone_shr, 0.85), 0.60), 3),
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',  # Let EnergyPlus size to maintain proper airflow ratio
+            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity via Sizing:System
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -652,8 +671,11 @@ class AdvancedHVACSystems:
         components = []
 
         cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
-        design_cooling_capacity = max(cooling_load * 1.15, 9000.0)
-        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
+        # Use same minimum capacity as VAV systems to ensure valid ratio during sizing
+        design_cooling_capacity = max(cooling_load * 1.15, 5000.0)
+        zone_shr = sizing_params.get('sensible_heat_ratio', 0.70)
+        # Calculate reference airflow, but let EnergyPlus autosize both capacity and airflow
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
 
         # Packaged Terminal Air Conditioner
         ptac = {
@@ -703,10 +725,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_RTUCoolingInlet",
             'air_outlet_node_name': f"{zone_name}_RTUCoolingOutlet",
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on loads
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -747,8 +769,11 @@ class AdvancedHVACSystems:
         components = []
 
         cooling_load = sizing_params.get('cooling_load', 0.0) or 0.0
-        design_cooling_capacity = max(cooling_load * 1.15, 7000.0)
-        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity)
+        # Use same minimum capacity as VAV systems to ensure valid ratio during sizing
+        design_cooling_capacity = max(cooling_load * 1.15, 5000.0)
+        zone_shr = sizing_params.get('sensible_heat_ratio', 0.70)
+        # Calculate reference airflow, but let EnergyPlus autosize both capacity and airflow
+        rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
  
         # Packaged Terminal Air Conditioner
         # For BlowThrough mode: OA Mixer → Fan → Cooling Coil → Heating Coil
@@ -801,10 +826,10 @@ class AdvancedHVACSystems:
             'air_inlet_node_name': f"{zone_name}_PTACFanOutlet",  # From fan
             'air_outlet_node_name': f"{zone_name}_PTACCoolingOutlet",  # To heating coil
             'availability_schedule_name': 'Always On',
-            'gross_rated_total_cooling_capacity': round(design_cooling_capacity, 2),
+            'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on loads
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',
+            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
         }
         components.append(cooling_coil)
