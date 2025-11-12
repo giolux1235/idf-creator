@@ -343,7 +343,7 @@ class AdvancedHVACSystems:
         zone_usage = sizing_params.get('zone_usage', '') or ''
         
         # Calculate airflow for reference, but let EnergyPlus autosize both capacity and airflow
-        # The Sizing:System FlowPerCoolingCapacity (5.5e-5) will ensure proper ratio and prevent extreme cold temperatures
+        # The Sizing:System FlowPerCoolingCapacity (6.0e-5) will ensure proper ratio and prevent extreme cold temperatures
         rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
@@ -571,12 +571,18 @@ class AdvancedHVACSystems:
         components.append(cooling_setpoint_manager)
         
         # Cooling Coil
-        # CRITICAL: Let EnergyPlus autosize both capacity and airflow to maintain proper ratio
-        # The Sizing:System FlowPerCoolingCapacity (5.5e-5) ensures proper ratio during autosizing
-        # Higher ratio prevents extreme cold outlet temperatures and psychrometric errors
-        # Zone-area-based minimum capacity ensures valid ratio (4000W-6000W depending on zone size)
-        # Note: "Sizing" warnings may appear during sizing phase but don't affect final simulation results
-        # EnergyPlus will autosize both correctly and maintain valid ratio in final design
+        # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
+        # EnergyPlus checks ratio during sizing using initial estimates, so we must provide valid initial values
+        # Calculate airflow from estimated capacity using Sizing:System ratio (5.5e-5) to ensure no warnings
+        # Capacity remains Autosize so EnergyPlus can refine it, but airflow is set to match the ratio
+        estimated_capacity = design_cooling_capacity  # Use our calculated estimate
+        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
+        # This ensures the ratio is valid during sizing phase checks and eliminates warnings
+        initial_airflow = estimated_capacity * 6.0e-5
+        # Ensure minimum airflow for very small zones
+        min_airflow = 0.1  # Minimum 0.1 m³/s for proper operation
+        initial_airflow = max(initial_airflow, min_airflow)
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zn}_CoolingCoilDX",
@@ -584,7 +590,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on zone loads
             'gross_rated_sensible_heat_ratio': round(max(min(zone_shr, 0.85), 0.60), 3),
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity via Sizing:System
+            'rated_air_flow_rate': round(initial_airflow, 5),  # Set initial value matching Sizing:System ratio to prevent warnings
             'rated_evaporator_fan_power_per_volume_flow_rate_2023': 773.3,
             'air_inlet_node_name': normalize_node_name(f"{zn}_SupplyInlet"),
             'air_outlet_node_name': normalize_node_name(f"{zn}_CoolC-HeatCNode"),
@@ -746,6 +752,11 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
+        # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
+        design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
+        initial_airflow_rtu = design_cooling_capacity * 6.0e-5  # Match Sizing:System ratio
+        initial_airflow_rtu = max(initial_airflow_rtu, 0.1)  # Minimum 0.1 m³/s
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_RTUCoolingCoil",
@@ -755,7 +766,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on loads
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity
+            'rated_air_flow_rate': round(initial_airflow_rtu, 5),  # Set initial value matching Sizing:System ratio
             'condenser_air_inlet_node_name': f"{zone_name}_RTUCondenserInlet",
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
@@ -847,6 +858,11 @@ class AdvancedHVACSystems:
         components.append(fan)
         
         # Cooling Coil
+        # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
+        design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
+        initial_airflow_ptac = design_cooling_capacity * 6.0e-5  # Match Sizing:System ratio
+        initial_airflow_ptac = max(initial_airflow_ptac, 0.1)  # Minimum 0.1 m³/s
+        
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
             'name': f"{zone_name}_PTACCoolingCoil",
@@ -856,7 +872,7 @@ class AdvancedHVACSystems:
             'gross_rated_total_cooling_capacity': 'Autosize',  # Let EnergyPlus size based on loads
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
-            'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity
+            'rated_air_flow_rate': round(initial_airflow_ptac, 5),  # Set initial value matching Sizing:System ratio
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 7.0 to prevent operation at low outdoor temps that cause extreme cold
         }
         components.append(cooling_coil)

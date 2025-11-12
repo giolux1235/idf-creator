@@ -2177,7 +2177,7 @@ InternalMass,
   ,                         !- Cooling Supply Air Flow Rate {{m3/s}}
   ,                         !- Cooling Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
   ,                         !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
-  5.5e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (higher ratio to prevent extreme cold outlet temperatures)
+  6.0e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (high ratio to prevent extreme cold and eliminate warnings)
   DesignDay,                !- Heating Supply Air Flow Rate Method
   ,                         !- Heating Supply Air Flow Rate {{m3/s}}
   ,                         !- Heating Supply Air Flow Rate Per Floor Area {{m3/s-m2}}

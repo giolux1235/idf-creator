@@ -181,9 +181,9 @@ def calculate_dx_supply_air_flow(cooling_capacity: float,
     # CRITICAL: Use higher minimum to prevent extreme cold outlet temperatures
     # Low airflow-to-capacity ratios cause coils to overcool, resulting in frost/freeze warnings
     # Minimum ratio must be enforced strictly to prevent psychrometric errors
-    min_ratio = 4.8e-5  # m³/s per W (well above absolute minimum to prevent extreme cold)
+    min_ratio = 5.0e-5  # m³/s per W (well above absolute minimum to prevent extreme cold)
     max_ratio = 6.5e-5  # Allow higher maximum for better flexibility
-    target_ratio = 5.5e-5  # Higher target to ensure adequate airflow and prevent cold temperatures
+    target_ratio = 6.0e-5  # High target to ensure adequate airflow and eliminate warnings
 
     if cooling_capacity is None or cooling_capacity <= 0:
         simulated_capacity = 1000.0
