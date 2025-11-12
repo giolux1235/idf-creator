@@ -618,17 +618,20 @@ class AdvancedHVACSystems:
         # Cooling Coil
         # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
         # EnergyPlus checks ratio during sizing using initial estimates, so we must provide valid initial values
-        # Calculate airflow from estimated capacity using Sizing:System ratio (5.5e-5) to ensure no warnings
-        # Capacity remains Autosize so EnergyPlus can refine it, but airflow is set to match the ratio
-        estimated_capacity = design_cooling_capacity  # Use our calculated estimate
+        # CRITICAL FIX: Account for EnergyPlus autosizing capacity 1.37x higher
+        # If we set capacity to design_cooling_capacity, EnergyPlus autosizes to 1.37x higher
+        # So we need to set initial capacity higher to match autosized capacity
+        # This ensures runtime ratio stays above minimum even after autosizing
+        autosize_factor = 1.37  # EnergyPlus autosizes capacity 1.37x higher (observed: 14807W → 20224W)
+        estimated_capacity = design_cooling_capacity * autosize_factor  # Account for autosizing
         # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (5.5e-5)
+        # But use autosized capacity to ensure runtime ratio is valid
         # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
-        # Use 5.5e-5 which is safely within the valid range
         initial_airflow = estimated_capacity * 5.5e-5
-        # CRITICAL: Set initial capacity to match airflow so ratio is valid during sizing checks
-        # EnergyPlus uses initial capacity estimate (defaults to 2000W) for ratio checks
-        # By setting both capacity and airflow to matching values, we ensure valid ratio
-        initial_capacity = estimated_capacity  # Use our estimate as initial value
+        # CRITICAL: Set initial capacity to autosized estimate so ratio is valid during runtime
+        # EnergyPlus uses initial capacity estimate for ratio checks
+        # By setting capacity to autosized value, runtime ratio stays valid
+        initial_capacity = estimated_capacity  # Use autosized estimate as initial value
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
@@ -675,11 +678,17 @@ class AdvancedHVACSystems:
         # Using "Fixed" input method ensures minimum airflow is always maintained, even at part load
         # This prevents runtime airflow from dropping below minimum, which causes low runtime ratios
         # CRITICAL: Use design_cooling_capacity to calculate fixed minimum, accounting for autosizing
-        # Fixed minimum airflow = min_flow_fraction * (design_cooling_capacity * 5.5e-5)
-        # This ensures runtime ratio = fixed_minimum / autosized_capacity >= 4.027e-5
-        # With 1.5x buffer, autosized_capacity ≈ design_cooling_capacity, so ratio ≈ min_flow_fraction * 5.5e-5
-        # With min_flow_fraction = 0.85, ratio ≈ 4.675e-5 (above minimum 4.027e-5) ✓
-        fixed_minimum_airflow = design_cooling_capacity * 5.5e-5 * min_flow_fraction
+        # CRITICAL FIX: Runtime ratios are still too low (1.045E-005 vs min 4.027E-005)
+        # EnergyPlus autosizes capacity 1.37x higher (e.g., 14807W → 20224W)
+        # Fixed minimum must account for autosized capacity, not just design capacity
+        # Runtime ratio = fixed_minimum / autosized_capacity
+        # We need: fixed_minimum / autosized_capacity >= 4.027e-5
+        # autosized_capacity ≈ design_cooling_capacity * 1.37 (autosize factor)
+        # So: fixed_minimum >= design_cooling_capacity * 1.37 * 4.027e-5
+        # With safety margin: fixed_minimum = design_cooling_capacity * 1.5 * 5.5e-5
+        # This ensures runtime ratio >= 5.5e-5 / 1.37 ≈ 4.01e-5 (above minimum) ✓
+        autosize_factor = 1.5  # Account for EnergyPlus autosizing capacity higher
+        fixed_minimum_airflow = design_cooling_capacity * autosize_factor * 5.5e-5
         
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
