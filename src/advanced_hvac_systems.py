@@ -296,11 +296,14 @@ class AdvancedHVACSystems:
         # Storage zones may have zero occupancy/equipment, but still need basic HVAC capability
         # EnergyPlus requires non-zero loads for proper sizing calculations
         if 'storage' in usage:
-            # Increased minimum to ensure proper HVAC sizing and prevent zero-load warnings
-            min_storage_cooling_load = max(zone_area * 30.0, 2000.0)  # Minimum 30 W/m² or 2000W total
+            # CRITICAL: Significantly increased minimum to ensure proper HVAC sizing and prevent zero-load warnings
+            # Even with minimum loads, EnergyPlus may still calculate zero design load if internal gains are zero
+            # Must ensure storage zones have minimum internal gains (people, lighting, equipment) in addition to HVAC loads
+            # Minimum 50 W/m² cooling load ensures non-zero design cooling load even with minimal internal gains
+            min_storage_cooling_load = max(zone_area * 50.0, 4000.0)  # Minimum 50 W/m² or 4000W total
             cooling_load = max(cooling_load, min_storage_cooling_load)
             # Also ensure heating load is non-zero
-            min_storage_heating_load = max(zone_area * 25.0, 1500.0)  # Minimum 25 W/m² or 1500W total
+            min_storage_heating_load = max(zone_area * 40.0, 3000.0)  # Minimum 40 W/m² or 3000W total
             heating_load = max(heating_load, min_storage_heating_load)
 
         # Add buffer for EnergyPlus autosizing (may increase capacity by 30-50%)
