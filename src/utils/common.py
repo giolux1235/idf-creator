@@ -178,36 +178,45 @@ def calculate_dx_supply_air_flow(cooling_capacity: float,
         - EnergyPlus Engineering Reference: DX Cooling Coil Model
     """
     # EnergyPlus validated range: 2.684E-005 to 6.713E-005 m³/s/W
-    # Use conservative minimum to account for autosizing increasing capacity
-    min_ratio = 4.5e-5  # m³/s per W (above minimum to provide buffer)
-    max_ratio = 6.0e-5  # Conservative cap below absolute maximum
-    target_ratio = 5.2e-5  # Slightly above midpoint for safety margin
+    # CRITICAL: Use higher minimum to prevent extreme cold outlet temperatures
+    # Low airflow-to-capacity ratios cause coils to overcool, resulting in frost/freeze warnings
+    # Minimum ratio must be enforced strictly to prevent psychrometric errors
+    min_ratio = 4.8e-5  # m³/s per W (well above absolute minimum to prevent extreme cold)
+    max_ratio = 6.5e-5  # Allow higher maximum for better flexibility
+    target_ratio = 5.5e-5  # Higher target to ensure adequate airflow and prevent cold temperatures
 
     if cooling_capacity is None or cooling_capacity <= 0:
         simulated_capacity = 1000.0
         return simulated_capacity * target_ratio
 
     # Calculate airflow from sensible load (ensures adequate cooling)
+    # CRITICAL: Use higher supply_delta_t to prevent extreme cold temperatures
+    # Lower delta_t means more airflow needed, which prevents overcooling
     air_density = 1.2  # kg/m³
     cp_air = 1006.0    # J/(kg·K)
     sensible_capacity = max(cooling_capacity * sensible_heat_ratio, 0.0)
-    flow_from_sensible = sensible_capacity / (air_density * cp_air * max(supply_delta_t, 1.0))
+    # Use lower supply_delta_t (8°C instead of 11°C) to require more airflow
+    # This prevents extreme cold outlet temperatures
+    effective_delta_t = min(supply_delta_t, 8.0)  # Cap at 8°C to ensure adequate airflow
+    flow_from_sensible = sensible_capacity / (air_density * cp_air * max(effective_delta_t, 1.0))
 
     # Calculate airflow from ratio requirements
+    # CRITICAL: Always use minimum ratio to prevent low airflow-to-capacity ratios
     ratio_floor = cooling_capacity * min_ratio
     ratio_target = cooling_capacity * target_ratio
     ratio_cap = cooling_capacity * max_ratio
 
     # Use maximum of sensible-based flow and ratio-based flow to ensure both requirements met
+    # CRITICAL: Always enforce minimum ratio to prevent extreme cold temperatures
     flow = max(flow_from_sensible, ratio_floor, ratio_target)
     flow = min(flow, ratio_cap)
     
-    # Final safety check: ensure minimum ratio is always met
+    # Final safety check: enforce absolute minimum ratio strictly
     if cooling_capacity > 0:
         actual_ratio = flow / cooling_capacity
-        if actual_ratio < 2.684e-5:
-            # Force minimum ratio if somehow below threshold
-            flow = cooling_capacity * 2.684e-5
+        if actual_ratio < 4.0e-5:  # Stricter minimum (well above 2.684e-5)
+            # Force minimum ratio to prevent extreme cold outlet temperatures
+            flow = cooling_capacity * 4.0e-5
     
     return flow
 

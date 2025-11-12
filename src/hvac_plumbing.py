@@ -80,7 +80,7 @@ class HVACPlumbing:
                 'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
                 'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
                 'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR',
-                'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 5.0
+                'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 5.0 to prevent operation at low outdoor temps that cause extreme cold
             }
             components.append(coil_obj)
         

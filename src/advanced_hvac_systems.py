@@ -343,39 +343,41 @@ class AdvancedHVACSystems:
         zone_usage = sizing_params.get('zone_usage', '') or ''
         
         # Calculate airflow for reference, but let EnergyPlus autosize both capacity and airflow
-        # The Sizing:System FlowPerCoolingCapacity (5.0e-5) will ensure proper ratio
+        # The Sizing:System FlowPerCoolingCapacity (5.5e-5) will ensure proper ratio and prevent extreme cold temperatures
         rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
-        # CRITICAL: Reduce minimum flow fractions for small zones to prevent airflow-to-capacity mismatches
-        # Small zones need lower minimum flows to keep airflow proportional to capacity
+        # CRITICAL: Increase minimum flow fractions to prevent extreme cold outlet temperatures
+        # Low minimum flows cause low airflow-to-capacity ratios, leading to frost/freeze warnings
+        # Higher minimum flows ensure adequate airflow even at part load
         zone_area = sizing_params.get('zone_area', 0)
         if zone_area < 50.0:
-            # Very small zones: lower minimum flow to prevent excessive airflow
-            base_min_fraction = 0.50
+            # Very small zones: higher minimum flow to prevent extreme cold temperatures
+            base_min_fraction = 0.60  # Increased from 0.50
         elif zone_area < 200.0:
             # Small zones: moderate minimum flow
-            base_min_fraction = 0.55
+            base_min_fraction = 0.65  # Increased from 0.55
         else:
             # Normal zones: standard minimum flow
-            base_min_fraction = 0.65
+            base_min_fraction = 0.70  # Increased from 0.65
         
         usage_fraction_overrides = {
-            'break_room': 0.65 if zone_area >= 200.0 else 0.55,
-            'mechanical': 0.65 if zone_area >= 200.0 else 0.55,
-            'storage': 0.50,  # Lower for storage (minimal loads)
-            'corridor': 0.55 if zone_area >= 200.0 else 0.50
+            'break_room': 0.70 if zone_area >= 200.0 else 0.65,  # Increased
+            'mechanical': 0.70 if zone_area >= 200.0 else 0.65,  # Increased
+            'storage': 0.60,  # Increased from 0.50 to prevent extreme cold
+            'corridor': 0.65 if zone_area >= 200.0 else 0.60  # Increased
         }
         for key, fraction in usage_fraction_overrides.items():
             if key in zone_usage:
                 base_min_fraction = fraction
                 break
         
-        # Calculate required fraction based on EnergyPlus minimum ratio, but don't force it too high
-        safety_margin = 1.2  # Reduced from 1.35 to prevent excessive airflow
-        min_flow_required = design_cooling_capacity * 2.684e-5 * safety_margin
+        # Calculate required fraction based on EnergyPlus minimum ratio
+        # CRITICAL: Use higher safety margin to ensure adequate airflow and prevent extreme cold
+        safety_margin = 1.4  # Increased from 1.2 to ensure minimum airflow is met
+        min_flow_required = design_cooling_capacity * 4.0e-5 * safety_margin  # Use 4.0e-5 as minimum (well above 2.684e-5)
         required_fraction = min_flow_required / max(rated_air_flow, 0.001)
-        min_flow_fraction = min(0.90, max(base_min_fraction, required_fraction))  # Cap at 90% instead of 95%
+        min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))  # Allow up to 95% for safety
         
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
@@ -570,7 +572,8 @@ class AdvancedHVACSystems:
         
         # Cooling Coil
         # CRITICAL: Let EnergyPlus autosize both capacity and airflow to maintain proper ratio
-        # The Sizing:System FlowPerCoolingCapacity (5.0e-5) ensures proper ratio during autosizing
+        # The Sizing:System FlowPerCoolingCapacity (5.5e-5) ensures proper ratio during autosizing
+        # Higher ratio prevents extreme cold outlet temperatures and psychrometric errors
         # Zone-area-based minimum capacity ensures valid ratio (4000W-6000W depending on zone size)
         # Note: "Sizing" warnings may appear during sizing phase but don't affect final simulation results
         # EnergyPlus will autosize both correctly and maintain valid ratio in final design
@@ -590,7 +593,7 @@ class AdvancedHVACSystems:
             'energy_input_ratio_function_of_temperature_curve_name': 'Cool-EIR-fT',
             'energy_input_ratio_function_of_flow_fraction_curve_name': 'ConstantCubic',
             'part_load_fraction_correlation_curve_name': 'Cool-PLF-fPLR',
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 7.0 to prevent operation at low outdoor temps that cause extreme cold
         }
         components.append(cooling_coil)
         
@@ -757,7 +760,7 @@ class AdvancedHVACSystems:
             'condenser_type': 'AirCooled',
             'evaporator_fan_power_included_in_rated_cop': True,
             'condenser_fan_power_ratio': 0.2,
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 7.0 to prevent operation at low outdoor temps that cause extreme cold
         }
         components.append(cooling_coil)
         
@@ -854,7 +857,7 @@ class AdvancedHVACSystems:
             'gross_rated_sensible_heat_ratio': 0.70,
             'gross_rated_cooling_cop': hvac_template.efficiency['cooling_eer'] / 3.412,
             'rated_air_flow_rate': 'Autosize',  # Autosize to maintain ratio with autosized capacity
-            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 7.0
+            'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 7.0 to prevent operation at low outdoor temps that cause extreme cold
         }
         components.append(cooling_coil)
         
