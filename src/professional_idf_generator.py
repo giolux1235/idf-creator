@@ -2095,9 +2095,11 @@ Curve:Quadratic,
             min_epd = 5.0  # Minimum for office spaces
         elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
             # CRITICAL FIX: Storage zones need minimum equipment load to prevent zero design cooling load warnings
-            # EnergyPlus calculates design loads from internal gains, not HVAC capacity
-            # Minimum 2.0 W/m² ensures non-zero design cooling load for proper sizing
-            min_epd = 2.0  # Minimum equipment power density for storage/mechanical zones
+            # EnergyPlus calculates design loads from internal gains during sizing, not HVAC capacity
+            # Minimum 3.0 W/m² ensures sufficient internal gains for non-zero design cooling load
+            # Combined with minimum lighting (5.4 W/m²) and occupancy (0.02 person/m² = 3 W/m²), total = 11.4 W/m²
+            # This ensures non-zero design cooling load even for storage zones
+            min_epd = 3.0  # Increased to 3.0 W/m² minimum equipment power density for storage/mechanical zones
         else:
             min_epd = 3.0  # Default minimum for other commercial spaces
         
@@ -2169,11 +2171,13 @@ InternalMass,
         """
         # CRITICAL FIX: Storage zones need minimum cooling airflow to prevent zero design load warnings
         # Set minimum airflow based on zone area to ensure non-zero design cooling load
+        # EnergyPlus uses this minimum airflow during sizing to calculate design cooling load
+        # Minimum 0.001 m³/s per m² (1.0 L/s per m²) ensures sufficient airflow for non-zero design load
         space_type_lower = space_type.lower() if space_type else ''
         if 'storage' in space_type_lower and zone_area > 0:
-            # Minimum 0.0005 m³/s per m² (0.5 L/s per m²) for storage zones
+            # Increased minimum to 0.001 m³/s per m² (1.0 L/s per m²) for storage zones
             # This ensures non-zero design cooling load even with minimal internal gains
-            min_cooling_airflow = max(zone_area * 0.0005, 0.05)  # Minimum 0.05 m³/s or 0.5 L/s per m²
+            min_cooling_airflow = max(zone_area * 0.001, 0.1)  # Minimum 0.1 m³/s or 1.0 L/s per m²
             min_cooling_airflow_str = f"{min_cooling_airflow:.6f}"
         else:
             min_cooling_airflow_str = "0.0"
