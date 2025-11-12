@@ -580,9 +580,9 @@ class AdvancedHVACSystems:
         # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
         # Use 5.5e-5 which is safely within the valid range
         initial_airflow = estimated_capacity * 5.5e-5
-        # Ensure minimum airflow for very small zones
-        min_airflow = 0.1  # Minimum 0.1 m³/s for proper operation
-        initial_airflow = max(initial_airflow, min_airflow)
+        # CRITICAL: Don't enforce a fixed minimum airflow - it creates invalid ratios for small zones
+        # Instead, ensure the ratio is always valid by using capacity-based airflow only
+        # For very small zones, this will result in small airflow, which is correct
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
@@ -756,7 +756,7 @@ class AdvancedHVACSystems:
         # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
         design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
         initial_airflow_rtu = design_cooling_capacity * 5.5e-5  # Match Sizing:System ratio (within valid range)
-        initial_airflow_rtu = max(initial_airflow_rtu, 0.1)  # Minimum 0.1 m³/s
+        # Don't enforce fixed minimum - use capacity-based airflow to maintain valid ratio
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
@@ -862,7 +862,7 @@ class AdvancedHVACSystems:
         # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
         design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
         initial_airflow_ptac = design_cooling_capacity * 5.5e-5  # Match Sizing:System ratio (within valid range)
-        initial_airflow_ptac = max(initial_airflow_ptac, 0.1)  # Minimum 0.1 m³/s
+        # Don't enforce fixed minimum - use capacity-based airflow to maintain valid ratio
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
