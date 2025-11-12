@@ -391,23 +391,25 @@ class AdvancedHVACSystems:
                 break
         
         # Calculate required fraction based on EnergyPlus minimum ratio
-        # CRITICAL: Account for EnergyPlus autosizing capacity higher than our estimate
-        # Runtime ratio = (min_flow_fraction * autosized_airflow) / autosized_capacity
-        # EnergyPlus autosizes both capacity and airflow, maintaining Sizing:System ratio (5.5e-5)
-        # So: autosized_airflow = autosized_capacity * 5.5e-5
+        # CRITICAL: Runtime ratios are still too low (1.489E-005 vs min 4.027E-005)
+        # The issue is that at runtime, VAV reduces airflow below the autosized value
+        # Even with high minimum flow fractions, the actual runtime airflow can be lower
+        # We need to ensure that even at minimum flow, the ratio stays above 4.027e-5
+        # Runtime ratio = (actual_runtime_airflow) / (autosized_capacity)
+        # At minimum flow: actual_runtime_airflow = min_flow_fraction * autosized_airflow
+        # autosized_airflow = autosized_capacity * 5.5e-5 (from Sizing:System)
         # Runtime ratio = (min_flow_fraction * autosized_capacity * 5.5e-5) / autosized_capacity
         # Runtime ratio = min_flow_fraction * 5.5e-5
         # We need: min_flow_fraction * 5.5e-5 >= 4.027e-5
         # Solving: min_flow_fraction >= 4.027e-5 / 5.5e-5 ≈ 0.732
-        # Base minimum fractions (0.75-0.80) already satisfy this, but add safety margin
-        # Additional consideration: at part load, VAV may reduce airflow slightly below minimum flow fraction
-        # So we use base_min_fraction which is already high enough (0.75-0.80)
-        safety_margin = 1.1  # Small margin for safety
+        # However, at part load, VAV may reduce airflow further, so we need much higher minimum
+        # Base minimum fractions (0.85-0.90) should satisfy this, but add extra margin
+        safety_margin = 1.3  # Increased margin to account for VAV turndown at part load
         min_flow_required = design_cooling_capacity * 4.5e-5 * safety_margin
         required_fraction = min_flow_required / max(rated_air_flow, 0.001)
         # CRITICAL: Ensure minimum flow fraction is high enough to maintain valid runtime ratio
-        # Base minimum fractions (0.75-0.80) are already high enough to maintain valid ratio
-        min_flow_fraction = min(0.90, max(base_min_fraction, required_fraction))  # Cap at 90% to allow some turndown
+        # Base minimum fractions (0.85-0.90) should maintain valid ratio, but ensure calculated value doesn't override
+        min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))  # Cap at 95% to allow minimal turndown
         
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
