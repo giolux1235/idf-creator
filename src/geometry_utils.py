@@ -9,18 +9,22 @@ from typing import List, Tuple, Optional, Dict
 
 def remove_coincident_vertices(vertices_3d: List[Tuple[float, float, float]], 
                                tolerance: float = 0.001) -> List[Tuple[float, float, float]]:
-    """Remove coincident (duplicate) vertices from a list.
+    """Remove coincident (duplicate) and collinear vertices from a list.
+    
+    CRITICAL: Also removes collinear vertices (three consecutive points on a line)
+    to prevent EnergyPlus "coincident/collinear vertices" warnings.
     
     Args:
         vertices_3d: List of (x, y, z) tuples
         tolerance: Minimum distance between vertices to be considered different
         
     Returns:
-        List with coincident vertices removed
+        List with coincident and collinear vertices removed
     """
-    if len(vertices_3d) < 2:
+    if len(vertices_3d) < 3:
         return vertices_3d
     
+    # First pass: remove coincident vertices
     cleaned = [vertices_3d[0]]
     for v in vertices_3d[1:]:
         # Check if this vertex is different from the last one
@@ -38,7 +42,52 @@ def remove_coincident_vertices(vertices_3d: List[Tuple[float, float, float]],
             # Remove last vertex if it's coincident with first
             cleaned = cleaned[:-1]
     
-    return cleaned
+    # Second pass: remove collinear vertices (three consecutive points on a line)
+    # This prevents EnergyPlus "coincident/collinear vertices" warnings
+    if len(cleaned) < 3:
+        return cleaned
+    
+    final_cleaned = [cleaned[0]]
+    for i in range(1, len(cleaned) - 1):
+        prev = cleaned[i - 1]
+        curr = cleaned[i]
+        next_v = cleaned[i + 1]
+        
+        # Calculate vectors
+        v1 = (curr[0] - prev[0], curr[1] - prev[1], curr[2] - prev[2])
+        v2 = (next_v[0] - curr[0], next_v[1] - curr[1], next_v[2] - curr[2])
+        
+        # Calculate cross product magnitude (area of parallelogram)
+        cross = (
+            v1[1] * v2[2] - v1[2] * v2[1],
+            v1[2] * v2[0] - v1[0] * v2[2],
+            v1[0] * v2[1] - v1[1] * v2[0]
+        )
+        cross_mag = (cross[0]**2 + cross[1]**2 + cross[2]**2)**0.5
+        
+        # If cross product is very small, points are collinear
+        # Use tolerance based on edge lengths
+        v1_mag = (v1[0]**2 + v1[1]**2 + v1[2]**2)**0.5
+        v2_mag = (v2[0]**2 + v2[1]**2 + v2[2]**2)**0.5
+        if v1_mag > 0.001 and v2_mag > 0.001:
+            # Normalize by edge lengths to get relative measure
+            relative_area = cross_mag / (v1_mag * v2_mag)
+            if relative_area > 1e-6:  # Not collinear
+                final_cleaned.append(curr)
+        else:
+            # Very short edges, keep the vertex
+            final_cleaned.append(curr)
+    
+    # Always keep the last vertex
+    if len(cleaned) > 1:
+        final_cleaned.append(cleaned[-1])
+    
+    # Ensure we have at least 3 vertices for a valid polygon
+    if len(final_cleaned) < 3 and len(cleaned) >= 3:
+        # If we removed too many, keep original cleaned list
+        return cleaned
+    
+    return final_cleaned
 
 
 def validate_surface_area(vertices_3d: List[Tuple[float, float, float]], 

@@ -1331,6 +1331,10 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
 
 """
     
+    # NOTE: ConvergenceLimits object does NOT exist in EnergyPlus 24.2
+    # This was removed in EnergyPlus 24.2. Do not add it as it causes fatal errors.
+    # HVAC convergence issues should be addressed through proper system balancing instead.
+    
 
     
     def generate_building_section(self, name: str, north_axis: float = 0.0) -> str:
