@@ -343,7 +343,7 @@ class AdvancedHVACSystems:
         zone_usage = sizing_params.get('zone_usage', '') or ''
         
         # Calculate airflow for reference, but let EnergyPlus autosize both capacity and airflow
-        # The Sizing:System FlowPerCoolingCapacity (6.0e-5) will ensure proper ratio and prevent extreme cold temperatures
+        # The Sizing:System FlowPerCoolingCapacity (5.5e-5) will ensure proper ratio and prevent extreme cold temperatures
         rated_air_flow = calculate_dx_supply_air_flow(design_cooling_capacity, sensible_heat_ratio=zone_shr)
         sizing_params['rated_cooling_air_flow'] = rated_air_flow
         # Maintain EnergyPlus recommended minimum flow ratio even for VAV turndown
@@ -576,9 +576,10 @@ class AdvancedHVACSystems:
         # Calculate airflow from estimated capacity using Sizing:System ratio (5.5e-5) to ensure no warnings
         # Capacity remains Autosize so EnergyPlus can refine it, but airflow is set to match the ratio
         estimated_capacity = design_cooling_capacity  # Use our calculated estimate
-        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
-        # This ensures the ratio is valid during sizing phase checks and eliminates warnings
-        initial_airflow = estimated_capacity * 6.0e-5
+        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (5.5e-5)
+        # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
+        # Use 5.5e-5 which is safely within the valid range
+        initial_airflow = estimated_capacity * 5.5e-5
         # Ensure minimum airflow for very small zones
         min_airflow = 0.1  # Minimum 0.1 m³/s for proper operation
         initial_airflow = max(initial_airflow, min_airflow)
@@ -754,7 +755,7 @@ class AdvancedHVACSystems:
         # Cooling Coil
         # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
         design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
-        initial_airflow_rtu = design_cooling_capacity * 6.0e-5  # Match Sizing:System ratio
+        initial_airflow_rtu = design_cooling_capacity * 5.5e-5  # Match Sizing:System ratio (within valid range)
         initial_airflow_rtu = max(initial_airflow_rtu, 0.1)  # Minimum 0.1 m³/s
         
         cooling_coil = {
@@ -860,7 +861,7 @@ class AdvancedHVACSystems:
         # Cooling Coil
         # CRITICAL: Set initial airflow based on estimated capacity to prevent sizing warnings
         design_cooling_capacity = sizing_params.get('design_cooling_capacity') or 12000.0
-        initial_airflow_ptac = design_cooling_capacity * 6.0e-5  # Match Sizing:System ratio
+        initial_airflow_ptac = design_cooling_capacity * 5.5e-5  # Match Sizing:System ratio (within valid range)
         initial_airflow_ptac = max(initial_airflow_ptac, 0.1)  # Minimum 0.1 m³/s
         
         cooling_coil = {
