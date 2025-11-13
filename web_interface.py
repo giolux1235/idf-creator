@@ -2,6 +2,8 @@
 """
 Web Interface for Natural Language IDF Creator
 Simple Flask-based web UI for uploading documents and entering descriptions
+
+Deployed: iteration3 (e53d3eb) - Railway auto-deploy trigger
 """
 
 from flask import Flask, render_template_string, request, jsonify, send_file
