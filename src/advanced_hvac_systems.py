@@ -624,10 +624,10 @@ class AdvancedHVACSystems:
         # This ensures runtime ratio stays above minimum even after autosizing
         autosize_factor = 1.37  # EnergyPlus autosizes capacity 1.37x higher (observed: 14807W → 20224W)
         estimated_capacity = design_cooling_capacity * autosize_factor  # Account for autosizing
-        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (5.5e-5)
+        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
         # But use autosized capacity to ensure runtime ratio is valid
         # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
-        initial_airflow = estimated_capacity * 5.5e-5
+        initial_airflow = estimated_capacity * 6.0e-5
         # CRITICAL: Set initial capacity to autosized estimate so ratio is valid during runtime
         # EnergyPlus uses initial capacity estimate for ratio checks
         # By setting capacity to autosized value, runtime ratio stays valid
@@ -685,10 +685,22 @@ class AdvancedHVACSystems:
         # We need: fixed_minimum / autosized_capacity >= 4.027e-5
         # autosized_capacity ≈ design_cooling_capacity * 1.37 (autosize factor)
         # So: fixed_minimum >= design_cooling_capacity * 1.37 * 4.027e-5
-        # With safety margin: fixed_minimum = design_cooling_capacity * 1.5 * 5.5e-5
-        # This ensures runtime ratio >= 5.5e-5 / 1.37 ≈ 4.01e-5 (above minimum) ✓
+        # CRITICAL FIX: Fixed minimum airflow must ensure runtime ratio >= 4.027e-5
+        # Runtime ratio = actual_runtime_airflow / autosized_capacity
+        # We need: actual_runtime_airflow >= autosized_capacity * 4.027e-5
+        # But fixed_minimum_airflow must be <= max_airflow (EnergyPlus constraint)
+        # So we need: fixed_minimum_airflow = min(max_airflow * min_flow_fraction, autosized_capacity * 6.0e-5)
+        # This ensures runtime ratio >= min(min_flow_fraction * max_airflow / autosized_capacity, 6.0e-5)
         autosize_factor = 1.5  # Account for EnergyPlus autosizing capacity higher
-        fixed_minimum_airflow = design_cooling_capacity * autosize_factor * 5.5e-5
+        autosized_capacity = design_cooling_capacity * autosize_factor
+        # Minimum airflow required to maintain valid runtime ratio
+        min_airflow_for_ratio = autosized_capacity * 4.5e-5  # Use 4.5e-5 (above minimum 4.027e-5) with safety margin
+        # Minimum airflow from VAV minimum flow fraction
+        fixed_minimum_from_max = rated_air_flow * min_flow_fraction
+        # Use the maximum of both to ensure runtime ratio stays valid
+        fixed_minimum_airflow = max(fixed_minimum_from_max, min_airflow_for_ratio)
+        # But cap at max airflow to satisfy EnergyPlus constraint
+        fixed_minimum_airflow = min(fixed_minimum_airflow, rated_air_flow * 0.95)  # Cap at 95% of max to allow some turndown
         
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
