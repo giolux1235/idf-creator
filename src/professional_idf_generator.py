@@ -1699,24 +1699,33 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             # Fixed method ensures minimum airflow is always maintained, preventing low runtime ratios
             zone_min_flow_method = component.get('zone_minimum_airflow_input_method', 'Constant')
             fixed_min_airflow = component.get('fixed_minimum_airflow_rate')
-            
-            # CRITICAL: Check if Fixed method is requested and fixed_minimum_airflow_rate is provided
-            zone_min_flow_method = component.get('zone_minimum_airflow_input_method', 'Constant')
-            fixed_min_airflow = component.get('fixed_minimum_airflow_rate')
             min_flow_schedule = component.get('minimum_airflow_fraction_schedule_name')
             
-            if zone_min_flow_method == 'Fixed' and fixed_min_airflow is not None:
+            # CRITICAL FIX: Force Fixed method if fixed_minimum_airflow_rate is provided
+            # Even if a schedule exists or method is set to Scheduled, we want to use Fixed method to enforce minimum strictly
+            # Convert fixed_min_airflow to float if it's a string or numeric
+            try:
+                if fixed_min_airflow is not None:
+                    fixed_min_airflow_float = float(fixed_min_airflow) if not isinstance(fixed_min_airflow, (int, float)) else fixed_min_airflow
+                else:
+                    fixed_min_airflow_float = None
+            except (ValueError, TypeError):
+                fixed_min_airflow_float = None
+            
+            if fixed_min_airflow_float is not None and fixed_min_airflow_float > 0:
                 # Use Fixed method - set fraction and schedule to blank, use fixed airflow
+                zone_min_flow_method = 'Fixed'  # Force Fixed method when fixed airflow is provided
                 min_flow_fraction_str = ","
-                fixed_min_airflow_str = f"{fixed_min_airflow:.6f}"
-                min_flow_schedule_str = ","
+                fixed_min_airflow_str = f"{fixed_min_airflow_float:.6f}"
+                min_flow_schedule_str = ","  # Blank schedule when using Fixed method
             elif zone_min_flow_method == 'Scheduled' and min_flow_schedule:
-                # Use Scheduled method
+                # Use Scheduled method only if explicitly requested and no fixed airflow
                 min_flow_fraction_str = ","
                 fixed_min_airflow_str = ","
                 min_flow_schedule_str = min_flow_schedule
             else:
                 # Fallback to Constant method
+                zone_min_flow_method = 'Constant'  # Ensure method is set
                 min_flow_fraction_str = f"{component.get('maximum_flow_fraction_before_reheat', 0.2)}"
                 fixed_min_airflow_str = ","
                 min_flow_schedule_str = ","
@@ -2007,17 +2016,15 @@ Curve:Quadratic,
         else:
             occupancy_density = space_template['occupancy_density']
         
-        # CRITICAL FIX: Storage zones need minimum occupancy to prevent zero design cooling load warnings
+        # CRITICAL FIX: Storage zones and very small zones need minimum occupancy to prevent zero design cooling load warnings
         # EnergyPlus calculates design loads from internal gains during sizing, not HVAC capacity
         # Even with minimum HVAC loads, if internal gains are zero, design cooling load will be zero
-        # Minimum 0.02 person/m² (2 people per 100 m²) ensures sufficient internal gains for non-zero design cooling load
-        # Each person generates ~100W sensible + 50W latent = 150W total, so 0.02 person/m² = 3 W/m² from people
-        # Combined with minimum lighting (5.4 W/m²) and equipment (2.0 W/m²), total = 10.4 W/m² internal gains
-        # This ensures non-zero design cooling load even for storage zones
         space_type_lower = space_type.lower()
         # CRITICAL: Also check zone name for storage zones
         zone_name_lower = zone.name.lower() if zone.name else ''
         is_storage = 'storage' in space_type_lower or 'storage' in zone_name_lower
+        is_very_small = zone.area < 10.0 or zone.area == 0.0
+        
         if is_storage:
             # CRITICAL: Increased minimum occupancy to ensure non-zero design cooling load
             # Minimum 0.08 person/m² (8 people per 100 m²) ensures sufficient internal gains
@@ -2025,6 +2032,12 @@ Curve:Quadratic,
             # 0.08 person/m² = 12 W/m² from people, combined with lighting (6.0 W/m²) and equipment (5.0 W/m²) = 23 W/m²
             # This ensures non-zero design cooling load even for storage zones
             min_occupancy_density = 0.08  # Increased to 0.08 person/m² (8 people per 100 m²) for storage zones
+            occupancy_density = max(occupancy_density, min_occupancy_density)
+        elif is_very_small:
+            # CRITICAL: Very small zones (< 10 m² or zero area) need minimum occupancy to prevent zero design cooling load
+            # Minimum 0.05 person/m² ensures at least 1 person even for very small zones
+            # This prevents zero cooling design air flow rate warnings for systems
+            min_occupancy_density = 0.05  # Minimum 0.05 person/m² for very small zones
             occupancy_density = max(occupancy_density, min_occupancy_density)
         
         total_people = max(1, int(zone.area * occupancy_density))
@@ -2285,7 +2298,7 @@ InternalMass,
   ,                         !- Cooling Supply Air Flow Rate {{m3/s}}
   ,                         !- Cooling Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
   ,                         !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
-  5.5e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (within valid range 4.027e-5 to 6.041e-5)
+  5.5e-5,                   !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {{m3/s-W}} (within valid range 2.684e-5 to 6.713e-5, mid-range for autosizing)
   DesignDay,                !- Heating Supply Air Flow Rate Method
   ,                         !- Heating Supply Air Flow Rate {{m3/s}}
   ,                         !- Heating Supply Air Flow Rate Per Floor Area {{m3/s-m2}}
