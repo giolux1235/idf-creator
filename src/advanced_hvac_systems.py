@@ -375,20 +375,20 @@ class AdvancedHVACSystems:
         # The runtime ratio = min_flow_fraction * 5.5e-5, so we need min_flow_fraction >= 0.732
         # But at part load, VAV may reduce airflow further, so we need much higher minimum (85-90%)
         if zone_area < 50.0:
-            # Very small zones: reduced minimum flow (proven to reduce warnings)
-            base_min_fraction = 0.50  # Reduced from 0.85 - proven fix from WARNINGS_FIX_SUMMARY
+            # Very small zones: extremely high minimum flow to prevent extreme cold and invalid ratios
+            base_min_fraction = 0.85  # Increased to 85% to maintain valid runtime ratios
         elif zone_area < 200.0:
-            # Small zones: reduced minimum flow
-            base_min_fraction = 0.55  # Reduced from 0.90 - proven fix from WARNINGS_FIX_SUMMARY
+            # Small zones: extremely high minimum flow
+            base_min_fraction = 0.90  # Increased to 90% to maintain valid runtime ratios
         else:
-            # Normal zones: standard minimum flow
-            base_min_fraction = 0.65  # Reduced from 0.85 - proven fix from WARNINGS_FIX_SUMMARY
+            # Normal zones: very high minimum flow
+            base_min_fraction = 0.85  # Increased to 85% to maintain valid runtime ratios
         
         usage_fraction_overrides = {
-            'break_room': 0.65 if zone_area >= 200.0 else 0.55,  # Reduced from 0.90/0.85
-            'mechanical': 0.65 if zone_area >= 200.0 else 0.55,  # Reduced from 0.90/0.85
-            'storage': 0.50,  # Reduced from 0.85 - proven fix
-            'corridor': 0.65 if zone_area >= 200.0 else 0.55  # Reduced from 0.85/0.80
+            'break_room': 0.90 if zone_area >= 200.0 else 0.85,  # Extremely high minimum to prevent low ratios
+            'mechanical': 0.90 if zone_area >= 200.0 else 0.85,  # Extremely high minimum to prevent low ratios
+            'storage': 0.85,  # Extremely high minimum even for storage to prevent extreme cold
+            'corridor': 0.85 if zone_area >= 200.0 else 0.80  # Extremely high minimum
         }
         for key, fraction in usage_fraction_overrides.items():
             if key in zone_usage:
@@ -422,7 +422,7 @@ class AdvancedHVACSystems:
         # CRITICAL: Ensure minimum flow fraction is high enough to maintain valid runtime ratio
         # With 1.5x buffer, autosize factor ≈ 1.0, so base minimum fractions (0.85-0.90) should work
         # But add extra margin to ensure ratio stays valid even at part load
-        min_flow_fraction = min(0.90, max(base_min_fraction, required_fraction))  # Cap at 90% (reduced from 95% - proven fix)
+        min_flow_fraction = min(0.95, max(base_min_fraction, required_fraction))  # Cap at 95% to allow minimal turndown
         
         # Determine heating fuel type based on climate zone
         # Cold climates (CZ 5-8) should use natural gas for efficiency
