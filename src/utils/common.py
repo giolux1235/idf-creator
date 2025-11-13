@@ -178,17 +178,17 @@ def calculate_dx_supply_air_flow(cooling_capacity: float,
         - EnergyPlus Engineering Reference: DX Cooling Coil Model
     """
     # EnergyPlus validated range: 2.684E-005 to 6.713E-005 m³/s/W
-    # CRITICAL: Use higher minimum to prevent extreme cold outlet temperatures
-    # Low airflow-to-capacity ratios cause coils to overcool, resulting in frost/freeze warnings
-    # Minimum ratio must be enforced strictly to prevent psychrometric errors
-    # CRITICAL FIX: Runtime ratios are still too low (1.045E-005 vs min 4.027E-005)
-    # Must use even higher ratios to account for autosizing capacity 1.37x higher
-    # If autosized capacity is 1.37x higher, we need ratio * 1.37 >= 4.027e-5
-    # So ratio >= 4.027e-5 / 1.37 ≈ 2.94e-5, but we need safety margin for VAV turndown
-    # Use much higher ratios to ensure runtime ratio stays above minimum even with autosizing
-    min_ratio = 5.5e-5  # m³/s per W (increased from 5.0e-5 to account for autosizing)
-    max_ratio = 7.0e-5  # Allow higher maximum for better flexibility
-    target_ratio = 6.5e-5  # Increased target to ensure adequate airflow even with autosizing
+    # CRITICAL: Use ratios within valid EnergyPlus range to prevent runtime warnings
+    # EnergyPlus autosizes capacity during runtime, which can change the ratio
+    # Must ensure initial ratio accounts for autosizing AND stays within valid range
+    # If EnergyPlus autosizes capacity 1.37x higher, runtime ratio = initial_ratio / 1.37
+    # To ensure runtime ratio >= 2.684e-5, we need initial_ratio >= 2.684e-5 * 1.37 ≈ 3.68e-5
+    # To ensure runtime ratio <= 6.713e-5, we need initial_ratio <= 6.713e-5 * 1.37 ≈ 9.2e-5
+    # But EnergyPlus max is 6.713e-5, so we must use initial_ratio <= 6.713e-5
+    # Best approach: Use mid-range ratio that accounts for autosizing
+    min_ratio = 4.5e-5  # m³/s per W (ensures runtime ratio >= 3.28e-5 after autosizing)
+    max_ratio = 6.5e-5  # m³/s per W (ensures runtime ratio <= 4.74e-5 after autosizing, well within max 6.713e-5)
+    target_ratio = 5.5e-5  # Mid-range target (runtime ratio ≈ 4.01e-5 after autosizing)
 
     if cooling_capacity is None or cooling_capacity <= 0:
         simulated_capacity = 1000.0
