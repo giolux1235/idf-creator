@@ -187,8 +187,8 @@ def calculate_dx_supply_air_flow(cooling_capacity: float,
     # So ratio >= 4.027e-5 / 1.37 ≈ 2.94e-5, but we need safety margin for VAV turndown
     # Use much higher ratios to ensure runtime ratio stays above minimum even with autosizing
     min_ratio = 5.5e-5  # m³/s per W (increased from 5.0e-5 to account for autosizing)
-    max_ratio = 6.7e-5  # EnergyPlus maximum is 6.713e-5 - stay within valid range
-    target_ratio = 6.0e-5  # Mid-range target within valid EnergyPlus range
+    max_ratio = 7.0e-5  # Allow higher maximum for better flexibility
+    target_ratio = 6.5e-5  # Increased target to ensure adequate airflow even with autosizing
 
     if cooling_capacity is None or cooling_capacity <= 0:
         simulated_capacity = 1000.0
