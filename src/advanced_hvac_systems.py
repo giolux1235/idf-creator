@@ -601,7 +601,7 @@ class AdvancedHVACSystems:
             'type': 'Schedule:Constant',
             'name': f"{zn}_CoolingSupplyAirTemp",
             'schedule_type_limits_name': 'AnyNumber',
-            'hourly_value': 13.0  # Cooling supply air temp (13°C = 55°F typical)
+            'hourly_value': 14.0  # Cooling supply air temp (14°C = 57°F) - increased from 13°C to prevent extreme cold outlet temperatures that cause enthalpy/humidity ratio warnings
         }
         components.append(cooling_schedule)
         
