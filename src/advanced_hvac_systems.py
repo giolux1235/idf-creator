@@ -694,7 +694,7 @@ class AdvancedHVACSystems:
         autosize_factor = 1.50  # Reduced from 1.51 to 1.50 (tiny decrease)
         autosized_capacity = design_cooling_capacity * autosize_factor
         # Minimum airflow required to maintain valid runtime ratio
-        min_airflow_for_ratio = autosized_capacity * 4.57e-5  # Increase from 4.56e-5 to 4.57e-5 (tiny increase to reduce Enthalpy warnings)
+        min_airflow_for_ratio = autosized_capacity * 4.58e-5  # Increase from 4.57e-5 to 4.58e-5 (tiny increase to reduce Enthalpy warnings)
         # Minimum airflow from VAV minimum flow fraction
         fixed_minimum_from_max = rated_air_flow * min_flow_fraction
         # Use the maximum of both to ensure runtime ratio stays valid
