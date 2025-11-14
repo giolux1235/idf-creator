@@ -622,14 +622,16 @@ class AdvancedHVACSystems:
         # If we set capacity to design_cooling_capacity, EnergyPlus autosizes to 1.37x higher
         # So we need to set initial capacity higher to match autosized capacity
         # This ensures runtime ratio stays above minimum even after autosizing
-        # CRITICAL: Use design capacity directly (not autosized estimate) for initial coil values
-        # EnergyPlus will autosize both capacity and airflow based on design loads and Sizing:System
-        # Setting initial values too high can cause mismatches with actual autosized values
-        # Use design capacity and let EnergyPlus autosize both capacity and airflow correctly
-        initial_capacity = design_cooling_capacity  # Use design capacity, let EnergyPlus autosize
-        # Calculate initial airflow to match Sizing:System FlowPerCoolingCapacity (6.0e-5)
-        # This ensures the initial ratio is valid, and EnergyPlus will adjust both during autosizing
-        initial_airflow = initial_capacity * 6.0e-5
+        autosize_factor = 1.37  # EnergyPlus autosizes capacity 1.37x higher (observed: 14807W → 20224W)
+        estimated_capacity = design_cooling_capacity * autosize_factor  # Account for autosizing
+        # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
+        # But use autosized capacity to ensure runtime ratio is valid
+        # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
+        initial_airflow = estimated_capacity * 6.0e-5
+        # CRITICAL: Set initial capacity to autosized estimate so ratio is valid during runtime
+        # EnergyPlus uses initial capacity estimate for ratio checks
+        # By setting capacity to autosized value, runtime ratio stays valid
+        initial_capacity = estimated_capacity  # Use autosized estimate as initial value
         
         cooling_coil = {
             'type': 'Coil:Cooling:DX:SingleSpeed',
