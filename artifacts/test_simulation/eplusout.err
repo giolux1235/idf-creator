@@ -1,0 +1,61 @@
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.14 12:27,
+   ** Severe  ** Line: 17590 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 17865 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 18140 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 18415 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 18690 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 18965 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 19240 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 19515 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 19790 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 20065 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 20340 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 20615 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 20890 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 21165 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 21440 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 21715 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 21990 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 22265 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 22540 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 22815 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 23090 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 23365 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 23640 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 23915 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 24190 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 24465 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 24740 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 25015 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 25290 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 25565 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 25840 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 26115 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 26390 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 26665 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 26940 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 27215 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** Line: 27490 Index: 10 - Field cannot be Autosize or Autocalculate
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][convergence_tolerance] - "0.000000" - Expected number greater than 0.000000
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][damper_heating_action] - "BREAK_ROOM_0_Z3_ZONEEQUIPMENTINLET" - Failed to match against any enum values.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Value type "string" for input "Normal" not permitted by 'type' constraint.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against child schema #0.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - "Normal" - Failed to match against any enum values.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against child schema #1.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against any schemas allowed by anyOf constraint.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Value type "string" for input "Coil:Heating:Electric" not permitted by 'type' constraint.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against child schema #0.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - "Coil:Heating:Electric" - Failed to match against any enum values.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against child schema #1.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against any schemas allowed by anyOf constraint.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][minimum_hot_water_or_steam_flow_rate] - Value type "string" for input "break_room_0_z3_ReheatCoil" not permitted by 'type' constraint.
+   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][zone_minimum_air_flow_input_method] - "Fixed" - Failed to match against any enum values.
+   **  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=51
+   ..... Last severe error=<root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][zone_minimum_air_flow_input_method] - "Fixed" - Failed to match against any enum values.
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 51 Severe Errors; Elapsed Time=00hr 00min  0.14sec

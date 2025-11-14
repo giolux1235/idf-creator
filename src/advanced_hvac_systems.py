@@ -713,7 +713,10 @@ class AdvancedHVACSystems:
             'maximum_flow_per_zone_floor_area_during_reheat': None,  # Will be set to empty in formatter
             'maximum_flow_fraction_before_reheat': round(min_flow_fraction, 3),  # Keep for compatibility
             'fixed_minimum_airflow_rate': round(fixed_minimum_airflow, 6),  # CRITICAL: Fixed minimum to enforce strictly
-            'zone_minimum_airflow_input_method': 'Fixed',  # CRITICAL: Use Fixed method to enforce minimum strictly
+            'zone_minimum_airflow_input_method': 'FixedFlowRate',  # CRITICAL: Use FixedFlowRate method (correct enum) to enforce minimum strictly
+            'convergence_tolerance': 0.001,  # CRITICAL: Must be > 0 (default 0.001)
+            'reheat_coil_object_type': 'Coil:Heating:Electric',  # Specify coil type for formatter
+            'air_outlet_node_name': normalize_node_name(f"{zn}_ZoneEquipmentInlet"),  # Air outlet node name
             # Remove schedule reference - Fixed method doesn't use schedule
             'minimum_airflow_fraction_schedule_name': None,  # Not used with Fixed method
             'reheat_coil_name': f"{zn}_ReheatCoil",
