@@ -2222,10 +2222,10 @@ InternalMass,
         is_storage = 'storage' in space_type_lower or 'storage' in zone_name_lower
         if is_storage and zone_area > 0:
             # CRITICAL: Use both minimum airflow and minimum airflow per floor area
-            # Minimum 0.003 m³/s per m² (3.0 L/s per m²) for storage zones to ensure non-zero design load
-            # Increased from 0.002 to 0.003 to ensure EnergyPlus calculates a design cooling load
-            min_cooling_airflow_per_area = 0.003  # 3.0 L/s per m² (increased from 2.0)
-            min_cooling_airflow = max(zone_area * min_cooling_airflow_per_area, 0.20)  # Minimum 0.20 m³/s or 3.0 L/s per m²
+            # Minimum 0.0035 m³/s per m² (3.5 L/s per m²) for storage zones to ensure non-zero design load
+            # Small increase from 0.003 to 0.0035 to ensure EnergyPlus calculates a design cooling load
+            min_cooling_airflow_per_area = 0.0035  # 3.5 L/s per m² (small increase from 3.0)
+            min_cooling_airflow = max(zone_area * min_cooling_airflow_per_area, 0.22)  # Minimum 0.22 m³/s or 3.5 L/s per m² (small increase from 0.20)
             min_cooling_airflow_str = f"{min_cooling_airflow:.6f}"
             min_cooling_airflow_per_area_str = f"{min_cooling_airflow_per_area:.6f}"
         else:
