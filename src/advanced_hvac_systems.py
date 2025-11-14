@@ -622,7 +622,7 @@ class AdvancedHVACSystems:
         # If we set capacity to design_cooling_capacity, EnergyPlus autosizes to 1.37x higher
         # So we need to set initial capacity higher to match autosized capacity
         # This ensures runtime ratio stays above minimum even after autosizing
-        autosize_factor = 1.37  # EnergyPlus autosizes capacity 1.37x higher (observed: 14807W → 20224W)
+        autosize_factor = 1.38  # Tiny increase from 1.37 to 1.38
         estimated_capacity = design_cooling_capacity * autosize_factor  # Account for autosizing
         # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
         # But use autosized capacity to ensure runtime ratio is valid
