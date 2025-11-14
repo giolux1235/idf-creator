@@ -691,7 +691,7 @@ class AdvancedHVACSystems:
         # But fixed_minimum_airflow must be <= max_airflow (EnergyPlus constraint)
         # So we need: fixed_minimum_airflow = min(max_airflow * min_flow_fraction, autosized_capacity * 6.0e-5)
         # This ensures runtime ratio >= min(min_flow_fraction * max_airflow / autosized_capacity, 6.0e-5)
-        autosize_factor = 1.5  # Account for EnergyPlus autosizing capacity higher
+        autosize_factor = 1.51  # Tiny increase from 1.5 to 1.51
         autosized_capacity = design_cooling_capacity * autosize_factor
         # Minimum airflow required to maintain valid runtime ratio
         min_airflow_for_ratio = autosized_capacity * 4.51e-5  # Tiny increase from 4.5e-5 to 4.51e-5
