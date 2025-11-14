@@ -1707,9 +1707,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             
             if zone_min_flow_method == 'FixedFlowRate' and fixed_min_airflow is not None:
                 # Use FixedFlowRate method - set fraction and schedule to blank, use fixed airflow
-                min_flow_fraction_str = ","
+                min_flow_fraction_str = ","  # Single comma for blank field
                 fixed_min_airflow_str = f"{fixed_min_airflow:.6f}"
-                min_flow_schedule_str = ","
+                min_flow_schedule_str = ","  # Single comma for blank field
             elif zone_min_flow_method == 'Scheduled' and min_flow_schedule:
                 # Use Scheduled method
                 min_flow_fraction_str = ","
@@ -1719,8 +1719,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 # Fallback to Constant method
                 zone_min_flow_method = 'Constant'
                 min_flow_fraction_str = f"{component.get('maximum_flow_fraction_before_reheat', 0.2)}"
-                fixed_min_airflow_str = ","
-                min_flow_schedule_str = ","
+                fixed_min_airflow_str = ","  # Single comma for blank field
+                min_flow_schedule_str = ","  # Single comma for blank field
             
             # CRITICAL FIX: For electric reheat coils, Maximum Hot Water or Steam Flow Rate must be 0.0 (not Autosize)
             # Autosize is only valid for water/steam coils, not electric coils
@@ -1747,9 +1747,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   {component['air_inlet_node_name']},  !- Air Inlet Node Name
   {max_air_flow},                            !- Maximum Air Flow Rate {{m3/s}}
   {zone_min_flow_method},                            !- Zone Minimum Air Flow Input Method
-  {min_flow_fraction_str}, !- Constant Minimum Air Flow Fraction (ignored if FixedFlowRate method)
+  {min_flow_fraction_str} !- Constant Minimum Air Flow Fraction (ignored if FixedFlowRate method)
   {fixed_min_airflow_str},                                    !- Fixed Minimum Air Flow Rate {{m3/s}} (used if FixedFlowRate method)
-  {min_flow_schedule_str},                                    !- Minimum Air Flow Fraction Schedule Name
+  {min_flow_schedule_str}                                    !- Minimum Air Flow Fraction Schedule Name
   {reheat_coil_type},               !- Reheat Coil Object Type
   {component['reheat_coil_name']},     !- Reheat Coil Name
   {max_reheat_flow},                            !- Maximum Hot Water or Steam Flow Rate {{m3/s}} (0.0 for electric coils)
@@ -1757,7 +1757,7 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
   {air_outlet_node}, !- Air Outlet Node Name
   {convergence_tolerance:.6f}, !- Convergence Tolerance
   {damper_heating_action}, !- Damper Heating Action
-  {flow_per_area_str},                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}} (ignored when NORMAL)
+  {flow_per_area_str}                       !- Maximum Flow per Zone Floor Area During Reheat {{m3/s-m2}} (ignored when NORMAL)
   {flow_fraction_str};                       !- Maximum Flow Fraction During Reheat (ignored when NORMAL)
 
 """
