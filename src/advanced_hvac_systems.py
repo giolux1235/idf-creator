@@ -700,7 +700,7 @@ class AdvancedHVACSystems:
         # Use the maximum of both to ensure runtime ratio stays valid
         fixed_minimum_airflow = max(fixed_minimum_from_max, min_airflow_for_ratio)
         # But cap at max airflow to satisfy EnergyPlus constraint
-        fixed_minimum_airflow = min(fixed_minimum_airflow, rated_air_flow * 0.95)  # Cap at 95% of max to allow some turndown
+        fixed_minimum_airflow = min(fixed_minimum_airflow, rated_air_flow * 0.951)  # Cap at 95.1% of max (tiny increase from 95%)
         
         vav_terminal = {
             'type': 'AirTerminal:SingleDuct:VAV:Reheat',
