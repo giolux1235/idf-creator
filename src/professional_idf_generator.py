@@ -2254,7 +2254,7 @@ InternalMass,
         return f"""Sizing:Zone,
   {zone_name},                !- Zone or ZoneList Name
   SupplyAirTemperature,    !- Zone Cooling Design Supply Air Temperature Input Method
-  13.5000,                 !- Zone Cooling Design Supply Air Temperature {{C}} (increased from 12.8°C to match cooling supply air temp schedule and prevent Enthalpy warnings)
+  12.8000,                 !- Zone Cooling Design Supply Air Temperature {{C}}
   ,                        !- Zone Cooling Design Supply Air Temperature Difference {{deltaC}}
   SupplyAirTemperature,    !- Zone Heating Design Supply Air Temperature Input Method
   50.0000,                 !- Zone Heating Design Supply Air Temperature {{C}}
@@ -2293,7 +2293,7 @@ InternalMass,
   0.0080,                   !- Preheat Design Humidity Ratio {{kgWater/kgDryAir}}
   12.8,                     !- Precool Design Temperature {{C}}
   0.0080,                   !- Precool Design Humidity Ratio {{kgWater/kgDryAir}}
-  13.5,                     !- Central Cooling Design Supply Air Temperature {{C}} (increased from 12.8°C to match cooling supply air temp schedule and prevent Enthalpy warnings)
+  12.8,                     !- Central Cooling Design Supply Air Temperature {{C}}
   40.0,                     !- Central Heating Design Supply Air Temperature {{C}}
   NonCoincident,            !- Type of Zone Sum to Use
   No,                       !- 100% Outdoor Air in Cooling
