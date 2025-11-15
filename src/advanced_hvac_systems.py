@@ -627,7 +627,7 @@ class AdvancedHVACSystems:
         # Calculate airflow to match Sizing:System FlowPerCoolingCapacity exactly (6.0e-5)
         # But use autosized capacity to ensure runtime ratio is valid
         # This ensures the ratio is valid during sizing phase checks (within 4.027e-5 to 6.041e-5)
-        initial_airflow = estimated_capacity * 6.5e-5  # Increased from 6.0e-5 to match Sizing:System and ensure adequate airflow
+        initial_airflow = estimated_capacity * 6.0e-5
         # CRITICAL: Set initial capacity to autosized estimate so ratio is valid during runtime
         # EnergyPlus uses initial capacity estimate for ratio checks
         # By setting capacity to autosized value, runtime ratio stays valid
