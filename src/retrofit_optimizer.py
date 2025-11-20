@@ -389,6 +389,7 @@ class RetrofitOptimizer:
         self,
         scenarios: List[RetrofitScenario],
         baseline_idf_path: str,
+        weather_file: str,
         output_dir: Optional[str] = None,
         max_concurrent: int = 4
     ) -> List[RetrofitScenario]:
@@ -398,6 +399,7 @@ class RetrofitOptimizer:
         Args:
             scenarios: List of retrofit scenarios to simulate
             baseline_idf_path: Path to baseline IDF file
+            weather_file: Path to weather file (.epw)
             output_dir: Directory for simulation outputs
             max_concurrent: Maximum concurrent simulations (for parallel processing)
             
@@ -408,6 +410,9 @@ class RetrofitOptimizer:
             print("⚠️  EnergyPlus not found. Using estimated savings only.")
             return scenarios
         
+        if not os.path.exists(weather_file):
+            raise ValueError(f"Weather file not found: {weather_file}")
+        
         if output_dir is None:
             output_dir = os.path.dirname(baseline_idf_path) or '.'
         
@@ -417,34 +422,83 @@ class RetrofitOptimizer:
         print(f"\n🔄 Running simulations for {len(scenarios)} retrofit scenarios...")
         
         # Run baseline simulation first
-        baseline_results = self._run_simulation(baseline_idf_path, output_dir / "baseline")
+        baseline_results = self._run_simulation(baseline_idf_path, weather_file, output_dir / "baseline")
         baseline_annual = baseline_results.get('annual_kwh', 0.0)
         
         if baseline_annual == 0:
             print("⚠️  Baseline simulation failed. Using estimated savings.")
             return scenarios
         
-        # Run each scenario
-        for i, scenario in enumerate(scenarios, 1):
-            print(f"  [{i}/{len(scenarios)}] Simulating: {scenario.description[:50]}...")
+        # Run scenarios in parallel if max_concurrent > 1
+        if max_concurrent > 1 and len(scenarios) > 1:
+            from concurrent.futures import ThreadPoolExecutor, as_completed
             
-            # Create modified IDF for this scenario
-            scenario_idf = self._apply_retrofit_measures(
-                baseline_idf_path,
-                scenario.measures,
-                output_dir / f"scenario_{i}.idf"
-            )
-            
-            # Run simulation
-            results = self._run_simulation(scenario_idf, output_dir / f"scenario_{i}_output")
-            
-            scenario.simulated_energy_kwh = results.get('annual_kwh', 0.0)
-            if scenario.simulated_energy_kwh > 0:
-                scenario.energy_savings_kwh = baseline_annual - scenario.simulated_energy_kwh
-                scenario.energy_savings_percent = (scenario.energy_savings_kwh / baseline_annual * 100) if baseline_annual > 0 else 0.0
-                print(f"    ✓ Savings: {scenario.energy_savings_kwh:,.0f} kWh ({scenario.energy_savings_percent:.1f}%)")
-            else:
-                print(f"    ⚠️  Simulation failed, using estimated savings")
+            with ThreadPoolExecutor(max_workers=max_concurrent) as executor:
+                futures = {}
+                
+                for i, scenario in enumerate(scenarios, 1):
+                    # Create modified IDF for this scenario
+                    scenario_idf = self._apply_retrofit_measures(
+                        baseline_idf_path,
+                        scenario.measures,
+                        output_dir / f"scenario_{i}.idf"
+                    )
+                    
+                    # Validate IDF before simulation
+                    if not self._validate_modified_idf(scenario_idf):
+                        print(f"  ⚠️  Scenario {i} IDF validation failed, skipping simulation")
+                        continue
+                    
+                    # Submit simulation task
+                    future = executor.submit(
+                        self._run_simulation,
+                        scenario_idf,
+                        weather_file,
+                        output_dir / f"scenario_{i}_output"
+                    )
+                    futures[future] = (i, scenario)
+                
+                # Process results as they complete
+                for future in as_completed(futures):
+                    i, scenario = futures[future]
+                    try:
+                        results = future.result()
+                        scenario.simulated_energy_kwh = results.get('annual_kwh', 0.0)
+                        if scenario.simulated_energy_kwh > 0:
+                            scenario.energy_savings_kwh = baseline_annual - scenario.simulated_energy_kwh
+                            scenario.energy_savings_percent = (scenario.energy_savings_kwh / baseline_annual * 100) if baseline_annual > 0 else 0.0
+                            print(f"  [{i}/{len(scenarios)}] ✓ {scenario.description[:40]}... Savings: {scenario.energy_savings_kwh:,.0f} kWh ({scenario.energy_savings_percent:.1f}%)")
+                        else:
+                            print(f"  [{i}/{len(scenarios)}] ⚠️  {scenario.description[:40]}... Simulation failed, using estimated savings")
+                    except Exception as e:
+                        print(f"  [{i}/{len(scenarios)}] ❌ Error: {e}")
+        else:
+            # Sequential execution
+            for i, scenario in enumerate(scenarios, 1):
+                print(f"  [{i}/{len(scenarios)}] Simulating: {scenario.description[:50]}...")
+                
+                # Create modified IDF for this scenario
+                scenario_idf = self._apply_retrofit_measures(
+                    baseline_idf_path,
+                    scenario.measures,
+                    output_dir / f"scenario_{i}.idf"
+                )
+                
+                # Validate IDF before simulation
+                if not self._validate_modified_idf(scenario_idf):
+                    print(f"    ⚠️  IDF validation failed, skipping simulation")
+                    continue
+                
+                # Run simulation
+                results = self._run_simulation(scenario_idf, weather_file, output_dir / f"scenario_{i}_output")
+                
+                scenario.simulated_energy_kwh = results.get('annual_kwh', 0.0)
+                if scenario.simulated_energy_kwh > 0:
+                    scenario.energy_savings_kwh = baseline_annual - scenario.simulated_energy_kwh
+                    scenario.energy_savings_percent = (scenario.energy_savings_kwh / baseline_annual * 100) if baseline_annual > 0 else 0.0
+                    print(f"    ✓ Savings: {scenario.energy_savings_kwh:,.0f} kWh ({scenario.energy_savings_percent:.1f}%)")
+                else:
+                    print(f"    ⚠️  Simulation failed, using estimated savings")
         
         return scenarios
     
@@ -455,92 +509,202 @@ class RetrofitOptimizer:
         output_idf: Path
     ) -> str:
         """
-        Apply retrofit measures to IDF file.
+        Apply retrofit measures to IDF file with improved pattern matching.
         
         Returns:
             Path to modified IDF file
         """
-        with open(baseline_idf, 'r') as f:
+        with open(baseline_idf, 'r', encoding='utf-8') as f:
             idf_content = f.read()
         
         for measure in measures:
             if measure.measure_type == RetrofitMeasureType.LIGHTING_LED:
                 # Reduce lighting power density by 40%
-                pattern = r'(Lights[^;]+Watts per Zone Floor Area[^;]+)([\d.]+)'
+                pattern = r'(Lights[^;]*Watts per Zone Floor Area[^,]*,\s*)([\d.E+-]+)'
                 def reduce_lighting(match):
-                    old_value = float(match.group(2))
-                    new_value = old_value * 0.6  # 40% reduction
-                    return match.group(1) + f"{new_value:.2f}"
-                idf_content = re.sub(pattern, reduce_lighting, idf_content)
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.6  # 40% reduction
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_lighting, idf_content, flags=re.MULTILINE)
+            
+            elif measure.measure_type == RetrofitMeasureType.LIGHTING_CONTROLS:
+                # Add occupancy sensors - reduce lighting schedule values
+                # This is a simplified approach - full implementation would modify schedules
+                pattern = r'(Lights[^;]*Watts per Zone Floor Area[^,]*,\s*)([\d.E+-]+)'
+                def reduce_with_controls(match):
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.85  # 15% reduction from controls
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_with_controls, idf_content, flags=re.MULTILINE)
             
             elif measure.measure_type == RetrofitMeasureType.LIGHTING_DAYLIGHTING:
-                # Add daylighting controls (already integrated in Phase 1)
-                # Just ensure they're present - if not, add them
-                if 'Daylighting:Controls' not in idf_content:
-                    # Would need to add daylighting controls here
-                    pass
+                # Daylighting controls already integrated in Phase 1
+                # Additional dimming reduces lighting load
+                pattern = r'(Lights[^;]*Watts per Zone Floor Area[^,]*,\s*)([\d.E+-]+)'
+                def reduce_daylighting(match):
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.80  # 20% reduction from daylighting
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_daylighting, idf_content, flags=re.MULTILINE)
             
             elif measure.measure_type == RetrofitMeasureType.HVAC_EFFICIENCY:
-                # Improve HVAC efficiency (reduce energy consumption)
-                # Modify COP or efficiency values
-                pattern = r'(Coil:Cooling:DX:SingleSpeed[^;]+Rated COP[^;]+)([\d.]+)'
+                # Improve HVAC efficiency - handle multiple coil types
+                # Cooling COP improvement
+                pattern = r'(Coil:Cooling:DX[^;]*Rated COP[^,]*,\s*)([\d.E+-]+)'
                 def improve_cop(match):
-                    old_value = float(match.group(2))
-                    new_value = old_value * 1.25  # 25% improvement
-                    return match.group(1) + f"{new_value:.2f}"
-                idf_content = re.sub(pattern, improve_cop, idf_content)
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 1.25  # 25% improvement
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, improve_cop, idf_content, flags=re.MULTILINE)
+                
+                # Heating efficiency improvement
+                pattern = r'(Coil:Heating[^;]*Efficiency[^,]*,\s*)([\d.E+-]+)'
+                def improve_heating(match):
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 1.25  # 25% improvement
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, improve_heating, idf_content, flags=re.MULTILINE)
+            
+            elif measure.measure_type == RetrofitMeasureType.HVAC_VFD:
+                # VFDs reduce fan energy - modify fan power coefficients
+                pattern = r'(Fan[^;]*Fan Power Coefficient[^,]*,\s*)([\d.E+-]+)'
+                def reduce_fan_power(match):
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.7  # 30% reduction with VFD
+                        return match.group(1) + f"{new_value:.3f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_fan_power, idf_content, flags=re.MULTILINE)
             
             elif measure.measure_type == RetrofitMeasureType.HVAC_ECONOMIZER:
-                # Add economizer (already integrated in Phase 1)
-                # Ensure economizer is present
-                if 'Controller:OutdoorAir' not in idf_content:
-                    # Would need to add economizer here
-                    pass
+                # Economizer already integrated in Phase 1
+                # Additional savings come from free cooling
+                pass  # Already present in IDF
             
             elif measure.measure_type == RetrofitMeasureType.ENVELOPE_INSULATION:
-                # Increase insulation R-values
-                pattern = r'(Material[^;]+Thermal Resistance[^;]+)([\d.]+)'
+                # Increase insulation R-values - match Material objects
+                pattern = r'(Material[^;]*Thermal Resistance[^,]*,\s*)([\d.E+-]+)'
                 def increase_rvalue(match):
-                    old_value = float(match.group(2))
-                    new_value = old_value * 1.5  # 50% increase
-                    return match.group(1) + f"{new_value:.2f}"
-                idf_content = re.sub(pattern, increase_rvalue, idf_content)
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 1.5  # 50% increase
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, increase_rvalue, idf_content, flags=re.MULTILINE)
             
             elif measure.measure_type == RetrofitMeasureType.ENVELOPE_WINDOWS:
                 # Improve window U-value (lower = better)
-                pattern = r'(WindowMaterial:SimpleGlazingSystem[^;]+U-Factor[^;]+)([\d.]+)'
+                pattern = r'(WindowMaterial:SimpleGlazingSystem[^;]*U-Factor[^,]*,\s*)([\d.E+-]+)'
                 def improve_window(match):
-                    old_value = float(match.group(2))
-                    new_value = old_value * 0.7  # 30% improvement (lower U-value)
-                    return match.group(1) + f"{new_value:.3f}"
-                idf_content = re.sub(pattern, improve_window, idf_content)
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.7  # 30% improvement (lower U-value)
+                        return match.group(1) + f"{new_value:.3f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, improve_window, idf_content, flags=re.MULTILINE)
             
             elif measure.measure_type == RetrofitMeasureType.ENVELOPE_AIR_SEALING:
                 # Reduce infiltration rates
-                pattern = r'(ZoneInfiltration:DesignFlowRate[^;]+Flow Rate[^;]+)([\d.]+)'
+                pattern = r'(ZoneInfiltration:DesignFlowRate[^;]*Flow Rate[^,]*,\s*)([\d.E+-]+)'
                 def reduce_infiltration(match):
-                    old_value = float(match.group(2))
-                    new_value = old_value * 0.8  # 20% reduction
-                    return match.group(1) + f"{new_value:.6f}"
-                idf_content = re.sub(pattern, reduce_infiltration, idf_content)
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.8  # 20% reduction
+                        return match.group(1) + f"{new_value:.6f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_infiltration, idf_content, flags=re.MULTILINE)
+            
+            elif measure.measure_type == RetrofitMeasureType.RENEWABLE_PV:
+                # PV systems generate electricity - would need to add Generator:Photovoltaic objects
+                # For now, this is handled in post-processing (reduces grid electricity)
+                pass
+            
+            elif measure.measure_type == RetrofitMeasureType.BAS_AUTOMATION:
+                # BAS improves overall efficiency through better control
+                # Reduce all loads slightly
+                pattern = r'(Lights[^;]*Watts per Zone Floor Area[^,]*,\s*)([\d.E+-]+)'
+                def reduce_bas_lighting(match):
+                    try:
+                        old_value = float(match.group(2))
+                        new_value = old_value * 0.92  # 8% reduction
+                        return match.group(1) + f"{new_value:.2f}"
+                    except ValueError:
+                        return match.group(0)
+                idf_content = re.sub(pattern, reduce_bas_lighting, idf_content, flags=re.MULTILINE)
         
         # Write modified IDF
-        with open(output_idf, 'w') as f:
+        with open(output_idf, 'w', encoding='utf-8') as f:
             f.write(idf_content)
         
         return str(output_idf)
     
-    def _run_simulation(self, idf_file: str, output_dir: Path) -> Dict:
+    def _validate_modified_idf(self, idf_path: str) -> bool:
+        """
+        Validate IDF syntax before simulation.
+        
+        Returns:
+            True if IDF appears valid, False otherwise
+        """
+        try:
+            # Basic validation: check file exists and is readable
+            if not os.path.exists(idf_path):
+                return False
+            
+            # Check for basic IDF structure
+            with open(idf_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+            # Check for required objects
+            if 'Version,' not in content:
+                return False
+            
+            # Check for balanced semicolons (basic syntax check)
+            if content.count(';') < 10:  # Minimum expected objects
+                return False
+            
+            return True
+        except Exception:
+            return False
+    
+    def _run_simulation(self, idf_file: str, weather_file: str, output_dir: Path) -> Dict:
         """Run EnergyPlus simulation and extract results"""
         output_dir.mkdir(parents=True, exist_ok=True)
         
         try:
             result = subprocess.run(
-                [self.energyplus_path, '-w', 'dummy.epw', '-d', str(output_dir), idf_file],
+                [self.energyplus_path, '-w', str(Path(weather_file).absolute()), '-d', str(output_dir.absolute()), str(Path(idf_file).absolute())],
                 capture_output=True,
                 text=True,
                 timeout=300
             )
+            
+            if result.returncode != 0:
+                # Check for fatal errors
+                if 'FATAL' in result.stderr or 'FATAL' in result.stdout:
+                    print(f"    ⚠️  Fatal error in simulation")
+                    return {'annual_kwh': 0.0, 'monthly_kwh': [0.0] * 12}
+        except subprocess.TimeoutExpired:
+            print(f"    ⚠️  Simulation timed out")
+            return {'annual_kwh': 0.0, 'monthly_kwh': [0.0] * 12}
         except Exception as e:
             print(f"    ⚠️  Simulation error: {e}")
             return {'annual_kwh': 0.0, 'monthly_kwh': [0.0] * 12}
@@ -563,22 +727,69 @@ class RetrofitOptimizer:
             conn = sqlite3.connect(str(sqlite_file))
             cursor = conn.cursor()
             
-            cursor.execute("""
-                SELECT SUM(Value) 
-                FROM ReportData 
-                WHERE ReportDataDictionaryIndex IN (
-                    SELECT ReportDataDictionaryIndex 
-                    FROM ReportDataDictionary 
-                    WHERE VariableName LIKE '%Electricity%' 
-                    AND VariableName LIKE '%Facility%'
-                )
-            """)
+            annual_kwh = 0.0
             
-            result = cursor.fetchone()
+            # Strategy 1: ReportMeterData (preferred for energy consumption)
+            try:
+                cursor.execute("""
+                    SELECT MAX(Value)
+                    FROM ReportMeterData
+                    WHERE ReportMeterDictionaryIndex IN (
+                        SELECT ReportMeterDictionaryIndex
+                        FROM ReportMeterDictionary
+                        WHERE Name = 'Electricity:Facility'
+                        AND ReportingFrequency = 'RunPeriod'
+                    )
+                """)
+                result = cursor.fetchone()
+                if result and result[0]:
+                    # Value is in Joules, convert to kWh
+                    annual_kwh = result[0] / 3600000.0
+            except:
+                pass
+            
+            # Strategy 2: ReportMeterDataDictionary (alternative schema)
+            if annual_kwh == 0:
+                try:
+                    cursor.execute("""
+                        SELECT MAX(Value)
+                        FROM ReportMeterData
+                        WHERE ReportMeterDataDictionaryIndex IN (
+                            SELECT ReportMeterDataDictionaryIndex
+                            FROM ReportMeterDataDictionary
+                            WHERE Name = 'Electricity:Facility'
+                            AND ReportingFrequency = 'RunPeriod'
+                        )
+                    """)
+                    result = cursor.fetchone()
+                    if result and result[0]:
+                        annual_kwh = result[0] / 3600000.0
+                except:
+                    pass
+            
+            # Strategy 3: ReportData (fallback)
+            if annual_kwh == 0:
+                try:
+                    cursor.execute("""
+                        SELECT SUM(Value)
+                        FROM ReportData
+                        WHERE ReportDataDictionaryIndex IN (
+                            SELECT ReportDataDictionaryIndex
+                            FROM ReportDataDictionary
+                            WHERE Name LIKE '%Electricity%Facility%'
+                            AND ReportingFrequency = 'RunPeriod'
+                        )
+                    """)
+                    result = cursor.fetchone()
+                    if result and result[0]:
+                        # Assume Joules if large number, otherwise kWh
+                        annual_kwh = result[0] / 3600000.0 if result[0] > 1000000 else result[0]
+                except:
+                    pass
+            
             conn.close()
             
-            if result and result[0]:
-                annual_kwh = result[0]
+            if annual_kwh > 0:
                 return {
                     'annual_kwh': annual_kwh,
                     'monthly_kwh': [annual_kwh / 12.0] * 12

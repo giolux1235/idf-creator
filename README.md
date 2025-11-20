@@ -242,16 +242,69 @@ energyplus -w weather.epw output/Building.idf
 - HVAC systems use ideal loads (simplified but comprehensive)
 - Consider customizing materials and systems for detailed studies
 - Weather files should match your climate zone
-- Deployment verification: 2025-11-07 small update confirming production pipeline
+
+## 🧪 Testing
+
+Run the test suite:
+```bash
+python -m pytest tests/
+```
+
+For more information, see [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md).
+
+## 📚 Additional Documentation
+
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
+- [API Documentation](docs/API_DOCUMENTATION.md) - API reference
+- [User Workflow Guide](docs/USER_WORKFLOW_GUIDE.md) - Detailed usage guide
+- [How It Works](docs/HOW_IT_WORKS.md) - Technical overview
+
+## 📁 Project Structure
+
+```
+idf-creator/
+├── src/                    # Main source code
+│   ├── core/              # Core IDF generation logic
+│   ├── validation/        # Validation modules
+│   ├── compliance/        # Compliance checking (ASHRAE 90.1)
+│   ├── utils/             # Utility functions
+│   └── ...                # Other modules (HVAC, geometry, etc.)
+├── tests/                  # Test suite
+│   ├── data/             # Test data files
+│   └── test_*.py         # Test modules
+├── examples/              # Example scripts and usage
+├── scripts/               # Utility scripts
+│   └── archive/          # Historical/one-off scripts
+├── docs/                  # Documentation
+│   ├── history/         # Historical documentation
+│   └── *.md             # Current documentation
+├── main.py               # Main entry point
+├── requirements.txt      # Python dependencies
+├── CONTRIBUTING.md       # Contribution guidelines
+└── README.md            # This file
+```
 
 ## 🤝 Contributing
 
-Contributions welcome! Areas for improvement:
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Quick Start for Contributors
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes and add tests
+4. Run tests: `python -m pytest tests/`
+5. Submit a pull request
+
+### Areas for Contribution
+
 - Enhanced document parsing
 - More building type templates
 - Additional HVAC system types
 - Better geometry estimation
 - Integration with building databases
+- Improved test coverage
+- Documentation improvements
 
 ## 📄 License
 

@@ -1,23 +1,11 @@
-Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.14 12:28,
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][convergence_tolerance] - "0.000000" - Expected number greater than 0.000000
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][damper_heating_action] - "BREAK_ROOM_0_Z3_ZONEEQUIPMENTINLET" - Failed to match against any enum values.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Value type "string" for input "Normal" not permitted by 'type' constraint.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against child schema #0.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - "Normal" - Failed to match against any enum values.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against child schema #1.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_flow_fraction_during_reheat] - Failed to validate against any schemas allowed by anyOf constraint.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Value type "string" for input "Coil:Heating:Electric" not permitted by 'type' constraint.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against child schema #0.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - "Coil:Heating:Electric" - Failed to match against any enum values.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against child schema #1.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][maximum_hot_water_or_steam_flow_rate] - Failed to validate against any schemas allowed by anyOf constraint.
-   ** Severe  ** <root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][minimum_hot_water_or_steam_flow_rate] - Value type "string" for input "break_room_0_z3_ReheatCoil" not permitted by 'type' constraint.
-   **  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.
+Program Version,EnergyPlus, Version 24.2.0-94a887817b, YMD=2025.11.14 12:29,
+   ************* Beginning Zone Sizing Calculations
+   **  Fatal  ** OpenWeatherFile: Unexpected End-of-File on EPW Weather file, while reading header information, looking for header=LOCATION
    ...Summary of Errors that led to program termination:
-   ..... Reference severe error count=13
-   ..... Last severe error=<root>[AirTerminal:SingleDuct:VAV:Reheat][break_room_0_z3_VAVTerminal][minimum_hot_water_or_steam_flow_rate] - Value type "string" for input "break_room_0_z3_ReheatCoil" not permitted by 'type' constraint.
+   ..... Reference severe error count=0
+   ..... Last severe error=
    ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
    ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
    ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
    ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
-   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 13 Severe Errors; Elapsed Time=00hr 00min  0.12sec
+   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  0.20sec

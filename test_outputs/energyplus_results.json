@@ -3,7 +3,7 @@
     {
       "name": "Small Office",
       "idf_path": "test_outputs/test_small_office.idf",
-      "weather_file": "artifacts/desktop_files/weather/Chicago.epw",
+      "weather_file": null,
       "simulation_results": {
         "csv": {
           "total_site_energy_gj": 1772.61,

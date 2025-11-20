@@ -13,41 +13,21 @@ NREL_BASE_URL = "https://data.nrel.gov/system/files/68/"
 # Weather files we need (TMY3 format)
 WEATHER_FILES = {
     'Chicago': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/IL/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw',
+        'url': 'https://climate.onebuilding.org/WMO_Region_4_North_and_Central_America/USA_United_States_of_America/IL_Illinois/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.zip',
         'filename': 'USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw'
     },
     'New_York': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/NY/USA_NY_New.York.LaGuardia.AP.725030_TMY3.epw',
+        'url': 'https://climate.onebuilding.org/WMO_Region_4_North_and_Central_America/USA_United_States_of_America/NY_New_York/USA_NY_New.York-LaGuardia.AP.725030_TMY3.zip',
         'filename': 'USA_NY_New.York.LaGuardia.AP.725030_TMY3.epw'
     },
     'San_Francisco': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/CA/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw',
+        'url': 'https://climate.onebuilding.org/WMO_Region_4_North_and_Central_America/USA_United_States_of_America/CA_California/USA_CA_San.Francisco.Intl.AP.724940_TMY3.zip',
         'filename': 'USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw'
-    },
-    'Boston': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/MA/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.epw',
-        'filename': 'USA_MA_Boston-Logan.Intl.AP.725090_TMY3.epw'
-    },
-    'Seattle': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/WA/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw',
-        'filename': 'USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw'
-    },
-    'Los_Angeles': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/CA/USA_CA_Los.Angeles.Intl.AP.722950_TMY3.epw',
-        'filename': 'USA_CA_Los.Angeles.Intl.AP.722950_TMY3.epw'
-    },
-    'Miami': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/FL/USA_FL_Miami.Intl.AP.722020_TMY3.epw',
-        'filename': 'USA_FL_Miami.Intl.AP.722020_TMY3.epw'
-    },
-    'Denver': {
-        'url': 'https://github.com/NREL/EnergyPlusWeatherData/raw/master/north_and_central_america_wmo_region_4/USA/CO/USA_CO_Denver-Aurora-Buckley.AFB.724695_TMY3.epw',
-        'filename': 'USA_CO_Denver-Aurora-Buckley.AFB.724695_TMY3.epw'
     }
 }
 
 def download_weather_file(city_name: str, url: str, filename: str, output_dir: str = "artifacts/desktop_files/weather"):
-    """Download a weather file from NREL"""
+    """Download a weather file from OneBuilding (ZIP) or direct URL"""
     output_path = Path(output_dir) / filename
     
     # Skip if already exists
@@ -57,12 +37,31 @@ def download_weather_file(city_name: str, url: str, filename: str, output_dir: s
     
     print(f"Downloading {city_name} weather file...")
     try:
-        response = requests.get(url, timeout=30)
+        response = requests.get(url, timeout=60)
         response.raise_for_status()
         
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, 'wb') as f:
-            f.write(response.content)
+        
+        # Handle ZIP files
+        if url.endswith('.zip'):
+            import zipfile
+            import io
+            
+            with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+                # Find the EPW file in the zip
+                epw_files = [f for f in z.namelist() if f.endswith('.epw')]
+                if not epw_files:
+                    raise ValueError("No EPW file found in ZIP archive")
+                
+                # Extract the first EPW file
+                epw_content = z.read(epw_files[0])
+                
+                with open(output_path, 'wb') as f:
+                    f.write(epw_content)
+        else:
+            # Direct download
+            with open(output_path, 'wb') as f:
+                f.write(response.content)
         
         print(f"✓ {city_name}: Downloaded ({filename})")
         return str(output_path)

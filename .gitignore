@@ -55,6 +55,31 @@ Thumbs.db
 # Logs
 *.log
 
+# Test outputs and artifacts
+artifacts/
+test_outputs/
+test_run/
+test_sf_run/
+test_vav_local/
+output/
+
+# Temporary files
+*.json.bak
+*.idf.bak
+tmp*.idf
+debug*.idf
+test_*.idf
+*_fixed*.idf
+
+# JSON test responses (temporary)
+test_response*.json
+minimal_test_response.json
+full_api_response.json
+test_response_with_weather.json
+
+# One-off fix scripts (keep in scripts/ but ignore if temporary)
+# fix_*.py files are moved to scripts/archive/
+
 
 
 
