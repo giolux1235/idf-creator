@@ -3,7 +3,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from src.location_fetcher import LocationFetcher, GeocodingError
 from src.enhanced_location_fetcher import EnhancedLocationFetcher
@@ -308,6 +308,161 @@ class IDFCreator:
         print("="*60 + "\n")
         
         return output_path
+    
+    def create_and_calibrate_idf(
+        self,
+        address: str,
+        utility_data: Any,  # UtilityData from model_calibration
+        weather_file: str,
+        documents: List[str] = None,
+        user_params: Dict = None,
+        output_path: str = None,
+        tolerance: float = 0.10,
+        max_iterations: int = 20
+    ) -> Dict[str, Any]:
+        """
+        Generate IDF and calibrate it to utility bills.
+        
+        Args:
+            address: Building address
+            utility_data: UtilityData object with monthly kWh consumption
+            weather_file: Path to weather file (.epw)
+            documents: Optional document paths
+            user_params: Optional user parameters
+            output_path: Optional output path for IDF
+            tolerance: Calibration tolerance (default 10%)
+            max_iterations: Maximum calibration iterations
+            
+        Returns:
+            Dictionary with 'idf_path' and 'calibration_result'
+        """
+        from src.model_calibration import ModelCalibrator
+        
+        # Generate baseline IDF
+        print("\n" + "="*60)
+        print("🏗️  IDF Creator - Generate & Calibrate")
+        print("="*60 + "\n")
+        
+        baseline_idf = self.create_idf(address, documents, user_params, output_path)
+        
+        # Calibrate to utility bills
+        print("\n" + "="*60)
+        print("📊 Model Calibration")
+        print("="*60 + "\n")
+        
+        calibrator = ModelCalibrator()
+        calibration_result = calibrator.calibrate_to_utility_bills(
+            idf_file=baseline_idf,
+            utility_data=utility_data,
+            weather_file=weather_file,
+            tolerance=tolerance,
+            max_iterations=max_iterations
+        )
+        
+        print(f"\n✅ Calibration complete!")
+        print(f"   Calibrated IDF: {calibration_result.calibrated_idf_path}")
+        print(f"   Annual Error: {calibration_result.accuracy_annual:.1f}%")
+        print(f"   CVRMSE: {calibration_result.accuracy_monthly_cvrmse:.1f}%")
+        print(f"   ASHRAE 14 Compliant: {calibration_result.accuracy_monthly_cvrmse <= 15.0}")
+        
+        return {
+            'baseline_idf_path': baseline_idf,
+            'calibrated_idf_path': calibration_result.calibrated_idf_path,
+            'calibration_result': calibration_result
+        }
+    
+    def create_and_optimize_retrofits(
+        self,
+        address: str,
+        utility_rates: Any,  # UtilityRates from retrofit_optimizer
+        weather_file: str,
+        documents: List[str] = None,
+        user_params: Dict = None,
+        output_path: str = None,
+        budget: Optional[float] = None,
+        max_payback: Optional[float] = None,
+        max_measures_per_scenario: int = 5
+    ) -> Dict[str, Any]:
+        """
+        Generate IDF and create optimized retrofit scenarios.
+        
+        Args:
+            address: Building address
+            utility_rates: UtilityRates object with electricity rates
+            weather_file: Path to weather file (.epw)
+            documents: Optional document paths
+            user_params: Optional user parameters
+            output_path: Optional output path for IDF
+            budget: Optional budget constraint for optimization
+            max_payback: Optional maximum payback period (years)
+            max_measures_per_scenario: Maximum measures per scenario
+            
+        Returns:
+            Dictionary with 'idf_path', 'scenarios', and 'optimized_scenarios'
+        """
+        from src.retrofit_optimizer import RetrofitOptimizer
+        
+        # Generate baseline IDF
+        print("\n" + "="*60)
+        print("🏗️  IDF Creator - Generate & Optimize Retrofits")
+        print("="*60 + "\n")
+        
+        baseline_idf = self.create_idf(address, documents, user_params, output_path)
+        
+        # Get building parameters for retrofit analysis
+        data = self.process_inputs(address, documents, user_params)
+        params = self.estimate_missing_parameters(data['building_params'])
+        
+        # Estimate baseline energy (will be updated after simulation)
+        floor_area_m2 = params['building'].get('floor_area', 1500)
+        floor_area_sf = floor_area_m2 * 10.764  # Convert m² to ft²
+        estimated_annual_kwh = floor_area_sf * 20  # Rough estimate: 20 kWh/ft²/year
+        
+        # Generate retrofit scenarios
+        print("\n" + "="*60)
+        print("🔄 Retrofit Optimization")
+        print("="*60 + "\n")
+        
+        optimizer = RetrofitOptimizer()
+        building_type = params['building'].get('building_type', 'office').lower()
+        
+        scenarios = optimizer.generate_scenarios(
+            baseline_energy_kwh=estimated_annual_kwh,
+            floor_area_sf=floor_area_sf,
+            baseline_idf_path=baseline_idf,
+            building_type=building_type,
+            max_measures_per_scenario=max_measures_per_scenario
+        )
+        
+        print(f"✅ Generated {len(scenarios)} retrofit scenarios")
+        
+        # Run simulations to get actual energy savings
+        scenarios = optimizer.run_scenario_simulations(
+            scenarios=scenarios,
+            baseline_idf_path=baseline_idf,
+            weather_file=weather_file,
+            max_concurrent=4
+        )
+        
+        # Optimize scenarios
+        optimized = optimizer.optimize(
+            scenarios=scenarios,
+            utility_rates=utility_rates,
+            budget=budget,
+            max_payback=max_payback
+        )
+        
+        print(f"\n✅ Optimization complete!")
+        print(f"   Optimized scenarios: {len(optimized)}")
+        if optimized:
+            print(f"   Top scenario NPV: ${optimized[0].npv:,.0f}")
+            print(f"   Top scenario ROI: {optimized[0].roi:.1f}%")
+        
+        return {
+            'baseline_idf_path': baseline_idf,
+            'scenarios': scenarios,
+            'optimized_scenarios': optimized
+        }
 
 
 def _parse_user_params(args: argparse.Namespace) -> Dict[str, any]:
@@ -458,19 +613,93 @@ Examples:
     enhanced = args.enhanced and not args.basic
     professional = args.professional
     
-    # Create IDF
+    # Create IDF with optional calibration/retrofit
     try:
         creator = IDFCreator(
             config_path=args.config,
             enhanced=enhanced,
             professional=professional
         )
-        creator.create_idf(
-            address=args.address,
-            documents=args.documents,
-            user_params=user_params,
-            output_path=args.output
-        )
+        
+        # Check if calibration or retrofit is requested
+        if args.calibrate:
+            if not args.utility_data or not args.weather_file:
+                print("❌ Error: --calibrate requires --utility-data and --weather-file", file=sys.stderr)
+                sys.exit(1)
+            
+            from src.model_calibration import UtilityData
+            import json
+            
+            # Load utility data
+            with open(args.utility_data, 'r') as f:
+                util_json = json.load(f)
+            
+            utility_data = UtilityData(
+                monthly_kwh=util_json.get('monthly_kwh', []),
+                peak_demand_kw=util_json.get('peak_demand_kw'),
+                heating_fuel=util_json.get('heating_fuel', 'electric'),
+                cooling_fuel=util_json.get('cooling_fuel', 'electric'),
+                gas_therms=util_json.get('gas_therms'),
+                electricity_rate_kwh=util_json.get('electricity_rate_kwh', 0.12),
+                gas_rate_therm=util_json.get('gas_rate_therm', 1.20)
+            )
+            
+            result = creator.create_and_calibrate_idf(
+                address=args.address,
+                utility_data=utility_data,
+                weather_file=args.weather_file,
+                documents=args.documents,
+                user_params=user_params,
+                output_path=args.output
+            )
+            print(f"\n✅ Complete! Calibrated IDF: {result['calibrated_idf_path']}")
+            
+        elif args.generate_retrofits:
+            if not args.weather_file:
+                print("❌ Error: --generate-retrofits requires --weather-file", file=sys.stderr)
+                sys.exit(1)
+            
+            from src.retrofit_optimizer import UtilityRates
+            import json
+            
+            # Load or create utility rates
+            if args.utility_rates:
+                with open(args.utility_rates, 'r') as f:
+                    rates_json = json.load(f)
+                utility_rates = UtilityRates(
+                    electricity_rate_kwh=rates_json.get('electricity_rate_kwh', 0.12),
+                    gas_rate_therm=rates_json.get('gas_rate_therm'),
+                    demand_rate_kw=rates_json.get('demand_rate_kw'),
+                    escalation_rate=rates_json.get('escalation_rate', 0.03)
+                )
+            else:
+                # Use defaults
+                utility_rates = UtilityRates(
+                    electricity_rate_kwh=0.12,
+                    escalation_rate=0.03
+                )
+            
+            result = creator.create_and_optimize_retrofits(
+                address=args.address,
+                utility_rates=utility_rates,
+                weather_file=args.weather_file,
+                documents=args.documents,
+                user_params=user_params,
+                output_path=args.output,
+                budget=args.retrofit_budget,
+                max_payback=args.max_payback
+            )
+            print(f"\n✅ Complete! Baseline IDF: {result['baseline_idf_path']}")
+            print(f"   Optimized scenarios: {len(result['optimized_scenarios'])}")
+            
+        else:
+            # Standard IDF generation
+            creator.create_idf(
+                address=args.address,
+                documents=args.documents,
+                user_params=user_params,
+                output_path=args.output
+            )
     except Exception as e:
         import traceback
         print(f"\n❌ Error: {e}", file=sys.stderr)

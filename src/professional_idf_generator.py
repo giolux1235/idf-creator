@@ -388,8 +388,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 continue
             space_type = self._determine_space_type(zone.name, building_type)
             idf_content.append(self.generate_people_objects(zone, space_type, building_type, age_adjusted_params))
-            idf_content.append(self.generate_lighting_objects(zone, space_type, building_type, age_adjusted_params, leed_bonuses))
-            idf_content.append(self.generate_equipment_objects(zone, space_type, building_type, age_adjusted_params, leed_bonuses))
+            idf_content.append(self.generate_lighting_objects(zone, space_type, building_type, age_adjusted_params, leed_bonuses, building_params))
+            idf_content.append(self.generate_equipment_objects(zone, space_type, building_type, age_adjusted_params, leed_bonuses, building_params))
             
             # Add daylighting controls for office/school spaces (integrate existing framework)
             # Apply to office spaces (not storage, mechanical, etc.)
@@ -2067,42 +2067,49 @@ Curve:Quadratic,
     
     def generate_lighting_objects(self, zone: ZoneGeometry, space_type: str, building_type: str,
                                   age_adjusted_params: Optional[Dict] = None,
-                                  leed_bonuses: Optional[Dict] = None) -> str:
+                                  leed_bonuses: Optional[Dict] = None,
+                                  building_params: Optional[Dict] = None) -> str:
         """Generate Lights objects for zone."""
         space_template = self.building_types.get_space_template(space_type)
         if not space_template:
             space_template = self.building_types.get_space_template('office_open')
         
+        # PRIORITY: Use user-specified lighting_power_density if provided (for calibration)
+        user_provided_lpd = building_params and building_params.get('lighting_power_density') is not None
+        if user_provided_lpd:
+            lighting_power_density = float(building_params['lighting_power_density'])
         # Use age-adjusted LPD if provided, otherwise use space template default
-        if age_adjusted_params and age_adjusted_params.get('lighting_lpd'):
+        elif age_adjusted_params and age_adjusted_params.get('lighting_lpd'):
             lighting_power_density = age_adjusted_params['lighting_lpd']
         else:
             lighting_power_density = space_template.get('lighting_power_density', 10.8)  # Default to ASHRAE 90.1 standard
         
         # CRITICAL FIX: Ensure minimum lighting power density based on space type
-        # ASHRAE 90.1-2019 standards: Office spaces 10.8 W/m², Lobbies 8.1-10.8 W/m², Conference 12.9 W/m², Storage/Mechanical 5.4 W/m²
-        space_type_lower = space_type.lower()
-        if 'conference' in space_type_lower or 'meeting' in space_type_lower:
-            min_lpd = 12.9  # ASHRAE 90.1-2019 for conference rooms
-        elif 'office' in space_type_lower:
-            min_lpd = 10.8  # ASHRAE 90.1-2019 for office spaces
-        elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
-            min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
-        elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
-            # CRITICAL: Increased minimum lighting for storage zones to ensure non-zero design cooling load
-            # Minimum 7.0 W/m² (increased from 6.0 W/m²) ensures sufficient internal gains
-            # Also check zone name for storage zones
-            zone_name_lower = zone.name.lower() if zone.name else ''
-            if 'storage' in zone_name_lower:
-                min_lpd = 7.0  # Increased to 7.0 W/m² for storage zones
+        # BUT: Skip minimum enforcement if user explicitly provided calibration value
+        if not user_provided_lpd:
+            # ASHRAE 90.1-2019 standards: Office spaces 10.8 W/m², Lobbies 8.1-10.8 W/m², Conference 12.9 W/m², Storage/Mechanical 5.4 W/m²
+            space_type_lower = space_type.lower()
+            if 'conference' in space_type_lower or 'meeting' in space_type_lower:
+                min_lpd = 12.9  # ASHRAE 90.1-2019 for conference rooms
+            elif 'office' in space_type_lower:
+                min_lpd = 10.8  # ASHRAE 90.1-2019 for office spaces
+            elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
+                min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
+            elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
+                # CRITICAL: Increased minimum lighting for storage zones to ensure non-zero design cooling load
+                # Minimum 7.0 W/m² (increased from 6.0 W/m²) ensures sufficient internal gains
+                # Also check zone name for storage zones
+                zone_name_lower = zone.name.lower() if zone.name else ''
+                if 'storage' in zone_name_lower:
+                    min_lpd = 7.0  # Increased to 7.0 W/m² for storage zones
+                else:
+                    min_lpd = 6.0  # 6.0 W/m² for mechanical zones
             else:
-                min_lpd = 6.0  # 6.0 W/m² for mechanical zones
-        else:
-            min_lpd = 8.1  # Default minimum for other commercial spaces (lobby standard)
-        
-        # Ensure lighting power density meets minimum standards
-        if lighting_power_density < min_lpd:
-            lighting_power_density = min_lpd
+                min_lpd = 8.1  # Default minimum for other commercial spaces (lobby standard)
+            
+            # Ensure lighting power density meets minimum standards (only if not user-provided)
+            if lighting_power_density < min_lpd:
+                lighting_power_density = min_lpd
         
         # Apply LEED bonus (reduces LPD for more efficient lighting)
         # But ensure it doesn't go below minimum
@@ -2137,36 +2144,43 @@ Curve:Quadratic,
     
     def generate_equipment_objects(self, zone: ZoneGeometry, space_type: str, building_type: str,
                                    age_adjusted_params: Optional[Dict] = None,
-                                   leed_bonuses: Optional[Dict] = None) -> str:
+                                   leed_bonuses: Optional[Dict] = None,
+                                   building_params: Optional[Dict] = None) -> str:
         """Generate ElectricEquipment objects for zone."""
         space_template = self.building_types.get_space_template(space_type)
         if not space_template:
             space_template = self.building_types.get_space_template('office_open')
         
+        # PRIORITY: Use user-specified equipment_power_density if provided (for calibration)
+        user_provided_epd = building_params and building_params.get('equipment_power_density') is not None
+        if user_provided_epd:
+            equipment_power_density = float(building_params['equipment_power_density'])
         # Use age-adjusted EPD if provided, otherwise use space template default
-        if age_adjusted_params and age_adjusted_params.get('equipment_epd'):
+        elif age_adjusted_params and age_adjusted_params.get('equipment_epd'):
             equipment_power_density = age_adjusted_params['equipment_epd']
         else:
             equipment_power_density = space_template.get('equipment_power_density', 8.1)  # Default to ASHRAE 90.1 standard
         
         # CRITICAL FIX: Ensure minimum equipment power density based on space type
-        # ASHRAE 90.1-2019 typical values: Office spaces 5-10 W/m²
-        space_type_lower = space_type.lower()
-        if 'office' in space_type_lower or 'conference' in space_type_lower:
-            min_epd = 5.0  # Minimum for office spaces
-        elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
-            # CRITICAL FIX: Storage zones need minimum equipment load to prevent zero design cooling load warnings
-            # EnergyPlus calculates design loads from internal gains during sizing, not HVAC capacity
-            # Minimum 3.0 W/m² ensures sufficient internal gains for non-zero design cooling load
-            # Combined with minimum lighting (5.4 W/m²) and occupancy (0.02 person/m² = 3 W/m²), total = 11.4 W/m²
-            # This ensures non-zero design cooling load even for storage zones
-            min_epd = 3.0  # Increased to 3.0 W/m² minimum equipment power density for storage/mechanical zones
-        else:
-            min_epd = 3.0  # Default minimum for other commercial spaces
-        
-        # Ensure equipment power density meets minimum standards (if not storage/mechanical)
-        if equipment_power_density < min_epd and min_epd > 0:
-            equipment_power_density = min_epd
+        # BUT: Skip minimum enforcement if user explicitly provided calibration value
+        if not user_provided_epd:
+            # ASHRAE 90.1-2019 typical values: Office spaces 5-10 W/m²
+            space_type_lower = space_type.lower()
+            if 'office' in space_type_lower or 'conference' in space_type_lower:
+                min_epd = 5.0  # Minimum for office spaces
+            elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
+                # CRITICAL FIX: Storage zones need minimum equipment load to prevent zero design cooling load warnings
+                # EnergyPlus calculates design loads from internal gains during sizing, not HVAC capacity
+                # Minimum 3.0 W/m² ensures sufficient internal gains for non-zero design cooling load
+                # Combined with minimum lighting (5.4 W/m²) and occupancy (0.02 person/m² = 3 W/m²), total = 11.4 W/m²
+                # This ensures non-zero design cooling load even for storage zones
+                min_epd = 3.0  # Increased to 3.0 W/m² minimum equipment power density for storage/mechanical zones
+            else:
+                min_epd = 3.0  # Default minimum for other commercial spaces
+            
+            # Ensure equipment power density meets minimum standards (only if not user-provided)
+            if equipment_power_density < min_epd and min_epd > 0:
+                equipment_power_density = min_epd
         
         # Apply LEED bonus (reduces EPD for more efficient equipment)
         # But ensure it doesn't go below minimum (for non-storage spaces)

@@ -246,7 +246,7 @@ def run_simulation(idf_path: str, weather_file: Optional[str], output_dir: str) 
     except Exception as e:
         return {'error': str(e)}
 
-def test_building(name: str, address: str, params: Dict) -> Dict:
+def run_building_test(name: str, address: str, params: Dict) -> Dict:
     """Test a single building"""
     print(f"\n{'='*70}")
     print(f"Testing: {name}")
@@ -381,7 +381,7 @@ def main():
     Path("test_outputs").mkdir(exist_ok=True)
     
     # Test 1: Small office building
-    test1 = test_building(
+    test1 = run_building_test(
         name="Small Office",
         address="123 Main St, Chicago, IL 60601",
         params={
@@ -395,7 +395,7 @@ def main():
     print_results_summary(test1)
     
     # Test 2: Medium office building
-    test2 = test_building(
+    test2 = run_building_test(
         name="Medium Office",
         address="456 Broadway, New York, NY 10013",
         params={
