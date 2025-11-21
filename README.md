@@ -2,6 +2,10 @@
 
 **Generate complete EnergyPlus IDF (Input Data File) from minimal inputs like an address and basic building information.**
 
+<div align="center">
+  <img src="docs/assets/images/buildings/hero-building.png" alt="IDF Creator - Building Energy Modeling" width="800"/>
+</div>
+
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -18,6 +22,9 @@ Creating EnergyPlus IDF files typically requires detailed knowledge of:
 - Optional documents (PDFs, images with building plans)
 - Basic parameters (building type, stories, floor area)
 
+![Building Energy Modeling](docs/assets/images/buildings/building-example.png)
+*Example: IDF Creator can generate energy models for various building types*
+
 ## ✨ Features
 
 - 🌍 **Automatic location detection** - Geocoding and climate zone determination
@@ -26,6 +33,11 @@ Creating EnergyPlus IDF files typically requires detailed knowledge of:
 - ⚡ **Building type templates** - Office, Residential, Retail, Warehouse, etc.
 - 🎛️ **Complete IDF generation** - Zones, surfaces, loads, HVAC, schedules
 - 📊 **Ready to simulate** - Output files work directly with EnergyPlus
+
+<div align="center">
+  <img src="docs/assets/images/buildings/building-types.png" alt="Supported Building Types" width="600"/>
+  <p><em>IDF Creator supports multiple building types with industry-standard templates</em></p>
+</div>
 
 ## 🚀 Quick Start
 
@@ -117,6 +129,9 @@ IDF files are saved to the `output/` directory by default, or to the specified p
 
 ## 🏗️ How It Works
 
+![IDF Creator Workflow](docs/assets/images/workflow/idf-creator-workflow.png)
+*The IDF Creator pipeline: From address to complete EnergyPlus model*
+
 1. **Location Processing**
    - Geocodes the address to get coordinates
    - Determines ASHRAE climate zone
@@ -186,6 +201,9 @@ When you run the tool, you'll see:
 ✨ Ready to simulate in EnergyPlus!
 ============================================================
 ```
+
+![Example Building Model](docs/assets/images/buildings/example-building-model.png)
+*Example: Generated building model ready for EnergyPlus simulation*
 
 ## 🔧 Requirements
 
