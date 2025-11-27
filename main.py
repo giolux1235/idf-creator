@@ -255,27 +255,14 @@ class IDFCreator:
         # Generate IDF
         print("\n⚙️  Generating IDF file...")
         if self.professional:
-            try:
-                idf_content = self.idf_generator.generate_professional_idf(
-                    address,
-                    params['building'],
-                    data['location'],
-                    documents
-                )
-            except Exception as professional_error:
-                import traceback
-                error_trace = traceback.format_exc()
-                print("⚠️ Professional IDF generation failed, falling back to standard generator.")
-                print(f"   Reason: {professional_error}")
-                print(f"   Traceback:\n{error_trace}")
-                if not self.standard_idf_generator:
-                    self.standard_idf_generator = IDFGenerator()
-                idf_content = self.standard_idf_generator.generate_complete_idf(
-                    data['location'],
-                    params['building'],
-                    params['zone'],
-                    self.config
-                )
+            # CRITICAL: Never fall back to standard generator - it creates Building_Zone_1 with IdealLoads
+            # Professional generator MUST succeed and create real zones from geometry engine
+            idf_content = self.idf_generator.generate_professional_idf(
+                address,
+                params['building'],
+                data['location'],
+                documents
+            )
         else:
             idf_content = self.idf_generator.generate_complete_idf(
                 data['location'],

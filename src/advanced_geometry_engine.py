@@ -646,11 +646,36 @@ class AdvancedGeometryEngine:
                     available_polygon = floor_polygon
         
         # Generate typical zones to fill remaining space using grid-based approach
-        if remaining_area > 50:  # Only if significant area remains
+        # CRITICAL FIX: Lower threshold for residential buildings (they have smaller rooms)
+        min_remaining_area = 5.0 if building_type.lower() == 'residential' else 50.0
+        if remaining_area > min_remaining_area:
             typical_zones = self._generate_typical_zones(
                 available_polygon, floor_level, template, remaining_area, created_types
             )
             zones.extend(typical_zones)
+        
+        # CRITICAL FIX: If no zones were created, create at least one default zone from the floor polygon
+        # This ensures we always have zones, even for very small buildings
+        # BUT: Use proper zone naming based on building type, never "Building_Zone_1"
+        if not zones and floor_polygon and floor_polygon.is_valid and floor_polygon.area >= 1.0:
+            # Create a single zone for the entire floor with proper naming
+            # For residential, use apartment/unit naming; for others, use building_type_floor
+            if building_type and building_type.lower() == 'residential':
+                zone_name = f"apartment_floor_{floor_level}"
+            elif building_type:
+                zone_name = f"{building_type.lower()}_floor_{floor_level}"
+            else:
+                zone_name = f"zone_floor_{floor_level}"
+            
+            # ZoneGeometry is already imported at the top of the file
+            zones.append(ZoneGeometry(
+                name=zone_name,
+                polygon=floor_polygon,
+                floor_level=floor_level,
+                height=3.0,
+                area=floor_polygon.area,
+                perimeter=floor_polygon.length
+            ))
         
         return zones
     

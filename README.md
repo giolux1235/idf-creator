@@ -32,7 +32,8 @@ Creating EnergyPlus IDF files typically requires detailed knowledge of:
 - 🏗️ **Smart defaults** - Industry-standard materials and constructions
 - ⚡ **Building type templates** - Office, Residential, Retail, Warehouse, etc.
 - 🎛️ **Complete IDF generation** - Zones, surfaces, loads, HVAC, schedules
-- 📊 **Ready to simulate** - Output files work directly with EnergyPlus
+- 📊 **BESTEST-compliant outputs** - Automatically includes 30+ output variables for comprehensive analysis
+- ✅ **Ready to simulate** - Output files work directly with EnergyPlus
 
 <div align="center">
   <img src="docs/assets/images/buildings/building-types.png" alt="Supported Building Types" width="600"/>
@@ -122,6 +123,12 @@ The tool generates a complete EnergyPlus IDF file containing:
 - ✅ **Schedules** - Occupancy, lighting, equipment, HVAC
 - ✅ **Climate data** - Location and weather file references
 - ✅ **Simulation control** - Run periods and output requests
+- ✅ **Comprehensive outputs** - Automatically includes BESTEST-required output variables:
+  - Zone-level metrics (temperature, heating/cooling energy)
+  - Surface-level metrics (heat transfer, temperatures)
+  - HVAC system performance (COP, efficiency, energy consumption)
+  - Environmental data (outdoor conditions, solar radiation)
+  - Building-level summaries
 
 ### Output Location
 

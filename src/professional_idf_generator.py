@@ -39,6 +39,7 @@ from .formatters.hvac_objects import (
     format_ptac,
 )
 from .utils.common import normalize_node_name
+from .output_variable_manager import OutputVariableManager
 from pathlib import Path
 
 
@@ -175,7 +176,9 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         )
         
         # Generate detailed zone layout
-        zones = self.geometry_engine.generate_zone_layout(footprint, building_type)
+        # CRITICAL: Normalize building_type to lowercase for template lookup
+        building_type_for_geometry = building_type.lower() if building_type else 'office'
+        zones = self.geometry_engine.generate_zone_layout(footprint, building_type_for_geometry)
         # Ensure unique zone names across entire building
         name_counts = {}
         for z in zones:
@@ -274,29 +277,32 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         idf_content.append(self.material_library.generate_construction_objects(constructions_used))
         
         # Filter out invalid zones before processing
+        # CRITICAL: Use lower threshold for residential/small buildings to ensure real zones are used
+        min_zone_area = 0.01 if building_type.lower() == 'residential' else 0.1
         valid_zones = []
         for zone in zones:
-            # Skip zones with invalid or very small polygons
-            if zone.polygon and zone.polygon.is_valid and zone.polygon.area >= 0.1:
-                # Fix invalid polygons if possible
-                if not zone.polygon.is_valid:
-                    fixed = zone.polygon.buffer(0)
-                    if isinstance(fixed, Polygon) and fixed.is_valid and fixed.area >= 0.1:
-                        zone.polygon = fixed
-                        valid_zones.append(zone)
-                else:
-                    valid_zones.append(zone)
+            # Fix invalid polygons if possible
+            if zone.polygon and not zone.polygon.is_valid:
+                fixed = zone.polygon.buffer(0)
+                if isinstance(fixed, Polygon) and fixed.is_valid:
+                    zone.polygon = fixed
+                    zone.area = fixed.area  # Update area after fixing
+            
+            # Accept zones with valid polygons and sufficient area
+            if zone.polygon and zone.polygon.is_valid and zone.polygon.area >= min_zone_area:
+                valid_zones.append(zone)
         
         # Use only valid zones
         zones = valid_zones
         
         if not zones:
-            fallback_zones = self._generate_fallback_zones(footprint, building_params)
-            if fallback_zones:
-                zones = fallback_zones
-                print(f"✅ Fallback zone layout created with {len(zones)} zone(s) totaling {sum(z.area for z in zones):.2f} m²")
-            else:
-                print("⚠️  Critical: Unable to generate fallback zones; proceeding with empty geometry")
+            # NO FALLBACK - require real geometry
+            raise ValueError(
+                f"Failed to generate zones from geometry. "
+                f"This indicates a problem with the building footprint or geometry engine. "
+                f"Footprint area: {footprint.polygon.area if footprint and footprint.polygon else 'N/A'} m². "
+                f"Please check building parameters and ensure valid geometry is provided."
+            )
         
         # Surfaces (generate first to calculate actual floor areas)
         surfaces = self.geometry_engine.generate_building_surfaces(zones, footprint)
@@ -465,7 +471,13 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                 idf_content.append(self.generate_zone_sizing_object(zone.name, zone_area=zone.area, space_type=space_type))
         
         # HVAC Systems (advanced or simple ideal loads)
+        # CRITICAL: Professional generator should NEVER use simple_hvac/IdealLoads
+        # Always use advanced HVAC systems for realistic energy modeling
         if building_params.get('simple_hvac'):
+            print("⚠️  Warning: simple_hvac=True is ignored in professional generator. Using advanced HVAC systems.")
+        
+        # Always use advanced HVAC systems (never IdealLoads)
+        if False:  # Never execute IdealLoads path
             for zone in zones:
                 idf_content.append(self._generate_ideal_loads(zone.name))
         else:
@@ -554,6 +566,14 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         has_gas_equipment = self._check_for_gas_equipment(hvac_components)
         idf_content.append(self.generate_output_objects(has_gas_equipment=has_gas_equipment))
         
+        # CRITICAL: Always generate OutdoorAir:Node for SITE OUTDOOR AIR NODE
+        # This is required for PTAC outdoor air mixers and other HVAC systems
+        outdoor_air_node = self.generate_outdoor_air_node('SITE OUTDOOR AIR NODE')
+        if not outdoor_air_node:
+            # Force creation if it doesn't exist yet
+            outdoor_air_node = "OutdoorAir:Node,\n  SITE OUTDOOR AIR NODE;\n\n"
+        idf_content.insert(0, outdoor_air_node)  # Add at beginning, before HVAC components
+        
         # Weather File (ground temps already added in generate_site_location)
         idf_content.append(self.generate_weather_file_object(
             location_data.get('weather_file', 'USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw'),
@@ -563,6 +583,24 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         full_idf = '\n\n'.join(idf_content)
         # Final safety: remove any duplicate object definitions across entire IDF
         full_idf = dedupe_idf_string(full_idf)
+        
+        # Add BESTEST-required output variables for comprehensive analysis
+        # This ensures all necessary data is captured during simulation
+        try:
+            output_manager = OutputVariableManager(include_comprehensive=True)
+            # Extract zone names from zones list
+            zone_names = [zone.name for zone in zones] if zones else None
+            # Let the manager extract surface and HVAC names from IDF content
+            full_idf = output_manager.add_output_variables(
+                full_idf,
+                zone_names=zone_names,
+                surface_names=None,  # Auto-extract from IDF
+                hvac_system_names=None  # Auto-extract from IDF
+            )
+        except Exception as e:
+            # If output variable injection fails, log but don't break IDF generation
+            print(f"⚠️  Warning: Could not add BESTEST output variables: {e}")
+            # Continue with IDF as-is
         
         return full_idf
 
@@ -1000,6 +1038,8 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
         """Generate advanced HVAC systems for all zones"""
         hvac_components = []
         seen_names = set()  # Global tracker to prevent any duplicate names
+        seen_zone_connections = set()  # Track zones that already have EquipmentConnections
+        self._ptac_processed_zones = set()  # Track zones processed by PTAC path
         
         # Get HVAC system type from building template
         building_template = self.building_types.get_building_type_template(building_type)
@@ -1140,15 +1180,24 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
                     hvac_components.append(eq_list)
                     
                     # Create ZoneHVAC:EquipmentConnections
+                    # CRITICAL: Extract exact node names from PTAC component
+                    ptac_comp = next((c for c in unique_zone_hvac if c.get('type') == 'ZoneHVAC:PackagedTerminalAirConditioner'), None)
+                    ptac_return_node = ptac_comp.get('air_inlet_node_name', f"{zone.name}_PTACReturn") if ptac_comp else f"{zone.name}_PTACReturn"
+                    ptac_supply_node = ptac_comp.get('air_outlet_node_name', f"{ptac_name}ZoneSupplyNode") if ptac_comp else f"{ptac_name}ZoneSupplyNode"
+                    
                     eq_connections = {
                         'type': 'ZoneHVAC:EquipmentConnections',
-                        'name': f"{zone.name}{unique_suffix} Connections",  # Add name for deduplication
+                        'name': f"{zone.name}{unique_suffix} Connections",
                         'zone_name': zone.name,
                         'zone_equipment_list_name': eq_list['name'],
-                        'zone_air_inlet_node_name': f"{ptac_name}ZoneSupplyNode",
-                        'zone_exhaust_node_or_nodelist_name': f"{ptac_name}ZoneExhaustNode"
+                        'zone_air_inlet_node_name': ptac_supply_node,
+                        'zone_exhaust_node_or_nodelist_name': '',
+                        'zone_air_node_name': f"{zone.name} Air Node",
+                        'zone_return_air_node_name': ptac_return_node  # MUST match PTAC air_inlet_node_name exactly!
                     }
                     hvac_components.append(eq_connections)
+                    seen_zone_connections.add(zone.name)  # Mark as having connections
+                    self._ptac_processed_zones.add(zone.name)  # Mark as PTAC-processed
             
             # Generate controls for this zone (moved inside loop)
             controls = self.hvac_systems.generate_control_objects(
@@ -1647,12 +1696,23 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             return format_coil_cooling_dx_single_speed(component)
         
         elif comp_type == 'OutdoorAir:Mixer':
+            # EnergyPlus OutdoorAir:Mixer format (EXACTLY 5 fields):
+            # Field 1: Mixed Air Node Name
+            # Field 2: Outdoor Air Stream Node Name
+            # Field 3: Relief Air Stream Node Name
+            # Field 4: Return Air Stream Node Name
+            # NO 5th field - OutdoorAir:Mixer does not have outdoor_air_node_name field
+            return_air_node = component.get('return_air_stream_node_name', '')
+            if not return_air_node:
+                # Fallback if not provided
+                zone_name = component.get('zone_name', component['name'].replace('_PTACMixer', ''))
+                return_air_node = f"{zone_name}_PTACReturn"
             return f"""OutdoorAir:Mixer,
   {component['name']},                 !- Name
   {component['mixed_air_node_name']},  !- Mixed Air Node Name
   {component['outdoor_air_stream_node_name']}, !- Outdoor Air Stream Node Name
   {component['relief_air_stream_node_name']}, !- Relief Air Stream Node Name
-  {component['outdoor_air_node_name']}; !- Outdoor Air Node Name
+  {return_air_node};                   !- Return Air Stream Node Name
 
 """
         
@@ -1792,6 +1852,18 @@ class ProfessionalIDFGenerator(BaseIDFGenerator):
             exhaust_node = component.get('zone_exhaust_node_or_nodelist_name', '')
             zone_air_node = component.get('zone_air_node_name', f"{zone_name} Air Node")
             return_air_node = component.get('zone_return_air_node_name', '')
+            
+            # CRITICAL FIX: If supply node contains PTACZoneSupplyNode, return node MUST be PTACReturn
+            # This is a last-chance fix to ensure correctness right before formatting
+            zone_name_val = zone_name
+            if 'PTACZoneSupplyNode' in supply_node:
+                correct_return = f"{zone_name_val}_PTACReturn"
+                if return_air_node != correct_return:
+                    return_air_node = correct_return
+                    # Update component dict to persist the fix
+                    component['zone_return_air_node_name'] = return_air_node
+                    print(f"  🔧 FINAL FIX: EquipmentConnections return node for {zone_name_val}: -> '{return_air_node}'")
+            
             return f"""ZoneHVAC:EquipmentConnections,
   {zone_name},                 !- Zone Name
   {eq_list_name},              !- Zone Conditioning Equipment List Name
@@ -2089,22 +2161,21 @@ Curve:Quadratic,
         if not user_provided_lpd:
             # ASHRAE 90.1-2019 standards: Office spaces 10.8 W/m², Lobbies 8.1-10.8 W/m², Conference 12.9 W/m², Storage/Mechanical 5.4 W/m²
             space_type_lower = space_type.lower()
-            if 'conference' in space_type_lower or 'meeting' in space_type_lower:
-                min_lpd = 12.9  # ASHRAE 90.1-2019 for conference rooms
-            elif 'office' in space_type_lower:
-                min_lpd = 10.8  # ASHRAE 90.1-2019 for office spaces
-            elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
-                min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
-            elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
-                # CRITICAL: Increased minimum lighting for storage zones to ensure non-zero design cooling load
-                # Minimum 7.0 W/m² (increased from 6.0 W/m²) ensures sufficient internal gains
-                # Also check zone name for storage zones
-                zone_name_lower = zone.name.lower() if zone.name else ''
-                if 'storage' in zone_name_lower:
-                    min_lpd = 7.0  # Increased to 7.0 W/m² for storage zones
-                else:
-                    min_lpd = 6.0  # 6.0 W/m² for mechanical zones
+        if 'conference' in space_type_lower or 'meeting' in space_type_lower:
+            min_lpd = 12.9  # ASHRAE 90.1-2019 for conference rooms
+        elif 'office' in space_type_lower:
+            min_lpd = 10.8  # ASHRAE 90.1-2019 for office spaces
+        elif 'lobby' in space_type_lower or 'reception' in space_type_lower:
+            min_lpd = 8.1  # ASHRAE 90.1-2019 minimum for lobbies
+        elif 'storage' in space_type_lower or 'mechanical' in space_type_lower:
+            # CRITICAL: Increased minimum lighting for storage zones to ensure non-zero design cooling load
+            # Minimum 7.0 W/m² (increased from 6.0 W/m²) ensures sufficient internal gains
+            # Also check zone name for storage zones
+            zone_name_lower = zone.name.lower() if zone.name else ''
+            if 'storage' in zone_name_lower:
+                min_lpd = 7.0  # Increased to 7.0 W/m² for storage zones
             else:
+                min_lpd = 6.0  # 6.0 W/m² for mechanical zones
                 min_lpd = 8.1  # Default minimum for other commercial spaces (lobby standard)
             
             # Ensure lighting power density meets minimum standards (only if not user-provided)
@@ -3299,12 +3370,12 @@ Output:Meter,
         data = defaults.copy()
         data['heating_dry_bulb'] = safe(heating_vals, 1, defaults['heating_dry_bulb'])
         data['heating_wet_bulb'] = safe(heating_vals, 3, defaults['heating_wet_bulb'])
-        data['heating_wind_speed'] = safe(heating_vals, -2, defaults['heating_wind_speed'])
+        data['heating_wind_speed'] = max(0.0, min(40.0, safe(heating_vals, -2, defaults['heating_wind_speed'])))
         data['heating_wind_direction'] = safe(heating_vals, -1, defaults['heating_wind_direction'])
         data['cooling_daily_range'] = safe(cooling_vals, 1, defaults['cooling_daily_range'])
         data['cooling_dry_bulb'] = safe(cooling_vals, 2, defaults['cooling_dry_bulb'])
         data['cooling_wet_bulb'] = safe(cooling_vals, 3, defaults['cooling_wet_bulb'])
-        data['cooling_wind_speed'] = safe(cooling_vals, 14, defaults['cooling_wind_speed'])
+        data['cooling_wind_speed'] = max(0.0, min(40.0, safe(cooling_vals, 14, defaults['cooling_wind_speed'])))
         data['cooling_wind_direction'] = safe(cooling_vals, 15, defaults['cooling_wind_direction'])
 
         data['cooling_wet_bulb'] = min(data['cooling_wet_bulb'], data['cooling_dry_bulb'] - 0.1)
@@ -3396,57 +3467,13 @@ Output:Meter,
         return "\n".join([heating_dd.strip("\n"), "", cooling_dd.strip("\n"), ""]) + "\n"
 
     def _generate_fallback_zones(self, footprint: BuildingFootprint, building_params: Dict) -> List[ZoneGeometry]:
-        """Create a simple zone layout when advanced geometry fails."""
-        fallback_zones: List[ZoneGeometry] = []
-        try:
-            target_area = building_params.get('floor_area') or building_params.get('total_area')
-            if not target_area and footprint and footprint.polygon:
-                target_area = footprint.polygon.area
-            if not target_area or target_area <= 0:
-                target_area = 500.0
-
-            if footprint and footprint.polygon and footprint.polygon.is_valid and footprint.polygon.area >= 1.0:
-                base_polygon = footprint.polygon.buffer(0)
-            else:
-                aspect_ratio = 1.5
-                width = math.sqrt(target_area / aspect_ratio)
-                length = width * aspect_ratio
-                base_polygon = Polygon([(0.0, 0.0), (length, 0.0), (length, width), (0.0, width)])
-
-            if not base_polygon.is_valid or base_polygon.area < 1.0:
-                base_polygon = base_polygon.convex_hull
-
-            stories = building_params.get('stories') or building_params.get('num_floors')
-            if not stories and footprint:
-                stories = footprint.stories
-            stories = max(int(stories or 1), 1)
-
-            floor_height = building_params.get('floor_to_floor_height')
-            if not floor_height and footprint and footprint.stories:
-                floor_height = max(footprint.height / max(footprint.stories, 1), 3.0)
-            floor_height = float(floor_height or 3.0)
-
-            base_name = building_params.get('name', 'Fallback').replace(' ', '_')
-
-            if footprint:
-                footprint.polygon = base_polygon
-                footprint.stories = stories
-                footprint.height = stories * floor_height
-
-            for level in range(stories):
-                zone_poly = base_polygon.buffer(0)
-                zone_name = f"{base_name}_Zone_{level + 1}"
-                fallback_zones.append(ZoneGeometry(
-                    name=zone_name,
-                    polygon=zone_poly,
-                    floor_level=level,
-                    height=floor_height,
-                    area=zone_poly.area,
-                    perimeter=zone_poly.length
-                ))
-
-            print(f"⚠️  Warning: Advanced geometry produced no zones; generated {len(fallback_zones)} fallback zone(s) using footprint area {base_polygon.area:.2f} m²")
-        except Exception as exc:
-            print(f"❌ Fallback zone creation failed: {exc}")
-
-        return fallback_zones
+        """
+        DEPRECATED: Fallback zones are no longer used.
+        This method will raise an error if called - real geometry is always required.
+        """
+        raise ValueError(
+            "Fallback zones are no longer supported. "
+            "Real geometry must be generated from the building footprint. "
+            "If zones are empty, check the geometry engine and building parameters. "
+            "This error indicates the geometry engine failed to generate zones."
+        )

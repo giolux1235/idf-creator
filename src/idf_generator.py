@@ -4,6 +4,7 @@ import os
 import math
 
 from src.core.base_idf_generator import BaseIDFGenerator
+from .output_variable_manager import OutputVariableManager
 
 
 class IDFGenerator(BaseIDFGenerator):
@@ -900,7 +901,30 @@ Output:Meter,
         # Output requests
         idf_content.append(self.generate_output_requests())
         
-        return "".join(idf_content)
+        full_idf = "".join(idf_content)
+        
+        # Add BESTEST-required output variables for comprehensive analysis
+        # This ensures all necessary data is captured during simulation
+        try:
+            output_manager = OutputVariableManager(include_comprehensive=True)
+            # Extract zone names from building_params
+            zone_names = []
+            for story in range(1, building_params.get('stories', 3) + 1):
+                zone_name = f"{building_params.get('name', 'Building')}_Zone_{story}"
+                zone_names.append(zone_name)
+            
+            full_idf = output_manager.add_output_variables(
+                full_idf,
+                zone_names=zone_names if zone_names else None,
+                surface_names=None,  # Auto-extract from IDF
+                hvac_system_names=None  # Auto-extract from IDF
+            )
+        except Exception as e:
+            # If output variable injection fails, log but don't break IDF generation
+            print(f"⚠️  Warning: Could not add BESTEST output variables: {e}")
+            # Continue with IDF as-is
+        
+        return full_idf
 
 
 

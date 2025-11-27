@@ -195,8 +195,24 @@ Schedule:Compact,
             zone_width = max_x - min_x
             zone_height = max_y - min_y
             # Very small zones do not gain from daylighting controls and frequently fail spacing checks.
-            if zone_width < 0.8 or zone_height < 0.8:
+            # CRITICAL: Disable daylighting for very small zones to prevent segfaults
+            # For residential buildings, be even more conservative
+            min_size = 1.5 if building_type and building_type.lower() == 'residential' else 1.0
+            if zone_width < min_size or zone_height < min_size:
                 return ""
+            
+            # CRITICAL: Ensure reference points are far enough from windows
+            # EnergyPlus requires at least 0.15m (6") clearance from window plane
+            min_clearance = 0.2  # Use 0.2m (8") for safety margin
+            
+            # Calculate reference point placement with clearance
+            ref_x = zone_center_x
+            ref_y = zone_center_y
+            
+            # Adjust if too close to any window edge
+            # For now, just ensure minimum distance from zone center to any edge
+            if zone_width < min_clearance * 2 or zone_height < min_clearance * 2:
+                return ""  # Zone too small to safely place reference points
             actual_margin_x = min(margin, zone_width / 4.0)  # Use 25% of width as max margin
             actual_margin_y = min(margin, zone_height / 4.0)  # Use 25% of height as max margin
             # Maintain a minimum clearance of 0.30m from glazing planes when possible
@@ -234,6 +250,27 @@ Schedule:Compact,
                 # Glare point outside, use same as reference point
                 glare_x = ref_x
                 glare_y = ref_y
+            
+            # CRITICAL FIX: Ensure reference point is at least 0.2m (8") from all edges
+            # This prevents "less than 0.15m from window plane" errors
+            min_dist_to_edge = max(0.2, min(zone_width, zone_height) * 0.15)  # At least 0.2m or 15% from edge
+            ref_x = max(min_x + min_dist_to_edge, min(max_x - min_dist_to_edge, ref_x))
+            ref_y = max(min_y + min_dist_to_edge, min(max_y - min_dist_to_edge, ref_y))
+            
+            # Ensure glare point is also properly positioned
+            glare_x = max(min_x + min_dist_to_edge, min(max_x - min_dist_to_edge, glare_x))
+            glare_y = max(min_y + min_dist_to_edge, min(max_y - min_dist_to_edge, glare_y))
+            
+            # Final verification: ensure points are still within polygon
+            final_test_point = Point(ref_x, ref_y)
+            final_glare_point = Point(glare_x, glare_y)
+            if not zone_geometry.polygon.contains(final_test_point):
+                # If still outside, use centroid with margin
+                if zone_geometry.polygon.contains(centroid):
+                    ref_x = max(min_x + min_dist_to_edge, min(max_x - min_dist_to_edge, centroid.x))
+                    ref_y = max(min_y + min_dist_to_edge, min(max_y - min_dist_to_edge, centroid.y))
+                    glare_x = ref_x + 0.3  # Slight offset for glare point
+                    glare_y = ref_y
         else:
             # Default fallback: use center of typical zone
             # This is a fallback - ideally zone_geometry should always be provided

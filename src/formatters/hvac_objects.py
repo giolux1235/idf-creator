@@ -144,12 +144,12 @@ def format_branch(component: dict) -> str:
     return branch_str + "\n"
 
 def format_ptac(component: dict) -> str:
-    # Build fan and coil names from PTAC name
+    # Build fan and coil names - use component dict values if provided, otherwise build from PTAC name
     ptac_name = component['name']
-    fan_name = ptac_name + 'Fan'
-    cooling_coil_name = ptac_name + 'CoolingCoil'
-    heating_coil_name = ptac_name + 'HeatingCoil'
-    mixer_name = ptac_name + 'Mixer'
+    fan_name = component.get('supply_air_fan_name', ptac_name + 'Fan')
+    cooling_coil_name = component.get('cooling_coil_name', ptac_name + 'CoolingCoil')
+    heating_coil_name = component.get('heating_coil_name', ptac_name + 'HeatingCoil')
+    mixer_name = component.get('outdoor_air_mixer_name', ptac_name + 'Mixer')
     
     # Build node names for zone connections (these connect PTAC to zone)
     air_inlet_node = component.get('air_inlet_node_name', ptac_name + ' Inlet')

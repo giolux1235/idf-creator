@@ -232,7 +232,7 @@ class EnergyPlusSimulator:
             return None
         
         try:
-            with open(csv_file, 'r') as f:
+            with open(csv_file, 'r', encoding='latin-1') as f:
                 content = f.read()
             
             results = {}

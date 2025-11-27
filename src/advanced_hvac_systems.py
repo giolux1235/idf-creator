@@ -916,9 +916,9 @@ class AdvancedHVACSystems:
             'no_load_outdoor_air_flow_rate': sizing_params['ventilation_rate'] * 0.3,
             'supply_air_fan_object_type': 'Fan:ConstantVolume',
             'supply_air_fan_name': f"{zone_name}_PTACFan",
-            'cooling_coil_object_type': 'Coil:Cooling:DX:SingleSpeed',
+            'cooling_coil_object_type': 'Coil:Cooling:DX:SingleSpeed',  # CRITICAL: Must be cooling coil type
             'cooling_coil_name': f"{zone_name}_PTACCoolingCoil",
-            'heating_coil_object_type': 'Coil:Heating:Electric',
+            'heating_coil_object_type': 'Coil:Heating:Electric',  # CRITICAL: Must be heating coil type
             'heating_coil_name': f"{zone_name}_PTACHeatingCoil",
             'fan_placement': 'BlowThrough',
             'outdoor_air_mixer_object_type': 'OutdoorAir:Mixer',
@@ -961,6 +961,24 @@ class AdvancedHVACSystems:
             'minimum_outdoor_dry_bulb_temperature_for_compressor_operation': 10.0  # Increased from 7.0 to prevent operation at low outdoor temps that cause extreme cold
         }
         components.append(cooling_coil)
+        
+        # Outdoor Air Mixer for PTAC (REQUIRED - PTAC references this)
+        # EnergyPlus OutdoorAir:Mixer format (EXACTLY 5 fields):
+        # Field 1: Mixed Air Node Name
+        # Field 2: Outdoor Air Stream Node Name (connects to outdoor air)
+        # Field 3: Relief Air Stream Node Name (connects to outdoor air)
+        # Field 4: Return Air Stream Node Name (connects to PTAC inlet)
+        # CRITICAL: For PTAC systems, outdoor_air_stream_node_name and relief_air_stream_node_name
+        # should be local nodes. EnergyPlus will automatically connect them to outdoor conditions.
+        mixer = {
+            'type': 'OutdoorAir:Mixer',
+            'name': f"{zone_name}_PTACMixer",
+            'mixed_air_node_name': f"{zone_name}_PTACMixedAir",  # Goes to fan inlet
+            'outdoor_air_stream_node_name': f"{zone_name}_PTACOAStream",  # Local OA stream node
+            'relief_air_stream_node_name': f"{zone_name}_PTACReliefStream",  # Local relief node
+            'return_air_stream_node_name': f"{zone_name}_PTACReturn"  # Return from zone (PTAC inlet)
+        }
+        components.append(mixer)
         
         # Heating Coil
         heating_coil = {
@@ -1146,7 +1164,7 @@ class AdvancedHVACSystems:
             'name': f"{zone_name}_ZoneControl",
             'zone_or_zonelist_name': zone_base_name,
             'control_type_schedule_name': 'DualSetpoint Control Type',
-            'control_1_object_type': 'ThermostatSetpoint:DualSetpoint' if control_template['thermostat_type'] == 'ThermostatSetpoint:DualSetpoint' else 'Thermostat',
+            'control_1_object_type': 'ThermostatSetpoint:DualSetpoint',  # Always use DualSetpoint
             'control_1_name': f"{zone_name}_Thermostat"
         }
         controls.append(zone_control)
