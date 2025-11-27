@@ -75,15 +75,16 @@ def run_test(test_number: int, test_data: Dict, output_base_dir: Path) -> Dict:
         building_params = {k: v for k, v in building_params.items() if v is not None}
         
         # Handle residential buildings - force PTAC if window AC detected
-        hvac_system_types = test_data.get('hvac_details', {}).get('hvac_system_types', [])
+        hvac_details = test_data.get('hvac_details', {})
+        hvac_system_types = hvac_details.get('hvac_system_types', [])
         if building_params['building_type'].lower() == 'residential':
             hvac_types_str = ' '.join(str(h) for h in hvac_system_types).lower()
             if 'window air conditioner' in hvac_types_str or 'split system' in hvac_types_str:
                 building_params['force_hvac_type'] = 'PTAC'
                 print(f"  ℹ️  Residential building with window AC/split system → forcing PTAC")
         
-        # Get HVAC system info if available
-        hvac_system_info = test_data.get('hvac_system_info')
+        # Get HVAC system info if available (check both locations)
+        hvac_system_info = test_data.get('hvac_system_info') or hvac_details
         if hvac_system_info:
             building_params['hvac_system_info'] = hvac_system_info
         
@@ -198,6 +199,23 @@ def run_test(test_number: int, test_data: Dict, output_base_dir: Path) -> Dict:
         if 'error' in sim_result:
             raise ValueError(f"Simulation error: {sim_result['error']}")
         
+        # Check return code - segfault (-11) or other failures
+        returncode = sim_result.get('returncode', 0)
+        if returncode != 0:
+            err_file = sim_output_dir / 'eplusout.err'
+            if err_file.exists():
+                with open(err_file, 'r') as f:
+                    err_content = f.read()
+                    # Extract severe/fatal errors
+                    errors = [line for line in err_content.split('\n') 
+                            if '** Severe' in line or '** Fatal' in line or '** Error' in line]
+                    if errors:
+                        error_msg = errors[0][:200]
+                        raise ValueError(f"Simulation failed: {error_msg}")
+            if returncode == -11:
+                raise ValueError(f"Simulation failed: Segmentation fault (return code {returncode})")
+            raise ValueError(f"Simulation failed: Unknown error (return code {returncode})")
+        
         if not sim_result.get('success'):
             # Check error file
             err_file = sim_output_dir / 'eplusout.err'
@@ -232,6 +250,7 @@ def run_test(test_number: int, test_data: Dict, output_base_dir: Path) -> Dict:
         print(f"\n[4/4] Comparing with target data...")
         
         comparison = {}
+        has_comparison = False
         
         # Compare EUI
         target_eui = test_data.get('eui_kbtu_sqft') or test_data.get('site_eui_kbtu_sqft')
@@ -245,6 +264,9 @@ def run_test(test_number: int, test_data: Dict, output_base_dir: Path) -> Dict:
             print(f"  Target EUI: {target_eui:.1f} kBtu/sqft")
             print(f"  Simulated EUI: {sim_eui:.1f} kBtu/sqft")
             print(f"  Error: {eui_error:+.1f}%")
+            has_comparison = True
+        elif sim_eui:
+            print(f"  Simulated EUI: {sim_eui:.1f} kBtu/sqft (no target EUI available)")
         
         # Compare total energy
         target_energy = test_data.get('annual_electric_kwh')
@@ -258,31 +280,40 @@ def run_test(test_number: int, test_data: Dict, output_base_dir: Path) -> Dict:
             print(f"  Target Energy: {target_energy:,.0f} kWh")
             print(f"  Simulated Energy: {sim_energy:,.0f} kWh")
             print(f"  Error: {energy_error:+.1f}%")
+            has_comparison = True
+        elif sim_energy:
+            print(f"  Simulated Energy: {sim_energy:,.0f} kWh (no target energy available)")
         
         result['comparison'] = comparison
         result['success'] = True
         
         # Determine status
-        max_error = max(
-            abs(comparison.get('eui_error_percent', 0)),
-            abs(comparison.get('total_error_percent', 0))
-        )
-        
-        if max_error < 10:
-            status = "EXCELLENT"
-        elif max_error < 30:
-            status = "GOOD"
+        if has_comparison:
+            max_error = max(
+                abs(comparison.get('eui_error_percent', 0)),
+                abs(comparison.get('total_error_percent', 0))
+            )
+            
+            if max_error < 10:
+                status = "EXCELLENT"
+            elif max_error < 30:
+                status = "GOOD"
+            else:
+                status = "NEEDS IMPROVEMENT"
         else:
-            status = "NEEDS IMPROVEMENT"
+            status = "PASSING (no target data for comparison)"
         
         print(f"\n  ✓ Test {test_number} completed: {status}")
         
     except Exception as e:
         error_msg = str(e)
         result['errors'].append(error_msg)
+        result['success'] = False
         print(f"\n  ❌ Test {test_number} failed: {error_msg}")
-        import traceback
-        traceback.print_exc()
+    
+    # Ensure result is always properly initialized
+    if 'success' not in result:
+        result['success'] = False
     
     return result
 
@@ -321,8 +352,21 @@ def main():
     # Run each test
     results = []
     for i, test_data in enumerate(tests, start=1):
-        result = run_test(i, test_data, output_dir)
-        results.append(result)
+        try:
+            result = run_test(i, test_data, output_dir)
+            if result and isinstance(result, dict):
+                results.append(result)
+            else:
+                print(f"⚠️  Test {i} returned invalid result, skipping...")
+        except Exception as e:
+            print(f"⚠️  Test {i} raised exception: {e}")
+            # Create a failed result
+            results.append({
+                'test_number': i,
+                'test_data': test_data,
+                'success': False,
+                'errors': [str(e)]
+            })
     
     # Generate summary
     print(f"\n{'='*80}")
